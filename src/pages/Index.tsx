@@ -91,6 +91,7 @@ const CATEGORIES = [
   
   { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
   { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
+  { key: "private_jobs", label: "Private Jobs", icon: ExternalLink, color: "bg-emerald-100 text-emerald-700", link: "https://interreport.in" },
 ];
 
 interface Scheme {
@@ -228,19 +229,34 @@ const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => 
 );
 
 // Category Chip
-const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => (
-  <button
-    onClick={onClick}
-    className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-      isActive
-        ? "bg-primary text-primary-foreground shadow-glow"
-        : `${cat.color} hover:scale-105`
-    }`}
-  >
-    <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-    {cat.label}
-  </button>
-);
+const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
+  if ('link' in cat && cat.link) {
+    return (
+      <a
+        href={cat.link as string}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${cat.color} hover:scale-105`}
+      >
+        <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+        {cat.label}
+      </a>
+    );
+  }
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
+        isActive
+          ? "bg-primary text-primary-foreground shadow-glow"
+          : `${cat.color} hover:scale-105`
+      }`}
+    >
+      <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+      {cat.label}
+    </button>
+  );
+};
 
 const Index = () => {
   const { user, profile } = useAuth();
@@ -319,7 +335,7 @@ const Index = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-3 gap-2 mt-3">
+          <div className="grid grid-cols-2 gap-2 mt-3">
             <Link to="/create-report">
               <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
                 <FileText className="h-4 w-4 shrink-0" /> Internship Report
@@ -330,11 +346,6 @@ const Index = () => {
                 <Brain className="h-4 w-4 shrink-0" /> Mock Interview
               </Button>
             </Link>
-            <a href="https://interreport.in" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-emerald-500/30 text-emerald-700 hover:bg-emerald-50">
-                <ExternalLink className="h-4 w-4 shrink-0" /> Private Jobs
-              </Button>
-            </a>
           </div>
         </div>
 
