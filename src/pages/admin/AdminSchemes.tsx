@@ -79,7 +79,7 @@ const AdminSchemes = () => {
 
   const openCreate = () => { setForm(emptyScheme); setEditId(null); setDialogOpen(true); };
   const openEdit = (s: any) => {
-    setForm({ title: s.title, category: s.category, description: s.description, eligibility: s.eligibility || "", documents: s.documents || "", image_url: s.image_url || "", apply_link: s.apply_link || "" });
+    setForm({ title: s.title, category: s.category, state: s.state || "central", description: s.description, eligibility: s.eligibility || "", documents: s.documents || "", image_url: s.image_url || "", apply_link: s.apply_link || "" });
     setEditId(s.id);
     setDialogOpen(true);
   };
