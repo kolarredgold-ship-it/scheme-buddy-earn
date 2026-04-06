@@ -23,10 +23,11 @@ serve(async (req) => {
   try {
     const { offset = 0, limit = 10 } = await req.json();
 
-    // Fetch batch of schemes
+    // Fetch schemes that still have myscheme.gov.in links
     const { data: schemes, error: fetchError } = await supabase
       .from("schemes")
       .select("id, title")
+      .like("apply_link", "%myscheme.gov.in%")
       .order("created_at", { ascending: true })
       .range(offset, offset + limit - 1);
 
@@ -37,18 +38,21 @@ serve(async (req) => {
       });
     }
 
-    // Build prompt for batch
     const schemeList = schemes.map((s, i) => `${i + 1}. ${s.title}`).join("\n");
 
-    const prompt = `For each Indian government scheme below, provide the OFFICIAL application/department website URL where citizens can apply. NOT myscheme.gov.in links. Give the actual ministry or department portal URL.
+    const prompt = `For each Indian government scheme below, I need the OFFICIAL APPLICATION PORTAL URL — the actual website where a citizen goes to apply.
 
-If the scheme has a dedicated portal, give that URL. If not, give the parent ministry/department URL. If you are unsure, give the most relevant official .gov.in or .nic.in URL.
+CRITICAL RULES:
+- NEVER return any URL containing "myscheme.gov.in" — that is an aggregator, not the official portal
+- Return the actual ministry/department/dedicated portal URL (e.g., pmkisan.gov.in, scholarships.gov.in, pmaymis.gov.in)
+- If a scheme has a dedicated portal, use that (e.g., PM-KISAN → https://pmkisan.gov.in)
+- If no dedicated portal exists, use the parent ministry website
+- All URLs must be .gov.in or .nic.in domains
 
 Schemes:
 ${schemeList}
 
-Respond ONLY with a JSON array of objects with "index" (1-based) and "url" fields. No explanation. Example:
-[{"index":1,"url":"https://scholarships.gov.in"},{"index":2,"url":"https://pmkisan.gov.in"}]`;
+Respond ONLY with a JSON array: [{"index":1,"url":"https://..."},...]`;
 
     const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
@@ -59,7 +63,7 @@ Respond ONLY with a JSON array of objects with "index" (1-based) and "url" field
       body: JSON.stringify({
         model: "deepseek-chat",
         messages: [
-          { role: "system", content: "You are an expert on Indian government schemes. Return only valid JSON arrays." },
+          { role: "system", content: "You are an expert on Indian government schemes and their official portals. Never return myscheme.gov.in URLs. Return only valid JSON." },
           { role: "user", content: prompt },
         ],
         temperature: 0.1,
@@ -68,7 +72,6 @@ Respond ONLY with a JSON array of objects with "index" (1-based) and "url" field
 
     if (!response.ok) {
       const errText = await response.text();
-      console.error("DeepSeek error:", response.status, errText);
       return new Response(JSON.stringify({ error: `DeepSeek API error: ${response.status}` }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -76,28 +79,27 @@ Respond ONLY with a JSON array of objects with "index" (1-based) and "url" field
 
     const aiData = await response.json();
     const content = aiData.choices?.[0]?.message?.content || "";
-
-    // Extract JSON from response
     const jsonMatch = content.match(/\[[\s\S]*\]/);
     if (!jsonMatch) {
-      console.error("No JSON found in response:", content);
-      return new Response(JSON.stringify({ error: "Could not parse AI response", raw: content }), {
+      return new Response(JSON.stringify({ error: "Could not parse AI response" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const links = JSON.parse(jsonMatch[0]);
     let updated = 0;
+    let skipped = 0;
 
     for (const item of links) {
       const scheme = schemes[item.index - 1];
-      if (scheme && item.url && item.url.startsWith("http")) {
+      if (scheme && item.url && item.url.startsWith("http") && !item.url.includes("myscheme.gov.in")) {
         const { error: updateError } = await supabase
           .from("schemes")
           .update({ apply_link: item.url })
           .eq("id", scheme.id);
         if (!updateError) updated++;
-        else console.error(`Failed to update ${scheme.id}:`, updateError);
+      } else {
+        skipped++;
       }
     }
 
@@ -105,6 +107,7 @@ Respond ONLY with a JSON array of objects with "index" (1-based) and "url" field
       done: false,
       processed: schemes.length,
       updated,
+      skipped,
       nextOffset: offset + limit,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
