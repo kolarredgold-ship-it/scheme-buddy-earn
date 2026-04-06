@@ -1,0 +1,1 @@
+ALTER TABLE public.schemes ADD COLUMN state text DEFAULT 'central';
