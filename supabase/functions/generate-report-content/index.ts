@@ -12,8 +12,8 @@ serve(async (req) => {
     const body = await req.json();
     const { mode, course, topic, description, chapter, studentName, registerNumber, collegeName, university, guideName, internshipTitle, companyName, companyLocation, internshipDuration, academicYear, topicSpecialization, pagesCount } = body;
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY not configured");
 
     let prompt: string;
     let systemPrompt: string;
@@ -132,14 +132,14 @@ Then write ANNEXURES section with:
       prompt = chapterPrompts[chapter] || chapterPrompts['1'];
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+        "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "deepseek-chat",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
