@@ -338,12 +338,12 @@ const Index = () => {
           <div className="grid grid-cols-2 gap-2 mt-3">
             <Link to="/create-report">
               <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
-                <FileText className="h-4 w-4 shrink-0" /> Internship Report
+                <FileText className="h-4 w-4 shrink-0" /> AI Internship Report
               </Button>
             </Link>
             <Link to="/mock-interview">
               <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-purple-500/30 text-purple-700 hover:bg-purple-50">
-                <Brain className="h-4 w-4 shrink-0" /> Mock Interview
+                <Brain className="h-4 w-4 shrink-0" /> AI Mock Interview
               </Button>
             </Link>
           </div>
