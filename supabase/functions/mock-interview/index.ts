@@ -69,8 +69,6 @@ Return ONLY valid JSON array: [{"question":"...","answer":"...","difficulty":"ea
       userPrompt = `You are conducting a job interview for the role/topic: ${reqTopic}.
 This is round ${round || 1}. Ask ONE clear, professional interview question.
 Return ONLY the question text, nothing else.`;
-This is round ${round}. Ask ONE clear, professional interview question.
-Return ONLY the question text, nothing else.`;
     } else if (action === "evaluate") {
       systemPrompt = "You are an expert interview evaluator. Return ONLY valid JSON.";
       userPrompt = `Evaluate this interview answer.
