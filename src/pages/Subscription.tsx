@@ -1,0 +1,116 @@
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate, Link } from "react-router-dom";
+import Layout from "@/components/Layout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Check, Star, Zap, Shield } from "lucide-react";
+
+const BENEFITS = [
+  "Full access to all government scheme details",
+  "Direct apply links for all schemes",
+  "Eligibility criteria & required documents",
+  "Priority notifications for new schemes",
+  "Refer & earn up to ₹400 per referral",
+  "3-level referral earning system",
+];
+
+const Subscription = () => {
+  const { user, profile, loading } = useAuth();
+
+  if (loading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
+
+  if (profile?.subscription_status === "active") {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-12 text-center max-w-md">
+          <div className="h-16 w-16 rounded-2xl bg-secondary/10 flex items-center justify-center mx-auto mb-6">
+            <Check className="h-8 w-8 text-secondary" />
+          </div>
+          <h1 className="text-2xl font-bold mb-2">You're a Premium Member!</h1>
+          <p className="text-muted-foreground mb-6">You have full access to all schemes and features.</p>
+          <Link to="/">
+            <Button>Browse Schemes</Button>
+          </Link>
+        </div>
+      </Layout>
+    );
+  }
+
+  const hasReferral = !!profile?.referred_by;
+  const price = hasReferral ? 1000 : 2999;
+
+  const handlePayment = () => {
+    // Placeholder for Razorpay integration
+    alert("Payment integration coming soon! This will connect to Razorpay.");
+  };
+
+  return (
+    <Layout>
+      <div className="container mx-auto px-4 py-8 pb-20 md:pb-8 max-w-md">
+        <div className="text-center mb-8">
+          <Badge className="mb-4 bg-accent text-accent-foreground">
+            <Star className="h-3 w-3 mr-1" /> Premium Plan
+          </Badge>
+          <h1 className="text-3xl font-bold mb-2">Unlock Full Access</h1>
+          <p className="text-muted-foreground">Get complete access to all government schemes</p>
+        </div>
+
+        <Card className="mb-6 border-primary/30 shadow-lg">
+          <CardContent className="p-8 text-center">
+            {hasReferral && (
+              <p className="text-sm text-muted-foreground line-through mb-1">₹2,999</p>
+            )}
+            <div className="flex items-baseline justify-center gap-1 mb-2">
+              <span className="text-4xl font-bold">₹{price.toLocaleString()}</span>
+              <span className="text-muted-foreground">/lifetime</span>
+            </div>
+            {hasReferral && (
+              <Badge variant="outline" className="border-secondary text-secondary">
+                <Zap className="h-3 w-3 mr-1" /> Referral Discount Applied! Save ₹1,999
+              </Badge>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" /> What you get
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3">
+              {BENEFITS.map((b, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
+                  <span className="text-sm">{b}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+
+        {user ? (
+          <Button size="lg" className="w-full text-lg py-6" onClick={handlePayment}>
+            Pay ₹{price.toLocaleString()} Now
+          </Button>
+        ) : (
+          <Link to="/signup">
+            <Button size="lg" className="w-full text-lg py-6">
+              Sign Up to Subscribe
+            </Button>
+          </Link>
+        )}
+
+        {!hasReferral && (
+          <p className="text-center text-xs text-muted-foreground mt-4">
+            Have a referral code? <Link to="/signup" className="text-primary hover:underline">Sign up with one</Link> to get ₹1,999 off!
+          </p>
+        )}
+      </div>
+    </Layout>
+  );
+};
+
+export default Subscription;

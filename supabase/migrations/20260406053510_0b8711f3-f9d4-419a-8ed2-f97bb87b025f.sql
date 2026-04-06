@@ -1,0 +1,19 @@
+
+CREATE OR REPLACE FUNCTION public.generate_referral_code()
+RETURNS TEXT
+LANGUAGE plpgsql
+SET search_path = public
+AS $$
+DECLARE
+  code TEXT;
+  exists_already BOOLEAN;
+BEGIN
+  LOOP
+    code := 'TR' || upper(substr(md5(random()::text), 1, 6));
+    SELECT EXISTS(SELECT 1 FROM public.profiles WHERE referral_code = code) INTO exists_already;
+    IF NOT exists_already THEN
+      RETURN code;
+    END IF;
+  END LOOP;
+END;
+$$;
