@@ -120,13 +120,20 @@ serve(async (req) => {
           continue;
         }
 
+        const isCourse = ["BCom", "BBA", "BCA", "MCA", "MBA"].includes(r);
+        const isProgramming = ["C", "C++", "Java", "Python", "JavaScript", "SQL", "React", "Node.js"].includes(r);
+        const isEngineering = r.startsWith("BE/BTech") || r.startsWith("ME/MTech");
+        
+        const contextLabel = isCourse ? `course: ${r}` : isProgramming ? `programming language: ${r}` : isEngineering ? `engineering specialization: ${r}` : `job role: ${r}`;
+        const questionType = isProgramming ? "coding and technical interview" : isCourse ? "academic viva and placement interview" : isEngineering ? "academic and technical interview" : "interview";
+
         const prompt = `Act as a senior industry expert and interviewer.
-Generate exactly 40 interview questions and answers for the role: ${r}
+Generate exactly 40 ${questionType} questions and answers for the ${contextLabel}
 Category: ${c}
-Topics to cover: ${roleTopics[r]}
+Topics to cover: ${roleTopics[r] || r}
 
 Requirements:
-- Realistic, commonly asked in 2025 interviews
+- Realistic, commonly asked in 2025 interviews/exams
 - No repetition, gradually increase difficulty
 - 2-5 lines per answer, clear, concise, practical
 - Include examples where possible
