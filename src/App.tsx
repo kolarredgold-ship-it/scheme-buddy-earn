@@ -16,6 +16,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminSchemes from "./pages/admin/AdminSchemes";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminWithdrawals from "./pages/admin/AdminWithdrawals";
+import CreateReport from "./pages/CreateReport";
+import AIReportGenerator from "./pages/AIReportGenerator";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
