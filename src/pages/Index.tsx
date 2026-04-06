@@ -288,17 +288,32 @@ const Index = () => {
           <HeroBanner />
         </div>
 
-        {/* Search Bar */}
+        {/* Search Bar + State Filter */}
         <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6">
-          <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search schemes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-11 md:h-12 pl-10 pr-4 rounded-xl bg-card border border-border/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted-foreground/60"
-            />
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search schemes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-11 md:h-12 pl-10 pr-4 rounded-xl bg-card border border-border/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted-foreground/60"
+              />
+            </div>
+            <Select value={selectedState} onValueChange={setSelectedState}>
+              <SelectTrigger className="w-[140px] md:w-[180px] h-11 md:h-12 rounded-xl bg-card border-border/60 text-sm gap-1 shrink-0">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <SelectValue placeholder="Select State" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {INDIAN_STATES.map((state) => (
+                  <SelectItem key={state.value} value={state.value} className="text-sm">
+                    {state.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
