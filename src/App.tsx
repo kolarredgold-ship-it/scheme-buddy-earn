@@ -18,6 +18,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminWithdrawals from "./pages/admin/AdminWithdrawals";
 import CreateReport from "./pages/CreateReport";
 import AIReportGenerator from "./pages/AIReportGenerator";
+import MockInterview from "./pages/MockInterview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
