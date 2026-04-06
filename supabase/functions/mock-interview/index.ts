@@ -122,7 +122,22 @@ Return ONLY valid JSON: {"score":7,"feedback":"...","suggestions":"..."}`;
       parsed = raw;
     }
 
-    return new Response(JSON.stringify({ result: parsed }), {
+    // Format response based on action type
+    let responseData;
+    if (action === "generate-questions") {
+      const qs = (Array.isArray(parsed) ? parsed : []).map((q: any, i: number) => ({ ...q, id: `gen-${i}` }));
+      responseData = { questions: qs };
+    } else if (action === "ask-question") {
+      responseData = { question: typeof parsed === 'string' ? parsed.trim() : (raw || "Tell me about yourself.") };
+    } else if (action === "evaluate") {
+      responseData = typeof parsed === 'object' && !Array.isArray(parsed) 
+        ? parsed 
+        : { score: 5, feedback: raw, suggestions: "Try to be more specific." };
+    } else {
+      responseData = { result: parsed };
+    }
+
+    return new Response(JSON.stringify(responseData), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
