@@ -72,7 +72,7 @@ const Index = () => {
 
   const getSchemesByCategory = (cat: string) => {
     if (cat === "recent") return schemes.slice(0, 10);
-    return schemes.filter((s) => s.category.toLowerCase() === cat.replace("_", "/"));
+    return schemes.filter((s) => s.category.toLowerCase() === cat);
   };
 
   return (
