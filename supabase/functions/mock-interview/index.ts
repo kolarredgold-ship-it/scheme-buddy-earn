@@ -9,7 +9,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { action, role, topic, difficulty, questionCount, question, answer, questions, answers } = await req.json();
+    const { action, role, topic, difficulty, questionCount, question, answer, questions, answers, category, subcategory, round, userId } = await req.json();
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
     if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY not configured");
