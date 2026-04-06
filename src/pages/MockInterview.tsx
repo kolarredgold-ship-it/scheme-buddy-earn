@@ -45,6 +45,7 @@ const MockInterview = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [loadingQuestions, setLoadingQuestions] = useState(false);
+  const [generatingQuestions, setGeneratingQuestions] = useState(false);
 
   const [interviewQuestion, setInterviewQuestion] = useState('');
   const [userAnswer, setUserAnswer] = useState('');
@@ -52,6 +53,16 @@ const MockInterview = () => {
   const [result, setResult] = useState<InterviewResult | null>(null);
   const [interviewRound, setInterviewRound] = useState(0);
   const [loadingQuestion, setLoadingQuestion] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      if (!user) return;
+      const { data } = await supabase.rpc('has_role', { _user_id: user.id, _role: 'admin' });
+      setIsAdmin(!!data);
+    };
+    checkAdmin();
+  }, [user]);
 
   if (!user) {
     return (
