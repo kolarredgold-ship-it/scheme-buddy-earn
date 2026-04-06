@@ -44,6 +44,21 @@ const roleTopics: Record<string, string> = {
   "Accountant": "Financial accounting, GST (India), Tally/ERP, auditing, Balance sheet, taxation",
   "HR Executive": "Recruitment, payroll, Employee engagement, Labor laws (India), Conflict management",
   "Digital Marketing": "SEO, SEM, Social media marketing, Google Ads, analytics, Campaign strategy & ROI",
+  // Course Based
+  "BCom": "Financial Accounting, Cost Accounting, Business Law, Economics, Taxation, Auditing, Banking, Corporate Accounting, Business Statistics, Financial Management",
+  "BBA": "Principles of Management, Marketing Management, Financial Management, Human Resource Management, Business Law, Organizational Behavior, Entrepreneurship, Business Communication",
+  "BCA": "Programming in C/C++/Java, Data Structures, DBMS, Operating Systems, Computer Networks, Web Technologies, Software Engineering, Mathematics, Python",
+  "MCA": "Advanced Java, .NET, Data Structures & Algorithms, DBMS, Software Engineering, Web Technologies, Cloud Computing, AI/ML, Operating Systems, Computer Networks",
+  "MBA": "Marketing Management, Financial Management, Human Resource Management, Operations Management, Strategic Management, Business Analytics, Entrepreneurship, International Business, Leadership",
+  // Programming Languages
+  "C": "C fundamentals, Pointers, Memory management, Arrays, Strings, Structures, File I/O, Dynamic memory allocation, Preprocessor directives, Linked lists in C",
+  "C++": "OOP concepts, Classes & Objects, Inheritance, Polymorphism, Templates, STL, Exception handling, Smart pointers, Move semantics, Design patterns in C++",
+  "Java": "OOP, Collections framework, Multithreading, Exception handling, JDBC, Servlets, Spring Boot, JVM internals, Streams API, Design patterns, Microservices",
+  "Python": "Data types, List comprehensions, Decorators, Generators, OOP, File handling, Django/Flask, NumPy/Pandas, Exception handling, Multithreading, Virtual environments",
+  "JavaScript": "ES6+, Closures, Promises, Async/Await, DOM manipulation, Event loop, Prototypes, Modules, Error handling, TypeScript basics, Node.js fundamentals",
+  "SQL": "SELECT queries, JOINs, Subqueries, Aggregation, Indexing, Normalization, Stored procedures, Triggers, Views, Window functions, Query optimization, Transactions",
+  "React": "Components, Props & State, Hooks (useState, useEffect, useContext), React Router, Redux/Context API, Performance optimization, Custom hooks, Server-side rendering, Testing",
+  "Node.js": "Event loop, Express.js, REST APIs, Middleware, Authentication (JWT), Database integration, File system, Streams, Error handling, WebSockets, Deployment",
   // BE/BTech
   "BE/BTech - Computer Science (CSE)": "Data Structures, Algorithms, OOP, DBMS, OS, Computer Networks, Compiler Design, Software Engineering, Web Technologies, Cloud Computing",
   "BE/BTech - Electronics & Communication (ECE)": "Analog & Digital Electronics, Signal Processing, Communication Systems, Microprocessors, VLSI, Embedded Systems, Control Systems, Electromagnetics",
