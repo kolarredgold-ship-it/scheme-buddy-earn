@@ -14,6 +14,24 @@ const roles = [
   "Accountant",
   "HR Executive",
   "Digital Marketing",
+  // BE/BTech Specializations
+  "BE/BTech - Computer Science (CSE)",
+  "BE/BTech - Electronics & Communication (ECE)",
+  "BE/BTech - Mechanical Engineering",
+  "BE/BTech - Civil Engineering",
+  "BE/BTech - Electrical Engineering (EEE)",
+  "BE/BTech - Information Technology (IT)",
+  "BE/BTech - Chemical Engineering",
+  "BE/BTech - Biotechnology",
+  // ME/MTech Specializations
+  "ME/MTech - Computer Science (CSE)",
+  "ME/MTech - Electronics & Communication (ECE)",
+  "ME/MTech - Mechanical Engineering",
+  "ME/MTech - Civil Engineering",
+  "ME/MTech - Artificial Intelligence & ML",
+  "ME/MTech - Data Science",
+  "ME/MTech - VLSI Design",
+  "ME/MTech - Structural Engineering",
 ];
 
 const categories = ["Basic", "Intermediate", "Advanced", "Scenario-Based", "HR & Behavioral"];
@@ -26,6 +44,24 @@ const roleTopics: Record<string, string> = {
   "Accountant": "Financial accounting, GST (India), Tally/ERP, auditing, Balance sheet, taxation",
   "HR Executive": "Recruitment, payroll, Employee engagement, Labor laws (India), Conflict management",
   "Digital Marketing": "SEO, SEM, Social media marketing, Google Ads, analytics, Campaign strategy & ROI",
+  // BE/BTech
+  "BE/BTech - Computer Science (CSE)": "Data Structures, Algorithms, OOP, DBMS, OS, Computer Networks, Compiler Design, Software Engineering, Web Technologies, Cloud Computing",
+  "BE/BTech - Electronics & Communication (ECE)": "Analog & Digital Electronics, Signal Processing, Communication Systems, Microprocessors, VLSI, Embedded Systems, Control Systems, Electromagnetics",
+  "BE/BTech - Mechanical Engineering": "Thermodynamics, Fluid Mechanics, Strength of Materials, Manufacturing, Machine Design, Heat Transfer, IC Engines, CAD/CAM, Robotics",
+  "BE/BTech - Civil Engineering": "Structural Analysis, RCC Design, Geotechnical Engineering, Fluid Mechanics, Surveying, Transportation Engineering, Environmental Engineering, Construction Management",
+  "BE/BTech - Electrical Engineering (EEE)": "Circuit Theory, Power Systems, Electrical Machines, Control Systems, Power Electronics, Signals & Systems, Microprocessors, Renewable Energy",
+  "BE/BTech - Information Technology (IT)": "Programming, Data Structures, DBMS, Web Development, Computer Networks, Cybersecurity, Cloud Computing, Software Testing, DevOps",
+  "BE/BTech - Chemical Engineering": "Chemical Process Calculations, Thermodynamics, Fluid Mechanics, Heat Transfer, Mass Transfer, Chemical Reaction Engineering, Process Control, Plant Design",
+  "BE/BTech - Biotechnology": "Molecular Biology, Genetics, Biochemistry, Microbiology, Bioprocess Engineering, Genetic Engineering, Immunology, Bioinformatics, Fermentation Technology",
+  // ME/MTech
+  "ME/MTech - Computer Science (CSE)": "Advanced Algorithms, Distributed Systems, Machine Learning, Advanced DBMS, Cloud Architecture, Research Methodology, High Performance Computing, Blockchain",
+  "ME/MTech - Electronics & Communication (ECE)": "Advanced Signal Processing, Wireless Communication, Antenna Design, Advanced VLSI, IoT, Radar Systems, Optical Communication, Satellite Communication",
+  "ME/MTech - Mechanical Engineering": "Advanced Thermodynamics, CFD, FEM, Advanced Manufacturing, Mechatronics, Vibration Analysis, Composite Materials, Industrial Automation",
+  "ME/MTech - Civil Engineering": "Advanced Structural Design, Earthquake Engineering, Advanced Geotechnical, Water Resources Engineering, Finite Element Methods, Smart Materials, Green Building",
+  "ME/MTech - Artificial Intelligence & ML": "Deep Learning, NLP, Computer Vision, Reinforcement Learning, GANs, Transformer Models, MLOps, AI Ethics, Neural Architecture Search, Edge AI",
+  "ME/MTech - Data Science": "Statistical Learning, Big Data Analytics, Data Mining, Time Series Analysis, Bayesian Methods, Feature Engineering, AutoML, Data Visualization, A/B Testing",
+  "ME/MTech - VLSI Design": "CMOS Design, Digital IC Design, Analog IC Design, Physical Design, Verification, FPGA, Low Power Design, SoC Architecture, Testing & DFT",
+  "ME/MTech - Structural Engineering": "Advanced RCC, Prestressed Concrete, Steel Structures, Bridge Engineering, Earthquake Resistant Design, Wind Engineering, Structural Dynamics, Finite Element Analysis",
 };
 
 const difficultyMap: Record<string, string> = {

@@ -17,8 +17,13 @@ const courseOptions = ['BCom', 'BBA', 'BCA', 'MCA', 'BE/BTech', 'MBA', 'ME/MTech
 const languageOptions = ['C', 'C++', 'Java', 'Python', 'JavaScript', 'SQL', 'React', 'Node.js'];
 const roleOptions = ['Software Developer', 'Full Stack Developer', 'Data Analyst', 'AI Engineer', 'Accountant', 'HR Executive', 'Digital Marketing'];
 
+const engineeringSpecializations: Record<string, string[]> = {
+  'BE/BTech': ['Computer Science (CSE)', 'Electronics & Communication (ECE)', 'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering (EEE)', 'Information Technology (IT)', 'Chemical Engineering', 'Biotechnology'],
+  'ME/MTech': ['Computer Science (CSE)', 'Electronics & Communication (ECE)', 'Mechanical Engineering', 'Civil Engineering', 'Artificial Intelligence & ML', 'Data Science', 'VLSI Design', 'Structural Engineering'],
+};
+
 type TrainingMode = null | 'course' | 'language' | 'role';
-type ViewState = 'select-mode' | 'select-option' | 'flashcards' | 'mock-interview';
+type ViewState = 'select-mode' | 'select-option' | 'select-specialization' | 'flashcards' | 'mock-interview';
 
 interface Question {
   id: string;
@@ -41,6 +46,7 @@ const MockInterview = () => {
   const [view, setView] = useState<ViewState>('select-mode');
   const [mode, setMode] = useState<TrainingMode>(null);
   const [selectedOption, setSelectedOption] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -135,10 +141,17 @@ const MockInterview = () => {
     }
   };
 
+  const allGeneratableRoles = [
+    ...roleOptions,
+    ...Object.entries(engineeringSpecializations).flatMap(([degree, specs]) =>
+      specs.map(spec => `${degree} - ${spec}`)
+    ),
+  ];
+
   const generateAllQuestions = async () => {
     setGeneratingQuestions(true);
     try {
-      for (const role of roleOptions) {
+      for (const role of allGeneratableRoles) {
         toast({ title: 'Generating...', description: `Generating questions for ${role}...` });
         const { data, error } = await supabase.functions.invoke('generate-interview-questions', {
           body: { role },
@@ -161,9 +174,24 @@ const MockInterview = () => {
   };
 
   const handleSelectOption = (option: string) => {
+    // If engineering course, show specialization picker
+    if (engineeringSpecializations[option]) {
+      setSelectedCourse(option);
+      setView('select-specialization');
+      return;
+    }
     setSelectedOption(option);
     const category = mode === 'course' ? 'course' : mode === 'language' ? 'language' : 'role';
     fetchQuestions(category, option);
+    setView('flashcards');
+    setCurrentIndex(0);
+    setFlipped(false);
+  };
+
+  const handleSelectSpecialization = (spec: string) => {
+    const fullRole = `${selectedCourse} - ${spec}`;
+    setSelectedOption(fullRole);
+    fetchQuestions('course', fullRole);
     setView('flashcards');
     setCurrentIndex(0);
     setFlipped(false);
@@ -227,7 +255,15 @@ const MockInterview = () => {
 
   const goBack = () => {
     if (view === 'mock-interview') setView('flashcards');
-    else if (view === 'flashcards') { setView('select-option'); setQuestions([]); }
+    else if (view === 'flashcards') { 
+      if (selectedCourse && engineeringSpecializations[selectedCourse]) {
+        setView('select-specialization'); 
+      } else {
+        setView('select-option');
+      }
+      setQuestions([]); 
+    }
+    else if (view === 'select-specialization') { setView('select-option'); setSelectedCourse(''); }
     else if (view === 'select-option') { setView('select-mode'); setMode(null); }
   };
 
@@ -347,7 +383,32 @@ const MockInterview = () => {
           </div>
         )}
 
-        {/* ===== FLASH CARDS ===== */}
+        {/* ===== SPECIALIZATION SELECTION ===== */}
+        {view === 'select-specialization' && selectedCourse && engineeringSpecializations[selectedCourse] && (
+          <div className="animate-fade-in">
+            <Button variant="ghost" size="sm" onClick={goBack} className="mb-4">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Back
+            </Button>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Select <span className="text-primary">{selectedCourse}</span> Specialization
+              </h2>
+              <p className="text-muted-foreground text-sm">Choose your branch to get relevant questions</p>
+            </div>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+              {engineeringSpecializations[selectedCourse].map((spec) => (
+                <Card key={spec} className="cursor-pointer hover:shadow-md transition-all group" onClick={() => handleSelectSpecialization(spec)}>
+                  <CardContent className="p-6 text-center">
+                    <GraduationCap className="w-6 h-6 mx-auto mb-2 text-primary/60 group-hover:text-primary transition-colors" />
+                    <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">{spec}</h3>
+                    <ChevronRight className="w-4 h-4 mx-auto mt-2 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
         {view === 'flashcards' && (
           <div className="animate-fade-in">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
