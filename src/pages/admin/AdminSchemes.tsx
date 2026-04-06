@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Upload, ImageIcon, Wand2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
-const CATEGORIES = ["scholarships", "farmers", "sc_st", "minority", "housing", "health", "education", "employment"];
+const CATEGORIES = ["scholarships", "farmers", "sc_st", "minority", "housing", "health", "education", "employment", "business", "govt_jobs"];
 
 const STATES = [
   { value: "central", label: "Central Govt" },
