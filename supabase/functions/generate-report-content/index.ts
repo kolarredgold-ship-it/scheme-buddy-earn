@@ -12,8 +12,8 @@ serve(async (req) => {
     const body = await req.json();
     const { mode, course, topic, description, chapter, studentName, registerNumber, collegeName, university, guideName, internshipTitle, companyName, companyLocation, internshipDuration, academicYear, topicSpecialization, pagesCount } = body;
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY not configured");
 
     let prompt: string;
     let systemPrompt: string;
