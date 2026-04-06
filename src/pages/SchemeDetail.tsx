@@ -10,10 +10,14 @@ import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle, Sparkles } from "
 
 const SchemeDetail = () => {
   const { id } = useParams();
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const [scheme, setScheme] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const isPaid = profile?.subscription_status === "active";
+
+  useEffect(() => {
+    if (user) refreshProfile();
+  }, [user]);
 
   useEffect(() => {
     const fetch = async () => {
