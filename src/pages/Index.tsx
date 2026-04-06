@@ -91,6 +91,7 @@ const CATEGORIES = [
   
   { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
   { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
+  { key: "private_jobs", label: "Private Jobs", icon: ExternalLink, color: "bg-emerald-100 text-emerald-700", link: "https://interreport.in" },
 ];
 
 interface Scheme {
