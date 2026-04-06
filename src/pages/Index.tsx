@@ -246,24 +246,30 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedState, setSelectedState] = useState("all");
   const isPaid = profile?.subscription_status === "active";
 
   useEffect(() => {
     const fetchSchemes = async () => {
       const { data } = await supabase.from("schemes").select("*").order("created_at", { ascending: false });
-      if (data) setSchemes(data);
+      if (data) setSchemes(data as Scheme[]);
       setLoading(false);
     };
     fetchSchemes();
   }, []);
 
+  // State-filtered base
+  const stateFiltered = selectedState === "all"
+    ? schemes
+    : schemes.filter((s) => s.state === selectedState);
+
   const getSchemesByCategory = (cat: string) => {
-    return schemes.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
+    return stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
   };
 
   const filteredSchemes = activeCategory
-    ? schemes.filter((s) => s.category === activeCategory)
-    : schemes;
+    ? stateFiltered.filter((s) => s.category === activeCategory)
+    : stateFiltered;
 
   const searchedSchemes = searchQuery
     ? filteredSchemes.filter((s) =>
@@ -272,7 +278,7 @@ const Index = () => {
       )
     : null;
 
-  const recentSchemes = schemes.slice(0, 12);
+  const recentSchemes = stateFiltered.slice(0, 12);
 
   return (
     <Layout>
