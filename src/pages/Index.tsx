@@ -98,6 +98,7 @@ interface Scheme {
   description: string;
   image_url: string | null;
   created_at: string;
+  state: string | null;
 }
 
 // Hero Banner with auto-scroll
