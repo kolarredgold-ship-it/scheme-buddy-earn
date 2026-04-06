@@ -45,6 +45,7 @@ const App = () => (
             <Route path="/admin/withdrawals" element={<AdminWithdrawals />} />
             <Route path="/create-report" element={<CreateReport />} />
             <Route path="/ai-report" element={<AIReportGenerator />} />
+            <Route path="/mock-interview" element={<MockInterview />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
