@@ -407,10 +407,18 @@ const Index = () => {
                     {filteredSchemes.length}
                   </Badge>
                 </h2>
+                <button
+                  onClick={() => setActiveCategory(null)}
+                  className="text-xs text-primary font-medium flex items-center gap-0.5 hover:underline"
+                >
+                  Clear Filter
+                </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} isPaid={isPaid} />
+                  <div key={scheme.id} className="w-full">
+                    <SchemeCard scheme={scheme} isPaid={isPaid} />
+                  </div>
                 ))}
               </div>
             </section>
