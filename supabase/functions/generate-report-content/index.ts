@@ -132,7 +132,7 @@ Then write ANNEXURES section with:
       prompt = chapterPrompts[chapter] || chapterPrompts['1'];
     }
 
-    const response = await fetch("https://gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${LOVABLE_API_KEY}`,
