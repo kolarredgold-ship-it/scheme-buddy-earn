@@ -260,8 +260,30 @@ const MockInterview = () => {
                 Choose Your <span className="text-primary">Training Path</span>
               </h1>
               <p className="text-muted-foreground max-w-xl mx-auto">
-                700+ questions across courses, programming languages & job roles with AI-powered feedback
+                1400+ pre-loaded questions across courses, programming languages & job roles with AI-powered feedback
               </p>
+            </div>
+
+            {isAdmin && (
+              <div className="max-w-2xl mx-auto mb-6">
+                <Card className="border-dashed border-2 border-primary/30">
+                  <CardContent className="p-4 flex items-center justify-between">
+                    <div>
+                      <p className="font-semibold text-sm">Admin: Generate Q&A Database</p>
+                      <p className="text-xs text-muted-foreground">Generate 200 questions per role using DeepSeek AI</p>
+                    </div>
+                    <Button 
+                      onClick={generateAllQuestions} 
+                      disabled={generatingQuestions}
+                      size="sm"
+                      variant="outline"
+                    >
+                      {generatingQuestions ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Generating...</> : <><RefreshCw className="w-4 h-4 mr-1" /> Generate All</>}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            )
             </div>
 
             <div className="max-w-2xl mx-auto mb-8">
