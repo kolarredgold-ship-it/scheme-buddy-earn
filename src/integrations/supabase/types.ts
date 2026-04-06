@@ -23,6 +23,7 @@ export type Database = {
           name: string | null
           referral_code: string
           referred_by: string | null
+          report_credits: number
           subscription_status: Database["public"]["Enums"]["subscription_status"]
           updated_at: string
           user_id: string
@@ -36,6 +37,7 @@ export type Database = {
           name?: string | null
           referral_code: string
           referred_by?: string | null
+          report_credits?: number
           subscription_status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
           user_id: string
@@ -49,6 +51,7 @@ export type Database = {
           name?: string | null
           referral_code?: string
           referred_by?: string | null
+          report_credits?: number
           subscription_status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
           user_id?: string
@@ -76,6 +79,39 @@ export type Database = {
           form_data?: Json | null
           id?: string
           report_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          chapter_content: Json
+          created_at: string
+          form_data: Json
+          id: string
+          report_type: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chapter_content?: Json
+          created_at?: string
+          form_data?: Json
+          id?: string
+          report_type?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chapter_content?: Json
+          created_at?: string
+          form_data?: Json
+          id?: string
+          report_type?: string
+          status?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
