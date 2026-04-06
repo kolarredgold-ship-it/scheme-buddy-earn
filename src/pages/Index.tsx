@@ -419,14 +419,11 @@ const Index = () => {
             <>
               {/* Recent / Trending */}
               <section>
-                <div className="flex items-center justify-between mb-3">
+                <div className="mb-3">
                   <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
                     <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent" />
                     Trending Schemes
                   </h2>
-                  <button className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline">
-                    View All <ChevronRight className="h-3.5 w-3.5" />
-                  </button>
                 </div>
                 <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
                   {recentSchemes.map((scheme) => (
