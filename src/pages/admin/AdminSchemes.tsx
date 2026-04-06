@@ -65,6 +65,7 @@ const AdminSchemes = () => {
   const [form, setForm] = useState(emptyScheme);
   const [editId, setEditId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const fetchSchemes = async () => {
     const { data } = await supabase.from("schemes").select("*").order("created_at", { ascending: false });
