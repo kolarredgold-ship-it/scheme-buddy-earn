@@ -167,9 +167,24 @@ const MockInterview = () => {
   };
 
   const handleSelectOption = (option: string) => {
+    // If engineering course, show specialization picker
+    if (engineeringSpecializations[option]) {
+      setSelectedCourse(option);
+      setView('select-specialization');
+      return;
+    }
     setSelectedOption(option);
     const category = mode === 'course' ? 'course' : mode === 'language' ? 'language' : 'role';
     fetchQuestions(category, option);
+    setView('flashcards');
+    setCurrentIndex(0);
+    setFlipped(false);
+  };
+
+  const handleSelectSpecialization = (spec: string) => {
+    const fullRole = `${selectedCourse} - ${spec}`;
+    setSelectedOption(fullRole);
+    fetchQuestions('course', fullRole);
     setView('flashcards');
     setCurrentIndex(0);
     setFlipped(false);
