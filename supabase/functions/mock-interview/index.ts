@@ -9,7 +9,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { action, role, topic, difficulty, questionCount, question, answer, questions, answers } = await req.json();
+    const { action, role, topic, difficulty, questionCount, question, answer, questions, answers, category, subcategory, round, userId } = await req.json();
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
     if (!DEEPSEEK_API_KEY) throw new Error("DEEPSEEK_API_KEY not configured");
@@ -57,6 +57,31 @@ Return JSON with keys:
 - "tips" (array of 3 actionable tips for next interview)
 
 Return ONLY valid JSON.`;
+    } else if (action === "generate-questions") {
+      systemPrompt = "You are an interview preparation expert. Return ONLY valid JSON.";
+      userPrompt = `Generate 10 interview questions for ${subcategory || topic} (category: ${category || 'general'}).
+For each question, provide a clear, concise answer.
+Assign difficulty: easy, medium, or hard.
+Return ONLY valid JSON array: [{"question":"...","answer":"...","difficulty":"easy|medium|hard"}]`;
+    } else if (action === "ask-question") {
+      const reqTopic = topic || "general";
+      systemPrompt = "You are a professional interviewer.";
+      userPrompt = `You are conducting a job interview for the role/topic: ${reqTopic}.
+This is round ${round || 1}. Ask ONE clear, professional interview question.
+Return ONLY the question text, nothing else.`;
+    } else if (action === "evaluate") {
+      systemPrompt = "You are an expert interview evaluator. Return ONLY valid JSON.";
+      userPrompt = `Evaluate this interview answer.
+Topic: ${topic}
+Question: ${question}
+Candidate's Answer: ${answer}
+
+Provide:
+1. Score (1-10)
+2. Feedback (2-3 sentences)
+3. Improvement suggestions (2-3 bullet points)
+
+Return ONLY valid JSON: {"score":7,"feedback":"...","suggestions":"..."}`;
     } else {
       throw new Error("Invalid action");
     }
@@ -95,7 +120,22 @@ Return ONLY valid JSON.`;
       parsed = raw;
     }
 
-    return new Response(JSON.stringify({ result: parsed }), {
+    // Format response based on action type
+    let responseData;
+    if (action === "generate-questions") {
+      const qs = (Array.isArray(parsed) ? parsed : []).map((q: any, i: number) => ({ ...q, id: `gen-${i}` }));
+      responseData = { questions: qs };
+    } else if (action === "ask-question") {
+      responseData = { question: typeof parsed === 'string' ? parsed.trim() : (raw || "Tell me about yourself.") };
+    } else if (action === "evaluate") {
+      responseData = typeof parsed === 'object' && !Array.isArray(parsed) 
+        ? parsed 
+        : { score: 5, feedback: raw, suggestions: "Try to be more specific." };
+    } else {
+      responseData = { result: parsed };
+    }
+
+    return new Response(JSON.stringify(responseData), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
