@@ -57,6 +57,33 @@ Return JSON with keys:
 - "tips" (array of 3 actionable tips for next interview)
 
 Return ONLY valid JSON.`;
+    } else if (action === "generate-questions") {
+      const { category, subcategory } = await req.json().catch(() => ({}));
+      systemPrompt = "You are an interview preparation expert. Return ONLY valid JSON.";
+      userPrompt = `Generate 10 interview questions for ${subcategory || topic} (category: ${category || 'general'}).
+For each question, provide a clear, concise answer.
+Assign difficulty: easy, medium, or hard.
+Return ONLY valid JSON array: [{"question":"...","answer":"...","difficulty":"easy|medium|hard"}]`;
+    } else if (action === "ask-question") {
+      const reqTopic = topic || "general";
+      const round = questionCount || 1;
+      systemPrompt = "You are a professional interviewer.";
+      userPrompt = `You are conducting a job interview for the role/topic: ${reqTopic}.
+This is round ${round}. Ask ONE clear, professional interview question.
+Return ONLY the question text, nothing else.`;
+    } else if (action === "evaluate") {
+      systemPrompt = "You are an expert interview evaluator. Return ONLY valid JSON.";
+      userPrompt = `Evaluate this interview answer.
+Topic: ${topic}
+Question: ${question}
+Candidate's Answer: ${answer}
+
+Provide:
+1. Score (1-10)
+2. Feedback (2-3 sentences)
+3. Improvement suggestions (2-3 bullet points)
+
+Return ONLY valid JSON: {"score":7,"feedback":"...","suggestions":"..."}`;
     } else {
       throw new Error("Invalid action");
     }
