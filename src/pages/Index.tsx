@@ -192,7 +192,7 @@ const HeroBanner = () => {
 // Scheme Card
 const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => (
   <Link to={`/scheme/${scheme.id}`} className="block">
-    <Card className="group min-w-[200px] md:min-w-[260px] max-w-[260px] md:max-w-[300px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
+    <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
       <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
         {scheme.image_url ? (
           <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
