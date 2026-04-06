@@ -6,24 +6,44 @@ import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search } from "lucide-react";
+import { Search, Crown } from "lucide-react";
+import { toast } from "sonner";
 
 const AdminUsers = () => {
   const { isAdmin, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
+
+  const fetchUsers = async () => {
+    const { data } = await supabase.from("profiles").select("*").order("created_at", { ascending: false });
+    if (data) setUsers(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (!isAdmin) return;
-    const fetch = async () => {
-      const { data } = await supabase.from("profiles").select("*").order("created_at", { ascending: false });
-      if (data) setUsers(data);
-      setLoading(false);
-    };
-    fetch();
+    fetchUsers();
   }, [isAdmin]);
+
+  const toggleSubscription = async (userId: string, currentStatus: string) => {
+    const newStatus = currentStatus === "active" ? "free" : "active";
+    setUpdating(userId);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ subscription_status: newStatus })
+      .eq("user_id", userId);
+    if (error) {
+      toast.error("Failed to update status");
+    } else {
+      toast.success(`User ${newStatus === "active" ? "upgraded to Pro" : "set to Free"}`);
+      setUsers((prev) => prev.map((u) => u.user_id === userId ? { ...u, subscription_status: newStatus } : u));
+    }
+    setUpdating(null);
+  };
 
   if (authLoading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
   if (!isAdmin) return <Navigate to="/" />;
@@ -57,6 +77,7 @@ const AdminUsers = () => {
                     <TableHead>Code</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Balance</TableHead>
+                    <TableHead className="text-center">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -71,6 +92,17 @@ const AdminUsers = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">₹{Number(u.wallet_balance).toFixed(2)}</TableCell>
+                      <TableCell className="text-center">
+                        <Button
+                          size="sm"
+                          variant={u.subscription_status === "active" ? "outline" : "default"}
+                          disabled={updating === u.user_id}
+                          onClick={() => toggleSubscription(u.user_id, u.subscription_status)}
+                        >
+                          <Crown className="h-4 w-4 mr-1" />
+                          {u.subscription_status === "active" ? "Revoke" : "Make Pro"}
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
