@@ -17,8 +17,13 @@ const courseOptions = ['BCom', 'BBA', 'BCA', 'MCA', 'BE/BTech', 'MBA', 'ME/MTech
 const languageOptions = ['C', 'C++', 'Java', 'Python', 'JavaScript', 'SQL', 'React', 'Node.js'];
 const roleOptions = ['Software Developer', 'Full Stack Developer', 'Data Analyst', 'AI Engineer', 'Accountant', 'HR Executive', 'Digital Marketing'];
 
+const engineeringSpecializations: Record<string, string[]> = {
+  'BE/BTech': ['Computer Science (CSE)', 'Electronics & Communication (ECE)', 'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering (EEE)', 'Information Technology (IT)', 'Chemical Engineering', 'Biotechnology'],
+  'ME/MTech': ['Computer Science (CSE)', 'Electronics & Communication (ECE)', 'Mechanical Engineering', 'Civil Engineering', 'Artificial Intelligence & ML', 'Data Science', 'VLSI Design', 'Structural Engineering'],
+};
+
 type TrainingMode = null | 'course' | 'language' | 'role';
-type ViewState = 'select-mode' | 'select-option' | 'flashcards' | 'mock-interview';
+type ViewState = 'select-mode' | 'select-option' | 'select-specialization' | 'flashcards' | 'mock-interview';
 
 interface Question {
   id: string;
