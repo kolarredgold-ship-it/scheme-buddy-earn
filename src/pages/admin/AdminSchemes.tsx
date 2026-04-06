@@ -142,6 +142,8 @@ const AdminSchemes = () => {
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Description</label>
                   <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
                 </div>
                 <div className="space-y-2">
