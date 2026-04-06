@@ -376,7 +376,32 @@ const MockInterview = () => {
           </div>
         )}
 
-        {/* ===== FLASH CARDS ===== */}
+        {/* ===== SPECIALIZATION SELECTION ===== */}
+        {view === 'select-specialization' && selectedCourse && engineeringSpecializations[selectedCourse] && (
+          <div className="animate-fade-in">
+            <Button variant="ghost" size="sm" onClick={goBack} className="mb-4">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Back
+            </Button>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Select <span className="text-primary">{selectedCourse}</span> Specialization
+              </h2>
+              <p className="text-muted-foreground text-sm">Choose your branch to get relevant questions</p>
+            </div>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+              {engineeringSpecializations[selectedCourse].map((spec) => (
+                <Card key={spec} className="cursor-pointer hover:shadow-md transition-all group" onClick={() => handleSelectSpecialization(spec)}>
+                  <CardContent className="p-6 text-center">
+                    <GraduationCap className="w-6 h-6 mx-auto mb-2 text-primary/60 group-hover:text-primary transition-colors" />
+                    <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">{spec}</h3>
+                    <ChevronRight className="w-4 h-4 mx-auto mt-2 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
         {view === 'flashcards' && (
           <div className="animate-fade-in">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
