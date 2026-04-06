@@ -58,7 +58,6 @@ Return JSON with keys:
 
 Return ONLY valid JSON.`;
     } else if (action === "generate-questions") {
-      const { category, subcategory } = await req.json().catch(() => ({}));
       systemPrompt = "You are an interview preparation expert. Return ONLY valid JSON.";
       userPrompt = `Generate 10 interview questions for ${subcategory || topic} (category: ${category || 'general'}).
 For each question, provide a clear, concise answer.
