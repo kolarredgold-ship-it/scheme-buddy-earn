@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      interview_questions: {
+        Row: {
+          answer: string
+          category: string
+          created_at: string
+          difficulty: string
+          id: string
+          question: string
+          role: string
+        }
+        Insert: {
+          answer: string
+          category: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          question: string
+          role: string
+        }
+        Update: {
+          answer?: string
+          category?: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          question?: string
+          role?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
