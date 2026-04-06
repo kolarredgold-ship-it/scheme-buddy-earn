@@ -46,6 +46,7 @@ const MockInterview = () => {
   const [view, setView] = useState<ViewState>('select-mode');
   const [mode, setMode] = useState<TrainingMode>(null);
   const [selectedOption, setSelectedOption] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
