@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles, MapPin } from "lucide-react";
+import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const INDIAN_STATES = [
