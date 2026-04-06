@@ -5,8 +5,50 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles, MapPin } from "lucide-react";
 import Layout from "@/components/Layout";
+
+const INDIAN_STATES = [
+  { value: "all", label: "All India" },
+  { value: "central", label: "Central Govt" },
+  { value: "andhra_pradesh", label: "Andhra Pradesh" },
+  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
+  { value: "assam", label: "Assam" },
+  { value: "bihar", label: "Bihar" },
+  { value: "chhattisgarh", label: "Chhattisgarh" },
+  { value: "delhi", label: "Delhi" },
+  { value: "goa", label: "Goa" },
+  { value: "gujarat", label: "Gujarat" },
+  { value: "haryana", label: "Haryana" },
+  { value: "himachal_pradesh", label: "Himachal Pradesh" },
+  { value: "jammu_kashmir", label: "Jammu & Kashmir" },
+  { value: "jharkhand", label: "Jharkhand" },
+  { value: "karnataka", label: "Karnataka" },
+  { value: "kerala", label: "Kerala" },
+  { value: "ladakh", label: "Ladakh" },
+  { value: "madhya_pradesh", label: "Madhya Pradesh" },
+  { value: "maharashtra", label: "Maharashtra" },
+  { value: "manipur", label: "Manipur" },
+  { value: "meghalaya", label: "Meghalaya" },
+  { value: "mizoram", label: "Mizoram" },
+  { value: "nagaland", label: "Nagaland" },
+  { value: "odisha", label: "Odisha" },
+  { value: "punjab", label: "Punjab" },
+  { value: "rajasthan", label: "Rajasthan" },
+  { value: "sikkim", label: "Sikkim" },
+  { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "telangana", label: "Telangana" },
+  { value: "tripura", label: "Tripura" },
+  { value: "uttar_pradesh", label: "Uttar Pradesh" },
+  { value: "uttarakhand", label: "Uttarakhand" },
+  { value: "west_bengal", label: "West Bengal" },
+  { value: "chandigarh", label: "Chandigarh" },
+  { value: "puducherry", label: "Puducherry" },
+  { value: "andaman_nicobar", label: "Andaman & Nicobar" },
+  { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
+  { value: "lakshadweep", label: "Lakshadweep" },
+];
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
