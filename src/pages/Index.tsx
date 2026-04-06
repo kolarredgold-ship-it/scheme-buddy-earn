@@ -251,8 +251,8 @@ const Index = () => {
 
   useEffect(() => {
     const fetchSchemes = async () => {
-      const { data } = await supabase.from("schemes").select("*").order("created_at", { ascending: false });
-      if (data) setSchemes(data as Scheme[]);
+      const { data } = await supabase.from("schemes").select("id, title, category, description, image_url, created_at, state").order("created_at", { ascending: false });
+      if (data) setSchemes(data as unknown as Scheme[]);
       setLoading(false);
     };
     fetchSchemes();
