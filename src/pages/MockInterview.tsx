@@ -248,7 +248,15 @@ const MockInterview = () => {
 
   const goBack = () => {
     if (view === 'mock-interview') setView('flashcards');
-    else if (view === 'flashcards') { setView('select-option'); setQuestions([]); }
+    else if (view === 'flashcards') { 
+      if (selectedCourse && engineeringSpecializations[selectedCourse]) {
+        setView('select-specialization'); 
+      } else {
+        setView('select-option');
+      }
+      setQuestions([]); 
+    }
+    else if (view === 'select-specialization') { setView('select-option'); setSelectedCourse(''); }
     else if (view === 'select-option') { setView('select-mode'); setMode(null); }
   };
 
