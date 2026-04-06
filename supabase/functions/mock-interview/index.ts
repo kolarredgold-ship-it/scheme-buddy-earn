@@ -65,9 +65,10 @@ Assign difficulty: easy, medium, or hard.
 Return ONLY valid JSON array: [{"question":"...","answer":"...","difficulty":"easy|medium|hard"}]`;
     } else if (action === "ask-question") {
       const reqTopic = topic || "general";
-      const round = questionCount || 1;
       systemPrompt = "You are a professional interviewer.";
       userPrompt = `You are conducting a job interview for the role/topic: ${reqTopic}.
+This is round ${round || 1}. Ask ONE clear, professional interview question.
+Return ONLY the question text, nothing else.`;
 This is round ${round}. Ask ONE clear, professional interview question.
 Return ONLY the question text, nothing else.`;
     } else if (action === "evaluate") {
