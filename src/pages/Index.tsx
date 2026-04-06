@@ -88,7 +88,7 @@ const CATEGORIES = [
   { key: "housing", label: "Housing", icon: HomeIcon, color: "bg-orange-100 text-orange-700" },
   { key: "health", label: "Health", icon: Heart, color: "bg-red-100 text-red-700" },
   { key: "education", label: "Education", icon: BookOpen, color: "bg-cyan-100 text-cyan-700" },
-  { key: "employment", label: "Jobs", icon: Briefcase, color: "bg-emerald-100 text-emerald-700" },
+  
   { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
   { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
 ];
