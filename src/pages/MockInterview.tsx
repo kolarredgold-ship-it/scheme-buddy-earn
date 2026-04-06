@@ -73,11 +73,11 @@ const MockInterview = () => {
   if (!user) {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-20 text-center">
-          <Brain className="h-16 w-16 text-primary mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">AI Mock Interview Training</h1>
-          <p className="text-muted-foreground mb-6">Login to start practicing interviews with AI</p>
-          <Button onClick={() => navigate('/login')}>Login to Continue</Button>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <Brain className="h-12 w-12 text-primary mx-auto mb-3" />
+          <h1 className="text-xl font-bold mb-2">AI Mock Interview Training</h1>
+          <p className="text-muted-foreground text-sm mb-5">Login to start practicing interviews with AI</p>
+          <Button onClick={() => navigate('/login')} size="sm">Login to Continue</Button>
         </div>
       </Layout>
     );
@@ -86,7 +86,6 @@ const MockInterview = () => {
   const fetchQuestions = async (category: string, subcategory: string) => {
     setLoadingQuestions(true);
     try {
-      // First try to fetch from database
       const roleMapping: Record<string, string> = {
         'course': subcategory,
         'language': subcategory,
@@ -102,14 +101,13 @@ const MockInterview = () => {
         .order('created_at');
 
       if (!dbError && dbQuestions && dbQuestions.length > 0) {
-        setQuestions(dbQuestions.map((q: any, i: number) => ({
+        setQuestions(dbQuestions.map((q: any) => ({
           id: q.id,
           question: q.question,
           answer: q.answer,
           difficulty: q.difficulty,
         })));
       } else {
-        // Fallback to AI generation
         const { data: aiData, error: aiError } = await supabase.functions.invoke('mock-interview', {
           body: { action: 'generate-questions', category, subcategory, userId: user?.id },
         });
@@ -174,7 +172,6 @@ const MockInterview = () => {
   };
 
   const handleSelectOption = (option: string) => {
-    // If engineering course, show specialization picker
     if (engineeringSpecializations[option]) {
       setSelectedCourse(option);
       setView('select-specialization');
@@ -282,75 +279,80 @@ const MockInterview = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-6 md:py-8 max-w-5xl">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 max-w-5xl">
 
         {/* ===== MODE SELECTION ===== */}
         {view === 'select-mode' && (
           <div className="animate-fade-in">
-            <div className="text-center mb-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
-                <Brain className="w-4 h-4" />
-                <span className="text-sm font-medium">AI-Powered Training</span>
+            <div className="text-center mb-6 sm:mb-10">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary mb-3">
+                <Brain className="w-3.5 h-3.5" />
+                <span className="text-xs font-medium">AI-Powered Training</span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-3">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
                 Choose Your <span className="text-primary">Training Path</span>
               </h1>
-              <p className="text-muted-foreground max-w-xl mx-auto">
-                1400+ pre-loaded questions across courses, programming languages & job roles with AI-powered feedback
+              <p className="text-muted-foreground text-xs sm:text-sm max-w-xl mx-auto px-2">
+                1400+ pre-loaded questions across courses, programming languages & job roles
               </p>
             </div>
 
             {isAdmin && (
-              <div className="max-w-2xl mx-auto mb-6">
+              <div className="max-w-2xl mx-auto mb-4 sm:mb-6">
                 <Card className="border-dashed border-2 border-primary/30">
-                  <CardContent className="p-4 flex items-center justify-between">
+                  <CardContent className="p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
-                      <p className="font-semibold text-sm">Admin: Generate Q&A Database</p>
-                      <p className="text-xs text-muted-foreground">Generate 200 questions per role using DeepSeek AI</p>
+                      <p className="font-semibold text-xs sm:text-sm">Admin: Generate Q&A Database</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Generate 200 questions per role using DeepSeek AI</p>
                     </div>
                     <Button 
                       onClick={generateAllQuestions} 
                       disabled={generatingQuestions}
                       size="sm"
                       variant="outline"
+                      className="w-full sm:w-auto"
                     >
-                      {generatingQuestions ? <><Loader2 className="w-4 h-4 animate-spin mr-1" /> Generating...</> : <><RefreshCw className="w-4 h-4 mr-1" /> Generate All</>}
+                      {generatingQuestions ? <><Loader2 className="w-3.5 h-3.5 animate-spin mr-1" /> Generating...</> : <><RefreshCw className="w-3.5 h-3.5 mr-1" /> Generate All</>}
                     </Button>
                   </CardContent>
                 </Card>
               </div>
             )}
 
-
-            <div className="max-w-2xl mx-auto mb-8">
-              <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <div className="max-w-2xl mx-auto mb-5 sm:mb-8">
+              <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">Note: AI Generated Questions</p>
-                  <p className="text-xs text-amber-600 dark:text-amber-500">Questions are generated by AI. Try the AI Mock Interview for unlimited AI-generated questions with real-time evaluation.</p>
+                  <p className="text-xs font-semibold text-amber-700 dark:text-amber-400 mb-0.5">Note: AI Generated Questions</p>
+                  <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-500">Try the AI Mock Interview for real-time evaluation.</p>
                 </div>
               </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
               {[
-                { mode: 'course' as TrainingMode, icon: GraduationCap, title: 'Course Based', desc: 'BCom, BBA, BCA, MBA & more academic course questions', color: 'from-blue-500 to-indigo-600', badge: '7 Courses' },
-                { mode: 'language' as TrainingMode, icon: Code, title: 'Programming', desc: 'C, Java, Python, JS, SQL & more coding interview questions', color: 'from-emerald-500 to-teal-600', badge: '8 Languages' },
-                { mode: 'role' as TrainingMode, icon: Briefcase, title: 'Job Roles', desc: 'Software Dev, Data Analyst, HR, Marketing & more', color: 'from-purple-500 to-pink-600', badge: '7 Roles' },
+                { mode: 'course' as TrainingMode, icon: GraduationCap, title: 'Course Based', desc: 'BCom, BBA, BCA, MBA, BE/BTech & more', color: 'from-blue-500 to-indigo-600', badge: '7 Courses' },
+                { mode: 'language' as TrainingMode, icon: Code, title: 'Programming', desc: 'C, Java, Python, JS, SQL & more', color: 'from-emerald-500 to-teal-600', badge: '8 Languages' },
+                { mode: 'role' as TrainingMode, icon: Briefcase, title: 'Job Roles', desc: 'Software Dev, Data Analyst, HR & more', color: 'from-purple-500 to-pink-600', badge: '7 Roles' },
               ].map((item, i) => (
-                <Card key={i} className="group cursor-pointer hover:shadow-lg transition-all border-0 shadow-md relative overflow-hidden" onClick={() => handleSelectMode(item.mode)}>
+                <Card 
+                  key={i} 
+                  className="group cursor-pointer hover:shadow-lg active:scale-[0.98] transition-all border-0 shadow-md relative overflow-hidden" 
+                  onClick={() => handleSelectMode(item.mode)}
+                >
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color}`} />
-                  <CardContent className="p-8 text-center">
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                      <item.icon className="w-8 h-8 text-white" />
+                  <CardContent className="p-5 sm:p-8 flex sm:flex-col items-center sm:text-center gap-4 sm:gap-0">
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center flex-shrink-0 sm:mx-auto sm:mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                      <item.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                     </div>
-                    <Badge variant="secondary" className="mb-3">{item.badge}</Badge>
-                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm">{item.desc}</p>
-                    <div className="mt-4 flex items-center justify-center gap-1 text-primary text-sm font-medium">
-                      <span>Start Training</span>
-                      <ChevronRight className="w-4 h-4" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 sm:justify-center sm:mb-3">
+                        <h3 className="text-base sm:text-xl font-bold">{item.title}</h3>
+                        <Badge variant="secondary" className="text-[10px] sm:text-xs">{item.badge}</Badge>
+                      </div>
+                      <p className="text-muted-foreground text-xs sm:text-sm line-clamp-2">{item.desc}</p>
                     </div>
+                    <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 sm:hidden" />
                   </CardContent>
                 </Card>
               ))}
@@ -361,21 +363,25 @@ const MockInterview = () => {
         {/* ===== OPTION SELECTION ===== */}
         {view === 'select-option' && (
           <div className="animate-fade-in">
-            <Button variant="ghost" size="sm" onClick={goBack} className="mb-4">
+            <Button variant="ghost" size="sm" onClick={goBack} className="mb-3 -ml-1">
               <ArrowLeft className="w-4 h-4 mr-1" /> Back
             </Button>
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+            <div className="text-center mb-5 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
                 Select {mode === 'course' ? 'Your Course' : mode === 'language' ? 'Programming Language' : 'Job Role'}
               </h2>
-              <p className="text-muted-foreground text-sm">Pick a topic to start practicing</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Pick a topic to start practicing</p>
             </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 max-w-3xl mx-auto">
               {getOptions().map((opt) => (
-                <Card key={opt} className="cursor-pointer hover:shadow-md transition-all group" onClick={() => handleSelectOption(opt)}>
-                  <CardContent className="p-6 text-center">
-                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{opt}</h3>
-                    <ChevronRight className="w-4 h-4 mx-auto mt-2 text-muted-foreground group-hover:text-primary transition-colors" />
+                <Card 
+                  key={opt} 
+                  className="cursor-pointer hover:shadow-md active:scale-[0.97] transition-all group border border-border/50"
+                  onClick={() => handleSelectOption(opt)}
+                >
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <h3 className="font-semibold text-sm sm:text-lg group-hover:text-primary transition-colors leading-tight">{opt}</h3>
+                    <ChevronRight className="w-4 h-4 mx-auto mt-1.5 text-muted-foreground group-hover:text-primary transition-colors" />
                   </CardContent>
                 </Card>
               ))}
@@ -386,22 +392,26 @@ const MockInterview = () => {
         {/* ===== SPECIALIZATION SELECTION ===== */}
         {view === 'select-specialization' && selectedCourse && engineeringSpecializations[selectedCourse] && (
           <div className="animate-fade-in">
-            <Button variant="ghost" size="sm" onClick={goBack} className="mb-4">
+            <Button variant="ghost" size="sm" onClick={goBack} className="mb-3 -ml-1">
               <ArrowLeft className="w-4 h-4 mr-1" /> Back
             </Button>
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                Select <span className="text-primary">{selectedCourse}</span> Specialization
+            <div className="text-center mb-5 sm:mb-8">
+              <Badge variant="secondary" className="mb-2">{selectedCourse}</Badge>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+                Select Specialization
               </h2>
-              <p className="text-muted-foreground text-sm">Choose your branch to get relevant questions</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Choose your branch to get relevant questions</p>
             </div>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 max-w-3xl mx-auto">
               {engineeringSpecializations[selectedCourse].map((spec) => (
-                <Card key={spec} className="cursor-pointer hover:shadow-md transition-all group" onClick={() => handleSelectSpecialization(spec)}>
-                  <CardContent className="p-6 text-center">
-                    <GraduationCap className="w-6 h-6 mx-auto mb-2 text-primary/60 group-hover:text-primary transition-colors" />
-                    <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">{spec}</h3>
-                    <ChevronRight className="w-4 h-4 mx-auto mt-2 text-muted-foreground group-hover:text-primary transition-colors" />
+                <Card 
+                  key={spec} 
+                  className="cursor-pointer hover:shadow-md active:scale-[0.97] transition-all group border border-border/50"
+                  onClick={() => handleSelectSpecialization(spec)}
+                >
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 mx-auto mb-1.5 text-primary/50 group-hover:text-primary transition-colors" />
+                    <h3 className="font-medium text-xs sm:text-sm group-hover:text-primary transition-colors leading-tight">{spec}</h3>
                   </CardContent>
                 </Card>
               ))}
@@ -409,56 +419,63 @@ const MockInterview = () => {
           </div>
         )}
 
+        {/* ===== FLASH CARDS ===== */}
         {view === 'flashcards' && (
           <div className="animate-fade-in">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            {/* Header */}
+            <div className="flex flex-col gap-3 mb-4 sm:mb-6">
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={goBack}>
-                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                <Button variant="ghost" size="icon" onClick={goBack} className="h-8 w-8 flex-shrink-0">
+                  <ArrowLeft className="w-4 h-4" />
                 </Button>
-                <div>
-                  <h2 className="text-2xl font-bold">{selectedOption}</h2>
-                  <p className="text-muted-foreground text-sm">Flashcard Training</p>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-2xl font-bold truncate">{selectedOption}</h2>
+                  <p className="text-muted-foreground text-xs">Flashcard Training</p>
                 </div>
               </div>
-              <Button onClick={startMockInterview} className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg hover:shadow-xl">
+              <Button 
+                onClick={startMockInterview} 
+                className="w-full sm:w-auto sm:self-end bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg active:scale-[0.98]"
+                size="sm"
+              >
                 <Brain className="w-4 h-4 mr-2" /> Start AI Mock Interview
               </Button>
             </div>
 
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-6 max-w-2xl mx-auto">
-              <Info className="w-4 h-4 text-amber-600 flex-shrink-0" />
-              <p className="text-xs text-amber-600 dark:text-amber-500">
-                For unlimited questions with evaluation, try the <strong>AI Mock Interview</strong>.
+            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-4 sm:mb-6 max-w-2xl mx-auto">
+              <Info className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
+              <p className="text-[10px] sm:text-xs text-amber-600 dark:text-amber-500">
+                For unlimited questions with evaluation, try <strong>AI Mock Interview</strong>.
               </p>
             </div>
 
             {loadingQuestions ? (
               <Card className="border-0 shadow-md max-w-2xl mx-auto">
-                <CardContent className="p-16 text-center">
-                  <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-                  <p className="text-muted-foreground">Generating questions with AI...</p>
+                <CardContent className="p-10 sm:p-16 text-center">
+                  <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">Generating questions with AI...</p>
                 </CardContent>
               </Card>
             ) : questions.length === 0 ? (
               <Card className="border-0 shadow-md max-w-2xl mx-auto">
-                <CardContent className="p-16 text-center">
-                  <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="font-semibold text-lg mb-2">No Flashcards Available</p>
-                  <p className="text-muted-foreground mb-6">Try the AI Mock Interview for unlimited AI-generated questions!</p>
-                  <Button onClick={startMockInterview} className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
-                    <Brain className="w-4 h-4 mr-2" /> Start AI Mock Interview Instead
+                <CardContent className="p-10 sm:p-16 text-center">
+                  <AlertCircle className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+                  <p className="font-semibold text-base mb-1">No Flashcards Available</p>
+                  <p className="text-muted-foreground text-xs mb-5">Try the AI Mock Interview for unlimited AI-generated questions!</p>
+                  <Button onClick={startMockInterview} size="sm" className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
+                    <Brain className="w-4 h-4 mr-2" /> Start AI Mock Interview
                   </Button>
                 </CardContent>
               </Card>
             ) : (
               <>
-                <div className="max-w-2xl mx-auto mb-4">
-                  <div className="flex items-center justify-between text-sm mb-2">
+                {/* Progress */}
+                <div className="max-w-2xl mx-auto mb-3 sm:mb-4">
+                  <div className="flex items-center justify-between text-xs mb-1.5">
                     <span className="text-muted-foreground">Progress</span>
                     <span className="font-semibold text-primary">{currentIndex + 1} / {questions.length}</span>
                   </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <div className="h-1.5 sm:h-2 bg-secondary rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary rounded-full transition-all duration-500"
                       style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
@@ -466,6 +483,7 @@ const MockInterview = () => {
                   </div>
                 </div>
 
+                {/* Flashcard */}
                 <div
                   className="cursor-pointer mx-auto max-w-2xl"
                   onClick={() => setFlipped(!flipped)}
@@ -476,43 +494,64 @@ const MockInterview = () => {
                     style={{
                       transformStyle: 'preserve-3d',
                       transform: flipped ? 'rotateY(180deg)' : 'rotateY(0)',
-                      minHeight: '320px',
+                      minHeight: '260px',
                     }}
                   >
+                    {/* Front - Question */}
                     <Card className="absolute inset-0 border-0 shadow-lg" style={{ backfaceVisibility: 'hidden' }}>
-                      <CardContent className="p-8 flex flex-col items-center justify-center h-full min-h-[320px]">
-                        <Badge className={`mb-5 ${difficultyColor(currentQ?.difficulty || 'medium')}`}>
+                      <CardContent className="p-5 sm:p-8 flex flex-col items-center justify-center h-full min-h-[260px]">
+                        <Badge className={`mb-3 sm:mb-5 text-[10px] sm:text-xs ${difficultyColor(currentQ?.difficulty || 'medium')}`}>
                           {currentQ?.difficulty || 'medium'}
                         </Badge>
-                        <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">Question</p>
-                        <p className="text-xl text-center font-semibold leading-relaxed">{currentQ?.question}</p>
-                        <div className="mt-8 flex items-center gap-2 text-primary text-sm animate-pulse">
-                          <span>Click to reveal answer</span>
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">Question</p>
+                        <p className="text-base sm:text-xl text-center font-semibold leading-relaxed px-1">{currentQ?.question}</p>
+                        <div className="mt-5 sm:mt-8 flex items-center gap-2 text-primary text-xs animate-pulse">
+                          <span>Tap to reveal answer</span>
                         </div>
                       </CardContent>
                     </Card>
 
+                    {/* Back - Answer */}
                     <Card className="absolute inset-0 border-0 shadow-lg border-t-4 border-t-primary" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-                      <CardContent className="p-8 flex flex-col items-center justify-center h-full min-h-[320px]">
-                        <p className="text-xs uppercase tracking-wider text-primary mb-4 font-bold">Answer</p>
-                        <p className="text-center text-muted-foreground whitespace-pre-wrap leading-relaxed">{currentQ?.answer}</p>
-                        <div className="mt-8 flex items-center gap-2 text-muted-foreground text-sm">
-                          <span>Click to see question</span>
+                      <CardContent className="p-5 sm:p-8 flex flex-col items-center justify-center h-full min-h-[260px]">
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-primary mb-3 font-bold">Answer</p>
+                        <p className="text-center text-muted-foreground text-sm sm:text-base whitespace-pre-wrap leading-relaxed px-1">{currentQ?.answer}</p>
+                        <div className="mt-5 sm:mt-8 flex items-center gap-2 text-muted-foreground text-xs">
+                          <span>Tap to see question</span>
                         </div>
                       </CardContent>
                     </Card>
                   </div>
                 </div>
 
-                <div className="flex justify-center gap-3 mt-8">
-                  <Button variant="outline" size="lg" disabled={currentIndex === 0} onClick={() => { setCurrentIndex(prev => prev - 1); setFlipped(false); }}>
-                    <ArrowLeft className="w-4 h-4 mr-1" /> Previous
+                {/* Navigation */}
+                <div className="flex justify-center gap-2 sm:gap-3 mt-5 sm:mt-8">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    disabled={currentIndex === 0} 
+                    onClick={() => { setCurrentIndex(prev => prev - 1); setFlipped(false); }}
+                    className="px-3 sm:px-4"
+                  >
+                    <ArrowLeft className="w-4 h-4 sm:mr-1" />
+                    <span className="hidden sm:inline">Previous</span>
                   </Button>
-                  <Button variant="outline" size="lg" onClick={() => { setFlipped(false); setCurrentIndex(0); }}>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => { setFlipped(false); setCurrentIndex(0); }}
+                  >
                     <RotateCcw className="w-4 h-4" />
                   </Button>
-                  <Button variant="outline" size="lg" disabled={currentIndex === questions.length - 1} onClick={() => { setCurrentIndex(prev => prev + 1); setFlipped(false); }}>
-                    Next <ArrowRight className="w-4 h-4 ml-1" />
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    disabled={currentIndex === questions.length - 1} 
+                    onClick={() => { setCurrentIndex(prev => prev + 1); setFlipped(false); }}
+                    className="px-3 sm:px-4"
+                  >
+                    <span className="hidden sm:inline">Next</span>
+                    <ArrowRight className="w-4 h-4 sm:ml-1" />
                   </Button>
                 </div>
               </>
@@ -523,41 +562,41 @@ const MockInterview = () => {
         {/* ===== MOCK INTERVIEW ===== */}
         {view === 'mock-interview' && (
           <div className="animate-fade-in max-w-3xl mx-auto">
-            <Button variant="ghost" size="sm" onClick={goBack} className="mb-4">
-              <ArrowLeft className="w-4 h-4 mr-1" /> Back to Flashcards
+            <Button variant="ghost" size="sm" onClick={goBack} className="mb-3 -ml-1">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Back
             </Button>
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-600 mb-3">
-                <Brain className="w-4 h-4" />
-                <span className="text-sm font-medium">Live AI Interview</span>
+            <div className="text-center mb-5 sm:mb-8">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 mb-2">
+                <Brain className="w-3.5 h-3.5" />
+                <span className="text-xs font-medium">Live AI Interview</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold truncate px-4">
                 {selectedOption || 'General'} Interview
               </h2>
             </div>
 
             {loadingQuestion ? (
               <Card className="border-0 shadow-md">
-                <CardContent className="p-16 text-center">
-                  <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-                  <p className="text-muted-foreground">AI is preparing your question...</p>
+                <CardContent className="p-10 sm:p-16 text-center">
+                  <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto mb-3" />
+                  <p className="text-muted-foreground text-sm">AI is preparing your question...</p>
                 </CardContent>
               </Card>
             ) : (
               <Card className="border-0 shadow-md overflow-hidden">
-                <div className="h-1.5 bg-gradient-to-r from-emerald-500 to-teal-600" />
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                      <span className="text-sm font-bold text-emerald-600">{interviewRound}</span>
+                <div className="h-1 sm:h-1.5 bg-gradient-to-r from-emerald-500 to-teal-600" />
+                <CardHeader className="pb-1 px-4 sm:px-6 pt-4">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                      <span className="text-xs font-bold text-emerald-600">{interviewRound}</span>
                     </div>
                     Round {interviewRound}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6 pb-8">
-                  <div className="bg-secondary/20 rounded-xl p-6 border border-border/30">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">Interview Question</p>
-                    <p className="font-semibold text-lg leading-relaxed">{interviewQuestion}</p>
+                <CardContent className="space-y-4 sm:space-y-6 pb-6 px-4 sm:px-6">
+                  <div className="bg-secondary/20 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-border/30">
+                    <p className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground mb-1.5 font-medium">Interview Question</p>
+                    <p className="font-semibold text-sm sm:text-lg leading-relaxed">{interviewQuestion}</p>
                   </div>
 
                   {!result ? (
@@ -565,34 +604,43 @@ const MockInterview = () => {
                       <Textarea
                         value={userAnswer}
                         onChange={e => setUserAnswer(e.target.value)}
-                        placeholder="Type your answer here... Be detailed and professional."
-                        rows={6}
-                        className="text-base"
+                        placeholder="Type your answer here..."
+                        rows={5}
+                        className="text-sm sm:text-base"
                       />
-                      <Button onClick={submitAnswer} disabled={evaluating} className="w-full bg-gradient-to-r from-primary to-primary/80" size="lg">
+                      <Button 
+                        onClick={submitAnswer} 
+                        disabled={evaluating} 
+                        className="w-full bg-gradient-to-r from-primary to-primary/80 active:scale-[0.98]" 
+                        size="default"
+                      >
                         {evaluating ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Evaluating...</> : <><Sparkles className="w-4 h-4 mr-2" /> Submit Answer</>}
                       </Button>
                     </>
                   ) : (
-                    <div className="space-y-5">
+                    <div className="space-y-4">
                       <div className="text-center">
-                        <div className={`inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-xl font-bold ${result.score >= 7 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : result.score >= 4 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
-                          <Star className="w-6 h-6" />
+                        <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-lg font-bold ${result.score >= 7 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : result.score >= 4 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                          <Star className="w-5 h-5" />
                           Score: {result.score}/10
                         </div>
                       </div>
 
-                      <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-5 border border-blue-200/30">
-                        <p className="font-semibold mb-2 text-blue-700 dark:text-blue-400 text-sm">💬 Feedback</p>
-                        <p className="text-sm text-blue-900 dark:text-blue-300 leading-relaxed">{result.feedback}</p>
+                      <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg sm:rounded-xl p-4 border border-blue-200/30">
+                        <p className="font-semibold mb-1.5 text-blue-700 dark:text-blue-400 text-xs">💬 Feedback</p>
+                        <p className="text-xs sm:text-sm text-blue-900 dark:text-blue-300 leading-relaxed">{result.feedback}</p>
                       </div>
 
-                      <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-5 border border-green-200/30">
-                        <p className="font-semibold mb-2 text-green-700 dark:text-green-400 text-sm">✨ Suggestions</p>
-                        <p className="text-sm text-green-900 dark:text-green-300 leading-relaxed">{result.suggestions}</p>
+                      <div className="bg-green-50 dark:bg-green-900/20 rounded-lg sm:rounded-xl p-4 border border-green-200/30">
+                        <p className="font-semibold mb-1.5 text-green-700 dark:text-green-400 text-xs">✨ Suggestions</p>
+                        <p className="text-xs sm:text-sm text-green-900 dark:text-green-300 leading-relaxed">{result.suggestions}</p>
                       </div>
 
-                      <Button onClick={fetchNextQuestion} className="w-full bg-gradient-to-r from-primary to-primary/80" size="lg">
+                      <Button 
+                        onClick={fetchNextQuestion} 
+                        className="w-full bg-gradient-to-r from-primary to-primary/80 active:scale-[0.98]" 
+                        size="default"
+                      >
                         Next Question <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                     </div>
