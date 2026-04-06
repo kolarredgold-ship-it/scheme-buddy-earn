@@ -11,7 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Upload, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, ImageIcon, Wand2 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 const CATEGORIES = ["scholarships", "farmers", "sc_st", "minority", "housing", "health", "education", "employment"];
 
@@ -66,6 +67,8 @@ const AdminSchemes = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [genProgress, setGenProgress] = useState({ current: 0, total: 0 });
 
   const fetchSchemes = async () => {
     const { data } = await supabase.from("schemes").select("*").order("created_at", { ascending: false });
@@ -107,15 +110,53 @@ const AdminSchemes = () => {
     if (error) toast.error("Failed to delete"); else { toast.success("Deleted"); fetchSchemes(); }
   };
 
+  const generateAllImages = async () => {
+    setGenerating(true);
+    const total = schemes.length;
+    setGenProgress({ current: 0, total });
+    let offset = 0;
+    let generated = 0;
+
+    while (true) {
+      try {
+        const { data, error } = await supabase.functions.invoke("generate-scheme-images", {
+          body: { offset, limit: 1 },
+        });
+        if (error) { toast.error("Generation error"); break; }
+        if (data?.done) break;
+        generated += (data?.updated || 0);
+        offset = data?.nextOffset || offset + 1;
+        setGenProgress({ current: offset, total });
+      } catch (e) {
+        toast.error("Network error, retrying...");
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
+
+    toast.success(`Generated ${generated} images!`);
+    setGenerating(false);
+    fetchSchemes();
+  };
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-6 space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Manage Schemes</h1>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={openCreate} className="gap-2"><Plus className="h-4 w-4" /> Add Scheme</Button>
-            </DialogTrigger>
+          <div className="flex gap-2 items-center">
+            {generating && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Generating {genProgress.current}/{genProgress.total}</span>
+                <Progress value={(genProgress.current / genProgress.total) * 100} className="w-24 h-2" />
+              </div>
+            )}
+            <Button onClick={generateAllImages} disabled={generating} variant="outline" className="gap-2">
+              <Wand2 className="h-4 w-4" /> {generating ? "Generating..." : "Generate All Images"}
+            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={openCreate} className="gap-2"><Plus className="h-4 w-4" /> Add Scheme</Button>
+              </DialogTrigger>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editId ? "Edit Scheme" : "Add New Scheme"}</DialogTitle>
@@ -199,6 +240,7 @@ const AdminSchemes = () => {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         <Card>
