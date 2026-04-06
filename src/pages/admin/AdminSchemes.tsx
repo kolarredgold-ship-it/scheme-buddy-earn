@@ -15,7 +15,47 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 
 const CATEGORIES = ["scholarships", "farmers", "sc_st", "minority", "housing", "health", "education", "employment"];
 
-const emptyScheme = { title: "", category: "scholarships", description: "", eligibility: "", documents: "", image_url: "", apply_link: "" };
+const STATES = [
+  { value: "central", label: "Central Govt" },
+  { value: "andhra_pradesh", label: "Andhra Pradesh" },
+  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
+  { value: "assam", label: "Assam" },
+  { value: "bihar", label: "Bihar" },
+  { value: "chhattisgarh", label: "Chhattisgarh" },
+  { value: "delhi", label: "Delhi" },
+  { value: "goa", label: "Goa" },
+  { value: "gujarat", label: "Gujarat" },
+  { value: "haryana", label: "Haryana" },
+  { value: "himachal_pradesh", label: "Himachal Pradesh" },
+  { value: "jammu_kashmir", label: "Jammu & Kashmir" },
+  { value: "jharkhand", label: "Jharkhand" },
+  { value: "karnataka", label: "Karnataka" },
+  { value: "kerala", label: "Kerala" },
+  { value: "ladakh", label: "Ladakh" },
+  { value: "madhya_pradesh", label: "Madhya Pradesh" },
+  { value: "maharashtra", label: "Maharashtra" },
+  { value: "manipur", label: "Manipur" },
+  { value: "meghalaya", label: "Meghalaya" },
+  { value: "mizoram", label: "Mizoram" },
+  { value: "nagaland", label: "Nagaland" },
+  { value: "odisha", label: "Odisha" },
+  { value: "punjab", label: "Punjab" },
+  { value: "rajasthan", label: "Rajasthan" },
+  { value: "sikkim", label: "Sikkim" },
+  { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "telangana", label: "Telangana" },
+  { value: "tripura", label: "Tripura" },
+  { value: "uttar_pradesh", label: "Uttar Pradesh" },
+  { value: "uttarakhand", label: "Uttarakhand" },
+  { value: "west_bengal", label: "West Bengal" },
+  { value: "chandigarh", label: "Chandigarh" },
+  { value: "puducherry", label: "Puducherry" },
+  { value: "andaman_nicobar", label: "Andaman & Nicobar" },
+  { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
+  { value: "lakshadweep", label: "Lakshadweep" },
+];
+
+const emptyScheme = { title: "", category: "scholarships", state: "central", description: "", eligibility: "", documents: "", image_url: "", apply_link: "" };
 
 const AdminSchemes = () => {
   const { isAdmin, loading: authLoading } = useAuth();
@@ -39,7 +79,7 @@ const AdminSchemes = () => {
 
   const openCreate = () => { setForm(emptyScheme); setEditId(null); setDialogOpen(true); };
   const openEdit = (s: any) => {
-    setForm({ title: s.title, category: s.category, description: s.description, eligibility: s.eligibility || "", documents: s.documents || "", image_url: s.image_url || "", apply_link: s.apply_link || "" });
+    setForm({ title: s.title, category: s.category, state: s.state || "central", description: s.description, eligibility: s.eligibility || "", documents: s.documents || "", image_url: s.image_url || "", apply_link: s.apply_link || "" });
     setEditId(s.id);
     setDialogOpen(true);
   };
@@ -94,6 +134,15 @@ const AdminSchemes = () => {
                   </Select>
                 </div>
                 <div className="space-y-2">
+                  <label className="text-sm font-medium">State</label>
+                  <Select value={form.state} onValueChange={(v) => setForm({ ...form, state: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent className="max-h-[250px]">
+                      {STATES.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
                   <label className="text-sm font-medium">Description</label>
                   <Textarea rows={5} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
                 </div>
@@ -129,18 +178,20 @@ const AdminSchemes = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead className="hidden md:table-cell">Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {schemes.map((s) => (
-                    <TableRow key={s.id}>
-                      <TableCell className="font-medium">{s.title}</TableCell>
-                      <TableCell>{s.category}</TableCell>
-                      <TableCell className="hidden md:table-cell">{new Date(s.created_at).toLocaleDateString()}</TableCell>
+                     <TableHead>Title</TableHead>
+                     <TableHead>Category</TableHead>
+                     <TableHead className="hidden md:table-cell">State</TableHead>
+                     <TableHead className="hidden md:table-cell">Created</TableHead>
+                     <TableHead className="text-right">Actions</TableHead>
+                   </TableRow>
+                 </TableHeader>
+                 <TableBody>
+                   {schemes.map((s) => (
+                     <TableRow key={s.id}>
+                       <TableCell className="font-medium">{s.title}</TableCell>
+                       <TableCell>{s.category}</TableCell>
+                       <TableCell className="hidden md:table-cell">{STATES.find(st => st.value === s.state)?.label || s.state}</TableCell>
+                       <TableCell className="hidden md:table-cell">{new Date(s.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" onClick={() => openEdit(s)}><Pencil className="h-4 w-4" /></Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
