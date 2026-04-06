@@ -156,8 +156,38 @@ const AdminSchemes = () => {
                   <Textarea rows={3} value={form.documents} onChange={(e) => setForm({ ...form, documents: e.target.value })} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Image URL</label>
-                  <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+                  <label className="text-sm font-medium">Scheme Image</label>
+                  {form.image_url && (
+                    <div className="relative w-full h-32 rounded-lg overflow-hidden bg-muted mb-2">
+                      <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
+                      <button type="button" onClick={() => setForm({ ...form, image_url: "" })} className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 text-xs">✕</button>
+                    </div>
+                  )}
+                  <label className={`flex items-center justify-center gap-2 border-2 border-dashed rounded-lg p-4 cursor-pointer transition-colors ${uploading ? "opacity-50 pointer-events-none" : "hover:border-primary/40 hover:bg-muted/50"}`}>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        const ext = file.name.split(".").pop();
+                        const path = `${crypto.randomUUID()}.${ext}`;
+                        const { error } = await supabase.storage.from("scheme-images").upload(path, file);
+                        if (error) { toast.error("Upload failed"); setUploading(false); return; }
+                        const { data: urlData } = supabase.storage.from("scheme-images").getPublicUrl(path);
+                        setForm((prev) => ({ ...prev, image_url: urlData.publicUrl }));
+                        setUploading(false);
+                        toast.success("Image uploaded");
+                      }}
+                    />
+                    {uploading ? (
+                      <><div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" /> Uploading...</>
+                    ) : (
+                      <><Upload className="h-4 w-4 text-muted-foreground" /> <span className="text-sm text-muted-foreground">Click to upload image</span></>
+                    )}
+                  </label>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Apply Link</label>
