@@ -283,8 +283,8 @@ const MockInterview = () => {
                   </CardContent>
                 </Card>
               </div>
-            )
-            </div>
+            )}
+
 
             <div className="max-w-2xl mx-auto mb-8">
               <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
