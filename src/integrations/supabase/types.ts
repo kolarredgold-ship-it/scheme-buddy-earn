@@ -14,16 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          mobile: string | null
+          name: string | null
+          referral_code: string
+          referred_by: string | null
+          subscription_status: Database["public"]["Enums"]["subscription_status"]
+          updated_at: string
+          user_id: string
+          wallet_balance: number
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          mobile?: string | null
+          name?: string | null
+          referral_code: string
+          referred_by?: string | null
+          subscription_status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id: string
+          wallet_balance?: number
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          mobile?: string | null
+          name?: string | null
+          referral_code?: string
+          referred_by?: string | null
+          subscription_status?: Database["public"]["Enums"]["subscription_status"]
+          updated_at?: string
+          user_id?: string
+          wallet_balance?: number
+        }
+        Relationships: []
+      }
+      schemes: {
+        Row: {
+          apply_link: string | null
+          category: string
+          created_at: string
+          description: string
+          documents: string | null
+          eligibility: string | null
+          id: string
+          image_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          apply_link?: string | null
+          category: string
+          created_at?: string
+          description: string
+          documents?: string | null
+          eligibility?: string | null
+          id?: string
+          image_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          apply_link?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          documents?: string | null
+          eligibility?: string | null
+          id?: string
+          image_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          source: string
+          type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          source: string
+          type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          source?: string
+          type?: Database["public"]["Enums"]["transaction_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      withdrawals: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          status: Database["public"]["Enums"]["withdrawal_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_referral_code: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      subscription_status: "free" | "active" | "expired"
+      transaction_type: "credit" | "debit"
+      withdrawal_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +312,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      subscription_status: ["free", "active", "expired"],
+      transaction_type: ["credit", "debit"],
+      withdrawal_status: ["pending", "approved", "rejected"],
+    },
   },
 } as const
