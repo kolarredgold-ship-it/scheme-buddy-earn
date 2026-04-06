@@ -80,15 +80,78 @@ const MockInterview = () => {
   const fetchQuestions = async (category: string, subcategory: string) => {
     setLoadingQuestions(true);
     try {
-      const { data: aiData, error: aiError } = await supabase.functions.invoke('mock-interview', {
-        body: { action: 'generate-questions', category, subcategory, userId: user?.id },
-      });
-      if (aiError) throw aiError;
-      setQuestions(aiData?.questions || []);
+      // First try to fetch from database
+      const roleMapping: Record<string, string> = {
+        'course': subcategory,
+        'language': subcategory,
+        'role': subcategory,
+      };
+      const roleQuery = roleMapping[category] || subcategory;
+      
+      const { data: dbQuestions, error: dbError } = await supabase
+        .from('interview_questions')
+        .select('*')
+        .eq('role', roleQuery)
+        .order('category')
+        .order('created_at');
+
+      if (!dbError && dbQuestions && dbQuestions.length > 0) {
+        setQuestions(dbQuestions.map((q: any, i: number) => ({
+          id: q.id,
+          question: q.question,
+          answer: q.answer,
+          difficulty: q.difficulty,
+        })));
+      } else {
+        // Fallback to AI generation
+        const { data: aiData, error: aiError } = await supabase.functions.invoke('mock-interview', {
+          body: { action: 'generate-questions', category, subcategory, userId: user?.id },
+        });
+        if (aiError) throw aiError;
+        setQuestions(aiData?.questions || []);
+      }
     } catch (error: any) {
       toast({ title: 'Error', description: 'Failed to load questions.', variant: 'destructive' });
     } finally {
       setLoadingQuestions(false);
+    }
+  };
+
+  const generateQuestionsForRole = async (role: string) => {
+    setGeneratingQuestions(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-interview-questions', {
+        body: { role },
+      });
+      if (error) throw error;
+      toast({
+        title: 'Questions Generated',
+        description: `Generated questions for ${role}: ${JSON.stringify(data?.results)}`,
+      });
+    } catch (error: any) {
+      toast({ title: 'Error', description: error.message || 'Failed to generate questions.', variant: 'destructive' });
+    } finally {
+      setGeneratingQuestions(false);
+    }
+  };
+
+  const generateAllQuestions = async () => {
+    setGeneratingQuestions(true);
+    try {
+      for (const role of roleOptions) {
+        toast({ title: 'Generating...', description: `Generating questions for ${role}...` });
+        const { data, error } = await supabase.functions.invoke('generate-interview-questions', {
+          body: { role },
+        });
+        if (error) {
+          console.error(`Error for ${role}:`, error);
+        }
+      }
+      toast({ title: 'Done!', description: 'All interview questions have been generated.' });
+    } catch (error: any) {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    } finally {
+      setGeneratingQuestions(false);
     }
   };
 
