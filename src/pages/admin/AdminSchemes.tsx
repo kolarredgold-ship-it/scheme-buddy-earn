@@ -15,7 +15,47 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 
 const CATEGORIES = ["scholarships", "farmers", "sc_st", "minority", "housing", "health", "education", "employment"];
 
-const emptyScheme = { title: "", category: "scholarships", description: "", eligibility: "", documents: "", image_url: "", apply_link: "" };
+const STATES = [
+  { value: "central", label: "Central Govt" },
+  { value: "andhra_pradesh", label: "Andhra Pradesh" },
+  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
+  { value: "assam", label: "Assam" },
+  { value: "bihar", label: "Bihar" },
+  { value: "chhattisgarh", label: "Chhattisgarh" },
+  { value: "delhi", label: "Delhi" },
+  { value: "goa", label: "Goa" },
+  { value: "gujarat", label: "Gujarat" },
+  { value: "haryana", label: "Haryana" },
+  { value: "himachal_pradesh", label: "Himachal Pradesh" },
+  { value: "jammu_kashmir", label: "Jammu & Kashmir" },
+  { value: "jharkhand", label: "Jharkhand" },
+  { value: "karnataka", label: "Karnataka" },
+  { value: "kerala", label: "Kerala" },
+  { value: "ladakh", label: "Ladakh" },
+  { value: "madhya_pradesh", label: "Madhya Pradesh" },
+  { value: "maharashtra", label: "Maharashtra" },
+  { value: "manipur", label: "Manipur" },
+  { value: "meghalaya", label: "Meghalaya" },
+  { value: "mizoram", label: "Mizoram" },
+  { value: "nagaland", label: "Nagaland" },
+  { value: "odisha", label: "Odisha" },
+  { value: "punjab", label: "Punjab" },
+  { value: "rajasthan", label: "Rajasthan" },
+  { value: "sikkim", label: "Sikkim" },
+  { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "telangana", label: "Telangana" },
+  { value: "tripura", label: "Tripura" },
+  { value: "uttar_pradesh", label: "Uttar Pradesh" },
+  { value: "uttarakhand", label: "Uttarakhand" },
+  { value: "west_bengal", label: "West Bengal" },
+  { value: "chandigarh", label: "Chandigarh" },
+  { value: "puducherry", label: "Puducherry" },
+  { value: "andaman_nicobar", label: "Andaman & Nicobar" },
+  { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
+  { value: "lakshadweep", label: "Lakshadweep" },
+];
+
+const emptyScheme = { title: "", category: "scholarships", state: "central", description: "", eligibility: "", documents: "", image_url: "", apply_link: "" };
 
 const AdminSchemes = () => {
   const { isAdmin, loading: authLoading } = useAuth();
