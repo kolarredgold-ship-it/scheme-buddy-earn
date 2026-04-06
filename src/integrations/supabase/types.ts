@@ -66,6 +66,7 @@ export type Database = {
           eligibility: string | null
           id: string
           image_url: string | null
+          state: string | null
           title: string
           updated_at: string
         }
@@ -78,6 +79,7 @@ export type Database = {
           eligibility?: string | null
           id?: string
           image_url?: string | null
+          state?: string | null
           title: string
           updated_at?: string
         }
@@ -90,6 +92,7 @@ export type Database = {
           eligibility?: string | null
           id?: string
           image_url?: string | null
+          state?: string | null
           title?: string
           updated_at?: string
         }

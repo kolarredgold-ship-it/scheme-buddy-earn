@@ -5,8 +5,50 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles, MapPin } from "lucide-react";
 import Layout from "@/components/Layout";
+
+const INDIAN_STATES = [
+  { value: "all", label: "All India" },
+  { value: "central", label: "Central Govt" },
+  { value: "andhra_pradesh", label: "Andhra Pradesh" },
+  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
+  { value: "assam", label: "Assam" },
+  { value: "bihar", label: "Bihar" },
+  { value: "chhattisgarh", label: "Chhattisgarh" },
+  { value: "delhi", label: "Delhi" },
+  { value: "goa", label: "Goa" },
+  { value: "gujarat", label: "Gujarat" },
+  { value: "haryana", label: "Haryana" },
+  { value: "himachal_pradesh", label: "Himachal Pradesh" },
+  { value: "jammu_kashmir", label: "Jammu & Kashmir" },
+  { value: "jharkhand", label: "Jharkhand" },
+  { value: "karnataka", label: "Karnataka" },
+  { value: "kerala", label: "Kerala" },
+  { value: "ladakh", label: "Ladakh" },
+  { value: "madhya_pradesh", label: "Madhya Pradesh" },
+  { value: "maharashtra", label: "Maharashtra" },
+  { value: "manipur", label: "Manipur" },
+  { value: "meghalaya", label: "Meghalaya" },
+  { value: "mizoram", label: "Mizoram" },
+  { value: "nagaland", label: "Nagaland" },
+  { value: "odisha", label: "Odisha" },
+  { value: "punjab", label: "Punjab" },
+  { value: "rajasthan", label: "Rajasthan" },
+  { value: "sikkim", label: "Sikkim" },
+  { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "telangana", label: "Telangana" },
+  { value: "tripura", label: "Tripura" },
+  { value: "uttar_pradesh", label: "Uttar Pradesh" },
+  { value: "uttarakhand", label: "Uttarakhand" },
+  { value: "west_bengal", label: "West Bengal" },
+  { value: "chandigarh", label: "Chandigarh" },
+  { value: "puducherry", label: "Puducherry" },
+  { value: "andaman_nicobar", label: "Andaman & Nicobar" },
+  { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
+  { value: "lakshadweep", label: "Lakshadweep" },
+];
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
@@ -56,6 +98,7 @@ interface Scheme {
   description: string;
   image_url: string | null;
   created_at: string;
+  state: string | null;
 }
 
 // Hero Banner with auto-scroll
@@ -203,24 +246,30 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedState, setSelectedState] = useState("all");
   const isPaid = profile?.subscription_status === "active";
 
   useEffect(() => {
     const fetchSchemes = async () => {
       const { data } = await supabase.from("schemes").select("*").order("created_at", { ascending: false });
-      if (data) setSchemes(data);
+      if (data) setSchemes(data as Scheme[]);
       setLoading(false);
     };
     fetchSchemes();
   }, []);
 
+  // State-filtered base
+  const stateFiltered = selectedState === "all"
+    ? schemes
+    : schemes.filter((s) => s.state === selectedState);
+
   const getSchemesByCategory = (cat: string) => {
-    return schemes.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
+    return stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
   };
 
   const filteredSchemes = activeCategory
-    ? schemes.filter((s) => s.category === activeCategory)
-    : schemes;
+    ? stateFiltered.filter((s) => s.category === activeCategory)
+    : stateFiltered;
 
   const searchedSchemes = searchQuery
     ? filteredSchemes.filter((s) =>
@@ -229,7 +278,7 @@ const Index = () => {
       )
     : null;
 
-  const recentSchemes = schemes.slice(0, 12);
+  const recentSchemes = stateFiltered.slice(0, 12);
 
   return (
     <Layout>
@@ -239,17 +288,32 @@ const Index = () => {
           <HeroBanner />
         </div>
 
-        {/* Search Bar */}
+        {/* Search Bar + State Filter */}
         <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6">
-          <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search schemes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-11 md:h-12 pl-10 pr-4 rounded-xl bg-card border border-border/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted-foreground/60"
-            />
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search schemes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-11 md:h-12 pl-10 pr-4 rounded-xl bg-card border border-border/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted-foreground/60"
+              />
+            </div>
+            <Select value={selectedState} onValueChange={setSelectedState}>
+              <SelectTrigger className="w-[140px] md:w-[180px] h-11 md:h-12 rounded-xl bg-card border-border/60 text-sm gap-1 shrink-0">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <SelectValue placeholder="Select State" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {INDIAN_STATES.map((state) => (
+                  <SelectItem key={state.value} value={state.value} className="text-sm">
+                    {state.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
