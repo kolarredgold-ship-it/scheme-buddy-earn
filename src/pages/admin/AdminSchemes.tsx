@@ -240,6 +240,7 @@ const AdminSchemes = () => {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         <Card>
