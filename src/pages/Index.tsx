@@ -343,7 +343,7 @@ const Index = () => {
             </Link>
             <Link to="/mock-interview">
               <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-purple-500/30 text-purple-700 hover:bg-purple-50">
-                <Brain className="h-4 w-4 shrink-0" /> Mock Interview
+                <Brain className="h-4 w-4 shrink-0" /> AI Mock Interview
               </Button>
             </Link>
           </div>
