@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles, MapPin } from "lucide-react";
+import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, Briefcase, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const INDIAN_STATES = [
@@ -89,6 +89,8 @@ const CATEGORIES = [
   { key: "health", label: "Health", icon: Heart, color: "bg-red-100 text-red-700" },
   { key: "education", label: "Education", icon: BookOpen, color: "bg-cyan-100 text-cyan-700" },
   { key: "employment", label: "Jobs", icon: Briefcase, color: "bg-emerald-100 text-emerald-700" },
+  { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
+  { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
 ];
 
 interface Scheme {
@@ -314,6 +316,20 @@ const Index = () => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 mt-3">
+            <a href="https://interreport.in" target="_blank" rel="noopener noreferrer" className="flex-1">
+              <Button variant="outline" className="w-full h-11 rounded-xl gap-2 text-xs md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
+                <FileText className="h-4 w-4" /> Generate Internship Report
+              </Button>
+            </a>
+            <a href="https://interreport.in" target="_blank" rel="noopener noreferrer" className="flex-1">
+              <Button variant="outline" className="w-full h-11 rounded-xl gap-2 text-xs md:text-sm font-semibold border-emerald-500/30 text-emerald-700 hover:bg-emerald-50">
+                <ExternalLink className="h-4 w-4" /> Private Jobs
+              </Button>
+            </a>
           </div>
         </div>
 
