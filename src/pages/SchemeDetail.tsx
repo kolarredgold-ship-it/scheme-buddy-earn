@@ -6,7 +6,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle } from "lucide-react";
+import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle, Sparkles } from "lucide-react";
 
 const SchemeDetail = () => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const SchemeDetail = () => {
   if (loading) return (
     <Layout>
       <div className="flex justify-center py-20">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+        <div className="h-8 w-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     </Layout>
   );
@@ -35,8 +35,9 @@ const SchemeDetail = () => {
   if (!scheme) return (
     <Layout>
       <div className="container mx-auto px-4 py-20 text-center">
-        <p className="text-xl text-muted-foreground">Scheme not found</p>
-        <Link to="/"><Button variant="link">← Back to Home</Button></Link>
+        <Sparkles className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+        <p className="text-lg text-muted-foreground mb-4">Scheme not found</p>
+        <Link to="/"><Button variant="link" className="gap-1"><ArrowLeft className="h-4 w-4" /> Back to Home</Button></Link>
       </div>
     </Layout>
   );
@@ -46,39 +47,42 @@ const SchemeDetail = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-6 pb-20 md:pb-8 max-w-3xl">
-        <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="h-4 w-4 mr-1" /> Back to Schemes
+      <div className="container mx-auto px-3 md:px-4 py-4 pb-24 md:pb-8 max-w-3xl animate-fade-in">
+        <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors">
+          <ArrowLeft className="h-4 w-4 mr-1" /> Back
         </Link>
 
         {scheme.image_url && (
-          <div className="rounded-xl overflow-hidden mb-6 h-48 md:h-64">
+          <div className="rounded-2xl overflow-hidden mb-5 h-44 md:h-60">
             <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover" />
           </div>
         )}
 
-        <Badge variant="outline" className="mb-3">{scheme.category}</Badge>
-        <h1 className="text-2xl md:text-3xl font-bold mb-4">{scheme.title}</h1>
+        <Badge variant="outline" className="mb-2 text-xs font-medium">{scheme.category}</Badge>
+        <h1 className="text-xl md:text-3xl font-extrabold mb-5 leading-tight" style={{ fontFamily: 'Plus Jakarta Sans' }}>{scheme.title}</h1>
 
         {/* Description */}
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <h2 className="font-semibold text-lg mb-3 flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" /> Description
+        <Card className="mb-4 border-border/40 overflow-hidden">
+          <CardContent className="p-4 md:p-6">
+            <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
+              <div className="p-1.5 rounded-lg bg-primary/10">
+                <FileText className="h-4 w-4 text-primary" />
+              </div>
+              Description
             </h2>
             <div className="relative">
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                 {isPaid ? description : description.slice(0, halfLength)}
               </p>
               {!isPaid && (
-                <div className="relative">
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap blur-sm select-none" aria-hidden>
+                <div className="relative mt-1">
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap blur-sm select-none" aria-hidden>
                     {description.slice(halfLength)}
                   </p>
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-card via-card/80 to-transparent">
                     <Link to="/subscription">
-                      <Button className="gap-2 shadow-lg">
-                        <Lock className="h-4 w-4" /> Unlock Full Details for ₹1000
+                      <Button className="gap-2 rounded-xl bg-gradient-primary shadow-glow font-semibold">
+                        <Lock className="h-4 w-4" /> Unlock Full Details
                       </Button>
                     </Link>
                   </div>
@@ -90,16 +94,19 @@ const SchemeDetail = () => {
 
         {/* Eligibility */}
         {scheme.eligibility && (
-          <Card className="mb-6">
-            <CardContent className="p-6">
-              <h2 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-secondary" /> Eligibility
+          <Card className="mb-4 border-border/40">
+            <CardContent className="p-4 md:p-6">
+              <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-secondary/10">
+                  <CheckCircle className="h-4 w-4 text-secondary" />
+                </div>
+                Eligibility
               </h2>
               {isPaid ? (
-                <p className="text-muted-foreground whitespace-pre-wrap">{scheme.eligibility}</p>
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.eligibility}</p>
               ) : (
-                <div className="blur-sm select-none text-muted-foreground">
-                  <p>This content is locked. Subscribe to view eligibility criteria.</p>
+                <div className="blur-sm select-none text-sm text-muted-foreground">
+                  <p>Subscribe to view eligibility criteria for this scheme.</p>
                 </div>
               )}
             </CardContent>
@@ -108,10 +115,10 @@ const SchemeDetail = () => {
 
         {/* Documents */}
         {scheme.documents && isPaid && (
-          <Card className="mb-6">
-            <CardContent className="p-6">
-              <h2 className="font-semibold text-lg mb-3">📄 Required Documents</h2>
-              <p className="text-muted-foreground whitespace-pre-wrap">{scheme.documents}</p>
+          <Card className="mb-4 border-border/40">
+            <CardContent className="p-4 md:p-6">
+              <h2 className="font-semibold text-base mb-3">📄 Required Documents</h2>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.documents}</p>
             </CardContent>
           </Card>
         )}
@@ -120,19 +127,19 @@ const SchemeDetail = () => {
         <div className="mt-6">
           {isPaid && scheme.apply_link ? (
             <a href={scheme.apply_link} target="_blank" rel="noopener noreferrer">
-              <Button size="lg" className="w-full md:w-auto gap-2">
+              <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-secondary font-semibold">
                 Apply Now <ExternalLink className="h-4 w-4" />
               </Button>
             </a>
           ) : !user ? (
             <Link to="/signup">
-              <Button size="lg" className="w-full md:w-auto gap-2">
+              <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-primary font-semibold">
                 Sign Up to Access
               </Button>
             </Link>
           ) : (
             <Link to="/subscription">
-              <Button size="lg" variant="outline" className="w-full md:w-auto gap-2">
+              <Button size="lg" variant="outline" className="w-full md:w-auto gap-2 rounded-xl font-semibold">
                 <Lock className="h-4 w-4" /> Subscribe to Apply
               </Button>
             </Link>
