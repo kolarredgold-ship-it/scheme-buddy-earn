@@ -1,0 +1,51 @@
+-- First reset all to central, then assign by title matches
+UPDATE public.schemes SET state = 'central';
+
+UPDATE public.schemes SET state = 'andhra_pradesh' WHERE lower(title) LIKE '%andhra pradesh%';
+UPDATE public.schemes SET state = 'arunachal_pradesh' WHERE lower(title) LIKE '%arunachal pradesh%';
+UPDATE public.schemes SET state = 'assam' WHERE lower(title) LIKE '%assam%';
+UPDATE public.schemes SET state = 'bihar' WHERE lower(title) LIKE '%bihar%';
+UPDATE public.schemes SET state = 'chhattisgarh' WHERE lower(title) LIKE '%chhattisgarh%';
+UPDATE public.schemes SET state = 'delhi' WHERE lower(title) LIKE '%delhi%';
+UPDATE public.schemes SET state = 'goa' WHERE lower(title) LIKE '%goa%' AND lower(title) NOT LIKE '%goal%';
+UPDATE public.schemes SET state = 'gujarat' WHERE lower(title) LIKE '%gujarat%';
+UPDATE public.schemes SET state = 'haryana' WHERE lower(title) LIKE '%haryana%';
+UPDATE public.schemes SET state = 'himachal_pradesh' WHERE lower(title) LIKE '%himachal pradesh%';
+UPDATE public.schemes SET state = 'jammu_kashmir' WHERE lower(title) LIKE '%jammu%' OR lower(title) LIKE '%kashmir%';
+UPDATE public.schemes SET state = 'jharkhand' WHERE lower(title) LIKE '%jharkhand%';
+UPDATE public.schemes SET state = 'karnataka' WHERE lower(title) LIKE '%karnataka%';
+UPDATE public.schemes SET state = 'kerala' WHERE lower(title) LIKE '%kerala%';
+UPDATE public.schemes SET state = 'ladakh' WHERE lower(title) LIKE '%ladakh%';
+UPDATE public.schemes SET state = 'madhya_pradesh' WHERE lower(title) LIKE '%madhya pradesh%';
+UPDATE public.schemes SET state = 'maharashtra' WHERE lower(title) LIKE '%maharashtra%';
+UPDATE public.schemes SET state = 'manipur' WHERE lower(title) LIKE '%manipur%';
+UPDATE public.schemes SET state = 'meghalaya' WHERE lower(title) LIKE '%meghalaya%';
+UPDATE public.schemes SET state = 'mizoram' WHERE lower(title) LIKE '%mizoram%';
+UPDATE public.schemes SET state = 'nagaland' WHERE lower(title) LIKE '%nagaland%';
+UPDATE public.schemes SET state = 'odisha' WHERE lower(title) LIKE '%odisha%';
+UPDATE public.schemes SET state = 'punjab' WHERE lower(title) LIKE '%punjab%';
+UPDATE public.schemes SET state = 'rajasthan' WHERE lower(title) LIKE '%rajasthan%';
+UPDATE public.schemes SET state = 'sikkim' WHERE lower(title) LIKE '%sikkim%';
+UPDATE public.schemes SET state = 'tamil_nadu' WHERE lower(title) LIKE '%tamil nadu%';
+UPDATE public.schemes SET state = 'telangana' WHERE lower(title) LIKE '%telangana%';
+UPDATE public.schemes SET state = 'tripura' WHERE lower(title) LIKE '%tripura%';
+UPDATE public.schemes SET state = 'uttar_pradesh' WHERE lower(title) LIKE '%uttar pradesh%';
+UPDATE public.schemes SET state = 'uttarakhand' WHERE lower(title) LIKE '%uttarakhand%';
+UPDATE public.schemes SET state = 'west_bengal' WHERE lower(title) LIKE '%west bengal%';
+UPDATE public.schemes SET state = 'chandigarh' WHERE lower(title) LIKE '%chandigarh%';
+UPDATE public.schemes SET state = 'puducherry' WHERE lower(title) LIKE '%puducherry%' OR lower(title) LIKE '%pondicherry%';
+UPDATE public.schemes SET state = 'andaman_nicobar' WHERE lower(title) LIKE '%andaman%' OR lower(title) LIKE '%nicobar%';
+UPDATE public.schemes SET state = 'dadra_nagar_haveli' WHERE lower(title) LIKE '%dadra%' OR lower(title) LIKE '%nagar haveli%';
+UPDATE public.schemes SET state = 'lakshadweep' WHERE lower(title) LIKE '%lakshadweep%';
+
+-- Also check descriptions for remaining central schemes
+UPDATE public.schemes SET state = 'andhra_pradesh' WHERE state = 'central' AND lower(description) LIKE '%andhra pradesh%';
+UPDATE public.schemes SET state = 'gujarat' WHERE state = 'central' AND lower(description) LIKE '%gujarat%';
+UPDATE public.schemes SET state = 'karnataka' WHERE state = 'central' AND lower(description) LIKE '%karnataka%';
+UPDATE public.schemes SET state = 'kerala' WHERE state = 'central' AND lower(description) LIKE '%kerala%';
+UPDATE public.schemes SET state = 'maharashtra' WHERE state = 'central' AND lower(description) LIKE '%maharashtra%';
+UPDATE public.schemes SET state = 'rajasthan' WHERE state = 'central' AND lower(description) LIKE '%rajasthan%';
+UPDATE public.schemes SET state = 'tamil_nadu' WHERE state = 'central' AND lower(description) LIKE '%tamil nadu%';
+UPDATE public.schemes SET state = 'telangana' WHERE state = 'central' AND lower(description) LIKE '%telangana%';
+UPDATE public.schemes SET state = 'uttar_pradesh' WHERE state = 'central' AND lower(description) LIKE '%uttar pradesh%';
+UPDATE public.schemes SET state = 'west_bengal' WHERE state = 'central' AND lower(description) LIKE '%west bengal%';
