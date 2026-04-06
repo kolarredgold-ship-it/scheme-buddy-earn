@@ -1,228 +1,57 @@
-import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
-import Layout from "@/components/Layout";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import Layout from '@/components/Layout';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import {
-  Brain, Mic, ChevronRight, ChevronLeft, CheckCircle2, XCircle,
-  Star, Trophy, Target, Lightbulb, ArrowRight, RotateCcw, Sparkles,
-  Clock, BarChart3, Award, MessageSquare
-} from "lucide-react";
+  ArrowLeft, Brain, BookOpen, Code, Briefcase, ChevronRight, RotateCcw,
+  ArrowRight, Star, Sparkles, GraduationCap, Info, AlertCircle, Loader2
+} from 'lucide-react';
 
-type InterviewQuestion = {
-  id: number;
+const courseOptions = ['BCom', 'BBA', 'BCA', 'MCA', 'BE/BTech', 'MBA', 'ME/MTech'];
+const languageOptions = ['C', 'C++', 'Java', 'Python', 'JavaScript', 'SQL', 'React', 'Node.js'];
+const roleOptions = ['Software Developer', 'Full Stack Developer', 'Data Analyst', 'AI Engineer', 'Accountant', 'HR Executive', 'Digital Marketing'];
+
+type TrainingMode = null | 'course' | 'language' | 'role';
+type ViewState = 'select-mode' | 'select-option' | 'flashcards' | 'mock-interview';
+
+interface Question {
+  id: string;
   question: string;
-  category: string;
-  tip: string;
-};
+  answer: string;
+  difficulty: string;
+}
 
-type AnswerEval = {
+interface InterviewResult {
   score: number;
-  rating: string;
-  strengths: string[];
-  improvements: string[];
-  sampleAnswer: string;
-};
-
-type OverallResult = {
-  overallScore: number;
-  overallRating: string;
-  summary: string;
-  topStrengths: string[];
-  topImprovements: string[];
-  hireRecommendation: string;
-  tips: string[];
-};
-
-const ROLES = [
-  "Software Developer", "Data Analyst", "Marketing Manager", "HR Executive",
-  "Business Analyst", "Product Manager", "UI/UX Designer", "Financial Analyst",
-  "Operations Manager", "Sales Executive", "Content Writer", "Project Manager",
-  "DevOps Engineer", "Full Stack Developer", "Machine Learning Engineer",
-  "Graphic Designer", "Digital Marketing Specialist", "Accountant",
-  "Civil Engineer", "Mechanical Engineer", "Teacher / Lecturer",
-];
-
-const TOPICS = [
-  "General Interview", "Technical Skills", "Behavioral Questions", "Problem Solving",
-  "Leadership", "Teamwork", "Communication", "Project Management",
-  "Data Structures & Algorithms", "System Design", "Database Management",
-  "Cloud Computing", "Agile Methodology", "Customer Service",
-  "Sales & Negotiation", "Financial Analysis", "Digital Marketing",
-];
-
-const DIFFICULTIES = [
-  { value: "beginner", label: "Fresher / Beginner", icon: "🌱" },
-  { value: "intermediate", label: "Intermediate (1-3 yrs)", icon: "🚀" },
-  { value: "advanced", label: "Advanced (3-7 yrs)", icon: "💎" },
-  { value: "expert", label: "Expert (7+ yrs)", icon: "👑" },
-];
-
-type Phase = "setup" | "interview" | "reviewing" | "results";
+  feedback: string;
+  suggestions: string;
+}
 
 const MockInterview = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const isPro = profile?.subscription_status === "active";
 
-  // Setup
-  const [role, setRole] = useState("");
-  const [customRole, setCustomRole] = useState("");
-  const [topic, setTopic] = useState("");
-  const [difficulty, setDifficulty] = useState("intermediate");
-  const [questionCount, setQuestionCount] = useState("5");
+  const [view, setView] = useState<ViewState>('select-mode');
+  const [mode, setMode] = useState<TrainingMode>(null);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
 
-  // Interview
-  const [phase, setPhase] = useState<Phase>("setup");
-  const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
-  const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [showTip, setShowTip] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [evalLoading, setEvalLoading] = useState(false);
-
-  // Per-question evaluation
-  const [currentEval, setCurrentEval] = useState<AnswerEval | null>(null);
-
-  // Results
-  const [overallResult, setOverallResult] = useState<OverallResult | null>(null);
-
-  const selectedRole = customRole || role;
-
-  const startInterview = async () => {
-    if (!selectedRole || !topic) {
-      toast({ title: "Please select role and topic", variant: "destructive" });
-      return;
-    }
-    if (!user) {
-      toast({ title: "Please login to start", variant: "destructive" });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("mock-interview", {
-        body: {
-          action: "generate_questions",
-          role: selectedRole,
-          topic,
-          difficulty,
-          questionCount: parseInt(questionCount),
-        },
-      });
-      if (error) throw error;
-
-      const qs = Array.isArray(data.result) ? data.result : [];
-      if (qs.length === 0) throw new Error("No questions generated");
-
-      setQuestions(qs);
-      setAnswers(new Array(qs.length).fill(""));
-      setCurrentQ(0);
-      setCurrentEval(null);
-      setPhase("interview");
-    } catch (err: any) {
-      toast({ title: "Error generating questions", description: err.message, variant: "destructive" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const evaluateCurrentAnswer = async () => {
-    const ans = answers[currentQ];
-    if (!ans?.trim()) {
-      toast({ title: "Please write your answer first", variant: "destructive" });
-      return;
-    }
-
-    setEvalLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("mock-interview", {
-        body: {
-          action: "evaluate_answer",
-          question: questions[currentQ].question,
-          answer: ans,
-        },
-      });
-      if (error) throw error;
-      setCurrentEval(data.result);
-    } catch (err: any) {
-      toast({ title: "Error evaluating", description: err.message, variant: "destructive" });
-    } finally {
-      setEvalLoading(false);
-    }
-  };
-
-  const goNext = () => {
-    setCurrentEval(null);
-    setShowTip(false);
-    if (currentQ < questions.length - 1) {
-      setCurrentQ(currentQ + 1);
-    }
-  };
-
-  const goPrev = () => {
-    setCurrentEval(null);
-    setShowTip(false);
-    if (currentQ > 0) {
-      setCurrentQ(currentQ - 1);
-    }
-  };
-
-  const finishInterview = async () => {
-    setPhase("reviewing");
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("mock-interview", {
-        body: {
-          action: "evaluate_all",
-          role: selectedRole,
-          topic,
-          questions: questions.map((q) => q.question),
-          answers,
-        },
-      });
-      if (error) throw error;
-      setOverallResult(data.result);
-      setPhase("results");
-    } catch (err: any) {
-      toast({ title: "Error evaluating interview", description: err.message, variant: "destructive" });
-      setPhase("interview");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const resetInterview = () => {
-    setPhase("setup");
-    setQuestions([]);
-    setAnswers([]);
-    setCurrentQ(0);
-    setCurrentEval(null);
-    setOverallResult(null);
-    setShowTip(false);
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    if (score >= 40) return "text-orange-600";
-    return "text-red-600";
-  };
-
-  const getScoreBg = (score: number) => {
-    if (score >= 8) return "bg-green-500";
-    if (score >= 6) return "bg-yellow-500";
-    if (score >= 4) return "bg-orange-500";
-    return "bg-red-500";
-  };
+  const [interviewQuestion, setInterviewQuestion] = useState('');
+  const [userAnswer, setUserAnswer] = useState('');
+  const [evaluating, setEvaluating] = useState(false);
+  const [result, setResult] = useState<InterviewResult | null>(null);
+  const [interviewRound, setInterviewRound] = useState(0);
+  const [loadingQuestion, setLoadingQuestion] = useState(false);
 
   if (!user) {
     return (
@@ -231,368 +60,389 @@ const MockInterview = () => {
           <Brain className="h-16 w-16 text-primary mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">AI Mock Interview Training</h1>
           <p className="text-muted-foreground mb-6">Login to start practicing interviews with AI</p>
-          <Button asChild><a href="/login">Login to Continue</a></Button>
+          <Button onClick={() => navigate('/login')}>Login to Continue</Button>
         </div>
       </Layout>
     );
   }
 
+  const fetchQuestions = async (category: string, subcategory: string) => {
+    setLoadingQuestions(true);
+    try {
+      const { data: aiData, error: aiError } = await supabase.functions.invoke('mock-interview', {
+        body: { action: 'generate-questions', category, subcategory, userId: user?.id },
+      });
+      if (aiError) throw aiError;
+      setQuestions(aiData?.questions || []);
+    } catch (error: any) {
+      toast({ title: 'Error', description: 'Failed to load questions.', variant: 'destructive' });
+    } finally {
+      setLoadingQuestions(false);
+    }
+  };
+
+  const handleSelectMode = (m: TrainingMode) => {
+    setMode(m);
+    setView('select-option');
+  };
+
+  const handleSelectOption = (option: string) => {
+    setSelectedOption(option);
+    const category = mode === 'course' ? 'course' : mode === 'language' ? 'language' : 'role';
+    fetchQuestions(category, option);
+    setView('flashcards');
+    setCurrentIndex(0);
+    setFlipped(false);
+  };
+
+  const startMockInterview = async () => {
+    setView('mock-interview');
+    setInterviewRound(0);
+    setResult(null);
+    setUserAnswer('');
+    await fetchNextQuestion();
+  };
+
+  const fetchNextQuestion = async () => {
+    setLoadingQuestion(true);
+    setResult(null);
+    setUserAnswer('');
+    try {
+      const topic = selectedOption || 'general';
+      const { data, error } = await supabase.functions.invoke('mock-interview', {
+        body: { action: 'ask-question', topic, round: interviewRound + 1, userId: user?.id },
+      });
+      if (error) throw error;
+      setInterviewQuestion(data?.question || 'Tell me about yourself.');
+      setInterviewRound(prev => prev + 1);
+    } catch (error: any) {
+      toast({ title: 'Error', description: 'Failed to get question.', variant: 'destructive' });
+    } finally {
+      setLoadingQuestion(false);
+    }
+  };
+
+  const submitAnswer = async () => {
+    if (!userAnswer.trim()) {
+      toast({ title: 'Empty answer', description: 'Please type your answer.', variant: 'destructive' });
+      return;
+    }
+    setEvaluating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('mock-interview', {
+        body: {
+          action: 'evaluate',
+          question: interviewQuestion,
+          answer: userAnswer,
+          topic: selectedOption,
+          userId: user?.id,
+        },
+      });
+      if (error) throw error;
+      setResult({
+        score: data?.score || 0,
+        feedback: data?.feedback || '',
+        suggestions: data?.suggestions || '',
+      });
+    } catch (error: any) {
+      toast({ title: 'Error', description: 'Failed to evaluate answer.', variant: 'destructive' });
+    } finally {
+      setEvaluating(false);
+    }
+  };
+
+  const goBack = () => {
+    if (view === 'mock-interview') setView('flashcards');
+    else if (view === 'flashcards') { setView('select-option'); setQuestions([]); }
+    else if (view === 'select-option') { setView('select-mode'); setMode(null); }
+  };
+
+  const getOptions = () => {
+    if (mode === 'course') return courseOptions;
+    if (mode === 'language') return languageOptions;
+    if (mode === 'role') return roleOptions;
+    return [];
+  };
+
+  const currentQ = questions[currentIndex];
+  const difficultyColor = (d: string) =>
+    d === 'easy' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+    : d === 'hard' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+    : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
+
   return (
     <Layout>
-      <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5">
-            <Brain className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-xl md:text-2xl font-bold">AI Mock Interview</h1>
-            <p className="text-xs md:text-sm text-muted-foreground">Practice with AI-powered interview simulation</p>
-          </div>
-          {phase !== "setup" && (
-            <Button variant="ghost" size="sm" className="ml-auto gap-1.5" onClick={resetInterview}>
-              <RotateCcw className="h-4 w-4" /> New
-            </Button>
-          )}
-        </div>
+      <div className="container mx-auto px-4 py-6 md:py-8 max-w-5xl">
 
-        {/* PHASE: SETUP */}
-        {phase === "setup" && (
-          <div className="space-y-6 animate-fade-in">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Target className="h-5 w-5 text-primary" />
-                  Configure Your Interview
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-5">
-                {/* Role */}
-                <div className="space-y-2">
-                  <Label className="font-semibold">Job Role / Position</Label>
-                  <Select value={role} onValueChange={(v) => { setRole(v); setCustomRole(""); }}>
-                    <SelectTrigger className="rounded-xl">
-                      <SelectValue placeholder="Select a role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ROLES.map((r) => (
-                        <SelectItem key={r} value={r}>{r}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Input
-                    placeholder="Or type a custom role..."
-                    value={customRole}
-                    onChange={(e) => { setCustomRole(e.target.value); setRole(""); }}
-                    className="rounded-xl"
-                  />
+        {/* ===== MODE SELECTION ===== */}
+        {view === 'select-mode' && (
+          <div className="animate-fade-in">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
+                <Brain className="w-4 h-4" />
+                <span className="text-sm font-medium">AI-Powered Training</span>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold mb-3">
+                Choose Your <span className="text-primary">Training Path</span>
+              </h1>
+              <p className="text-muted-foreground max-w-xl mx-auto">
+                700+ questions across courses, programming languages & job roles with AI-powered feedback
+              </p>
+            </div>
+
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">Note: AI Generated Questions</p>
+                  <p className="text-xs text-amber-600 dark:text-amber-500">Questions are generated by AI. Try the AI Mock Interview for unlimited AI-generated questions with real-time evaluation.</p>
                 </div>
+              </div>
+            </div>
 
-                {/* Topic */}
-                <div className="space-y-2">
-                  <Label className="font-semibold">Interview Focus Area</Label>
-                  <Select value={topic} onValueChange={setTopic}>
-                    <SelectTrigger className="rounded-xl">
-                      <SelectValue placeholder="Select focus area" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TOPICS.map((t) => (
-                        <SelectItem key={t} value={t}>{t}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Difficulty */}
-                <div className="space-y-2">
-                  <Label className="font-semibold">Experience Level</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {DIFFICULTIES.map((d) => (
-                      <button
-                        key={d.value}
-                        onClick={() => setDifficulty(d.value)}
-                        className={`p-3 rounded-xl border text-left text-sm font-medium transition-all ${
-                          difficulty === d.value
-                            ? "border-primary bg-primary/5 text-primary"
-                            : "border-border hover:border-primary/30"
-                        }`}
-                      >
-                        <span className="mr-1.5">{d.icon}</span> {d.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Question Count */}
-                <div className="space-y-2">
-                  <Label className="font-semibold">Number of Questions</Label>
-                  <Select value={questionCount} onValueChange={setQuestionCount}>
-                    <SelectTrigger className="rounded-xl w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="3">3 Questions</SelectItem>
-                      <SelectItem value="5">5 Questions</SelectItem>
-                      <SelectItem value="8">8 Questions</SelectItem>
-                      <SelectItem value="10">10 Questions</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Button
-                  onClick={startInterview}
-                  disabled={loading || (!selectedRole || !topic)}
-                  className="w-full h-12 rounded-xl text-base font-semibold gap-2"
-                >
-                  {loading ? (
-                    <>
-                      <div className="h-4 w-4 border-2 border-primary-foreground/40 border-t-primary-foreground rounded-full animate-spin" />
-                      Generating Questions...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-5 w-5" /> Start Mock Interview
-                    </>
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Features */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid md:grid-cols-3 gap-6">
               {[
-                { icon: Brain, label: "AI-Powered", desc: "Smart questions" },
-                { icon: BarChart3, label: "Detailed Scoring", desc: "Per-answer feedback" },
-                { icon: MessageSquare, label: "Model Answers", desc: "Learn from best" },
-                { icon: Award, label: "Final Report", desc: "Overall analysis" },
-              ].map((f, i) => (
-                <Card key={i} className="text-center p-3">
-                  <f.icon className="h-6 w-6 text-primary mx-auto mb-1.5" />
-                  <p className="text-xs font-semibold">{f.label}</p>
-                  <p className="text-[10px] text-muted-foreground">{f.desc}</p>
+                { mode: 'course' as TrainingMode, icon: GraduationCap, title: 'Course Based', desc: 'BCom, BBA, BCA, MBA & more academic course questions', color: 'from-blue-500 to-indigo-600', badge: '7 Courses' },
+                { mode: 'language' as TrainingMode, icon: Code, title: 'Programming', desc: 'C, Java, Python, JS, SQL & more coding interview questions', color: 'from-emerald-500 to-teal-600', badge: '8 Languages' },
+                { mode: 'role' as TrainingMode, icon: Briefcase, title: 'Job Roles', desc: 'Software Dev, Data Analyst, HR, Marketing & more', color: 'from-purple-500 to-pink-600', badge: '7 Roles' },
+              ].map((item, i) => (
+                <Card key={i} className="group cursor-pointer hover:shadow-lg transition-all border-0 shadow-md relative overflow-hidden" onClick={() => handleSelectMode(item.mode)}>
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color}`} />
+                  <CardContent className="p-8 text-center">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                      <item.icon className="w-8 h-8 text-white" />
+                    </div>
+                    <Badge variant="secondary" className="mb-3">{item.badge}</Badge>
+                    <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                    <p className="text-muted-foreground text-sm">{item.desc}</p>
+                    <div className="mt-4 flex items-center justify-center gap-1 text-primary text-sm font-medium">
+                      <span>Start Training</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  </CardContent>
                 </Card>
               ))}
             </div>
           </div>
         )}
 
-        {/* PHASE: INTERVIEW */}
-        {phase === "interview" && questions.length > 0 && (
-          <div className="space-y-4 animate-fade-in">
-            {/* Progress */}
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-muted-foreground">
-                Question {currentQ + 1} / {questions.length}
-              </span>
-              <Progress value={((currentQ + 1) / questions.length) * 100} className="flex-1 h-2" />
-              <Badge variant="outline" className="text-xs">{questions[currentQ].category}</Badge>
+        {/* ===== OPTION SELECTION ===== */}
+        {view === 'select-option' && (
+          <div className="animate-fade-in">
+            <Button variant="ghost" size="sm" onClick={goBack} className="mb-4">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Back
+            </Button>
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Select {mode === 'course' ? 'Your Course' : mode === 'language' ? 'Programming Language' : 'Job Role'}
+              </h2>
+              <p className="text-muted-foreground text-sm">Pick a topic to start practicing</p>
+            </div>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+              {getOptions().map((opt) => (
+                <Card key={opt} className="cursor-pointer hover:shadow-md transition-all group" onClick={() => handleSelectOption(opt)}>
+                  <CardContent className="p-6 text-center">
+                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{opt}</h3>
+                    <ChevronRight className="w-4 h-4 mx-auto mt-2 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ===== FLASH CARDS ===== */}
+        {view === 'flashcards' && (
+          <div className="animate-fade-in">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" onClick={goBack}>
+                  <ArrowLeft className="w-4 h-4 mr-1" /> Back
+                </Button>
+                <div>
+                  <h2 className="text-2xl font-bold">{selectedOption}</h2>
+                  <p className="text-muted-foreground text-sm">Flashcard Training</p>
+                </div>
+              </div>
+              <Button onClick={startMockInterview} className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg hover:shadow-xl">
+                <Brain className="w-4 h-4 mr-2" /> Start AI Mock Interview
+              </Button>
             </div>
 
-            {/* Question Card */}
-            <Card className="border-primary/20">
-              <CardContent className="p-5 md:p-6">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-primary/10 shrink-0 mt-0.5">
-                    <MessageSquare className="h-5 w-5 text-primary" />
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-6 max-w-2xl mx-auto">
+              <Info className="w-4 h-4 text-amber-600 flex-shrink-0" />
+              <p className="text-xs text-amber-600 dark:text-amber-500">
+                For unlimited questions with evaluation, try the <strong>AI Mock Interview</strong>.
+              </p>
+            </div>
+
+            {loadingQuestions ? (
+              <Card className="border-0 shadow-md max-w-2xl mx-auto">
+                <CardContent className="p-16 text-center">
+                  <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+                  <p className="text-muted-foreground">Generating questions with AI...</p>
+                </CardContent>
+              </Card>
+            ) : questions.length === 0 ? (
+              <Card className="border-0 shadow-md max-w-2xl mx-auto">
+                <CardContent className="p-16 text-center">
+                  <AlertCircle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="font-semibold text-lg mb-2">No Flashcards Available</p>
+                  <p className="text-muted-foreground mb-6">Try the AI Mock Interview for unlimited AI-generated questions!</p>
+                  <Button onClick={startMockInterview} className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white">
+                    <Brain className="w-4 h-4 mr-2" /> Start AI Mock Interview Instead
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                <div className="max-w-2xl mx-auto mb-4">
+                  <div className="flex items-center justify-between text-sm mb-2">
+                    <span className="text-muted-foreground">Progress</span>
+                    <span className="font-semibold text-primary">{currentIndex + 1} / {questions.length}</span>
                   </div>
-                  <div>
-                    <p className="text-base md:text-lg font-semibold leading-relaxed">
-                      {questions[currentQ].question}
-                    </p>
+                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary rounded-full transition-all duration-500"
+                      style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+                    />
                   </div>
                 </div>
 
-                {/* Tip */}
-                {!showTip ? (
-                  <button
-                    onClick={() => setShowTip(true)}
-                    className="text-xs text-primary flex items-center gap-1 hover:underline mb-4"
+                <div
+                  className="cursor-pointer mx-auto max-w-2xl"
+                  onClick={() => setFlipped(!flipped)}
+                  style={{ perspective: '1000px' }}
+                >
+                  <div
+                    className="relative transition-transform duration-500"
+                    style={{
+                      transformStyle: 'preserve-3d',
+                      transform: flipped ? 'rotateY(180deg)' : 'rotateY(0)',
+                      minHeight: '320px',
+                    }}
                   >
-                    <Lightbulb className="h-3.5 w-3.5" /> Show Hint
-                  </button>
-                ) : (
-                  <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-4 text-sm text-amber-800 dark:text-amber-200 flex items-start gap-2">
-                    <Lightbulb className="h-4 w-4 shrink-0 mt-0.5" />
-                    {questions[currentQ].tip}
+                    <Card className="absolute inset-0 border-0 shadow-lg" style={{ backfaceVisibility: 'hidden' }}>
+                      <CardContent className="p-8 flex flex-col items-center justify-center h-full min-h-[320px]">
+                        <Badge className={`mb-5 ${difficultyColor(currentQ?.difficulty || 'medium')}`}>
+                          {currentQ?.difficulty || 'medium'}
+                        </Badge>
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-medium">Question</p>
+                        <p className="text-xl text-center font-semibold leading-relaxed">{currentQ?.question}</p>
+                        <div className="mt-8 flex items-center gap-2 text-primary text-sm animate-pulse">
+                          <span>Click to reveal answer</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="absolute inset-0 border-0 shadow-lg border-t-4 border-t-primary" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                      <CardContent className="p-8 flex flex-col items-center justify-center h-full min-h-[320px]">
+                        <p className="text-xs uppercase tracking-wider text-primary mb-4 font-bold">Answer</p>
+                        <p className="text-center text-muted-foreground whitespace-pre-wrap leading-relaxed">{currentQ?.answer}</p>
+                        <div className="mt-8 flex items-center gap-2 text-muted-foreground text-sm">
+                          <span>Click to see question</span>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                )}
+                </div>
 
-                {/* Answer */}
-                <Textarea
-                  placeholder="Type your answer here... Be detailed and structured."
-                  value={answers[currentQ] || ""}
-                  onChange={(e) => {
-                    const newAnswers = [...answers];
-                    newAnswers[currentQ] = e.target.value;
-                    setAnswers(newAnswers);
-                  }}
-                  className="min-h-[150px] rounded-xl resize-none"
-                />
-
-                {/* Evaluate Button */}
-                <div className="flex gap-2 mt-3">
-                  <Button
-                    variant="outline"
-                    onClick={evaluateCurrentAnswer}
-                    disabled={evalLoading || !answers[currentQ]?.trim()}
-                    className="gap-1.5 rounded-xl"
-                  >
-                    {evalLoading ? (
-                      <div className="h-4 w-4 border-2 border-primary/40 border-t-primary rounded-full animate-spin" />
-                    ) : (
-                      <Star className="h-4 w-4" />
-                    )}
-                    Evaluate Answer
+                <div className="flex justify-center gap-3 mt-8">
+                  <Button variant="outline" size="lg" disabled={currentIndex === 0} onClick={() => { setCurrentIndex(prev => prev - 1); setFlipped(false); }}>
+                    <ArrowLeft className="w-4 h-4 mr-1" /> Previous
+                  </Button>
+                  <Button variant="outline" size="lg" onClick={() => { setFlipped(false); setCurrentIndex(0); }}>
+                    <RotateCcw className="w-4 h-4" />
+                  </Button>
+                  <Button variant="outline" size="lg" disabled={currentIndex === questions.length - 1} onClick={() => { setCurrentIndex(prev => prev + 1); setFlipped(false); }}>
+                    Next <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </div>
-
-                {/* Per-question Evaluation */}
-                {currentEval && (
-                  <div className="mt-4 space-y-3 animate-fade-in">
-                    <div className="flex items-center gap-3">
-                      <div className={`text-3xl font-bold ${currentEval.score >= 7 ? 'text-green-600' : currentEval.score >= 5 ? 'text-yellow-600' : 'text-red-600'}`}>
-                        {currentEval.score}/10
-                      </div>
-                      <Badge className={`${getScoreBg(currentEval.score)} text-white`}>{currentEval.rating}</Badge>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-3">
-                      <div className="bg-green-50 dark:bg-green-950/20 rounded-xl p-3 space-y-1.5">
-                        <p className="text-xs font-semibold text-green-700 dark:text-green-400 flex items-center gap-1">
-                          <CheckCircle2 className="h-3.5 w-3.5" /> Strengths
-                        </p>
-                        {currentEval.strengths?.map((s, i) => (
-                          <p key={i} className="text-xs text-green-800 dark:text-green-300">• {s}</p>
-                        ))}
-                      </div>
-                      <div className="bg-orange-50 dark:bg-orange-950/20 rounded-xl p-3 space-y-1.5">
-                        <p className="text-xs font-semibold text-orange-700 dark:text-orange-400 flex items-center gap-1">
-                          <XCircle className="h-3.5 w-3.5" /> Improve
-                        </p>
-                        {currentEval.improvements?.map((s, i) => (
-                          <p key={i} className="text-xs text-orange-800 dark:text-orange-300">• {s}</p>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="bg-muted/50 rounded-xl p-3">
-                      <p className="text-xs font-semibold mb-1 flex items-center gap-1">
-                        <Sparkles className="h-3.5 w-3.5 text-primary" /> Model Answer
-                      </p>
-                      <p className="text-xs text-muted-foreground leading-relaxed">{currentEval.sampleAnswer}</p>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between">
-              <Button variant="outline" onClick={goPrev} disabled={currentQ === 0} className="gap-1.5 rounded-xl">
-                <ChevronLeft className="h-4 w-4" /> Previous
-              </Button>
-
-              {currentQ < questions.length - 1 ? (
-                <Button onClick={goNext} className="gap-1.5 rounded-xl">
-                  Next <ChevronRight className="h-4 w-4" />
-                </Button>
-              ) : (
-                <Button onClick={finishInterview} className="gap-1.5 rounded-xl bg-green-600 hover:bg-green-700">
-                  <Trophy className="h-4 w-4" /> Finish & Get Results
-                </Button>
-              )}
-            </div>
+              </>
+            )}
           </div>
         )}
 
-        {/* PHASE: REVIEWING */}
-        {phase === "reviewing" && (
-          <div className="text-center py-20 animate-fade-in">
-            <div className="h-12 w-12 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-lg font-semibold">Evaluating your interview...</p>
-            <p className="text-sm text-muted-foreground mt-1">AI is analyzing all your answers</p>
-          </div>
-        )}
-
-        {/* PHASE: RESULTS */}
-        {phase === "results" && overallResult && (
-          <div className="space-y-4 animate-fade-in">
-            {/* Score Card */}
-            <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-              <CardContent className="p-6 text-center">
-                <Trophy className="h-10 w-10 text-primary mx-auto mb-3" />
-                <div className={`text-5xl font-bold mb-1 ${getScoreColor(overallResult.overallScore)}`}>
-                  {overallResult.overallScore}%
-                </div>
-                <Badge className="mb-3 text-sm px-4 py-1">{overallResult.overallRating}</Badge>
-                <p className="text-sm text-muted-foreground max-w-md mx-auto">{overallResult.summary}</p>
-                <div className="mt-4">
-                  <Badge variant="outline" className={`text-sm px-4 py-1 ${
-                    overallResult.hireRecommendation === "Strong Hire" ? "border-green-500 text-green-600" :
-                    overallResult.hireRecommendation === "Hire" ? "border-blue-500 text-blue-600" :
-                    overallResult.hireRecommendation === "Maybe" ? "border-yellow-500 text-yellow-600" :
-                    "border-red-500 text-red-600"
-                  }`}>
-                    Hire Recommendation: {overallResult.hireRecommendation}
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Strengths & Improvements */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <Card>
-                <CardContent className="p-4 space-y-2">
-                  <h3 className="font-semibold flex items-center gap-2 text-green-700 dark:text-green-400">
-                    <CheckCircle2 className="h-5 w-5" /> Top Strengths
-                  </h3>
-                  {overallResult.topStrengths?.map((s, i) => (
-                    <div key={i} className="flex items-start gap-2 text-sm">
-                      <Star className="h-4 w-4 text-green-500 shrink-0 mt-0.5" />
-                      <span>{s}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-4 space-y-2">
-                  <h3 className="font-semibold flex items-center gap-2 text-orange-700 dark:text-orange-400">
-                    <Target className="h-5 w-5" /> Areas to Improve
-                  </h3>
-                  {overallResult.topImprovements?.map((s, i) => (
-                    <div key={i} className="flex items-start gap-2 text-sm">
-                      <ArrowRight className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
-                      <span>{s}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+        {/* ===== MOCK INTERVIEW ===== */}
+        {view === 'mock-interview' && (
+          <div className="animate-fade-in max-w-3xl mx-auto">
+            <Button variant="ghost" size="sm" onClick={goBack} className="mb-4">
+              <ArrowLeft className="w-4 h-4 mr-1" /> Back to Flashcards
+            </Button>
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-600 mb-3">
+                <Brain className="w-4 h-4" />
+                <span className="text-sm font-medium">Live AI Interview</span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold">
+                {selectedOption || 'General'} Interview
+              </h2>
             </div>
 
-            {/* Tips */}
-            <Card>
-              <CardContent className="p-4 space-y-2">
-                <h3 className="font-semibold flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-primary" /> Tips for Next Interview
-                </h3>
-                {overallResult.tips?.map((t, i) => (
-                  <div key={i} className="flex items-start gap-2 text-sm">
-                    <Badge variant="outline" className="shrink-0 text-[10px] mt-0.5">{i + 1}</Badge>
-                    <span>{t}</span>
+            {loadingQuestion ? (
+              <Card className="border-0 shadow-md">
+                <CardContent className="p-16 text-center">
+                  <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
+                  <p className="text-muted-foreground">AI is preparing your question...</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="border-0 shadow-md overflow-hidden">
+                <div className="h-1.5 bg-gradient-to-r from-emerald-500 to-teal-600" />
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                      <span className="text-sm font-bold text-emerald-600">{interviewRound}</span>
+                    </div>
+                    Round {interviewRound}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6 pb-8">
+                  <div className="bg-secondary/20 rounded-xl p-6 border border-border/30">
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">Interview Question</p>
+                    <p className="font-semibold text-lg leading-relaxed">{interviewQuestion}</p>
                   </div>
-                ))}
-              </CardContent>
-            </Card>
 
-            {/* Retry */}
-            <div className="flex gap-3">
-              <Button onClick={resetInterview} className="flex-1 h-12 rounded-xl gap-2">
-                <RotateCcw className="h-4 w-4" /> Practice Again
-              </Button>
-              <Button variant="outline" onClick={() => setPhase("interview")} className="flex-1 h-12 rounded-xl gap-2">
-                <MessageSquare className="h-4 w-4" /> Review Answers
-              </Button>
-            </div>
+                  {!result ? (
+                    <>
+                      <Textarea
+                        value={userAnswer}
+                        onChange={e => setUserAnswer(e.target.value)}
+                        placeholder="Type your answer here... Be detailed and professional."
+                        rows={6}
+                        className="text-base"
+                      />
+                      <Button onClick={submitAnswer} disabled={evaluating} className="w-full bg-gradient-to-r from-primary to-primary/80" size="lg">
+                        {evaluating ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Evaluating...</> : <><Sparkles className="w-4 h-4 mr-2" /> Submit Answer</>}
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="space-y-5">
+                      <div className="text-center">
+                        <div className={`inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-xl font-bold ${result.score >= 7 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : result.score >= 4 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                          <Star className="w-6 h-6" />
+                          Score: {result.score}/10
+                        </div>
+                      </div>
+
+                      <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-5 border border-blue-200/30">
+                        <p className="font-semibold mb-2 text-blue-700 dark:text-blue-400 text-sm">💬 Feedback</p>
+                        <p className="text-sm text-blue-900 dark:text-blue-300 leading-relaxed">{result.feedback}</p>
+                      </div>
+
+                      <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-5 border border-green-200/30">
+                        <p className="font-semibold mb-2 text-green-700 dark:text-green-400 text-sm">✨ Suggestions</p>
+                        <p className="text-sm text-green-900 dark:text-green-300 leading-relaxed">{result.suggestions}</p>
+                      </div>
+
+                      <Button onClick={fetchNextQuestion} className="w-full bg-gradient-to-r from-primary to-primary/80" size="lg">
+                        Next Question <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
       </div>
