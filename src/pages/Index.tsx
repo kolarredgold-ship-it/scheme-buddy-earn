@@ -192,7 +192,7 @@ const HeroBanner = () => {
 // Scheme Card
 const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => (
   <Link to={`/scheme/${scheme.id}`} className="block">
-    <Card className="group min-w-[200px] md:min-w-[260px] max-w-[260px] md:max-w-[300px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
+    <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
       <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
         {scheme.image_url ? (
           <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
@@ -407,10 +407,18 @@ const Index = () => {
                     {filteredSchemes.length}
                   </Badge>
                 </h2>
+                <button
+                  onClick={() => setActiveCategory(null)}
+                  className="text-xs text-primary font-medium flex items-center gap-0.5 hover:underline"
+                >
+                  Clear Filter
+                </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} isPaid={isPaid} />
+                  <div key={scheme.id} className="w-full">
+                    <SchemeCard scheme={scheme} isPaid={isPaid} />
+                  </div>
                 ))}
               </div>
             </section>
@@ -419,14 +427,11 @@ const Index = () => {
             <>
               {/* Recent / Trending */}
               <section>
-                <div className="flex items-center justify-between mb-3">
+                <div className="mb-3">
                   <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
                     <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent" />
                     Trending Schemes
                   </h2>
-                  <button className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline">
-                    View All <ChevronRight className="h-3.5 w-3.5" />
-                  </button>
                 </div>
                 <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
                   {recentSchemes.map((scheme) => (
