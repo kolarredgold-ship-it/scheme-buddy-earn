@@ -143,10 +143,20 @@ const AdminSchemes = () => {
       <div className="container mx-auto px-4 py-6 space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Manage Schemes</h1>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={openCreate} className="gap-2"><Plus className="h-4 w-4" /> Add Scheme</Button>
-            </DialogTrigger>
+          <div className="flex gap-2 items-center">
+            {generating && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Generating {genProgress.current}/{genProgress.total}</span>
+                <Progress value={(genProgress.current / genProgress.total) * 100} className="w-24 h-2" />
+              </div>
+            )}
+            <Button onClick={generateAllImages} disabled={generating} variant="outline" className="gap-2">
+              <Wand2 className="h-4 w-4" /> {generating ? "Generating..." : "Generate All Images"}
+            </Button>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={openCreate} className="gap-2"><Plus className="h-4 w-4" /> Add Scheme</Button>
+              </DialogTrigger>
             <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editId ? "Edit Scheme" : "Add New Scheme"}</DialogTitle>
