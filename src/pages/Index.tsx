@@ -320,11 +320,11 @@ const Index = () => {
 
           {/* Action Buttons */}
           <div className="flex gap-2 mt-3">
-            <a href="https://interreport.in" target="_blank" rel="noopener noreferrer" className="flex-1">
+            <Link to="/create-report" className="flex-1">
               <Button variant="outline" className="w-full h-11 rounded-xl gap-2 text-xs md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
                 <FileText className="h-4 w-4" /> Generate Internship Report
               </Button>
-            </a>
+            </Link>
             <a href="https://interreport.in" target="_blank" rel="noopener noreferrer" className="flex-1">
               <Button variant="outline" className="w-full h-11 rounded-xl gap-2 text-xs md:text-sm font-semibold border-emerald-500/30 text-emerald-700 hover:bg-emerald-50">
                 <ExternalLink className="h-4 w-4" /> Private Jobs

@@ -56,6 +56,30 @@ export type Database = {
         }
         Relationships: []
       }
+      report_generations: {
+        Row: {
+          created_at: string
+          form_data: Json | null
+          id: string
+          report_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          form_data?: Json | null
+          id?: string
+          report_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          form_data?: Json | null
+          id?: string
+          report_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       schemes: {
         Row: {
           apply_link: string | null
