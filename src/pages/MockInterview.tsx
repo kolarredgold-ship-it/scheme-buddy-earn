@@ -141,10 +141,17 @@ const MockInterview = () => {
     }
   };
 
+  const allGeneratableRoles = [
+    ...roleOptions,
+    ...Object.entries(engineeringSpecializations).flatMap(([degree, specs]) =>
+      specs.map(spec => `${degree} - ${spec}`)
+    ),
+  ];
+
   const generateAllQuestions = async () => {
     setGeneratingQuestions(true);
     try {
-      for (const role of roleOptions) {
+      for (const role of allGeneratableRoles) {
         toast({ title: 'Generating...', description: `Generating questions for ${role}...` });
         const { data, error } = await supabase.functions.invoke('generate-interview-questions', {
           body: { role },
