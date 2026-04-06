@@ -110,6 +110,34 @@ const AdminSchemes = () => {
     if (error) toast.error("Failed to delete"); else { toast.success("Deleted"); fetchSchemes(); }
   };
 
+  const generateAllImages = async () => {
+    setGenerating(true);
+    const total = schemes.length;
+    setGenProgress({ current: 0, total });
+    let offset = 0;
+    let generated = 0;
+
+    while (true) {
+      try {
+        const { data, error } = await supabase.functions.invoke("generate-scheme-images", {
+          body: { offset, limit: 1 },
+        });
+        if (error) { toast.error("Generation error"); break; }
+        if (data?.done) break;
+        generated += (data?.updated || 0);
+        offset = data?.nextOffset || offset + 1;
+        setGenProgress({ current: offset, total });
+      } catch (e) {
+        toast.error("Network error, retrying...");
+        await new Promise(r => setTimeout(r, 3000));
+      }
+    }
+
+    toast.success(`Generated ${generated} images!`);
+    setGenerating(false);
+    fetchSchemes();
+  };
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-6 space-y-6">
