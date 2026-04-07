@@ -25,6 +25,16 @@
 </head>
 
   <body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" style="position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;transition:opacity 0.4s ease">
+      <img src="/techrola_logo.png" alt="TechRola" style="max-width:260px;width:70%;animation:splashPulse 1.5s ease-in-out infinite" />
+    </div>
+    <style>
+      @keyframes splashPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.85; transform: scale(1.03); }
+      }
+    </style>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
