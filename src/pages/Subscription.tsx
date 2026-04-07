@@ -71,17 +71,17 @@ const Subscription = () => {
 
         <Card className="mb-6 border-primary/30 shadow-lg">
           <CardContent className="p-8 text-center">
-            {hasReferral && (
-              <p className="text-sm text-muted-foreground line-through mb-1">₹2,999</p>
-            )}
+            <p className="text-lg text-muted-foreground line-through mb-1">₹2,999</p>
             <div className="flex items-baseline justify-center gap-1 mb-2">
-              <span className="text-4xl font-bold">₹{price.toLocaleString()}</span>
+              <span className="text-5xl font-extrabold text-secondary">₹999</span>
               <span className="text-muted-foreground">/lifetime</span>
             </div>
-            {hasReferral && (
+            {hasReferral ? (
               <Badge variant="outline" className="border-secondary text-secondary">
                 <Zap className="h-3 w-3 mr-1" /> Referral Discount Applied! Save ₹2,000
               </Badge>
+            ) : (
+              <p className="text-xs text-muted-foreground mt-1">Use code <span className="font-bold text-primary">WELCOME</span> to unlock this price</p>
             )}
           </CardContent>
         </Card>
