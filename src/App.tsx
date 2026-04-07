@@ -20,6 +20,7 @@ import AdminWithdrawals from "./pages/admin/AdminWithdrawals";
 import CreateReport from "./pages/CreateReport";
 import AIReportGenerator from "./pages/AIReportGenerator";
 import MockInterview from "./pages/MockInterview";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
