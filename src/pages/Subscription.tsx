@@ -38,7 +38,7 @@ const Subscription = () => {
   }
 
   const hasReferral = !!profile?.referred_by;
-  const price = hasReferral ? 1000 : 2999;
+  const price = hasReferral ? 999 : 2999;
 
   const handlePayment = () => {
     // Placeholder for Razorpay integration
@@ -56,6 +56,19 @@ const Subscription = () => {
           <p className="text-muted-foreground">Get complete access to all government schemes</p>
         </div>
 
+        {/* Limited Time Offer Banner */}
+        <Card className="mb-4 border-secondary/50 bg-secondary/5">
+          <CardContent className="p-4 text-center">
+            <Badge className="mb-2 bg-destructive text-destructive-foreground">
+              <Zap className="h-3 w-3 mr-1" /> Limited Time Offer
+            </Badge>
+            <p className="text-sm font-semibold">Get Premium at just <span className="text-secondary">₹999</span>!</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Don't have a referral code? Use code <span className="font-bold text-primary">TR9F9AD6</span> & get ₹2,000 discount!
+            </p>
+          </CardContent>
+        </Card>
+
         <Card className="mb-6 border-primary/30 shadow-lg">
           <CardContent className="p-8 text-center">
             {hasReferral && (
@@ -67,7 +80,7 @@ const Subscription = () => {
             </div>
             {hasReferral && (
               <Badge variant="outline" className="border-secondary text-secondary">
-                <Zap className="h-3 w-3 mr-1" /> Referral Discount Applied! Save ₹1,999
+                <Zap className="h-3 w-3 mr-1" /> Referral Discount Applied! Save ₹2,000
               </Badge>
             )}
           </CardContent>
