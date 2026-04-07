@@ -68,7 +68,7 @@ const AdminUsers = () => {
       if (res.error || res.data?.error) {
         throw new Error(res.data?.error || "Failed");
       }
-      const price = res.data?.price || 1000;
+      const price = res.data?.price || 999;
       toast.success(`User upgraded to Pro (₹${price}) with referral earnings distributed`);
       await fetchUsers();
     } catch (e: any) {
