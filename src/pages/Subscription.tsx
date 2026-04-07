@@ -64,7 +64,7 @@ const Subscription = () => {
             </Badge>
             <p className="text-sm font-semibold">Get Premium at just <span className="text-secondary">₹999</span>!</p>
             <p className="text-xs text-muted-foreground mt-1">
-              Don't have a referral code? Use code <span className="font-bold text-primary">TR9F9AD6</span> & get ₹2,000 discount!
+              Don't have a referral code? Use code <span className="font-bold text-primary">WELCOME</span> & get ₹2,000 discount!
             </p>
           </CardContent>
         </Card>
