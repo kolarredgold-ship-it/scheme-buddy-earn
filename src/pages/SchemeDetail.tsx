@@ -57,11 +57,15 @@ const SchemeDetail = () => {
           <ArrowLeft className="h-4 w-4 mr-1" /> Back
         </Link>
 
-        {scheme.image_url && (
-          <div className="rounded-2xl overflow-hidden mb-5 h-44 md:h-60">
+        <div className="rounded-2xl overflow-hidden mb-5 h-44 md:h-60">
+          {scheme.image_url ? (
             <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover" />
-          </div>
-        )}
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
+              <img src={techrolaIcon} alt="TechRola" className="h-20 w-20 opacity-20" />
+            </div>
+          )}
+        </div>
 
         <Badge variant="outline" className="mb-2 text-xs font-medium">{scheme.category}</Badge>
         <h1 className="text-xl md:text-3xl font-extrabold mb-5 leading-tight" style={{ fontFamily: 'Plus Jakarta Sans' }}>{scheme.title}</h1>
