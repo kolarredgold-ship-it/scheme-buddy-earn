@@ -20,6 +20,7 @@ import AdminWithdrawals from "./pages/admin/AdminWithdrawals";
 import CreateReport from "./pages/CreateReport";
 import AIReportGenerator from "./pages/AIReportGenerator";
 import MockInterview from "./pages/MockInterview";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => {
             <Route path="/create-report" element={<CreateReport />} />
             <Route path="/ai-report" element={<AIReportGenerator />} />
             <Route path="/mock-interview" element={<MockInterview />} />
+            <Route path="/install" element={<Install />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
