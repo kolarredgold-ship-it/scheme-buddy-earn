@@ -13,6 +13,10 @@ const BENEFITS = [
   "Priority notifications for new schemes",
   "Refer & earn up to ₹400 per referral",
   "3-level referral earning system",
+  "Get AI Internship Report Generator",
+  "Get AI Interview Training App Access",
+  "Get AI HR Mock Interview Training Access",
+  "Get AI Based Interview Q&A - Flash Cards",
 ];
 
 const Subscription = () => {
