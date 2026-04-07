@@ -8,19 +8,46 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Crown } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Crown, Pencil, Eye } from "lucide-react";
 import { toast } from "sonner";
+
+interface UserProfile {
+  id: string;
+  user_id: string;
+  name: string | null;
+  email: string | null;
+  mobile: string | null;
+  referral_code: string;
+  referred_by: string | null;
+  subscription_status: "free" | "active" | "expired";
+  wallet_balance: number;
+  report_credits: number;
+  created_at: string;
+}
 
 const AdminUsers = () => {
   const { isAdmin, loading: authLoading } = useAuth();
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<UserProfile[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [editUser, setEditUser] = useState<UserProfile | null>(null);
+  const [viewUser, setViewUser] = useState<UserProfile | null>(null);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    subscription_status: "free" as "free" | "active" | "expired",
+    wallet_balance: 0,
+    report_credits: 0,
+  });
 
   const fetchUsers = async () => {
     const { data } = await supabase.from("profiles").select("*").order("created_at", { ascending: false });
-    if (data) setUsers(data);
+    if (data) setUsers(data as UserProfile[]);
     setLoading(false);
   };
 
@@ -45,6 +72,48 @@ const AdminUsers = () => {
     setUpdating(null);
   };
 
+  const openEdit = (user: UserProfile) => {
+    setEditUser(user);
+    setEditForm({
+      name: user.name || "",
+      email: user.email || "",
+      mobile: user.mobile || "",
+      subscription_status: user.subscription_status,
+      wallet_balance: Number(user.wallet_balance),
+      report_credits: user.report_credits,
+    });
+  };
+
+  const saveEdit = async () => {
+    if (!editUser) return;
+    setUpdating(editUser.user_id);
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        name: editForm.name || null,
+        email: editForm.email || null,
+        mobile: editForm.mobile || null,
+        subscription_status: editForm.subscription_status,
+        wallet_balance: editForm.wallet_balance,
+        report_credits: editForm.report_credits,
+      })
+      .eq("user_id", editUser.user_id);
+    if (error) {
+      toast.error("Failed to update user");
+    } else {
+      toast.success("User updated successfully");
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.user_id === editUser.user_id
+            ? { ...u, ...editForm, name: editForm.name || null, email: editForm.email || null, mobile: editForm.mobile || null }
+            : u
+        )
+      );
+      setEditUser(null);
+    }
+    setUpdating(null);
+  };
+
   if (authLoading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
   if (!isAdmin) return <Navigate to="/" />;
 
@@ -57,7 +126,10 @@ const AdminUsers = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-6 space-y-6">
-        <h1 className="text-2xl font-bold">User Management</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">User Management</h1>
+          <Badge variant="secondary">{users.length} users</Badge>
+        </div>
 
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -74,17 +146,20 @@ const AdminUsers = () => {
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead className="hidden md:table-cell">Email</TableHead>
+                    <TableHead className="hidden lg:table-cell">Mobile</TableHead>
                     <TableHead>Code</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Balance</TableHead>
-                    <TableHead className="text-center">Action</TableHead>
+                    <TableHead className="hidden md:table-cell text-right">Credits</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filtered.map((u) => (
                     <TableRow key={u.id}>
                       <TableCell className="font-medium">{u.name || "—"}</TableCell>
-                      <TableCell className="hidden md:table-cell">{u.email}</TableCell>
+                      <TableCell className="hidden md:table-cell">{u.email || "—"}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{u.mobile || "—"}</TableCell>
                       <TableCell><code className="text-xs">{u.referral_code}</code></TableCell>
                       <TableCell>
                         <Badge variant={u.subscription_status === "active" ? "default" : "secondary"} className={u.subscription_status === "active" ? "bg-secondary text-secondary-foreground" : ""}>
@@ -92,16 +167,25 @@ const AdminUsers = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">₹{Number(u.wallet_balance).toFixed(2)}</TableCell>
+                      <TableCell className="hidden md:table-cell text-right">{u.report_credits}</TableCell>
                       <TableCell className="text-center">
-                        <Button
-                          size="sm"
-                          variant={u.subscription_status === "active" ? "outline" : "default"}
-                          disabled={updating === u.user_id}
-                          onClick={() => toggleSubscription(u.user_id, u.subscription_status)}
-                        >
-                          <Crown className="h-4 w-4 mr-1" />
-                          {u.subscription_status === "active" ? "Revoke" : "Make Pro"}
-                        </Button>
+                        <div className="flex items-center justify-center gap-1">
+                          <Button size="icon" variant="ghost" onClick={() => setViewUser(u)} title="View">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button size="icon" variant="ghost" onClick={() => openEdit(u)} title="Edit">
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant={u.subscription_status === "active" ? "outline" : "default"}
+                            disabled={updating === u.user_id}
+                            onClick={() => toggleSubscription(u.user_id, u.subscription_status)}
+                          >
+                            <Crown className="h-4 w-4 mr-1" />
+                            {u.subscription_status === "active" ? "Revoke" : "Pro"}
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -111,6 +195,78 @@ const AdminUsers = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* View User Dialog */}
+      <Dialog open={!!viewUser} onOpenChange={() => setViewUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>User Details</DialogTitle>
+          </DialogHeader>
+          {viewUser && (
+            <div className="space-y-3 text-sm">
+              <div className="grid grid-cols-2 gap-2">
+                <div><span className="text-muted-foreground">Name:</span> <strong>{viewUser.name || "—"}</strong></div>
+                <div><span className="text-muted-foreground">Email:</span> <strong>{viewUser.email || "—"}</strong></div>
+                <div><span className="text-muted-foreground">Mobile:</span> <strong>{viewUser.mobile || "—"}</strong></div>
+                <div><span className="text-muted-foreground">Referral Code:</span> <strong>{viewUser.referral_code}</strong></div>
+                <div><span className="text-muted-foreground">Referred By:</span> <strong>{viewUser.referred_by || "—"}</strong></div>
+                <div><span className="text-muted-foreground">Status:</span> <Badge variant={viewUser.subscription_status === "active" ? "default" : "secondary"}>{viewUser.subscription_status}</Badge></div>
+                <div><span className="text-muted-foreground">Wallet:</span> <strong>₹{Number(viewUser.wallet_balance).toFixed(2)}</strong></div>
+                <div><span className="text-muted-foreground">Report Credits:</span> <strong>{viewUser.report_credits}</strong></div>
+                <div className="col-span-2"><span className="text-muted-foreground">Joined:</span> <strong>{new Date(viewUser.created_at).toLocaleDateString()}</strong></div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Dialog */}
+      <Dialog open={!!editUser} onOpenChange={() => setEditUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Name</Label>
+              <Input value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+            </div>
+            <div>
+              <Label>Email</Label>
+              <Input value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} />
+            </div>
+            <div>
+              <Label>Mobile</Label>
+              <Input value={editForm.mobile} onChange={(e) => setEditForm({ ...editForm, mobile: e.target.value })} />
+            </div>
+            <div>
+              <Label>Subscription Status</Label>
+              <Select value={editForm.subscription_status} onValueChange={(v) => setEditForm({ ...editForm, subscription_status: v as any })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="free">Free</SelectItem>
+                  <SelectItem value="active">Active (Pro)</SelectItem>
+                  <SelectItem value="expired">Expired</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Wallet Balance (₹)</Label>
+                <Input type="number" value={editForm.wallet_balance} onChange={(e) => setEditForm({ ...editForm, wallet_balance: Number(e.target.value) })} />
+              </div>
+              <div>
+                <Label>Report Credits</Label>
+                <Input type="number" value={editForm.report_credits} onChange={(e) => setEditForm({ ...editForm, report_credits: Number(e.target.value) })} />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditUser(null)}>Cancel</Button>
+            <Button onClick={saveEdit} disabled={updating === editUser?.user_id}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 };
