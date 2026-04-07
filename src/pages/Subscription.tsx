@@ -118,7 +118,7 @@ const Subscription = () => {
 
         {!hasReferral && (
           <p className="text-center text-xs text-muted-foreground mt-4">
-            Have a referral code? <Link to="/signup" className="text-primary hover:underline">Sign up with one</Link> to get ₹1,999 off!
+            Have a referral code? <Link to="/signup" className="text-primary hover:underline">Sign up with one</Link> to get ₹2,000 off! Try code <span className="font-bold">TR9F9AD6</span>
           </p>
         )}
       </div>
