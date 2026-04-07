@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard } from "lucide-react";
+import techrolaLogo from "@/assets/techrola_logo.png";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
@@ -51,13 +52,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         }`}
       >
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="h-9 w-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow transition-transform duration-200 group-hover:scale-105">
-              <span className="text-primary-foreground font-extrabold text-base" style={{ fontFamily: 'Plus Jakarta Sans' }}>T</span>
-            </div>
-            <span className="text-lg font-extrabold tracking-tight" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-              Tech<span className="text-gradient-primary">Rola</span>
-            </span>
+          <Link to="/" className="flex items-center group">
+            <img src={techrolaLogo} alt="TechRola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
