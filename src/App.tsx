@@ -24,7 +24,19 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    const splash = document.getElementById("splash-screen");
+    if (splash) {
+      const timer = setTimeout(() => {
+        splash.style.opacity = "0";
+        setTimeout(() => splash.remove(), 400);
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
