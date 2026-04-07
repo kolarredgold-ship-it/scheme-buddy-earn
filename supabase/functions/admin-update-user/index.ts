@@ -67,13 +67,7 @@ serve(async (req) => {
         })
         .eq("user_id", userId);
 
-      // Record transaction
-      await supabase.from("transactions").insert({
-        user_id: userId,
-        amount: price,
-        type: "credit",
-        source: `Admin Pro Subscription (₹${price})`,
-      });
+      // No credit transaction for the user - subscription payment goes to company
 
       // Distribute referral earnings if referred
       if (profile.referred_by) {
