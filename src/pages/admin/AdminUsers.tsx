@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Crown, Pencil, Eye } from "lucide-react";
+import { Search, Crown, Pencil, Eye, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserProfile {
@@ -36,6 +36,8 @@ const AdminUsers = () => {
   const [updating, setUpdating] = useState<string | null>(null);
   const [editUser, setEditUser] = useState<UserProfile | null>(null);
   const [viewUser, setViewUser] = useState<UserProfile | null>(null);
+  const [passwordUser, setPasswordUser] = useState<UserProfile | null>(null);
+  const [newPassword, setNewPassword] = useState("");
   const [editForm, setEditForm] = useState({
     name: "",
     email: "",
@@ -56,18 +58,58 @@ const AdminUsers = () => {
     fetchUsers();
   }, [isAdmin]);
 
-  const toggleSubscription = async (userId: string, currentStatus: string) => {
-    const newStatus = currentStatus === "active" ? "free" : "active";
+  const makePro = async (user: UserProfile) => {
+    setUpdating(user.user_id);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await supabase.functions.invoke("admin-update-user", {
+        body: { action: "make_pro", userId: user.user_id },
+      });
+      if (res.error || res.data?.error) {
+        throw new Error(res.data?.error || "Failed");
+      }
+      const price = res.data?.price || 1000;
+      toast.success(`User upgraded to Pro (₹${price}) with referral earnings distributed`);
+      await fetchUsers();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to make pro");
+    }
+    setUpdating(null);
+  };
+
+  const revokePro = async (userId: string) => {
     setUpdating(userId);
     const { error } = await supabase
       .from("profiles")
-      .update({ subscription_status: newStatus })
+      .update({ subscription_status: "free" })
       .eq("user_id", userId);
     if (error) {
-      toast.error("Failed to update status");
+      toast.error("Failed to revoke");
     } else {
-      toast.success(`User ${newStatus === "active" ? "upgraded to Pro" : "set to Free"}`);
-      setUsers((prev) => prev.map((u) => u.user_id === userId ? { ...u, subscription_status: newStatus } : u));
+      toast.success("User set to Free");
+      setUsers((prev) => prev.map((u) => u.user_id === userId ? { ...u, subscription_status: "free" } : u));
+    }
+    setUpdating(null);
+  };
+
+  const changePassword = async () => {
+    if (!passwordUser || newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    setUpdating(passwordUser.user_id);
+    try {
+      const res = await supabase.functions.invoke("admin-update-user", {
+        body: { action: "change_password", userId: passwordUser.user_id, password: newPassword },
+      });
+      if (res.error || res.data?.error) {
+        throw new Error(res.data?.error || "Failed");
+      }
+      toast.success("Password changed successfully");
+      setPasswordUser(null);
+      setNewPassword("");
+    } catch (e: any) {
+      toast.error(e.message || "Failed to change password");
     }
     setUpdating(null);
   };
@@ -176,15 +218,30 @@ const AdminUsers = () => {
                           <Button size="icon" variant="ghost" onClick={() => openEdit(u)} title="Edit">
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button
-                            size="sm"
-                            variant={u.subscription_status === "active" ? "outline" : "default"}
-                            disabled={updating === u.user_id}
-                            onClick={() => toggleSubscription(u.user_id, u.subscription_status)}
-                          >
-                            <Crown className="h-4 w-4 mr-1" />
-                            {u.subscription_status === "active" ? "Revoke" : "Pro"}
+                          <Button size="icon" variant="ghost" onClick={() => { setPasswordUser(u); setNewPassword(""); }} title="Change Password">
+                            <KeyRound className="h-4 w-4" />
                           </Button>
+                          {u.subscription_status === "active" ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={updating === u.user_id}
+                              onClick={() => revokePro(u.user_id)}
+                            >
+                              <Crown className="h-4 w-4 mr-1" />
+                              Revoke
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="default"
+                              disabled={updating === u.user_id}
+                              onClick={() => makePro(u)}
+                            >
+                              <Crown className="h-4 w-4 mr-1" />
+                              Pro
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -264,6 +321,32 @@ const AdminUsers = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditUser(null)}>Cancel</Button>
             <Button onClick={saveEdit} disabled={updating === editUser?.user_id}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Password Dialog */}
+      <Dialog open={!!passwordUser} onOpenChange={() => setPasswordUser(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Password for {passwordUser?.name || passwordUser?.email}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>New Password</Label>
+              <Input
+                type="password"
+                placeholder="Min 6 characters"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPasswordUser(null)}>Cancel</Button>
+            <Button onClick={changePassword} disabled={updating === passwordUser?.user_id || newPassword.length < 6}>
+              Change Password
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
