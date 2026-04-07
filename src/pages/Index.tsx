@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import techrolaIcon from "@/assets/techrola_icon.png";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -198,7 +199,7 @@ const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => 
           <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
-            <Sparkles className="h-8 w-8 text-primary/20" />
+            <img src={techrolaIcon} alt="TechRola" className="h-16 w-16 opacity-20" />
           </div>
         )}
         {!isPaid && (
