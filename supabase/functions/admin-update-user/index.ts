@@ -56,7 +56,7 @@ serve(async (req) => {
       if (!profile) throw new Error("User not found");
 
       // Determine price based on referral
-      const price = profile.referred_by ? 1000 : 2999;
+      const price = profile.referred_by ? 999 : 2999;
 
       // Update subscription status and add 3 report credits
       await supabase
