@@ -1,10 +1,13 @@
+import { useState, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Navigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, Zap, Shield } from "lucide-react";
+import { Check, Star, Zap, Shield, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const BENEFITS = [
   "Full access to all government scheme details",
@@ -21,6 +24,8 @@ const BENEFITS = [
 
 const Subscription = () => {
   const { user, profile, loading } = useAuth();
+  const [paying, setPaying] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   if (loading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
 
@@ -44,9 +49,53 @@ const Subscription = () => {
   const hasReferral = !!profile?.referred_by;
   const price = hasReferral ? 999 : 2999;
 
-  const handlePayment = () => {
-    // Placeholder for Razorpay integration
-    alert("Payment integration coming soon! This will connect to Razorpay.");
+  const handlePayment = async () => {
+    if (!user || !profile) {
+      toast.error("Please log in first");
+      return;
+    }
+
+    setPaying(true);
+    try {
+      const orderId = `SUB_${user.id}_${Date.now()}`;
+      
+      const { data, error } = await supabase.functions.invoke("airpay-payment", {
+        body: {
+          userId: user.id,
+          orderId,
+          amount: price,
+          buyerEmail: profile.email || user.email,
+          buyerPhone: profile.mobile || "9999999999",
+          buyerFirstname: profile.name || "User",
+          buyerLastname: "",
+        },
+      });
+
+      if (error || !data?.success) {
+        throw new Error(error?.message || data?.error || "Payment initiation failed");
+      }
+
+      // Create a hidden form and submit to Airpay
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = data.paymentUrl;
+      form.style.display = "none";
+
+      Object.entries(data.formData as Record<string, string>).forEach(([key, value]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+    } catch (err: any) {
+      console.error("Payment error:", err);
+      toast.error(err.message || "Failed to initiate payment. Please try again.");
+      setPaying(false);
+    }
   };
 
   return (
@@ -109,8 +158,20 @@ const Subscription = () => {
         </Card>
 
         {user ? (
-          <Button size="lg" className="w-full text-lg py-6" onClick={handlePayment}>
-            Pay ₹{price.toLocaleString()} Now
+          <Button 
+            size="lg" 
+            className="w-full text-lg py-6" 
+            onClick={handlePayment}
+            disabled={paying}
+          >
+            {paying ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                Processing...
+              </>
+            ) : (
+              `Pay ₹${price.toLocaleString()} Now`
+            )}
           </Button>
         ) : (
           <Link to="/signup">
@@ -125,6 +186,13 @@ const Subscription = () => {
             Have a referral code? <Link to="/signup" className="text-primary hover:underline">Sign up with one</Link> to get ₹2,000 off! Try code <span className="font-bold">WELCOME</span>
           </p>
         )}
+
+        {/* Payment Security Note */}
+        <div className="mt-6 text-center">
+          <p className="text-[11px] text-muted-foreground flex items-center justify-center gap-1">
+            <Shield className="h-3 w-3" /> Secured payments powered by Airpay
+          </p>
+        </div>
       </div>
     </Layout>
   );
