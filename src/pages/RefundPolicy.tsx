@@ -16,7 +16,7 @@ const RefundPolicy = () => (
         <h2 className="text-lg font-semibold text-foreground">3. Cancellation</h2>
         <p>Since this is a lifetime subscription, there is no recurring charge and hence no cancellation needed. Your access remains active indefinitely.</p>
         <h2 className="text-lg font-semibold text-foreground">4. Contact for Disputes</h2>
-        <p>For any payment-related disputes, reach out to support@techrola.com or call our support team.</p>
+        <p>For any payment-related disputes, reach out to omlaytechnologies@gmail.com or call 7899666679.</p>
       </div>
     </div>
   </Layout>
