@@ -43,7 +43,8 @@ const Footer = () => (
           <ul className="space-y-2">
             <li><Link to="/about-us" className="text-xs text-muted-foreground hover:text-primary transition-colors">About Us</Link></li>
             <li><Link to="/contact-us" className="text-xs text-muted-foreground hover:text-primary transition-colors">Contact Us</Link></li>
-            <li><a href="mailto:support@techrola.com" className="text-xs text-muted-foreground hover:text-primary transition-colors">support@techrola.com</a></li>
+            <li><a href="mailto:omlaytechnologies@gmail.com" className="text-xs text-muted-foreground hover:text-primary transition-colors">omlaytechnologies@gmail.com</a></li>
+            <li><a href="tel:7899666679" className="text-xs text-muted-foreground hover:text-primary transition-colors">7899666679</a></li>
           </ul>
         </div>
       </div>
