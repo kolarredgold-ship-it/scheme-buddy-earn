@@ -92,7 +92,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <Link to="/login">
                   <Button variant="ghost" size="sm" className="rounded-xl font-medium">Login</Button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/plans">
                   <Button size="sm" className="rounded-xl font-semibold bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">Sign Up</Button>
                 </Link>
               </div>
