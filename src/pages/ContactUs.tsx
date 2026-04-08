@@ -12,7 +12,7 @@ const ContactUs = () => (
           </div>
           <div>
             <h3 className="font-semibold">Email</h3>
-            <p className="text-muted-foreground text-sm">support@techrola.com</p>
+            <p className="text-muted-foreground text-sm">omlaytechnologies@gmail.com</p>
           </div>
         </div>
         <div className="flex items-start gap-4">
@@ -21,7 +21,7 @@ const ContactUs = () => (
           </div>
           <div>
             <h3 className="font-semibold">Phone</h3>
-            <p className="text-muted-foreground text-sm">Contact us via email for phone support</p>
+            <p className="text-muted-foreground text-sm">7899666679</p>
           </div>
         </div>
         <div className="flex items-start gap-4">
@@ -30,7 +30,7 @@ const ContactUs = () => (
           </div>
           <div>
             <h3 className="font-semibold">Address</h3>
-            <p className="text-muted-foreground text-sm">India</p>
+            <p className="text-muted-foreground text-sm">Bengaluru, India</p>
           </div>
         </div>
       </div>
