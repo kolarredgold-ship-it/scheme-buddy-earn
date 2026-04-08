@@ -30,7 +30,7 @@ const ContactUs = () => (
           </div>
           <div>
             <h3 className="font-semibold">Address</h3>
-            <p className="text-muted-foreground text-sm">India</p>
+            <p className="text-muted-foreground text-sm">Bengaluru, India</p>
           </div>
         </div>
       </div>
