@@ -140,7 +140,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <Link to="/login" className="flex-1">
                       <Button variant="outline" className="w-full rounded-xl">Login</Button>
                     </Link>
-                    <Link to="/signup" className="flex-1">
+                    <Link to="/plans" className="flex-1">
                       <Button className="w-full rounded-xl bg-gradient-primary">Sign Up</Button>
                     </Link>
                   </div>
