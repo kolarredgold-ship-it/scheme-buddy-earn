@@ -213,7 +213,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </Button>
               </div>
             ) : (
-              <Link to="/signup">
+              <Link to="/plans">
                 <Button className="w-full h-11 rounded-xl bg-white text-orange-600 hover:bg-white/90 font-bold gap-2 shadow-lg">
                   <Users className="h-4 w-4" /> Sign Up to Start Earning
                 </Button>
