@@ -63,7 +63,7 @@ const Login = () => {
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-primary font-medium hover:underline">Sign Up</Link>
+            <Link to="/plans" className="text-primary font-medium hover:underline">Sign Up</Link>
           </p>
         </CardContent>
       </Card>
