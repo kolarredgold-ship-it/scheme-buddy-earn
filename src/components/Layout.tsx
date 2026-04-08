@@ -4,6 +4,7 @@ import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCar
 import techrolaLogo from "@/assets/techrola_logo.png";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import Footer from "@/components/Footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { user, profile, isAdmin, signOut } = useAuth();
