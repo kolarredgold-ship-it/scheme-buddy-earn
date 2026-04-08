@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain } from "lucide-react";
+import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const INDIAN_STATES = [
@@ -348,6 +348,22 @@ const Index = () => {
               </Button>
             </Link>
           </div>
+        </div>
+
+        {/* Install App Banner */}
+        <div className="container mx-auto px-3 md:px-4 mt-4">
+          <Link to="/install" className="block">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary p-4 md:p-5 flex items-center gap-4 hover:opacity-95 transition-opacity">
+              <div className="h-12 w-12 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                <Download className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm md:text-base font-bold text-primary-foreground">Install TechRola App</h3>
+                <p className="text-xs text-primary-foreground/80 truncate">Quick access from your home screen — no app store needed!</p>
+              </div>
+              <ChevronRight className="h-5 w-5 text-primary-foreground/60 shrink-0" />
+            </div>
+          </Link>
         </div>
 
         {/* Category Chips */}
