@@ -21,6 +21,12 @@ import CreateReport from "./pages/CreateReport";
 import AIReportGenerator from "./pages/AIReportGenerator";
 import MockInterview from "./pages/MockInterview";
 import Install from "./pages/Install";
+import PaymentStatus from "./pages/PaymentStatus";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
+import RefundPolicy from "./pages/RefundPolicy";
+import ContactUs from "./pages/ContactUs";
+import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,6 +67,12 @@ const App = () => {
             <Route path="/ai-report" element={<AIReportGenerator />} />
             <Route path="/mock-interview" element={<MockInterview />} />
             <Route path="/install" element={<Install />} />
+            <Route path="/payment-status" element={<PaymentStatus />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-conditions" element={<TermsConditions />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/about-us" element={<AboutUs />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
