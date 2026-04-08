@@ -20,7 +20,7 @@ const PrivacyPolicy = () => (
         <h2 className="text-lg font-semibold text-foreground">4. Data Sharing</h2>
         <p>We do not sell your personal data to third parties. Data may be shared with payment processors (Airpay) for transaction processing.</p>
         <h2 className="text-lg font-semibold text-foreground">5. Contact Us</h2>
-        <p>For any privacy concerns, contact us at support@techrola.com</p>
+        <p>For any privacy concerns, contact us at omlaytechnologies@gmail.com or call 7899666679. Address: Bengaluru, India.</p>
       </div>
     </div>
   </Layout>
