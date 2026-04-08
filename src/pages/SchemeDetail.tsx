@@ -141,7 +141,7 @@ const SchemeDetail = () => {
               </Button>
             </a>
           ) : !user ? (
-            <Link to="/signup">
+            <Link to="/plans">
               <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-primary font-semibold">
                 Sign Up to Access
               </Button>

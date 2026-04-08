@@ -92,7 +92,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <Link to="/login">
                   <Button variant="ghost" size="sm" className="rounded-xl font-medium">Login</Button>
                 </Link>
-                <Link to="/signup">
+                <Link to="/plans">
                   <Button size="sm" className="rounded-xl font-semibold bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">Sign Up</Button>
                 </Link>
               </div>
@@ -140,7 +140,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <Link to="/login" className="flex-1">
                       <Button variant="outline" className="w-full rounded-xl">Login</Button>
                     </Link>
-                    <Link to="/signup" className="flex-1">
+                    <Link to="/plans" className="flex-1">
                       <Button className="w-full rounded-xl bg-gradient-primary">Sign Up</Button>
                     </Link>
                   </div>
@@ -213,7 +213,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </Button>
               </div>
             ) : (
-              <Link to="/signup">
+              <Link to="/plans">
                 <Button className="w-full h-11 rounded-xl bg-white text-orange-600 hover:bg-white/90 font-bold gap-2 shadow-lg">
                   <Users className="h-4 w-4" /> Sign Up to Start Earning
                 </Button>

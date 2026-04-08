@@ -174,7 +174,7 @@ const Subscription = () => {
             )}
           </Button>
         ) : (
-          <Link to="/signup">
+          <Link to="/plans">
             <Button size="lg" className="w-full text-lg py-6">
               Sign Up to Subscribe
             </Button>
@@ -183,7 +183,7 @@ const Subscription = () => {
 
         {!hasReferral && (
           <p className="text-center text-xs text-muted-foreground mt-4">
-            Have a referral code? <Link to="/signup" className="text-primary hover:underline">Sign up with one</Link> to get ₹2,000 off! Try code <span className="font-bold">WELCOME</span>
+            Have a referral code? <Link to="/plans" className="text-primary hover:underline">Sign up with one</Link> to get ₹2,000 off! Try code <span className="font-bold">WELCOME</span>
           </p>
         )}
 
