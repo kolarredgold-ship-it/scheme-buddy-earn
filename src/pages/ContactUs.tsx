@@ -12,7 +12,7 @@ const ContactUs = () => (
           </div>
           <div>
             <h3 className="font-semibold">Email</h3>
-            <p className="text-muted-foreground text-sm">support@techrola.com</p>
+            <p className="text-muted-foreground text-sm">omlaytechnologies@gmail.com</p>
           </div>
         </div>
         <div className="flex items-start gap-4">
