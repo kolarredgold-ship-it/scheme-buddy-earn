@@ -162,7 +162,7 @@ const HeroBanner = () => {
           <p key={`sub-${current}`} className="text-sm md:text-lg text-primary-foreground/80 mb-4 md:mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
             {slide.subtitle}
           </p>
-          <Link to="/signup">
+          <Link to="/plans">
             <Button
               size="lg"
               className="rounded-xl bg-card/20 backdrop-blur-md text-primary-foreground border border-primary-foreground/20 hover:bg-card/30 font-semibold gap-2 animate-slide-up"
