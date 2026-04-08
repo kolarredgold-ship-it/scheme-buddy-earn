@@ -144,6 +144,8 @@ const HeroBanner = () => {
             className="w-full h-full object-cover"
             width={1280}
             height={512}
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding="async"
           />
           <div className={`absolute inset-0 bg-gradient-to-r ${s.gradient}`} />
         </div>
