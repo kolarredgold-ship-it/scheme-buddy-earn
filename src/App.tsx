@@ -8,6 +8,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Plans from "./pages/Plans";
 import SchemeDetail from "./pages/SchemeDetail";
 import Dashboard from "./pages/Dashboard";
 import Earnings from "./pages/Earnings";
