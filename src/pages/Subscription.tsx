@@ -174,7 +174,7 @@ const Subscription = () => {
             )}
           </Button>
         ) : (
-          <Link to="/signup">
+          <Link to="/plans">
             <Button size="lg" className="w-full text-lg py-6">
               Sign Up to Subscribe
             </Button>
