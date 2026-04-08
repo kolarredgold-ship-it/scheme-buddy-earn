@@ -154,6 +154,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Main Content */}
       <main className="flex-1">{children}</main>
 
+      {/* Footer */}
+      <Footer />
+
       {/* Mobile Bottom Nav */}
       {user && (
         <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong safe-area-bottom">
