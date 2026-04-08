@@ -16,9 +16,7 @@ const SchemeDetail = () => {
   const [loading, setLoading] = useState(true);
   const isPaid = profile?.subscription_status === "active";
 
-  useEffect(() => {
-    if (user) refreshProfile();
-  }, [user]);
+  // Profile is already loaded by AuthProvider, no need to re-fetch
 
   useEffect(() => {
     const fetch = async () => {
