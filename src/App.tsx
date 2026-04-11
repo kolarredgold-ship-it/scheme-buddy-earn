@@ -27,6 +27,7 @@ const Install = lazy(() => import("./pages/Install"));
 const CareerProgram = lazy(() => import("./pages/CareerProgram"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const AdminCareer = lazy(() => import("./pages/admin/AdminCareer"));
+const PaymentStatus = lazy(() => import("./pages/PaymentStatus"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
