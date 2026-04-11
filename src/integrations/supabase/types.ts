@@ -14,6 +14,87 @@ export type Database = {
   }
   public: {
     Tables: {
+      career_progress: {
+        Row: {
+          college: string | null
+          course: string | null
+          created_at: string
+          current_step: number
+          daily_promotions: number
+          eligible: boolean
+          id: string
+          last_promotion_date: string | null
+          phone: string | null
+          registered: boolean
+          streak_days: number
+          total_active_days: number
+          total_promotions: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          college?: string | null
+          course?: string | null
+          created_at?: string
+          current_step?: number
+          daily_promotions?: number
+          eligible?: boolean
+          id?: string
+          last_promotion_date?: string | null
+          phone?: string | null
+          registered?: boolean
+          streak_days?: number
+          total_active_days?: number
+          total_promotions?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          college?: string | null
+          course?: string | null
+          created_at?: string
+          current_step?: number
+          daily_promotions?: number
+          eligible?: boolean
+          id?: string
+          last_promotion_date?: string | null
+          phone?: string | null
+          registered?: boolean
+          streak_days?: number
+          total_active_days?: number
+          total_promotions?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      hiring_applications: {
+        Row: {
+          application_type: string
+          created_at: string
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          application_type?: string
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          application_type?: string
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       interview_questions: {
         Row: {
           answer: string
@@ -86,6 +167,24 @@ export type Database = {
           updated_at?: string
           user_id?: string
           wallet_balance?: number
+        }
+        Relationships: []
+      }
+      promotion_logs: {
+        Row: {
+          id: string
+          promoted_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          promoted_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          promoted_at?: string
+          user_id?: string
         }
         Relationships: []
       }
