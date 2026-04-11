@@ -77,25 +77,9 @@ const SchemeDetail = () => {
               </div>
               Description
             </h2>
-            <div className="relative">
-              <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {isPaid ? description : description.slice(0, halfLength)}
-              </p>
-              {!isPaid && (
-                <div className="relative mt-1">
-                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap blur-sm select-none" aria-hidden>
-                    {description.slice(halfLength)}
-                  </p>
-                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-card via-card/80 to-transparent">
-                    <Link to="/subscription">
-                      <Button className="gap-2 rounded-xl bg-gradient-primary shadow-glow font-semibold">
-                        <Lock className="h-4 w-4" /> Unlock Full Details
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {description}
+            </p>
           </CardContent>
         </Card>
 
@@ -109,19 +93,13 @@ const SchemeDetail = () => {
                 </div>
                 Eligibility
               </h2>
-              {isPaid ? (
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.eligibility}</p>
-              ) : (
-                <div className="blur-sm select-none text-sm text-muted-foreground">
-                  <p>Subscribe to view eligibility criteria for this scheme.</p>
-                </div>
-              )}
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.eligibility}</p>
             </CardContent>
           </Card>
         )}
 
         {/* Documents */}
-        {scheme.documents && isPaid && (
+        {scheme.documents && (
           <Card className="mb-4 border-border/40">
             <CardContent className="p-4 md:p-6">
               <h2 className="font-semibold text-base mb-3">📄 Required Documents</h2>

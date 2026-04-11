@@ -193,7 +193,7 @@ const HeroBanner = () => {
 };
 
 // Scheme Card
-const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => (
+const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.id}`} className="block">
     <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
       <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
@@ -202,13 +202,6 @@ const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => 
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
             <img src={techrolaIcon} alt="TechRola" className="h-16 w-16 opacity-20" />
-          </div>
-        )}
-        {!isPaid && (
-          <div className="absolute top-2 right-2">
-            <Badge className="bg-foreground/70 backdrop-blur-sm text-primary-foreground text-[10px] gap-1 border-0 font-medium">
-              <Lock className="h-2.5 w-2.5" /> Premium
-            </Badge>
           </div>
         )}
         <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
