@@ -261,7 +261,7 @@ const Index = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
-  const isPaid = profile?.subscription_status === "active";
+  // isPaid check removed - all content is free to view
 
   useEffect(() => {
     const fetchSchemes = async () => {
