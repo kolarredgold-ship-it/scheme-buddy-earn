@@ -116,16 +116,10 @@ const SchemeDetail = () => {
                 Apply Now <ExternalLink className="h-4 w-4" />
               </Button>
             </a>
-          ) : !user ? (
-            <Link to="/plans">
-              <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-primary font-semibold">
-                Sign Up to Access
-              </Button>
-            </Link>
           ) : (
-            <Link to="/subscription">
-              <Button size="lg" variant="outline" className="w-full md:w-auto gap-2 rounded-xl font-semibold">
-                <Lock className="h-4 w-4" /> Subscribe to Apply
+            <Link to={user ? "/subscription" : "/plans"}>
+              <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-primary font-semibold">
+                <Lock className="h-4 w-4" /> {user ? "Subscribe to Apply" : "Subscribe to Apply"}
               </Button>
             </Link>
           )}
