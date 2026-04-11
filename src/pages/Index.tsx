@@ -399,7 +399,7 @@ const Index = () => {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                 {searchedSchemes.slice(0, 20).map((scheme) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} isPaid={isPaid} />
+                  <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
               </div>
               {searchedSchemes.length === 0 && (
@@ -429,7 +429,7 @@ const Index = () => {
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
                   <div key={scheme.id} className="w-full">
-                    <SchemeCard scheme={scheme} isPaid={isPaid} />
+                    <SchemeCard scheme={scheme} />
                   </div>
                 ))}
               </div>
@@ -448,7 +448,7 @@ const Index = () => {
                 <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
                   {recentSchemes.map((scheme) => (
                     <div key={scheme.id} className="snap-start">
-                      <SchemeCard scheme={scheme} isPaid={isPaid} />
+                      <SchemeCard scheme={scheme} />
                     </div>
                   ))}
                 </div>
@@ -476,7 +476,7 @@ const Index = () => {
                     <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
                       {catSchemes.map((scheme) => (
                         <div key={scheme.id} className="snap-start">
-                          <SchemeCard scheme={scheme} isPaid={isPaid} />
+                          <SchemeCard scheme={scheme} />
                         </div>
                       ))}
                     </div>
