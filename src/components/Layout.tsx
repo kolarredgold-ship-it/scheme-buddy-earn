@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Gift, Share2, Users, IndianRupee } from "lucide-react";
+import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy } from "lucide-react";
 import techrolaLogo from "@/assets/techrola_logo.png";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
@@ -26,6 +26,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const navItems = [
     { path: "/", label: "Schemes", icon: Home },
+    { path: "/career-program", label: "Career", icon: Briefcase },
     ...(user
       ? [
           { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -154,73 +155,28 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Main Content */}
       <main className="flex-1">{children}</main>
 
-      {/* Refer & Earn Section - Above Footer */}
+      {/* Career Program CTA - Above Footer */}
       <div className="container mx-auto px-3 md:px-4 mt-10 mb-2">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 p-5 md:p-6">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <Gift className="h-5 w-5 text-white" />
-              </div>
-              <h3 className="text-lg md:text-xl font-extrabold text-white">Refer & Earn</h3>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-2 mb-4">
-              <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-center">
-                <div className="flex items-center justify-center gap-0.5 text-white font-bold text-base md:text-lg">
-                  <IndianRupee className="h-3.5 w-3.5" />400
+        <Link to="/career-program">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-secondary to-accent p-5 md:p-6 hover:opacity-95 transition-opacity">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-foreground/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-foreground/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+            <div className="relative z-10">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-10 w-10 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center">
+                  <Briefcase className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <p className="text-white/80 text-[10px] mt-0.5">Level 1</p>
+                <h3 className="text-lg md:text-xl font-extrabold text-primary-foreground">Techrola Career Program</h3>
               </div>
-              <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-center">
-                <div className="flex items-center justify-center gap-0.5 text-white font-bold text-base md:text-lg">
-                  <IndianRupee className="h-3.5 w-3.5" />100
-                </div>
-                <p className="text-white/80 text-[10px] mt-0.5">Level 2</p>
-              </div>
-              <div className="bg-white/15 backdrop-blur-sm rounded-xl p-3 text-center">
-                <div className="flex items-center justify-center gap-0.5 text-white font-bold text-base md:text-lg">
-                  <IndianRupee className="h-3.5 w-3.5" />50
-                </div>
-                <p className="text-white/80 text-[10px] mt-0.5">Level 3</p>
+              <p className="text-primary-foreground/90 text-xs md:text-sm mb-3">
+                Work, Learn, and Get Hired Based on Your Performance. Start as a promoter, grow into a professional!
+              </p>
+              <div className="flex items-center gap-2 text-primary-foreground text-sm font-semibold">
+                Join Now <Trophy className="h-4 w-4" />
               </div>
             </div>
-
-            <p className="text-white/90 text-xs md:text-sm mb-4">
-              Share your referral code with friends. When they subscribe, you earn up to <strong>₹400</strong> per referral across 3 levels!
-            </p>
-
-            {user && profile?.referral_code ? (
-              <div className="flex items-center gap-2">
-                <div className="flex-1 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2.5 text-white font-bold text-sm tracking-widest text-center">
-                  {profile.referral_code}
-                </div>
-                <Button
-                  onClick={() => {
-                    const shareText = `Join TechRola and get access to 550+ government schemes! Use my referral code: ${profile.referral_code}\n\nSign up here: ${window.location.origin}/signup`;
-                    if (navigator.share) {
-                      navigator.share({ title: 'Join TechRola', text: shareText });
-                    } else {
-                      navigator.clipboard.writeText(shareText);
-                      alert('Referral link copied!');
-                    }
-                  }}
-                  className="h-11 px-5 rounded-xl bg-white text-orange-600 hover:bg-white/90 font-bold gap-2 shadow-lg"
-                >
-                  <Share2 className="h-4 w-4" /> Share
-                </Button>
-              </div>
-            ) : (
-              <Link to="/plans">
-                <Button className="w-full h-11 rounded-xl bg-white text-orange-600 hover:bg-white/90 font-bold gap-2 shadow-lg">
-                  <Users className="h-4 w-4" /> Sign Up to Start Earning
-                </Button>
-              </Link>
-            )}
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* Footer */}

@@ -24,6 +24,9 @@ const CreateReport = lazy(() => import("./pages/CreateReport"));
 const AIReportGenerator = lazy(() => import("./pages/AIReportGenerator"));
 const MockInterview = lazy(() => import("./pages/MockInterview"));
 const Install = lazy(() => import("./pages/Install"));
+const CareerProgram = lazy(() => import("./pages/CareerProgram"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const AdminCareer = lazy(() => import("./pages/admin/AdminCareer"));
 const PaymentStatus = lazy(() => import("./pages/PaymentStatus"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions"));
@@ -78,6 +81,9 @@ const App = () => {
               <Route path="/ai-report" element={<AIReportGenerator />} />
               <Route path="/mock-interview" element={<MockInterview />} />
               <Route path="/install" element={<Install />} />
+              <Route path="/career-program" element={<CareerProgram />} />
+              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/admin/career" element={<AdminCareer />} />
               <Route path="/payment-status" element={<PaymentStatus />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-conditions" element={<TermsConditions />} />
