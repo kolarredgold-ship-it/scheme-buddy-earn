@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Lock, ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download } from "lucide-react";
+import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download } from "lucide-react";
 import Layout from "@/components/Layout";
 
 const INDIAN_STATES = [
@@ -193,7 +193,7 @@ const HeroBanner = () => {
 };
 
 // Scheme Card
-const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => (
+const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.id}`} className="block">
     <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
       <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
@@ -202,13 +202,6 @@ const SchemeCard = ({ scheme, isPaid }: { scheme: Scheme; isPaid: boolean }) => 
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
             <img src={techrolaIcon} alt="TechRola" className="h-16 w-16 opacity-20" />
-          </div>
-        )}
-        {!isPaid && (
-          <div className="absolute top-2 right-2">
-            <Badge className="bg-foreground/70 backdrop-blur-sm text-primary-foreground text-[10px] gap-1 border-0 font-medium">
-              <Lock className="h-2.5 w-2.5" /> Premium
-            </Badge>
           </div>
         )}
         <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
@@ -268,7 +261,7 @@ const Index = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
-  const isPaid = profile?.subscription_status === "active";
+  // isPaid check removed - all content is free to view
 
   useEffect(() => {
     const fetchSchemes = async () => {
@@ -406,7 +399,7 @@ const Index = () => {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                 {searchedSchemes.slice(0, 20).map((scheme) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} isPaid={isPaid} />
+                  <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
               </div>
               {searchedSchemes.length === 0 && (
@@ -436,7 +429,7 @@ const Index = () => {
               <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
                   <div key={scheme.id} className="w-full">
-                    <SchemeCard scheme={scheme} isPaid={isPaid} />
+                    <SchemeCard scheme={scheme} />
                   </div>
                 ))}
               </div>
@@ -455,7 +448,7 @@ const Index = () => {
                 <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
                   {recentSchemes.map((scheme) => (
                     <div key={scheme.id} className="snap-start">
-                      <SchemeCard scheme={scheme} isPaid={isPaid} />
+                      <SchemeCard scheme={scheme} />
                     </div>
                   ))}
                 </div>
@@ -483,7 +476,7 @@ const Index = () => {
                     <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
                       {catSchemes.map((scheme) => (
                         <div key={scheme.id} className="snap-start">
-                          <SchemeCard scheme={scheme} isPaid={isPaid} />
+                          <SchemeCard scheme={scheme} />
                         </div>
                       ))}
                     </div>
