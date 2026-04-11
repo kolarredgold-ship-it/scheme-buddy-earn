@@ -26,6 +26,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const navItems = [
     { path: "/", label: "Schemes", icon: Home },
+    { path: "/career-program", label: "Career", icon: Briefcase },
     ...(user
       ? [
           { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
