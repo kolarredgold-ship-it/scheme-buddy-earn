@@ -46,7 +46,7 @@ const SchemeDetail = () => {
   );
 
   const description = scheme.description || "";
-  const halfLength = Math.floor(description.length / 2);
+  
 
   return (
     <Layout>
