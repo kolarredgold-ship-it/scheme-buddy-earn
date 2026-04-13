@@ -42,7 +42,8 @@ const STEPS = [
   { num: 6, title: "Get Hired", icon: Briefcase, desc: "Apply for opportunities" },
 ];
 
-const MIN_STREAK_FOR_ELIGIBLE = 7;
+const MIN_STREAK_FOR_ELIGIBLE = 30;
+const MIN_CONVERSION_RATE = 80; // 80% of referrals must subscribe
 
 const CareerProgram = () => {
   const { user, profile, loading: authLoading } = useAuth();
@@ -193,13 +194,9 @@ const CareerProgram = () => {
     setSubmitting(false);
   };
 
-  // Step 4: Mark as promoted
+  // Step 4: Mark as promoted (unlimited, min 3 per day)
   const handlePromote = async () => {
     if (!user || !progress) return;
-    if (dailyCount >= 3) {
-      toast.info("You've completed today's promotions! Come back tomorrow.");
-      return;
-    }
     setSubmitting(true);
 
     // Log promotion
@@ -241,7 +238,7 @@ const CareerProgram = () => {
       current_step: Math.max(prev.current_step, newStep),
     } : null);
 
-    toast.success(dayCompleted ? "Day completed! Streak updated!" : `Promoted! ${3 - newDailyCount} more today.`);
+    toast.success(dayCompleted && newDailyCount === 3 ? "Minimum 3 done! Streak updated! Keep going!" : `Promoted! (${newDailyCount} today${newDailyCount < 3 ? `, ${3 - newDailyCount} more for streak` : ""})`);
     setSubmitting(false);
   };
 
@@ -420,10 +417,12 @@ const CareerProgram = () => {
               </div>
             </div>
             <Link to="/emp">
-              <Button variant="outline" className="w-full gap-2">
-                <Users className="h-4 w-4" /> Open Employee Dashboard — techrola.in/emp
+              <Button className="w-full gap-2 bg-gradient-to-r from-primary to-secondary text-white font-bold py-5 text-base shadow-lg hover:shadow-xl transition-all">
+                <TrendingUp className="h-5 w-5" /> Open Employee Dashboard
+                <ChevronRight className="h-4 w-4 ml-auto" />
               </Button>
             </Link>
+            <p className="text-xs text-center text-muted-foreground">techrola.in/emp — Track your leads & earnings</p>
           </div>
         );
 
@@ -449,7 +448,7 @@ const CareerProgram = () => {
               </Badge>
             ) : (
               <p className="text-xs text-muted-foreground text-center">
-                Maintain a {MIN_STREAK_FOR_ELIGIBLE}-day streak to become eligible for hiring
+                Maintain a {MIN_STREAK_FOR_ELIGIBLE}-day streak & {MIN_CONVERSION_RATE}% referral conversion to become eligible
               </p>
             )}
           </div>
@@ -460,7 +459,7 @@ const CareerProgram = () => {
           return (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <Lock className="h-8 w-8 text-muted-foreground/40 mb-2" />
-              <p className="text-sm text-muted-foreground">Complete {MIN_STREAK_FOR_ELIGIBLE}-day streak to unlock</p>
+              <p className="text-sm text-muted-foreground">Complete {MIN_STREAK_FOR_ELIGIBLE}-day streak & {MIN_CONVERSION_RATE}% conversion to unlock</p>
             </div>
           );
         }
