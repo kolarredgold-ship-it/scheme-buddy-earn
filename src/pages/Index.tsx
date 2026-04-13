@@ -332,9 +332,7 @@ const Index = () => {
     <Layout>
       <div className="pb-24 md:pb-8">
         {/* Hero Banner */}
-        <div className="container mx-auto px-3 md:px-4 pt-3 md:pt-6">
-          <HeroBanner />
-        </div>
+        <HeroBanner />
 
         {/* Search Bar + State Filter */}
         <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6">
