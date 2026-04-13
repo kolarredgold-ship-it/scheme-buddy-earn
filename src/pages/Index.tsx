@@ -290,7 +290,7 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
           />
         ) : null}
         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 absolute inset-0 -z-10">
-          <img src={techrolaIcon} alt="TechRola" className="h-16 w-16 opacity-20" />
+          <img src={techrolaIcon} alt="Techrola" className="h-16 w-16 opacity-20" />
         </div>
         <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
       </div>
@@ -483,7 +483,7 @@ const Index = () => {
                 <Download className="h-6 w-6 text-primary-foreground" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm md:text-base font-bold text-primary-foreground">Install TechRola App</h3>
+                <h3 className="text-sm md:text-base font-bold text-primary-foreground">Install Techrola App</h3>
                 <p className="text-xs text-primary-foreground/80 truncate">Quick access from your home screen — no app store needed!</p>
               </div>
               <ChevronRight className="h-5 w-5 text-primary-foreground/60 shrink-0" />

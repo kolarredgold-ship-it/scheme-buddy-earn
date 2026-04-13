@@ -8,7 +8,7 @@ const Footer = () => (
         {/* Brand */}
         <div className="col-span-2 md:col-span-1">
           <Link to="/">
-            <img src={techrolaLogo} alt="TechRola" className="h-8 w-auto mb-3" />
+            <img src={techrolaLogo} alt="Techrola" className="h-8 w-auto mb-3" />
           </Link>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Empowering citizens with easy access to 550+ government schemes, scholarships & welfare programs.
@@ -55,7 +55,7 @@ const Footer = () => (
       <div className="mt-8 pt-6 border-t border-border/40">
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-[11px] text-muted-foreground">
-            © {new Date().getFullYear()} TechRola. All rights reserved.
+            © {new Date().getFullYear()} Techrola. All rights reserved.
           </p>
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
             <span>Secured payments by</span>

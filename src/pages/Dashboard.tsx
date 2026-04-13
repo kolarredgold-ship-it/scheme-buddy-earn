@@ -28,7 +28,7 @@ const Dashboard = () => {
   };
 
   const shareWhatsApp = () => {
-    const msg = `Join TechRola and access government schemes! Use my referral code: ${profile?.referral_code} to get subscription at just ₹999! https://techrola.com`;
+    const msg = `Join Techrola and access government schemes! Use my referral code: ${profile?.referral_code} to get subscription at just ₹999! https://techrola.com`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
   };
 

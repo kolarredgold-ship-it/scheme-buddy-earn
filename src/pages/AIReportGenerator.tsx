@@ -140,7 +140,7 @@ const AIReportGenerator = () => {
           </Button>
           <div>
             <h1 className="text-xl md:text-2xl font-bold">AI Report Generator</h1>
-            <p className="text-sm text-muted-foreground">Quick section-wise content generation by TechRola</p>
+            <p className="text-sm text-muted-foreground">Quick section-wise content generation by Techrola</p>
           </div>
         </div>
 

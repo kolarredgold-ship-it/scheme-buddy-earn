@@ -56,7 +56,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       >
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center group">
-            <img src={techrolaLogo} alt="TechRola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
+            <img src={techrolaLogo} alt="Techrola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
