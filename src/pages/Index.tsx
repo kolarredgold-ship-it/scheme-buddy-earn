@@ -489,9 +489,6 @@ const Index = () => {
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
                   {CATEGORIES.find(c => c.key === activeCategory)?.label} Schemes
-                  <Badge variant="secondary" className="text-[10px] font-medium">
-                    {filteredSchemes.length}
-                  </Badge>
                 </h2>
                 <button
                   onClick={() => setActiveCategory(null)}
@@ -538,7 +535,6 @@ const Index = () => {
                       <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
                         <cat.icon className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
                         {cat.label}
-                        <Badge variant="outline" className="text-[10px] font-medium ml-1">{catSchemes.length}</Badge>
                       </h2>
                       <button
                         onClick={() => setActiveCategory(cat.key)}
