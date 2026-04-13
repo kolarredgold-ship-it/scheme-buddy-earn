@@ -27,6 +27,7 @@ const Install = lazy(() => import("./pages/Install"));
 const CareerProgram = lazy(() => import("./pages/CareerProgram"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const AdminCareer = lazy(() => import("./pages/admin/AdminCareer"));
+const EmpDashboard = lazy(() => import("./pages/EmpDashboard"));
 const PaymentStatus = lazy(() => import("./pages/PaymentStatus"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions"));
@@ -84,6 +85,7 @@ const App = () => {
               <Route path="/career-program" element={<CareerProgram />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/admin/career" element={<AdminCareer />} />
+              <Route path="/emp" element={<EmpDashboard />} />
               <Route path="/payment-status" element={<PaymentStatus />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-conditions" element={<TermsConditions />} />
