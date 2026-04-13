@@ -350,7 +350,11 @@ const Index = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
-  const [smartSearchOpen, setSmartSearchOpen] = useState(false);
+  const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
+  const [aiSummary, setAiSummary] = useState("");
+  const [aiSource, setAiSource] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   // Load user preferences to set default state filter
   useEffect(() => {
@@ -365,6 +369,9 @@ const Index = () => {
         if (data.preferred_state && data.preferred_state !== "all") {
           setSelectedState(data.preferred_state);
         }
+      } else {
+        // No preferences yet — show popup for new users
+        setPrefsOpen(true);
       }
     };
     loadPrefs();
@@ -372,12 +379,54 @@ const Index = () => {
 
   useEffect(() => {
     const fetchSchemes = async () => {
-      const { data } = await supabase.from("schemes").select("id, title, category, description, image_url, created_at, state").order("created_at", { ascending: false });
+      const { data } = await supabase.from("schemes").select("id, title, category, description, image_url, created_at, state, slug").order("created_at", { ascending: false });
       if (data) setSchemes(data as unknown as Scheme[]);
       setLoading(false);
     };
     fetchSchemes();
   }, []);
+
+  // Unified search: local first, then AI if needed
+  const handleSearch = async () => {
+    const q = searchQuery.trim();
+    if (q.length < 3) {
+      setAiResults(null);
+      setAiSummary("");
+      return;
+    }
+
+    setSearching(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-scheme-search", {
+        body: { query: q },
+      });
+      if (error) throw error;
+      setAiResults(data.schemes || []);
+      setAiSummary(data.ai_summary || "");
+      setAiSource(data.source || "database");
+    } catch (err) {
+      console.error("Search error:", err);
+      const local = schemes.filter((s) =>
+        s.title.toLowerCase().includes(q.toLowerCase()) ||
+        s.description?.toLowerCase().includes(q.toLowerCase())
+      );
+      setAiResults(local);
+      setAiSummary("");
+      setAiSource("local");
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setAiResults(null);
+    setAiSummary("");
+  };
 
   // State-filtered base
   const stateFiltered = selectedState === "all"
@@ -391,13 +440,6 @@ const Index = () => {
   const filteredSchemes = activeCategory
     ? stateFiltered.filter((s) => s.category === activeCategory)
     : stateFiltered;
-
-  const searchedSchemes = searchQuery
-    ? filteredSchemes.filter((s) =>
-        s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : null;
 
   const recentSchemes = stateFiltered.slice(0, 12);
 
