@@ -58,26 +58,29 @@ const HERO_SLIDES = [
   {
     image: hero1,
     title: "Discover Government Schemes",
-    subtitle: "Access 550+ scholarships, subsidies & welfare programs",
+    subtitle: "Access 550+ scholarships, subsidies & welfare programs across India",
     cta: "Explore Now",
     ctaLink: "#schemes",
-    gradient: "from-primary/90 via-primary/70 to-transparent",
+    badge: "🔥 Trending",
+    stat: "550+ Schemes",
   },
   {
     image: hero2,
     title: "Scholarships for Students",
-    subtitle: "Find scholarships worth lakhs for your education",
+    subtitle: "Find scholarships worth lakhs for your education journey",
     cta: "View Scholarships",
     ctaLink: "#schemes",
-    gradient: "from-secondary/90 via-secondary/70 to-transparent",
+    badge: "🎓 Education",
+    stat: "₹10L+ Worth",
   },
   {
     image: hero3,
     title: "Support for Farmers",
-    subtitle: "PM-KISAN, crop insurance, equipment subsidies & more",
+    subtitle: "PM-KISAN, crop insurance, equipment subsidies & more benefits",
     cta: "Farmer Schemes",
     ctaLink: "#schemes",
-    gradient: "from-accent/90 via-accent/70 to-transparent",
+    badge: "🌾 Agriculture",
+    stat: "100+ Benefits",
   },
 ];
 
@@ -134,8 +137,8 @@ const HeroBanner = () => {
       {HERO_SLIDES.map((s, i) => (
         <div
           key={i}
-          className={`absolute inset-0 transition-all duration-700 ease-out ${
-            i === current ? "opacity-100 scale-100" : "opacity-0 scale-105"
+          className={`absolute inset-0 transition-all duration-1000 ease-out ${
+            i === current ? "opacity-100 scale-100" : "opacity-0 scale-110"
           }`}
         >
           <img
@@ -147,45 +150,76 @@ const HeroBanner = () => {
             loading={i === 0 ? "eager" : "lazy"}
             decoding="async"
           />
-          <div className={`absolute inset-0 bg-gradient-to-r ${s.gradient}`} />
+          {/* Dark cinematic overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         </div>
       ))}
 
+      {/* Animated accent line */}
+      <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary via-secondary to-accent z-10" />
+
       {/* Content overlay */}
-      <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center">
-        <div className="max-w-md">
+      <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
+        <div className="max-w-lg">
+          {/* Badge */}
+          <div
+            key={`badge-${current}`}
+            className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border border-white/20 animate-fade-in"
+          >
+            {slide.badge}
+          </div>
+
           <h1
             key={current}
-            className="text-xl md:text-4xl font-extrabold text-primary-foreground mb-2 md:mb-3 animate-slide-up"
+            className="text-2xl md:text-5xl font-extrabold text-white mb-2 md:mb-3 leading-tight animate-fade-in"
             style={{ fontFamily: 'Plus Jakarta Sans' }}
           >
             {slide.title}
           </h1>
-          <p key={`sub-${current}`} className="text-sm md:text-lg text-primary-foreground/80 mb-4 md:mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          <p
+            key={`sub-${current}`}
+            className="text-sm md:text-lg text-white/80 mb-4 md:mb-6 animate-fade-in max-w-md leading-relaxed"
+            style={{ animationDelay: '0.1s' }}
+          >
             {slide.subtitle}
           </p>
-          <Link to="/plans">
-            <Button
-              size="lg"
-              className="rounded-xl bg-card/20 backdrop-blur-md text-primary-foreground border border-primary-foreground/20 hover:bg-card/30 font-semibold gap-2 animate-slide-up"
-              style={{ animationDelay: '0.2s' }}
-            >
-              {slide.cta} <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+
+          <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <Link to="/plans">
+              <Button
+                size="lg"
+                className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-bold gap-2 shadow-lg shadow-primary/30 text-sm md:text-base px-5 md:px-7"
+              >
+                {slide.cta} <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/10">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <span className="text-white text-sm font-semibold">{slide.stat}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Dots */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+      {/* Progress bar instead of dots */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 flex gap-1 px-3 pb-3 md:px-10 md:pb-4">
         {HERO_SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === current ? "w-6 h-2 bg-primary-foreground" : "w-2 h-2 bg-primary-foreground/40"
-            }`}
-          />
+            className="flex-1 h-1 rounded-full bg-white/20 overflow-hidden"
+          >
+            <div
+              className={`h-full rounded-full transition-all duration-300 ${
+                i === current
+                  ? "bg-white w-full animate-[hero-progress_4.5s_linear]"
+                  : i < current
+                    ? "bg-white/60 w-full"
+                    : "bg-transparent w-0"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </section>
