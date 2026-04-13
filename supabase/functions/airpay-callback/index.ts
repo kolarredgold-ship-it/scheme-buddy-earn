@@ -94,7 +94,7 @@ serve(async (req) => {
             if (referrer.referred_by) {
               const { data: level2 } = await supabaseClient
                 .from("profiles")
-                .select("user_id, referred_by")
+                .select("user_id, referred_by, wallet_balance")
                 .eq("referral_code", referrer.referred_by)
                 .single();
 
@@ -105,12 +105,16 @@ serve(async (req) => {
                   type: "credit",
                   source: `Level 2 referral - ${orderId}`,
                 });
+                await supabaseClient
+                  .from("profiles")
+                  .update({ wallet_balance: Number(level2.wallet_balance || 0) + 100 })
+                  .eq("user_id", level2.user_id);
 
                 // Level 3 referrer - ₹50
                 if (level2.referred_by) {
                   const { data: level3 } = await supabaseClient
                     .from("profiles")
-                    .select("user_id")
+                    .select("user_id, wallet_balance")
                     .eq("referral_code", level2.referred_by)
                     .single();
 
@@ -121,6 +125,10 @@ serve(async (req) => {
                       type: "credit",
                       source: `Level 3 referral - ${orderId}`,
                     });
+                    await supabaseClient
+                      .from("profiles")
+                      .update({ wallet_balance: Number(level3.wallet_balance || 0) + 50 })
+                      .eq("user_id", level3.user_id);
                   }
                 }
               }
