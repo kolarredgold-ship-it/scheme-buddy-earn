@@ -60,27 +60,57 @@ const HERO_SLIDES = [
     title: "Discover Government Schemes",
     subtitle: "Access 550+ scholarships, subsidies & welfare programs across India",
     cta: "Explore Now",
-    ctaLink: "#schemes",
-    badge: "🔥 Trending",
+    ctaLink: "/plans",
+    badge: "🏛 Government",
     stat: "550+ Schemes",
   },
   {
     image: hero2,
-    title: "Scholarships for Students",
-    subtitle: "Find scholarships worth lakhs for your education journey",
-    cta: "View Scholarships",
-    ctaLink: "#schemes",
-    badge: "🎓 Education",
-    stat: "₹10L+ Worth",
+    title: "Explore Job Opportunities",
+    subtitle: "Discover curated jobs matching your skills and career aspirations",
+    cta: "Find Jobs",
+    ctaLink: "/career-program",
+    badge: "💼 Jobs",
+    stat: "New Openings",
   },
   {
     image: hero3,
-    title: "Support for Farmers",
-    subtitle: "PM-KISAN, crop insurance, equipment subsidies & more benefits",
-    cta: "Farmer Schemes",
-    ctaLink: "#schemes",
-    badge: "🌾 Agriculture",
-    stat: "100+ Benefits",
+    title: "Skill Development Programs",
+    subtitle: "Upskill with industry-relevant courses & get certified",
+    cta: "Start Learning",
+    ctaLink: "/career-program",
+    badge: "🎓 Upskill",
+    stat: "Free Courses",
+  },
+  {
+    image: hero1,
+    title: "AI Mock Interview Training",
+    subtitle: "Practice with AI-powered HR interviews & get instant feedback to ace your next round",
+    cta: "Start Practice",
+    ctaLink: "/mock-interview",
+    badge: "🔥 Hot",
+    stat: "AI Powered",
+    glow: true,
+  },
+  {
+    image: hero2,
+    title: "Internship Report Generator",
+    subtitle: "Generate professional internship reports instantly — Get Real Experience!",
+    cta: "Generate Report",
+    ctaLink: "/create-report",
+    badge: "🔥 Get Real Experience",
+    stat: "AI Reports",
+    glow: true,
+  },
+  {
+    image: hero3,
+    title: "AI HR Interview Training",
+    subtitle: "Simulate real HR interview rounds and prepare like a pro with AI coaching",
+    cta: "Train Now",
+    ctaLink: "/mock-interview",
+    badge: "🔥 New",
+    stat: "Live Practice",
+    glow: true,
   },
 ];
 
@@ -163,7 +193,11 @@ const HeroBanner = () => {
           {/* Badge */}
           <div
             key={`badge-${current}`}
-            className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border border-white/20 animate-fade-in"
+            className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border animate-fade-in ${
+              (slide as any).glow
+                ? "bg-orange-500/30 border-orange-400/40 shadow-[0_0_15px_rgba(249,115,22,0.4)]"
+                : "bg-white/15 border-white/20"
+            }`}
           >
             {slide.badge}
           </div>
@@ -184,10 +218,14 @@ const HeroBanner = () => {
           </p>
 
           <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Link to="/plans">
+            <Link to={slide.ctaLink}>
               <Button
                 size="lg"
-                className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-bold gap-2 shadow-lg shadow-primary/30 text-sm md:text-base px-5 md:px-7"
+                className={`rounded-xl font-bold gap-2 text-sm md:text-base px-5 md:px-7 ${
+                  (slide as any).glow
+                    ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 shadow-[0_0_20px_rgba(249,115,22,0.4)]"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
+                }`}
               >
                 {slide.cta} <ArrowRight className="h-4 w-4" />
               </Button>
