@@ -419,6 +419,11 @@ const CareerProgram = () => {
                 <p className="text-[10px] text-muted-foreground">Active Days</p>
               </div>
             </div>
+            <Link to="/emp">
+              <Button variant="outline" className="w-full gap-2">
+                <Users className="h-4 w-4" /> Open Employee Dashboard — techrola.in/emp
+              </Button>
+            </Link>
           </div>
         );
 
