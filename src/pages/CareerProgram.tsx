@@ -90,12 +90,51 @@ const CareerProgram = () => {
   const todayStr = new Date().toISOString().split("T")[0];
   const dailyCount = progress?.last_promotion_date === todayStr ? (progress?.daily_promotions || 0) : 0;
 
-  // Step 1: Registration
+  // Step 1: Registration (also handles signup if not logged in)
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
     setSubmitting(true);
-    
+
+    if (!user) {
+      // Sign up the user first
+      if (!formData.password || formData.password.length < 6) {
+        toast.error("Password must be at least 6 characters");
+        setSubmitting(false);
+        return;
+      }
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name,
+          },
+        },
+      });
+      if (signUpError) {
+        toast.error(signUpError.message);
+        setSubmitting(false);
+        return;
+      }
+      // Wait for auth state to settle, then save career progress
+      const userId = signUpData.user?.id;
+      if (userId) {
+        await supabase.from("career_progress").upsert({
+          user_id: userId,
+          registered: true,
+          course: formData.course,
+          college: formData.college,
+          phone: formData.phone,
+          current_step: 2,
+        }, { onConflict: "user_id" });
+      }
+      toast.success("Account created! Please check your email to verify, then log in.");
+      navigate("/login");
+      setSubmitting(false);
+      return;
+    }
+
+    // Already logged in — just register career details
     const { error } = await supabase.from("career_progress").upsert({
       user_id: user.id,
       registered: true,
