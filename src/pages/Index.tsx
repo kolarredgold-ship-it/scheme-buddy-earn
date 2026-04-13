@@ -449,23 +449,43 @@ const Index = () => {
         {/* Hero Banner */}
         <HeroBanner />
 
-        {/* Search Bar + State Filter */}
+        {/* Unified Search Bar + State Filter */}
         <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6">
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
               <input
                 type="text"
-                placeholder="Search schemes..."
+                placeholder="AI Search: 'free laptop Tamil Nadu' or 'farmer subsidy'"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-11 md:h-12 pl-10 pr-4 rounded-xl bg-card border border-border/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all placeholder:text-muted-foreground/60"
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (e.target.value.trim().length < 3) {
+                    setAiResults(null);
+                    setAiSummary("");
+                  }
+                }}
+                onKeyDown={handleSearchKeyDown}
+                className="w-full h-11 md:h-12 pl-10 pr-10 rounded-xl bg-card border border-primary/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all placeholder:text-muted-foreground/50"
               />
+              {searchQuery && (
+                <button onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
+            <Button
+              onClick={handleSearch}
+              disabled={searching || searchQuery.trim().length < 3}
+              className="h-11 md:h-12 px-4 rounded-xl gap-1.5 shrink-0"
+            >
+              {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              <span className="hidden sm:inline">Search</span>
+            </Button>
             <Select value={selectedState} onValueChange={setSelectedState}>
-              <SelectTrigger className="w-[140px] md:w-[180px] h-11 md:h-12 rounded-xl bg-card border-border/60 text-sm gap-1 shrink-0">
+              <SelectTrigger className="w-[120px] md:w-[160px] h-11 md:h-12 rounded-xl bg-card border-border/60 text-sm gap-1 shrink-0">
                 <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <SelectValue placeholder="Select State" />
+                <SelectValue placeholder="State" />
               </SelectTrigger>
               <SelectContent className="max-h-[300px]">
                 {INDIAN_STATES.map((state) => (
@@ -477,32 +497,6 @@ const Index = () => {
             </Select>
           </div>
 
-          {/* AI Search + Personalize */}
-          <div className="flex gap-2 mt-2">
-            <Dialog open={smartSearchOpen} onOpenChange={setSmartSearchOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="flex-1 gap-1.5 rounded-xl text-xs border-primary/20 text-primary hover:bg-primary/5 h-9">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  AI Smart Search
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-lg max-h-[80vh] overflow-hidden">
-                <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    AI-Powered Scheme Search
-                  </DialogTitle>
-                </DialogHeader>
-                <SmartSearch onClose={() => setSmartSearchOpen(false)} />
-              </DialogContent>
-            </Dialog>
-            {user && (
-              <UserPreferences onPreferencesSaved={(state) => {
-                if (state !== "all") setSelectedState(state);
-              }} />
-            )}
-          </div>
-
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-2 mt-3">
             <Link to="/create-report">
@@ -511,7 +505,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/mock-interview">
-              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-purple-500/30 text-purple-700 hover:bg-purple-50">
+              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
                 <Brain className="h-4 w-4 shrink-0" /> AI Mock Interview
               </Button>
             </Link>
