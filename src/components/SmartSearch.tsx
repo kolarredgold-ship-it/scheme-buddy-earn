@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, Sparkles, Loader2 } from "lucide-react";
+import { Search, Sparkles, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,8 @@ interface SearchResult {
   state: string | null;
   image_url: string | null;
   slug: string;
+  apply_link: string | null;
+  source_website: string | null;
 }
 
 interface SmartSearchProps {
@@ -27,6 +29,7 @@ const SmartSearch = ({ onClose }: SmartSearchProps) => {
   const [aiSummary, setAiSummary] = useState("");
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [source, setSource] = useState("");
 
   const handleSearch = async () => {
     if (query.trim().length < 3) {
@@ -46,6 +49,7 @@ const SmartSearch = ({ onClose }: SmartSearchProps) => {
 
       setResults(data.schemes || []);
       setAiSummary(data.ai_summary || "");
+      setSource(data.source || "database");
     } catch (err) {
       console.error("Search error:", err);
       toast.error("Search failed. Please try again.");
@@ -93,7 +97,12 @@ const SmartSearch = ({ onClose }: SmartSearchProps) => {
       {aiSummary && (
         <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10">
           <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-          <p className="text-xs text-foreground/80">{aiSummary}</p>
+          <div>
+            <p className="text-xs text-foreground/80">{aiSummary}</p>
+            {source === "ai_enriched" && (
+              <p className="text-[10px] text-primary mt-1 font-medium">✨ AI discovered new schemes for you</p>
+            )}
+          </div>
         </div>
       )}
 
@@ -116,10 +125,15 @@ const SmartSearch = ({ onClose }: SmartSearchProps) => {
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-semibold line-clamp-1">{scheme.title}</h3>
                       <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{scheme.description}</p>
-                      <div className="flex items-center gap-2 mt-1.5">
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                         <Badge variant="outline" className="text-[9px] px-1.5 py-0">{scheme.category}</Badge>
                         {scheme.state && (
                           <span className="text-[10px] text-muted-foreground">{stateLabel(scheme.state)}</span>
+                        )}
+                        {!scheme.apply_link && scheme.source_website && (
+                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0 gap-0.5">
+                            <ExternalLink className="h-2.5 w-2.5" /> Dept. Page
+                          </Badge>
                         )}
                       </div>
                     </div>

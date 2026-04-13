@@ -132,12 +132,24 @@ const SchemeDetail = () => {
 
         {/* Apply Button */}
         <div className="mt-6">
-          {isPaid && scheme.apply_link ? (
-            <a href={scheme.apply_link} target="_blank" rel="noopener noreferrer">
-              <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-secondary font-semibold">
-                Apply Now <ExternalLink className="h-4 w-4" />
+          {isPaid ? (
+            scheme.apply_link ? (
+              <a href={scheme.apply_link} target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-secondary font-semibold">
+                  Apply Now <ExternalLink className="h-4 w-4" />
+                </Button>
+              </a>
+            ) : scheme.source_website ? (
+              <a href={scheme.source_website} target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-primary font-semibold">
+                  Visit Department Page <ExternalLink className="h-4 w-4" />
+                </Button>
+              </a>
+            ) : (
+              <Button size="lg" disabled className="w-full md:w-auto gap-2 rounded-xl opacity-60 font-semibold">
+                Apply Link Coming Soon
               </Button>
-            </a>
+            )
           ) : (
             <Link to={user ? "/subscription" : "/plans"}>
               <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-primary font-semibold">
