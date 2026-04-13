@@ -73,8 +73,7 @@ const Dashboard = () => {
               </Button>
             </div>
             <p className="text-sm text-muted-foreground mb-4">
-              Earn <span className="font-bold text-secondary">₹400</span> for each friend who subscribes! 
-              Your referrals earn <span className="font-bold">₹50</span> at Level 2 & 3 too.
+              Earn <span className="font-bold text-secondary">₹400</span> (L1), <span className="font-bold">₹100</span> (L2) & <span className="font-bold">₹50</span> (L3) per referral subscription!
             </p>
             <Button onClick={shareWhatsApp} className="w-full gap-2" variant="outline">
               <Share2 className="h-4 w-4" /> Share on WhatsApp

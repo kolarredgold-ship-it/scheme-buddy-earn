@@ -102,11 +102,11 @@ serve(async (req) => {
             if (level2) {
               await supabase
                 .from("profiles")
-                .update({ wallet_balance: Number(level2.wallet_balance) + 50 })
+                .update({ wallet_balance: Number(level2.wallet_balance) + 100 })
                 .eq("user_id", level2.user_id);
               await supabase.from("transactions").insert({
                 user_id: level2.user_id,
-                amount: 50,
+                amount: 100,
                 type: "credit",
                 source: `L2 Referral: ${profile.name || profile.email || 'User'} subscribed`,
               });
