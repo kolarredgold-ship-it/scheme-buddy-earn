@@ -7,7 +7,8 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle, Sparkles } from "lucide-react";
+import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle, Sparkles, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 const SchemeDetail = () => {
   const { slug } = useParams();
@@ -51,9 +52,30 @@ const SchemeDetail = () => {
   return (
     <Layout>
       <div className="container mx-auto px-3 md:px-4 py-4 pb-24 md:pb-8 max-w-3xl animate-fade-in">
-        <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors">
-          <ArrowLeft className="h-4 w-4 mr-1" /> Back
-        </Link>
+        <div className="flex items-center justify-between mb-4">
+          <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5 rounded-xl"
+            onClick={async () => {
+              const url = window.location.href;
+              const text = `Check out this scheme: ${scheme.title}`;
+              if (navigator.share) {
+                try {
+                  await navigator.share({ title: scheme.title, text, url });
+                } catch {}
+              } else {
+                await navigator.clipboard.writeText(url);
+                toast.success("Link copied to clipboard!");
+              }
+            }}
+          >
+            <Share2 className="h-4 w-4" /> Share
+          </Button>
+        </div>
 
         <div className="rounded-2xl overflow-hidden mb-5 h-44 md:h-60">
           {scheme.image_url ? (
