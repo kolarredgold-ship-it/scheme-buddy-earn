@@ -557,21 +557,42 @@ const Index = () => {
             <div className="flex justify-center py-20">
               <div className="h-8 w-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
-          ) : searchedSchemes ? (
-            /* Search Results */
+          ) : searching ? (
+            <div className="flex flex-col items-center py-16 gap-3 animate-fade-in">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+              <p className="text-sm text-muted-foreground">AI is searching for schemes...</p>
+            </div>
+          ) : aiResults ? (
+            /* AI Search Results */
             <section className="animate-fade-in">
-              <h2 className="text-base md:text-lg font-bold mb-3">
-                {searchedSchemes.length} result{searchedSchemes.length !== 1 ? 's' : ''} found
-              </h2>
+              {aiSummary && (
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 mb-4">
+                  <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-foreground/80">{aiSummary}</p>
+                    {aiSource === "ai_enriched" && (
+                      <p className="text-[10px] text-primary mt-1 font-medium">✨ AI discovered new schemes for you</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-base md:text-lg font-bold">
+                  {aiResults.length} result{aiResults.length !== 1 ? 's' : ''} found
+                </h2>
+                <button onClick={clearSearch} className="text-xs text-primary font-medium hover:underline">
+                  Clear Search
+                </button>
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                {searchedSchemes.slice(0, 20).map((scheme) => (
+                {aiResults.slice(0, 20).map((scheme: any) => (
                   <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
               </div>
-              {searchedSchemes.length === 0 && (
+              {aiResults.length === 0 && (
                 <div className="text-center py-12">
                   <Search className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground text-sm">No schemes found. Try a different search.</p>
+                  <p className="text-muted-foreground text-sm">No schemes found. Try different keywords.</p>
                 </div>
               )}
             </section>
