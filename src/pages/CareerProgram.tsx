@@ -280,27 +280,41 @@ const CareerProgram = () => {
     switch (step) {
       case 1:
         if (isCompleted) return <CompletedBadge text="Registration Complete" />;
-        if (!user) {
-          return (
-            <div className="text-center py-6">
-              <p className="text-sm text-muted-foreground mb-4">Create an account to start the career program</p>
-              <Link to="/plans">
-                <Button className="gap-2"><UserPlus className="h-4 w-4" /> Sign Up Now</Button>
-              </Link>
-            </div>
-          );
-        }
         return (
           <form onSubmit={handleRegister} className="space-y-3">
             <Input placeholder="Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
             <Input type="email" placeholder="Email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required />
+            {!user && (
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create Password (min 6 chars)"
+                  value={formData.password}
+                  onChange={e => setFormData({...formData, password: e.target.value})}
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            )}
             <Input placeholder="Phone Number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required />
             <Input placeholder="Course (e.g. B.Tech, MBA)" value={formData.course} onChange={e => setFormData({...formData, course: e.target.value})} required />
             <Input placeholder="College Name" value={formData.college} onChange={e => setFormData({...formData, college: e.target.value})} required />
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Apply Now
+              {user ? "Apply Now" : "Sign Up & Apply Now"}
             </Button>
+            {!user && (
+              <p className="text-xs text-center text-muted-foreground">
+                Already have an account? <Link to="/login" className="text-primary font-medium hover:underline">Sign In</Link>
+              </p>
+            )}
           </form>
         );
 
