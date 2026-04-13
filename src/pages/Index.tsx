@@ -193,7 +193,11 @@ const HeroBanner = () => {
           {/* Badge */}
           <div
             key={`badge-${current}`}
-            className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border border-white/20 animate-fade-in"
+            className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border animate-fade-in ${
+              (slide as any).glow
+                ? "bg-orange-500/30 border-orange-400/40 shadow-[0_0_15px_rgba(249,115,22,0.4)]"
+                : "bg-white/15 border-white/20"
+            }`}
           >
             {slide.badge}
           </div>
@@ -214,10 +218,14 @@ const HeroBanner = () => {
           </p>
 
           <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Link to="/plans">
+            <Link to={slide.ctaLink}>
               <Button
                 size="lg"
-                className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-bold gap-2 shadow-lg shadow-primary/30 text-sm md:text-base px-5 md:px-7"
+                className={`rounded-xl font-bold gap-2 text-sm md:text-base px-5 md:px-7 ${
+                  (slide as any).glow
+                    ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 shadow-[0_0_20px_rgba(249,115,22,0.4)]"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
+                }`}
               >
                 {slide.cta} <ArrowRight className="h-4 w-4" />
               </Button>
