@@ -53,6 +53,12 @@ const INDIAN_STATES = [
 import hero1 from "@/assets/hero-1.jpg";
 import hero2 from "@/assets/hero-2.jpg";
 import hero3 from "@/assets/hero-3.jpg";
+import heroJobs from "@/assets/hero-jobs.jpg";
+import heroSkills from "@/assets/hero-skills.jpg";
+import heroGovt from "@/assets/hero-govt.jpg";
+import heroAiInterview from "@/assets/hero-ai-interview.jpg";
+import heroReport from "@/assets/hero-report.jpg";
+import heroHrTraining from "@/assets/hero-hr-training.jpg";
 
 const HERO_SLIDES = [
   {
