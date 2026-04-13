@@ -146,6 +146,11 @@ const CareerProgram = () => {
       current_step: 2,
     }, { onConflict: "user_id" });
 
+    // Save referral code to profile if provided and not already set
+    if (formData.referralCode && !profile?.referred_by) {
+      await supabase.from("profiles").update({ referred_by: formData.referralCode }).eq("user_id", user.id);
+    }
+
     if (error) {
       toast.error("Failed to register. Try again.");
     } else {
