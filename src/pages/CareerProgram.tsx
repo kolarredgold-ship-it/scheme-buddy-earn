@@ -108,6 +108,7 @@ const CareerProgram = () => {
         options: {
           data: {
             name: formData.name,
+            referred_by: formData.referralCode || undefined,
           },
         },
       });
