@@ -49,7 +49,7 @@ const CareerProgram = () => {
   const navigate = useNavigate();
   const [progress, setProgress] = useState<CareerProgress | null>(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "", referralCode: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
