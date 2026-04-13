@@ -229,14 +229,14 @@ const HeroBanner = () => {
           <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <Link to={slide.ctaLink}>
               <Button
-                size="lg"
-                className={`rounded-xl font-bold gap-2 text-sm md:text-base px-5 md:px-7 ${
+                size="sm"
+                className={`rounded-lg font-semibold gap-1.5 text-xs md:text-sm px-3 md:px-5 py-1.5 ${
                   (slide as any).glow
                     ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 shadow-[0_0_20px_rgba(249,115,22,0.4)]"
                     : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
                 }`}
               >
-                {slide.cta} <ArrowRight className="h-4 w-4" />
+                {slide.cta} <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
             <div className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/10">
