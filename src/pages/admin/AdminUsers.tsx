@@ -192,8 +192,9 @@ const AdminUsers = () => {
                     <TableHead>Code</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Balance</TableHead>
-                    <TableHead className="hidden md:table-cell text-right">Credits</TableHead>
-                    <TableHead className="text-center">Actions</TableHead>
+                     <TableHead className="hidden md:table-cell text-right">Credits</TableHead>
+                     <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                     <TableHead className="text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
