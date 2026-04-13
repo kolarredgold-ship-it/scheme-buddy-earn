@@ -261,6 +261,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
         </nav>
       )}
+
+      {/* Personalize Preferences Popup */}
+      {user && (
+        <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
+      )}
     </div>
   );
 };
