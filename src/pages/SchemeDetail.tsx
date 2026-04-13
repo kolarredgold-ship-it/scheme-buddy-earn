@@ -7,7 +7,8 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle, Sparkles } from "lucide-react";
+import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle, Sparkles, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 const SchemeDetail = () => {
   const { slug } = useParams();
