@@ -157,22 +157,60 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Career Program CTA - Above Footer */}
       <div className="container mx-auto px-3 md:px-4 mt-10 mb-2">
-        <Link to="/career-program">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-secondary to-accent p-5 md:p-6 hover:opacity-95 transition-opacity">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-foreground/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary-foreground/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+        <Link to="/career-program" className="block group">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[hsl(220,90%,45%)] via-[hsl(260,80%,50%)] to-[hsl(320,70%,50%)] p-6 md:p-8 transition-all duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] hover:scale-[1.01]">
+            {/* Animated background shapes */}
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 right-1/4 w-20 h-20 bg-white/5 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }} />
+            {/* Sparkle dots */}
+            <div className="absolute top-4 right-8 w-2 h-2 bg-yellow-300 rounded-full animate-ping" style={{ animationDuration: '2s' }} />
+            <div className="absolute bottom-6 right-16 w-1.5 h-1.5 bg-yellow-200 rounded-full animate-ping" style={{ animationDuration: '3s', animationDelay: '0.5s' }} />
+            <div className="absolute top-8 right-1/3 w-1 h-1 bg-white rounded-full animate-ping" style={{ animationDuration: '2.5s', animationDelay: '1s' }} />
+
             <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 w-10 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center">
-                  <Briefcase className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <h3 className="text-lg md:text-xl font-extrabold text-primary-foreground">Techrola Career Program</h3>
+              {/* Badge */}
+              <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-md rounded-full px-3 py-1 mb-4 text-[10px] md:text-xs font-semibold text-white uppercase tracking-wider">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                Now Open — Limited Seats
               </div>
-              <p className="text-primary-foreground/90 text-xs md:text-sm mb-3">
-                Work, Learn, and Get Hired Based on Your Performance. Start as a promoter, grow into a professional!
+
+              {/* Title */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform duration-500">
+                  <Briefcase className="h-6 w-6 md:h-7 md:w-7 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-white leading-tight" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                    Techrola Career Program
+                  </h3>
+                  <p className="text-white/70 text-[11px] md:text-xs font-medium">Work · Learn · Get Hired</p>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-white/90 text-xs md:text-sm mb-5 max-w-lg leading-relaxed">
+                Start as a promoter, grow into a professional, and build your career with Techrola. 
+                Earn rewards, get certified, and land real opportunities!
               </p>
-              <div className="flex items-center gap-2 text-primary-foreground text-sm font-semibold">
-                Join Now <Trophy className="h-4 w-4" />
+
+              {/* Step indicators */}
+              <div className="flex items-center gap-1 mb-5 flex-wrap">
+                {["Register", "Subscribe", "Get EMP Code", "Promote", "Build Streak", "Get Hired"].map((step, i) => (
+                  <div key={i} className="flex items-center">
+                    <div className="flex items-center gap-1 bg-white/15 backdrop-blur-sm rounded-full px-2 py-1">
+                      <span className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-white/25 flex items-center justify-center text-[9px] md:text-[10px] font-bold text-white">{i + 1}</span>
+                      <span className="text-[9px] md:text-[10px] text-white/90 font-medium whitespace-nowrap">{step}</span>
+                    </div>
+                    {i < 5 && <div className="w-1.5 md:w-3 h-px bg-white/30 mx-0.5" />}
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA Button */}
+              <div className="inline-flex items-center gap-2 bg-white text-[hsl(260,80%,50%)] font-bold text-sm md:text-base px-6 py-3 rounded-xl shadow-lg group-hover:shadow-xl group-hover:gap-3 transition-all duration-300">
+                Start Your Career Journey
+                <Trophy className="h-4 w-4 md:h-5 md:w-5 group-hover:rotate-12 transition-transform" />
               </div>
             </div>
           </div>
