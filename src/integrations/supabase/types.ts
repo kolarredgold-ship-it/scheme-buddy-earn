@@ -295,6 +295,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_active: boolean | null
+          slug: string
           source_website: string | null
           state: string | null
           tags: string[] | null
@@ -312,6 +313,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean | null
+          slug: string
           source_website?: string | null
           state?: string | null
           tags?: string[] | null
@@ -329,6 +331,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean | null
+          slug?: string
           source_website?: string | null
           state?: string | null
           tags?: string[] | null

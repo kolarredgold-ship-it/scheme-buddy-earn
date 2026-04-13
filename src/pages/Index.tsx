@@ -145,6 +145,7 @@ interface Scheme {
   image_url: string | null;
   created_at: string;
   state: string | null;
+  slug: string;
 }
 
 // Hero Banner with auto-scroll
@@ -273,7 +274,7 @@ const HeroBanner = () => {
 
 // Scheme Card
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
-  <Link to={`/scheme/${scheme.id}`} className="block">
+  <Link to={`/scheme/${scheme.slug}`} className="block">
     <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
       <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
         {scheme.image_url ? (

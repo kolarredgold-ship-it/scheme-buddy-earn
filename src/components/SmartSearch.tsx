@@ -14,6 +14,7 @@ interface SearchResult {
   description: string;
   state: string | null;
   image_url: string | null;
+  slug: string;
 }
 
 interface SmartSearchProps {
@@ -106,7 +107,7 @@ const SmartSearch = ({ onClose }: SmartSearchProps) => {
             {results.map((scheme) => (
               <Link
                 key={scheme.id}
-                to={`/scheme/${scheme.id}`}
+                to={`/scheme/${scheme.slug}`}
                 onClick={onClose}
                 className="block"
               >

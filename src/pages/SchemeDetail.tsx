@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Lock, ExternalLink, ArrowLeft, FileText, CheckCircle, Sparkles } from "lucide-react";
 
 const SchemeDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { user, profile, refreshProfile } = useAuth();
   const [scheme, setScheme] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -20,12 +20,12 @@ const SchemeDetail = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase.from("schemes").select("*").eq("id", id!).single();
+      const { data } = await supabase.from("schemes").select("*").eq("slug", slug!).single();
       setScheme(data);
       setLoading(false);
     };
-    if (id) fetch();
-  }, [id]);
+    if (slug) fetch();
+  }, [slug]);
 
   if (loading) return (
     <Layout>
