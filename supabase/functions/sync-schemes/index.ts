@@ -14,24 +14,20 @@ interface SchemeData {
   eligibility?: string;
   documents?: string;
   apply_link?: string;
+  tags?: string[];
+  beneficiary_type?: string;
+  source_website?: string;
 }
 
-// Official government portal URLs to monitor for scheme updates
-const PORTAL_SOURCES: Record<string, { url: string; state: string; category: string }[]> = {
-  karnataka: [
-    { url: "https://sevasindhu.karnataka.gov.in", state: "karnataka", category: "govt_jobs" },
-    { url: "https://ssp.postmatric.karnataka.gov.in", state: "karnataka", category: "scholarships" },
-    { url: "https://socialwelfare.karnataka.gov.in", state: "karnataka", category: "sc_st" },
-    { url: "https://minoritywelfare.karnataka.gov.in", state: "karnataka", category: "minority" },
-    { url: "https://raitamitra.karnataka.gov.in", state: "karnataka", category: "farmers" },
-    { url: "https://dwcd.karnataka.gov.in", state: "karnataka", category: "health" },
-  ],
-  central: [
-    { url: "https://www.myscheme.gov.in", state: "central", category: "education" },
-    { url: "https://scholarships.gov.in", state: "central", category: "scholarships" },
-    { url: "https://pmkisan.gov.in", state: "central", category: "farmers" },
-  ],
-};
+const ALL_STATES = [
+  "karnataka", "andhra_pradesh", "tamil_nadu", "kerala", "telangana",
+  "maharashtra", "gujarat", "rajasthan", "uttar_pradesh", "madhya_pradesh",
+  "bihar", "west_bengal", "odisha", "punjab", "haryana", "himachal_pradesh",
+  "uttarakhand", "chhattisgarh", "jharkhand", "assam", "manipur", "meghalaya",
+  "mizoram", "nagaland", "sikkim", "tripura", "arunachal_pradesh", "goa",
+  "delhi", "jammu_kashmir", "ladakh", "chandigarh", "puducherry",
+  "andaman_nicobar", "dadra_nagar_haveli", "lakshadweep", "central"
+];
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -43,26 +39,23 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Parse request body for optional parameters
     let targetState = "all";
-    let mode = "check"; // "check" = search for new schemes, "report" = just report stats
+    let mode = "check";
     
     try {
       const body = await req.json();
       targetState = body.state || "all";
       mode = body.mode || "check";
     } catch {
-      // No body provided, use defaults
+      // defaults
     }
 
-    // Get current scheme count per state
+    // Fetch existing schemes
     const { data: existingSchemes, error: fetchError } = await supabase
       .from("schemes")
       .select("title, state, category");
 
-    if (fetchError) {
-      throw new Error(`Failed to fetch existing schemes: ${fetchError.message}`);
-    }
+    if (fetchError) throw new Error(`Fetch failed: ${fetchError.message}`);
 
     const existingTitles = new Set(
       (existingSchemes || []).map((s: any) => `${s.title}__${s.state}`.toLowerCase())
@@ -85,62 +78,66 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Use AI to discover and generate new scheme data
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!apiKey) {
+    // Try DeepSeek first, fall back to Lovable AI
+    const deepseekKey = Deno.env.get("DEEPSEEK_API_KEY");
+    const lovableKey = Deno.env.get("LOVABLE_API_KEY");
+    
+    const aiConfig = deepseekKey 
+      ? { url: "https://api.deepseek.com/chat/completions", key: deepseekKey, model: "deepseek-chat" }
+      : lovableKey
+        ? { url: "https://ai-gateway.lovable.dev/chat/completions", key: lovableKey, model: "google/gemini-2.5-flash" }
+        : null;
+
+    if (!aiConfig) {
       return new Response(
-        JSON.stringify({ 
-          success: false, 
-          error: "AI API key not configured",
-          existing_stats: { total: existingSchemes?.length, by_state: stateCounts }
-        }),
+        JSON.stringify({ success: false, error: "No AI API key configured" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
       );
     }
 
-    // Determine which states need more schemes
-    const statesToSync = targetState === "all" 
-      ? Object.keys(stateCounts).filter(s => (stateCounts[s] || 0) < 30)
+    // Determine states to sync
+    const statesToSync = targetState === "all"
+      ? ALL_STATES.filter(s => (stateCounts[s] || 0) < 30)
       : [targetState];
 
     let totalAdded = 0;
     const results: Record<string, number> = {};
+    const newNotifications: any[] = [];
 
-    for (const state of statesToSync.slice(0, 5)) { // Process max 5 states per run
+    for (const state of statesToSync.slice(0, 5)) {
       const stateLabel = state.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       const currentCount = stateCounts[state] || 0;
-      
-      if (currentCount >= 30) continue; // Skip states with enough schemes
+      if (currentCount >= 30) continue;
 
       const schemesToGenerate = Math.min(10, 30 - currentCount);
-
-      // Get existing scheme titles for this state to avoid duplicates
       const existingForState = (existingSchemes || [])
         .filter((s: any) => s.state === state)
         .map((s: any) => s.title);
 
-      const prompt = `Generate ${schemesToGenerate} real government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
+      const prompt = `Generate ${schemesToGenerate} real, currently active government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
 
-For each scheme, provide a JSON array with objects having these fields:
+Return a JSON array. Each object must have:
 - title: Official scheme name
 - category: One of: scholarships, farmers, sc_st, minority, housing, health, education, business, govt_jobs
-- description: 2-3 sentence description of the scheme
+- description: 2-3 sentence description
 - eligibility: Who can apply
 - documents: Required documents (comma-separated)
-- apply_link: Official government portal URL
+- apply_link: Official government portal URL (*.gov.in or *.nic.in preferred)
+- tags: Array of tags like ["loan", "subsidy", "scholarship", "free", "dbt", "insurance"]
+- beneficiary_type: One of: students, farmers, women, sc_st, obc, minority, senior_citizens, general, youth, disabled
+- source_website: The official portal URL where this scheme information is listed
 
-Focus on REAL, currently active government schemes. Include state-specific schemes from official departments.
-Return ONLY a valid JSON array, no other text.`;
+Focus on REAL schemes from official state departments. Return ONLY a valid JSON array.`;
 
       try {
-        const aiResponse = await fetch("https://ai-gateway.lovable.dev/chat/completions", {
+        const aiResponse = await fetch(aiConfig.url, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${apiKey}`,
+            "Authorization": `Bearer ${aiConfig.key}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
+            model: aiConfig.model,
             messages: [
               { role: "system", content: "You are a government scheme research assistant. Only output valid JSON arrays. No markdown, no explanations." },
               { role: "user", content: prompt }
@@ -150,27 +147,22 @@ Return ONLY a valid JSON array, no other text.`;
         });
 
         if (!aiResponse.ok) {
-          console.error(`AI API failed for ${state}: ${aiResponse.status}`);
+          console.error(`AI failed for ${state}: ${aiResponse.status}`);
           continue;
         }
 
         const aiData = await aiResponse.json();
         const content = aiData.choices?.[0]?.message?.content || "";
         
-        // Parse the AI response - extract JSON array
         let schemes: SchemeData[] = [];
         try {
-          // Try to find JSON array in the response
           const jsonMatch = content.match(/\[[\s\S]*\]/);
-          if (jsonMatch) {
-            schemes = JSON.parse(jsonMatch[0]);
-          }
+          if (jsonMatch) schemes = JSON.parse(jsonMatch[0]);
         } catch (parseErr) {
-          console.error(`Failed to parse AI response for ${state}:`, parseErr);
+          console.error(`Parse failed for ${state}:`, parseErr);
           continue;
         }
 
-        // Filter out duplicates and insert new schemes
         const newSchemes = schemes
           .filter((s: SchemeData) => {
             const key = `${s.title}__${state}`.toLowerCase();
@@ -184,20 +176,37 @@ Return ONLY a valid JSON array, no other text.`;
             eligibility: s.eligibility || null,
             documents: s.documents || null,
             apply_link: s.apply_link || null,
+            tags: s.tags || [],
+            beneficiary_type: s.beneficiary_type || null,
+            source_website: s.source_website || null,
+            is_active: true,
           }));
 
         if (newSchemes.length > 0) {
-          const { error: insertError } = await supabase
+          const { data: insertedSchemes, error: insertError } = await supabase
             .from("schemes")
-            .insert(newSchemes);
+            .insert(newSchemes)
+            .select("id, title, state, category");
 
           if (insertError) {
             console.error(`Insert failed for ${state}:`, insertError.message);
           } else {
             totalAdded += newSchemes.length;
             results[state] = newSchemes.length;
-            // Update the set to prevent duplicates across states
             newSchemes.forEach((s: any) => existingTitles.add(`${s.title}__${s.state}`.toLowerCase()));
+
+            // Create notifications for new schemes
+            if (insertedSchemes) {
+              for (const scheme of insertedSchemes) {
+                newNotifications.push({
+                  scheme_id: scheme.id,
+                  state: scheme.state,
+                  category: scheme.category,
+                  title: `New Scheme in ${stateLabel}`,
+                  message: `${scheme.title} has been added to ${scheme.category} schemes.`,
+                });
+              }
+            }
           }
         }
       } catch (stateErr) {
@@ -206,13 +215,20 @@ Return ONLY a valid JSON array, no other text.`;
       }
     }
 
+    // Insert notifications
+    if (newNotifications.length > 0) {
+      await supabase.from("scheme_notifications").insert(newNotifications);
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
         total_added: totalAdded,
         by_state: results,
         total_schemes: (existingSchemes?.length || 0) + totalAdded,
+        notifications_created: newNotifications.length,
         synced_at: new Date().toISOString(),
+        ai_engine: deepseekKey ? "deepseek" : "lovable-ai",
         message: `Synced ${totalAdded} new schemes across ${Object.keys(results).length} states`,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }

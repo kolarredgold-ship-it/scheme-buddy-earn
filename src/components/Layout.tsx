@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy } from "lucide-react";
+import NotificationBell from "@/components/NotificationBell";
 import techrolaLogo from "@/assets/techrola_logo.png";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
@@ -78,6 +79,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
+                <NotificationBell />
                 <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-1.5">
                   <div className="h-7 w-7 rounded-lg bg-gradient-primary flex items-center justify-center">
                     <User className="h-3.5 w-3.5 text-primary-foreground" />

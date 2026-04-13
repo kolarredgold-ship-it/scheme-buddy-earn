@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download } from "lucide-react";
 import Layout from "@/components/Layout";
+import UserPreferences from "@/components/UserPreferences";
+import SmartSearch from "@/components/SmartSearch";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const INDIAN_STATES = [
   { value: "all", label: "All India" },
@@ -346,7 +349,25 @@ const Index = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
-  // isPaid check removed - all content is free to view
+  const [smartSearchOpen, setSmartSearchOpen] = useState(false);
+
+  // Load user preferences to set default state filter
+  useEffect(() => {
+    if (!user) return;
+    const loadPrefs = async () => {
+      const { data } = await supabase
+        .from("user_preferences")
+        .select("preferred_state, preferred_categories")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (data) {
+        if (data.preferred_state && data.preferred_state !== "all") {
+          setSelectedState(data.preferred_state);
+        }
+      }
+    };
+    loadPrefs();
+  }, [user]);
 
   useEffect(() => {
     const fetchSchemes = async () => {
@@ -411,6 +432,32 @@ const Index = () => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* AI Search + Personalize */}
+          <div className="flex gap-2 mt-2">
+            <Dialog open={smartSearchOpen} onOpenChange={setSmartSearchOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="flex-1 gap-1.5 rounded-xl text-xs border-primary/20 text-primary hover:bg-primary/5 h-9">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  AI Smart Search
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg max-h-[80vh] overflow-hidden">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    AI-Powered Scheme Search
+                  </DialogTitle>
+                </DialogHeader>
+                <SmartSearch onClose={() => setSmartSearchOpen(false)} />
+              </DialogContent>
+            </Dialog>
+            {user && (
+              <UserPreferences onPreferencesSaved={(state) => {
+                if (state !== "all") setSelectedState(state);
+              }} />
+            )}
           </div>
 
           {/* Action Buttons */}
