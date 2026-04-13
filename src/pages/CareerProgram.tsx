@@ -46,9 +46,11 @@ const MIN_STREAK_FOR_ELIGIBLE = 7;
 
 const CareerProgram = () => {
   const { user, profile, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [progress, setProgress] = useState<CareerProgress | null>(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // Fetch career progress
