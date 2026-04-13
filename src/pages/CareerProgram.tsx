@@ -146,6 +146,11 @@ const CareerProgram = () => {
       current_step: 2,
     }, { onConflict: "user_id" });
 
+    // Save referral code to profile if provided and not already set
+    if (formData.referralCode && !profile?.referred_by) {
+      await supabase.from("profiles").update({ referred_by: formData.referralCode }).eq("user_id", user.id);
+    }
+
     if (error) {
       toast.error("Failed to register. Try again.");
     } else {
@@ -308,12 +313,10 @@ const CareerProgram = () => {
             <Input placeholder="Phone Number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required />
             <Input placeholder="Course (e.g. B.Tech, MBA)" value={formData.course} onChange={e => setFormData({...formData, course: e.target.value})} required />
             <Input placeholder="College Name" value={formData.college} onChange={e => setFormData({...formData, college: e.target.value})} required />
-            {!user && (
-              <div className="space-y-1">
-                <Input placeholder="Referral Code (optional)" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
-                <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹999 instead of ₹2999!</p>
-              </div>
-            )}
+            <div className="space-y-1">
+              <Input placeholder="Referral Code (optional)" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
+              <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹999 instead of ₹2999!</p>
+            </div>
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
               {user ? "Apply Now" : "Sign Up & Apply Now"}
