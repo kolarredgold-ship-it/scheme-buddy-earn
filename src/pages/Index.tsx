@@ -199,8 +199,6 @@ const HeroBanner = () => {
       {/* Content overlay */}
       <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
         <div className="max-w-lg">
-          {/* Techrola Icon */}
-          <img src={techrolaIcon} alt="" className="h-10 w-10 md:h-14 md:w-14 mb-3 opacity-90 drop-shadow-lg" />
           {/* Badge */}
           <div
             key={`badge-${current}`}
@@ -291,8 +289,8 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
             }}
           />
         ) : null}
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 absolute inset-0 -z-10">
-          <img src={techrolaIcon} alt="Techrola" className="h-16 w-16 opacity-20" />
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10 absolute inset-0 -z-10">
+          <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
         </div>
         <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
       </div>
