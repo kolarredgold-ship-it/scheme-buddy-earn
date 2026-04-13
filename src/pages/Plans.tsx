@@ -27,7 +27,7 @@ const Plans = () => {
             <Star className="h-3 w-3 mr-1" /> LIMITED TIME OFFER
           </Badge>
           <h1 className="text-3xl font-bold mb-2">Choose Your Plan</h1>
-          <p className="text-muted-foreground text-sm">Unlock all features with TechRola Premium</p>
+          <p className="text-muted-foreground text-sm">Unlock all features with Techrola Premium</p>
         </div>
 
         <Card className="border-2 border-primary shadow-xl relative overflow-hidden">

@@ -425,7 +425,7 @@ const CreateReport = () => {
             </Button>
             <div>
               <h1 className="text-xl md:text-2xl font-bold">Create Internship Report</h1>
-              <p className="text-sm text-muted-foreground">AI-powered report generation by TechRola</p>
+              <p className="text-sm text-muted-foreground">AI-powered report generation by Techrola</p>
             </div>
           </div>
           <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowHistory(true)}>

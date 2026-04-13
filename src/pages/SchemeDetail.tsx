@@ -60,7 +60,7 @@ const SchemeDetail = () => {
             <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
-              <img src={techrolaIcon} alt="TechRola" className="h-20 w-20 opacity-20" />
+              <img src={techrolaIcon} alt="Techrola" className="h-20 w-20 opacity-20" />
             </div>
           )}
         </div>

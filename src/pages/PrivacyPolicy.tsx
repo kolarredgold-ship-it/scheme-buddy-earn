@@ -12,7 +12,7 @@ const PrivacyPolicy = () => (
       <div className="prose prose-sm max-w-none space-y-4 text-muted-foreground">
         <p>Last updated: April 2026</p>
         <h2 className="text-lg font-semibold text-foreground">1. Information We Collect</h2>
-        <p>We collect personal information like name, email, phone number, and payment details when you register or subscribe to TechRola.</p>
+        <p>We collect personal information like name, email, phone number, and payment details when you register or subscribe to Techrola.</p>
         <h2 className="text-lg font-semibold text-foreground">2. How We Use Your Information</h2>
         <p>Your information is used to provide access to government schemes, process payments via Airpay, manage referral earnings, and improve our services.</p>
         <h2 className="text-lg font-semibold text-foreground">3. Payment Security</h2>

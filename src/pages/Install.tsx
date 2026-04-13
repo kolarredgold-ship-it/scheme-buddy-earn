@@ -48,7 +48,7 @@ const Install = () => {
             <Check className="h-8 w-8 text-secondary" />
           </div>
           <h1 className="text-2xl font-bold mb-2">App Installed!</h1>
-          <p className="text-muted-foreground">TechRola is installed on your device. Open it from your home screen.</p>
+          <p className="text-muted-foreground">Techrola is installed on your device. Open it from your home screen.</p>
         </div>
       </Layout>
     );
@@ -58,8 +58,8 @@ const Install = () => {
     <Layout>
       <div className="container mx-auto px-4 py-8 pb-20 md:pb-8 max-w-md">
         <div className="text-center mb-8">
-          <img src={techrolaLogo} alt="TechRola" className="h-16 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Install TechRola App</h1>
+          <img src={techrolaLogo} alt="Techrola" className="h-16 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Install Techrola App</h1>
           <p className="text-muted-foreground text-sm">Install for quick access — works like a native app!</p>
         </div>
 

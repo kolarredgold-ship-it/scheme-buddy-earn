@@ -68,7 +68,7 @@ const Signup = () => {
             <span className="text-primary-foreground font-bold text-xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
           </div>
           <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>Join TechRola to access government schemes & earn rewards</CardDescription>
+          <CardDescription>Join Techrola to access government schemes & earn rewards</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignup} className="space-y-4">
