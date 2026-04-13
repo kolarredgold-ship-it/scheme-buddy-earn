@@ -144,7 +144,7 @@ const HeroBanner = () => {
           <img
             src={s.image}
             alt={s.title}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover ${i === current ? "animate-[ken-burns_4.5s_ease-out_forwards]" : ""}`}
             width={1280}
             height={512}
             loading={i === 0 ? "eager" : "lazy"}
