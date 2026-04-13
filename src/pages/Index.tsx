@@ -150,10 +150,6 @@ const HeroBanner = () => {
             loading={i === 0 ? "eager" : "lazy"}
             decoding="async"
           />
-            height={512}
-            loading={i === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
           {/* Dark cinematic overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
