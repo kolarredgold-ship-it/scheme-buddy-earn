@@ -133,7 +133,7 @@ const HeroBanner = () => {
   const slide = HERO_SLIDES[current];
 
   return (
-    <section className="relative w-full overflow-hidden rounded-2xl mx-auto aspect-[4/3] md:aspect-[16/7]">
+    <section className="relative w-full overflow-hidden aspect-[4/3] md:aspect-[16/7]">
       {HERO_SLIDES.map((s, i) => (
         <div
           key={i}
