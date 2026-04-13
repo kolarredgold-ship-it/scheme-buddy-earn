@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy } from "lucide-react";
+import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2 } from "lucide-react";
+import UserPreferences from "@/components/UserPreferences";
 import NotificationBell from "@/components/NotificationBell";
 import techrolaLogo from "@/assets/techrola_logo.png";
 import { Button } from "@/components/ui/button";
