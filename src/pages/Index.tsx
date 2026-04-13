@@ -798,6 +798,17 @@ const Index = () => {
             </Link>
           </div>
         </div>
+
+        {/* Personalize Preferences Popup */}
+        {user && (
+          <UserPreferences
+            open={prefsOpen}
+            onOpenChange={setPrefsOpen}
+            onPreferencesSaved={(state) => {
+              if (state !== "all") setSelectedState(state);
+            }}
+          />
+        )}
       </div>
     </Layout>
   );
