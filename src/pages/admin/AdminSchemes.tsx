@@ -96,7 +96,7 @@ const AdminSchemes = () => {
       const { error } = await supabase.from("schemes").update(form).eq("id", editId);
       if (error) toast.error("Failed to update"); else toast.success("Scheme updated");
     } else {
-      const { error } = await supabase.from("schemes").insert([form]);
+      const { error } = await supabase.from("schemes").insert([{ ...form, slug: "" }]);
       if (error) toast.error("Failed to create"); else toast.success("Scheme created");
     }
     setSaving(false);
