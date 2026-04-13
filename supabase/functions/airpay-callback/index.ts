@@ -72,16 +72,22 @@ serve(async (req) => {
             .single();
 
           if (referrer) {
+            // Get current balance first
+            const { data: referrerProfile } = await supabaseClient
+              .from("profiles")
+              .select("wallet_balance")
+              .eq("user_id", referrer.user_id)
+              .single();
+
             await supabaseClient.from("transactions").insert({
               user_id: referrer.user_id,
               amount: 400,
               type: "credit",
               source: `Level 1 referral - ${orderId}`,
             });
-            await supabaseClient.rpc("", {}).then(() => {});
             await supabaseClient
               .from("profiles")
-              .update({ wallet_balance: supabaseClient.rpc as any })
+              .update({ wallet_balance: Number(referrerProfile?.wallet_balance || 0) + 400 })
               .eq("user_id", referrer.user_id);
 
             // Level 2 referrer - ₹100
