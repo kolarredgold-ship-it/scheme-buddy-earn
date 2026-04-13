@@ -46,10 +46,11 @@ const MIN_STREAK_FOR_ELIGIBLE = 7;
 
 const CareerProgram = () => {
   const { user, profile, loading: authLoading } = useAuth();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [progress, setProgress] = useState<CareerProgress | null>(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "", referralCode: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "", referralCode: searchParams.get("ref")?.toUpperCase() || "" });
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
