@@ -132,6 +132,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </Link>
               ))}
               <div className="pt-2 border-t mt-2">
+                {user && (
+                  <button
+                    onClick={() => { setPrefsOpen(true); setMobileMenuOpen(false); }}
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-muted-foreground w-full hover:bg-muted transition-colors"
+                  >
+                    <Settings2 className="h-5 w-5" />
+                    Personalize Feed
+                  </button>
+                )}
                 {user ? (
                   <button
                     onClick={signOut}
