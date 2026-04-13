@@ -11,7 +11,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Crown, Pencil, Eye, KeyRound } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, Crown, Pencil, Eye, KeyRound, Link, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserProfile {
@@ -165,6 +166,91 @@ const AdminUsers = () => {
     (u.referral_code || "").toLowerCase().includes(search.toLowerCase())
   );
 
+  const pendingUsers = filtered.filter(u => u.subscription_status !== "active");
+  const activeUsers = filtered.filter(u => u.subscription_status === "active");
+
+  const copyPaymentLink = (user: UserProfile) => {
+    const link = `${window.location.origin}/subscription`;
+    navigator.clipboard.writeText(link);
+    toast.success(`Payment link copied for ${user.name || user.email}`);
+  };
+
+  const renderUserTable = (userList: UserProfile[], showPaymentLink = false) => (
+    <Card>
+      <CardContent className="p-0">
+        {loading ? (
+          <div className="flex justify-center py-8"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" /></div>
+        ) : userList.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground text-sm">No users found</div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead className="hidden md:table-cell">Email</TableHead>
+                <TableHead className="hidden lg:table-cell">Mobile</TableHead>
+                <TableHead>Code</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Balance</TableHead>
+                <TableHead className="hidden md:table-cell text-right">Credits</TableHead>
+                <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {userList.map((u) => (
+                <TableRow key={u.id}>
+                  <TableCell className="font-medium">{u.name || "—"}</TableCell>
+                  <TableCell className="hidden md:table-cell">{u.email || "—"}</TableCell>
+                  <TableCell className="hidden lg:table-cell">{u.mobile || "—"}</TableCell>
+                  <TableCell><code className="text-xs">{u.referral_code}</code></TableCell>
+                  <TableCell>
+                    <Badge variant={u.subscription_status === "active" ? "default" : "secondary"} className={u.subscription_status === "active" ? "bg-secondary text-secondary-foreground" : ""}>
+                      {u.subscription_status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">₹{Number(u.wallet_balance).toFixed(2)}</TableCell>
+                  <TableCell className="hidden md:table-cell text-right">{u.report_credits}</TableCell>
+                  <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <Button size="icon" variant="ghost" onClick={() => setViewUser(u)} title="View">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={() => openEdit(u)} title="Edit">
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button size="icon" variant="ghost" onClick={() => { setPasswordUser(u); setNewPassword(""); }} title="Change Password">
+                        <KeyRound className="h-4 w-4" />
+                      </Button>
+                      {showPaymentLink && u.subscription_status !== "active" && (
+                        <Button size="sm" variant="outline" onClick={() => copyPaymentLink(u)} title="Copy Payment Link">
+                          <Link className="h-4 w-4 mr-1" />
+                          Pay Link
+                        </Button>
+                      )}
+                      {u.subscription_status === "active" ? (
+                        <Button size="sm" variant="outline" disabled={updating === u.user_id} onClick={() => revokePro(u.user_id)}>
+                          <Crown className="h-4 w-4 mr-1" />
+                          Revoke
+                        </Button>
+                      ) : (
+                        <Button size="sm" variant="default" disabled={updating === u.user_id} onClick={() => makePro(u)}>
+                          <Crown className="h-4 w-4 mr-1" />
+                          Pro
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-6 space-y-6">
@@ -178,81 +264,25 @@ const AdminUsers = () => {
           <Input placeholder="Search by name, email, or code..." className="pl-10" value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
 
-        <Card>
-          <CardContent className="p-0">
-            {loading ? (
-              <div className="flex justify-center py-8"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" /></div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead className="hidden md:table-cell">Email</TableHead>
-                    <TableHead className="hidden lg:table-cell">Mobile</TableHead>
-                    <TableHead>Code</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Balance</TableHead>
-                     <TableHead className="hidden md:table-cell text-right">Credits</TableHead>
-                     <TableHead className="hidden lg:table-cell">Joined</TableHead>
-                     <TableHead className="text-center">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.map((u) => (
-                    <TableRow key={u.id}>
-                      <TableCell className="font-medium">{u.name || "—"}</TableCell>
-                      <TableCell className="hidden md:table-cell">{u.email || "—"}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{u.mobile || "—"}</TableCell>
-                      <TableCell><code className="text-xs">{u.referral_code}</code></TableCell>
-                      <TableCell>
-                        <Badge variant={u.subscription_status === "active" ? "default" : "secondary"} className={u.subscription_status === "active" ? "bg-secondary text-secondary-foreground" : ""}>
-                          {u.subscription_status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">₹{Number(u.wallet_balance).toFixed(2)}</TableCell>
-                       <TableCell className="hidden md:table-cell text-right">{u.report_credits}</TableCell>
-                       <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</TableCell>
-                       <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <Button size="icon" variant="ghost" onClick={() => setViewUser(u)} title="View">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="icon" variant="ghost" onClick={() => openEdit(u)} title="Edit">
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button size="icon" variant="ghost" onClick={() => { setPasswordUser(u); setNewPassword(""); }} title="Change Password">
-                            <KeyRound className="h-4 w-4" />
-                          </Button>
-                          {u.subscription_status === "active" ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              disabled={updating === u.user_id}
-                              onClick={() => revokePro(u.user_id)}
-                            >
-                              <Crown className="h-4 w-4 mr-1" />
-                              Revoke
-                            </Button>
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="default"
-                              disabled={updating === u.user_id}
-                              onClick={() => makePro(u)}
-                            >
-                              <Crown className="h-4 w-4 mr-1" />
-                              Pro
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
+        <Tabs defaultValue="all">
+          <TabsList>
+            <TabsTrigger value="all">All Users ({filtered.length})</TabsTrigger>
+            <TabsTrigger value="pending" className="gap-1">
+              <AlertCircle className="h-3.5 w-3.5" />
+              Pending ({pendingUsers.length})
+            </TabsTrigger>
+            <TabsTrigger value="active">Active ({activeUsers.length})</TabsTrigger>
+          </TabsList>
+          <TabsContent value="all" className="mt-4">
+            {renderUserTable(filtered)}
+          </TabsContent>
+          <TabsContent value="pending" className="mt-4">
+            {renderUserTable(pendingUsers, true)}
+          </TabsContent>
+          <TabsContent value="active" className="mt-4">
+            {renderUserTable(activeUsers)}
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* View User Dialog */}
