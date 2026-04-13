@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy } from "lucide-react";
+import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2 } from "lucide-react";
+import UserPreferences from "@/components/UserPreferences";
 import NotificationBell from "@/components/NotificationBell";
 import techrolaLogo from "@/assets/techrola_logo.png";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [prefsOpen, setPrefsOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -79,6 +81,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => setPrefsOpen(true)} className="rounded-xl h-9 w-9 hover:bg-primary/10 hover:text-primary" title="Personalize">
+                  <Settings2 className="h-4 w-4" />
+                </Button>
                 <NotificationBell />
                 <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-1.5">
                   <div className="h-7 w-7 rounded-lg bg-gradient-primary flex items-center justify-center">
@@ -130,6 +135,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </Link>
               ))}
               <div className="pt-2 border-t mt-2">
+                {user && (
+                  <button
+                    onClick={() => { setPrefsOpen(true); setMobileMenuOpen(false); }}
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-muted-foreground w-full hover:bg-muted transition-colors"
+                  >
+                    <Settings2 className="h-5 w-5" />
+                    Personalize Feed
+                  </button>
+                )}
                 {user ? (
                   <button
                     onClick={signOut}
@@ -246,6 +260,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             ))}
           </div>
         </nav>
+      )}
+
+      {/* Personalize Preferences Popup */}
+      {user && (
+        <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
       )}
     </div>
   );
