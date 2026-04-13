@@ -49,7 +49,7 @@ const CareerProgram = () => {
   const navigate = useNavigate();
   const [progress, setProgress] = useState<CareerProgress | null>(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "", referralCode: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -108,6 +108,7 @@ const CareerProgram = () => {
         options: {
           data: {
             name: formData.name,
+            referred_by: formData.referralCode || undefined,
           },
         },
       });
@@ -306,6 +307,12 @@ const CareerProgram = () => {
             <Input placeholder="Phone Number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required />
             <Input placeholder="Course (e.g. B.Tech, MBA)" value={formData.course} onChange={e => setFormData({...formData, course: e.target.value})} required />
             <Input placeholder="College Name" value={formData.college} onChange={e => setFormData({...formData, college: e.target.value})} required />
+            {!user && (
+              <div className="space-y-1">
+                <Input placeholder="Referral Code (optional)" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
+                <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹999 instead of ₹2999!</p>
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
               {user ? "Apply Now" : "Sign Up & Apply Now"}
