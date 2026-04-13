@@ -124,6 +124,13 @@ const SchemeDetail = () => {
             </Link>
           )}
         </div>
+
+        {/* Disclaimer */}
+        <div className="mt-6 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/40">
+          <p className="text-[11px] md:text-xs text-amber-800 dark:text-amber-200/80 leading-relaxed">
+            ⚠️ <strong>Disclaimer:</strong> This is AI-generated content. Please verify all details from official government websites before applying. TechRola does not guarantee the accuracy of scheme information.
+          </p>
+        </div>
       </div>
     </Layout>
   );
