@@ -156,8 +156,6 @@ const HeroBanner = () => {
         </div>
       ))}
 
-      {/* Animated accent line */}
-      <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary via-secondary to-accent z-10" />
 
       {/* Content overlay */}
       <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
