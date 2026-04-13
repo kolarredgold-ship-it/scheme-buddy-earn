@@ -3,8 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MapPin, Tag, Check, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -58,14 +57,19 @@ const CATEGORIES = [
 
 interface UserPreferencesProps {
   onPreferencesSaved?: (state: string, categories: string[]) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-const UserPreferences = ({ onPreferencesSaved }: UserPreferencesProps) => {
+const UserPreferences = ({ onPreferencesSaved, open: externalOpen, onOpenChange: externalOnOpenChange }: UserPreferencesProps) => {
   const { user } = useAuth();
   const [preferredState, setPreferredState] = useState("all");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = externalOnOpenChange || setInternalOpen;
 
   useEffect(() => {
     if (!user) return;
@@ -114,12 +118,6 @@ const UserPreferences = ({ onPreferencesSaved }: UserPreferencesProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-1.5 rounded-xl text-xs border-border/60">
-          <Settings2 className="h-3.5 w-3.5" />
-          Personalize
-        </Button>
-      </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
