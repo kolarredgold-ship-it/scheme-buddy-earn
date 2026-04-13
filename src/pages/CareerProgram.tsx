@@ -79,7 +79,7 @@ const CareerProgram = () => {
     }
   }, [profile]);
 
-  const currentStep = !user ? 0 : !progress?.registered ? 1 : 
+  const currentStep = !user ? 1 : !progress?.registered ? 1 : 
     profile?.subscription_status !== "active" ? 2 :
     !profile?.referral_code?.startsWith("EMP") ? 3 :
     progress.current_step;
