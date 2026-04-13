@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Check, Star, Zap, Shield, Loader2, Tag } from "lucide-react";
+import { Check, Star, Zap, Shield, Loader2, Tag, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -25,11 +25,9 @@ const BENEFITS = [
 
 const Subscription = () => {
   const { user, profile, loading, refreshProfile } = useAuth();
-  const [paying, setPaying] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [applyingCoupon, setApplyingCoupon] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
 
   if (loading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
 
@@ -62,7 +60,6 @@ const Subscription = () => {
 
     setApplyingCoupon(true);
 
-    // Check if it's the WELCOME code or a valid referral code
     if (code === "WELCOME") {
       if (user && profile && !profile.referred_by) {
         await supabase.from("profiles").update({ referred_by: "WELCOME" }).eq("user_id", user.id);
@@ -71,7 +68,6 @@ const Subscription = () => {
       setCouponApplied(true);
       toast.success("🎉 Coupon applied! You save ₹2,000");
     } else {
-      // Check if it's a valid referral code from another user
       const { data } = await supabase.from("profiles").select("referral_code").eq("referral_code", code).maybeSingle();
       if (data) {
         if (user && profile && !profile.referred_by) {
@@ -87,52 +83,9 @@ const Subscription = () => {
     setApplyingCoupon(false);
   };
 
-  const handlePayment = async () => {
-    if (!user || !profile) {
-      toast.error("Please log in first");
-      return;
-    }
-
-    setPaying(true);
-    try {
-      const orderId = `SUB_${user.id}_${Date.now()}`;
-      
-      const { data, error } = await supabase.functions.invoke("airpay-payment", {
-        body: {
-          userId: user.id,
-          orderId,
-          amount: price,
-          buyerEmail: profile.email || user.email,
-          buyerPhone: profile.mobile || "9999999999",
-          buyerFirstname: profile.name || "User",
-          buyerLastname: "",
-        },
-      });
-
-      if (error || !data?.success) {
-        throw new Error(error?.message || data?.error || "Payment initiation failed");
-      }
-
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = data.paymentUrl;
-      form.style.display = "none";
-
-      Object.entries(data.formData as Record<string, string>).forEach(([key, value]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = value;
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      form.submit();
-    } catch (err: any) {
-      console.error("Payment error:", err);
-      toast.error(err.message || "Failed to initiate payment. Please try again.");
-      setPaying(false);
-    }
+  const handleWhatsAppContact = () => {
+    const msg = `Hi, I want to subscribe to Techrola Premium (₹${price.toLocaleString()}).%0AMy name: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}%0AReferral code used: ${profile?.referred_by || couponCode || "None"}`;
+    window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
   };
 
   return (
@@ -221,18 +174,11 @@ const Subscription = () => {
         {user ? (
           <Button 
             size="lg" 
-            className="w-full text-lg py-6" 
-            onClick={handlePayment}
-            disabled={paying}
+            className="w-full text-lg py-6 bg-green-600 hover:bg-green-700" 
+            onClick={handleWhatsAppContact}
           >
-            {paying ? (
-              <>
-                <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                Processing...
-              </>
-            ) : (
-              `Pay ₹${price.toLocaleString()} Now`
-            )}
+            <MessageCircle className="h-5 w-5 mr-2" />
+            Pay ₹{price.toLocaleString()} via WhatsApp
           </Button>
         ) : (
           <Link to="/plans">
@@ -242,11 +188,9 @@ const Subscription = () => {
           </Link>
         )}
 
-        <div className="mt-6 text-center">
-          <p className="text-[11px] text-muted-foreground flex items-center justify-center gap-1">
-            <Shield className="h-3 w-3" /> Secured payments powered by Airpay
-          </p>
-        </div>
+        <p className="text-center text-xs text-muted-foreground mt-3">
+          Contact us on WhatsApp to complete your payment. Your account will be activated within minutes.
+        </p>
       </div>
     </Layout>
   );
