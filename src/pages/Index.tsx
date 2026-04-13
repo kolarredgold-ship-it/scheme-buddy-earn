@@ -62,7 +62,7 @@ import heroHrTraining from "@/assets/hero-hr-training.jpg";
 
 const HERO_SLIDES = [
   {
-    image: hero1,
+    image: heroGovt,
     title: "Discover Government Schemes",
     subtitle: "Access 550+ scholarships, subsidies & welfare programs across India",
     cta: "Explore Now",
@@ -71,7 +71,7 @@ const HERO_SLIDES = [
     stat: "550+ Schemes",
   },
   {
-    image: hero2,
+    image: heroJobs,
     title: "Explore Job Opportunities",
     subtitle: "Discover curated jobs matching your skills and career aspirations",
     cta: "Find Jobs",
@@ -80,7 +80,7 @@ const HERO_SLIDES = [
     stat: "New Openings",
   },
   {
-    image: hero3,
+    image: heroSkills,
     title: "Skill Development Programs",
     subtitle: "Upskill with industry-relevant courses & get certified",
     cta: "Start Learning",
@@ -89,7 +89,7 @@ const HERO_SLIDES = [
     stat: "Free Courses",
   },
   {
-    image: hero1,
+    image: heroAiInterview,
     title: "AI Mock Interview Training",
     subtitle: "Practice with AI-powered HR interviews & get instant feedback to ace your next round",
     cta: "Start Practice",
@@ -99,7 +99,7 @@ const HERO_SLIDES = [
     glow: true,
   },
   {
-    image: hero2,
+    image: heroReport,
     title: "Internship Report Generator",
     subtitle: "Generate professional internship reports instantly — Get Real Experience!",
     cta: "Generate Report",
@@ -109,7 +109,7 @@ const HERO_SLIDES = [
     glow: true,
   },
   {
-    image: hero3,
+    image: heroHrTraining,
     title: "AI HR Interview Training",
     subtitle: "Simulate real HR interview rounds and prepare like a pro with AI coaching",
     cta: "Train Now",
