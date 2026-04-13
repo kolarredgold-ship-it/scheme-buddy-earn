@@ -274,12 +274,21 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
     <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
       <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
         {scheme.image_url ? (
-          <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
-            <img src={techrolaIcon} alt="TechRola" className="h-16 w-16 opacity-20" />
-          </div>
-        )}
+          <img
+            src={scheme.image_url}
+            alt={scheme.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.style.display = 'none';
+              target.parentElement?.classList.add('fallback-icon');
+            }}
+          />
+        ) : null}
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 absolute inset-0 -z-10">
+          <Landmark className="h-10 w-10 text-muted-foreground/30" />
+        </div>
         <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
       </div>
       <CardContent className="p-3 md:p-4">
