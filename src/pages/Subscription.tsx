@@ -5,7 +5,8 @@ import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, Zap, Shield, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Check, Star, Zap, Shield, Loader2, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -23,8 +24,11 @@ const BENEFITS = [
 ];
 
 const Subscription = () => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
   const [paying, setPaying] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   if (loading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
@@ -46,8 +50,42 @@ const Subscription = () => {
     );
   }
 
-  const hasReferral = !!profile?.referred_by;
-  const price = hasReferral ? 999 : 2999;
+  const hasDiscount = !!profile?.referred_by || couponApplied;
+  const price = hasDiscount ? 999 : 2999;
+
+  const applyCoupon = async () => {
+    const code = couponCode.trim().toUpperCase();
+    if (!code) {
+      toast.error("Please enter a coupon code");
+      return;
+    }
+
+    setApplyingCoupon(true);
+
+    // Check if it's the WELCOME code or a valid referral code
+    if (code === "WELCOME") {
+      if (user && profile && !profile.referred_by) {
+        await supabase.from("profiles").update({ referred_by: "WELCOME" }).eq("user_id", user.id);
+        await refreshProfile();
+      }
+      setCouponApplied(true);
+      toast.success("🎉 Coupon applied! You save ₹2,000");
+    } else {
+      // Check if it's a valid referral code from another user
+      const { data } = await supabase.from("profiles").select("referral_code").eq("referral_code", code).maybeSingle();
+      if (data) {
+        if (user && profile && !profile.referred_by) {
+          await supabase.from("profiles").update({ referred_by: code }).eq("user_id", user.id);
+          await refreshProfile();
+        }
+        setCouponApplied(true);
+        toast.success("🎉 Referral code applied! You save ₹2,000");
+      } else {
+        toast.error("Invalid coupon or referral code");
+      }
+    }
+    setApplyingCoupon(false);
+  };
 
   const handlePayment = async () => {
     if (!user || !profile) {
@@ -75,7 +113,6 @@ const Subscription = () => {
         throw new Error(error?.message || data?.error || "Payment initiation failed");
       }
 
-      // Create a hidden form and submit to Airpay
       const form = document.createElement("form");
       form.method = "POST";
       form.action = data.paymentUrl;
@@ -109,35 +146,59 @@ const Subscription = () => {
           <p className="text-muted-foreground">Get complete access to all government schemes</p>
         </div>
 
-        {/* Limited Time Offer Banner */}
-        <Card className="mb-4 border-secondary/50 bg-secondary/5">
-          <CardContent className="p-4 text-center">
-            <Badge className="mb-2 bg-destructive text-destructive-foreground">
-              <Zap className="h-3 w-3 mr-1" /> Limited Time Offer
-            </Badge>
-            <p className="text-sm font-semibold">Get Premium at just <span className="text-secondary">₹999</span>!</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Don't have a referral code? Use code <span className="font-bold text-primary">WELCOME</span> & get ₹2,000 discount!
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="mb-6 border-primary/30 shadow-lg">
+        {/* Pricing Card */}
+        <Card className="mb-4 border-primary/30 shadow-lg">
           <CardContent className="p-8 text-center">
             <p className="text-lg text-muted-foreground line-through mb-1">₹2,999</p>
             <div className="flex items-baseline justify-center gap-1 mb-2">
-              <span className="text-5xl font-extrabold text-secondary">₹999</span>
+              <span className="text-5xl font-extrabold text-secondary">₹{price.toLocaleString()}</span>
               <span className="text-muted-foreground">/lifetime</span>
             </div>
-            {hasReferral ? (
+            {hasDiscount ? (
               <Badge variant="outline" className="border-secondary text-secondary">
-                <Zap className="h-3 w-3 mr-1" /> Referral Discount Applied! Save ₹2,000
+                <Zap className="h-3 w-3 mr-1" /> Discount Applied! You save ₹2,000
               </Badge>
             ) : (
-              <p className="text-xs text-muted-foreground mt-1">Use code <span className="font-bold text-primary">WELCOME</span> to unlock this price</p>
+              <p className="text-xs text-muted-foreground mt-1">Apply a coupon code below to get ₹2,000 off</p>
             )}
           </CardContent>
         </Card>
+
+        {/* Coupon Code Box */}
+        {!hasDiscount && (
+          <Card className="mb-4 border-dashed border-2 border-primary/30">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Tag className="h-4 w-4 text-primary" />
+                <span className="text-sm font-semibold">Have a coupon or referral code?</span>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter code (e.g. WELCOME)"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                  className="uppercase"
+                  onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
+                />
+                <Button onClick={applyCoupon} disabled={applyingCoupon || !couponCode.trim()} variant="secondary">
+                  {applyingCoupon ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                💡 Try code <span className="font-bold text-primary cursor-pointer" onClick={() => setCouponCode("WELCOME")}>WELCOME</span> to get ₹2,000 discount!
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {hasDiscount && (
+          <Card className="mb-4 border-secondary/50 bg-secondary/5">
+            <CardContent className="p-3 flex items-center gap-2">
+              <Check className="h-4 w-4 text-secondary" />
+              <span className="text-sm font-medium text-secondary">Coupon "{profile?.referred_by || couponCode}" applied — ₹2,000 off!</span>
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="mb-6">
           <CardHeader>
@@ -181,13 +242,6 @@ const Subscription = () => {
           </Link>
         )}
 
-        {!hasReferral && (
-          <p className="text-center text-xs text-muted-foreground mt-4">
-            Have a referral code? <Link to="/plans" className="text-primary hover:underline">Sign up with one</Link> to get ₹2,000 off! Try code <span className="font-bold">WELCOME</span>
-          </p>
-        )}
-
-        {/* Payment Security Note */}
         <div className="mt-6 text-center">
           <p className="text-[11px] text-muted-foreground flex items-center justify-center gap-1">
             <Shield className="h-3 w-3" /> Secured payments powered by Airpay
