@@ -392,18 +392,18 @@ const CareerProgram = () => {
         return (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Share via WhatsApp, Instagram, or college groups. Complete <strong>minimum 3 promotions per day</strong>.
+              Share via WhatsApp, Instagram, or college groups. <strong>Minimum 3 promotions per day</strong> required — no upper limit!
             </p>
             <div className="flex items-center justify-between bg-muted rounded-xl p-3">
-              <span className="text-sm font-medium">Today's Progress</span>
+              <span className="text-sm font-medium">Today's Promotions</span>
               <Badge variant={dailyCount >= 3 ? "default" : "outline"} className={dailyCount >= 3 ? "bg-secondary" : ""}>
-                {dailyCount}/3
+                {dailyCount} done {dailyCount < 3 ? `(${3 - dailyCount} more needed)` : "✓"}
               </Badge>
             </div>
-            <Progress value={(dailyCount / 3) * 100} className="h-2" />
-            <Button onClick={handlePromote} disabled={submitting || dailyCount >= 3} className="w-full gap-2">
+            {dailyCount < 3 && <Progress value={(dailyCount / 3) * 100} className="h-2" />}
+            <Button onClick={handlePromote} disabled={submitting} className="w-full gap-2">
               {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Megaphone className="h-4 w-4" />}
-              {dailyCount >= 3 ? "Completed for Today ✓" : "Mark as Promoted"}
+              Log Promotion (+1)
             </Button>
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="bg-muted/50 rounded-lg p-2">
