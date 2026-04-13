@@ -535,6 +535,116 @@ const Index = () => {
             </div>
           </div>
         )}
+
+        {/* Featured Highlights Section */}
+        <div className="container mx-auto px-3 md:px-4 mt-10">
+          <div className="text-center mb-6">
+            <h2 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+              Everything You Need to <span className="text-primary">Build Your Career</span>
+            </h2>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">Powered by AI & Real Opportunities</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+            {/* Job Opportunities */}
+            <Link to="/career-program" className="group">
+              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-primary/30 transition-all duration-300 hover:shadow-md">
+                <div className="flex items-start gap-3">
+                  <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="text-xl">💼</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Explore Job Opportunities</h3>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Discover curated jobs matching your skills and aspirations</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Skill Development */}
+            <Link to="/career-program" className="group">
+              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-secondary/30 transition-all duration-300 hover:shadow-md">
+                <div className="flex items-start gap-3">
+                  <div className="h-11 w-11 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="text-xl">🎓</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Skill Development Programs</h3>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Upskill with industry-relevant courses & certifications</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Government Schemes */}
+            <Link to="/#schemes" className="group">
+              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-accent/30 transition-all duration-300 hover:shadow-md">
+                <div className="flex items-start gap-3">
+                  <div className="h-11 w-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="text-xl">🏛</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Government Scheme Updates</h3>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 550+ latest government welfare programs</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* AI Mock Interviews - GLOW */}
+            <Link to="/mock-interview" className="group">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] hover:border-purple-400/50">
+                <div className="absolute top-2 right-2">
+                  <span className="inline-flex items-center gap-1 bg-purple-500/15 text-purple-700 dark:text-purple-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 Hot</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="h-11 w-11 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
+                    <span className="text-xl">🤖</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">AI Mock Interview Training</h3>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Practice with AI-powered HR interviews & get instant feedback</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Internship Report Generator - GLOW */}
+            <Link to="/create-report" className="group">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)] hover:border-blue-400/50">
+                <div className="absolute top-2 right-2">
+                  <span className="inline-flex items-center gap-1 bg-blue-500/15 text-blue-700 dark:text-blue-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 Get Real Experience</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="h-11 w-11 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
+                    <span className="text-xl">📄</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Internship Report Generator</h3>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Generate professional internship reports instantly with AI</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* AI HR Interview Training - GLOW */}
+            <Link to="/mock-interview" className="group">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:border-emerald-400/50">
+                <div className="absolute top-2 right-2">
+                  <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 New</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="h-11 w-11 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
+                    <span className="text-xl">🤖</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">AI HR Interview Training</h3>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Simulate real HR rounds & ace your next interview</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
     </Layout>
   );
