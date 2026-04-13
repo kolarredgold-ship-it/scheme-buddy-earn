@@ -192,8 +192,9 @@ const AdminUsers = () => {
                     <TableHead>Code</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Balance</TableHead>
-                    <TableHead className="hidden md:table-cell text-right">Credits</TableHead>
-                    <TableHead className="text-center">Actions</TableHead>
+                     <TableHead className="hidden md:table-cell text-right">Credits</TableHead>
+                     <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                     <TableHead className="text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -209,8 +210,9 @@ const AdminUsers = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">₹{Number(u.wallet_balance).toFixed(2)}</TableCell>
-                      <TableCell className="hidden md:table-cell text-right">{u.report_credits}</TableCell>
-                      <TableCell className="text-center">
+                       <TableCell className="hidden md:table-cell text-right">{u.report_credits}</TableCell>
+                       <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</TableCell>
+                       <TableCell className="text-center">
                         <div className="flex items-center justify-center gap-1">
                           <Button size="icon" variant="ghost" onClick={() => setViewUser(u)} title="View">
                             <Eye className="h-4 w-4" />
