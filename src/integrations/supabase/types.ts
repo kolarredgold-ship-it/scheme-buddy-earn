@@ -245,9 +245,48 @@ export type Database = {
         }
         Relationships: []
       }
+      scheme_notifications: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          message: string
+          scheme_id: string | null
+          state: string
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          message: string
+          scheme_id?: string | null
+          state: string
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          message?: string
+          scheme_id?: string | null
+          state?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheme_notifications_scheme_id_fkey"
+            columns: ["scheme_id"]
+            isOneToOne: false
+            referencedRelation: "schemes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       schemes: {
         Row: {
           apply_link: string | null
+          beneficiary_type: string | null
           category: string
           created_at: string
           description: string
@@ -255,12 +294,16 @@ export type Database = {
           eligibility: string | null
           id: string
           image_url: string | null
+          is_active: boolean | null
+          source_website: string | null
           state: string | null
+          tags: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
           apply_link?: string | null
+          beneficiary_type?: string | null
           category: string
           created_at?: string
           description: string
@@ -268,12 +311,16 @@ export type Database = {
           eligibility?: string | null
           id?: string
           image_url?: string | null
+          is_active?: boolean | null
+          source_website?: string | null
           state?: string | null
+          tags?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
           apply_link?: string | null
+          beneficiary_type?: string | null
           category?: string
           created_at?: string
           description?: string
@@ -281,7 +328,10 @@ export type Database = {
           eligibility?: string | null
           id?: string
           image_url?: string | null
+          is_active?: boolean | null
+          source_website?: string | null
           state?: string | null
+          tags?: string[] | null
           title?: string
           updated_at?: string
         }
@@ -310,6 +360,33 @@ export type Database = {
           id?: string
           source?: string
           type?: Database["public"]["Enums"]["transaction_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          preferred_categories: string[] | null
+          preferred_state: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          preferred_categories?: string[] | null
+          preferred_state?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          preferred_categories?: string[] | null
+          preferred_state?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
