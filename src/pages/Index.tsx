@@ -277,21 +277,22 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
     <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
       <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
         {scheme.image_url ? (
-          <img
-            src={scheme.image_url}
-            alt={scheme.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            loading="lazy"
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.style.display = 'none';
-              target.parentElement?.classList.add('fallback-icon');
-            }}
-          />
-        ) : null}
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10 absolute inset-0 -z-10">
-          <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
-        </div>
+          {scheme.image_url ? (
+            <img
+              src={scheme.image_url}
+              alt={scheme.title}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              loading="lazy"
+              onError={(e) => {
+                const target = e.currentTarget;
+                target.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+              <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
+            </div>
+          )}
         <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
       </div>
       <CardContent className="p-3 md:p-4">
