@@ -285,13 +285,13 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
             onError={(e) => {
               const target = e.currentTarget;
               target.style.display = 'none';
-              target.parentElement?.classList.add('fallback-icon');
             }}
           />
-        ) : null}
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10 absolute inset-0 -z-10">
-          <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
-        </div>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+            <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
+          </div>
+        )}
         <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
       </div>
       <CardContent className="p-3 md:p-4">
