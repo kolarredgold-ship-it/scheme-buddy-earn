@@ -15,6 +15,7 @@ interface Notification {
   title: string;
   message: string;
   created_at: string;
+  schemes?: { slug: string } | null;
 }
 
 const NotificationBell = () => {
@@ -46,7 +47,7 @@ const NotificationBell = () => {
     const fetchNotifications = async () => {
       let query = supabase
         .from("scheme_notifications")
-        .select("*")
+        .select("*, schemes(slug)")
         .order("created_at", { ascending: false })
         .limit(20);
 
@@ -117,7 +118,7 @@ const NotificationBell = () => {
             filteredNotifications.map((notif) => (
               <Link
                 key={notif.id}
-                to={notif.scheme_id ? `/scheme/${notif.scheme_id}` : "#"}
+                to={notif.schemes?.slug ? `/scheme/${notif.schemes.slug}` : "#"}
                 onClick={() => setOpen(false)}
                 className="block"
               >
