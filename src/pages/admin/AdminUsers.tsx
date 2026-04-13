@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Crown, Pencil, Eye, KeyRound } from "lucide-react";
+import { Search, Crown, Pencil, Eye, KeyRound, Link, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserProfile {
