@@ -85,8 +85,7 @@ Return ONLY valid JSON: {"state": "...", "category": "...", "keywords": ["...", 
     // Build query
     let dbQuery = supabase
       .from("schemes")
-      .select("id, title, category, description, state, image_url, eligibility, tags, beneficiary_type")
-      .eq("is_active", true);
+      .select("id, title, category, description, state, image_url, eligibility, tags, beneficiary_type");
 
     if (searchState) {
       dbQuery = dbQuery.eq("state", searchState);
@@ -100,11 +99,14 @@ Return ONLY valid JSON: {"state": "...", "category": "...", "keywords": ["...", 
       ? searchKeywords
       : query.split(/\s+/).filter((w: string) => w.length > 2);
 
-    if (searchTerms.length > 0) {
-      const orConditions = searchTerms
-        .map((term: string) => `title.ilike.%${term}%,description.ilike.%${term}%,eligibility.ilike.%${term}%`)
-        .join(",");
-      dbQuery = dbQuery.or(orConditions);
+    if (searchTerms.length > 0 && !searchState && !searchCategory) {
+      // Only apply text filter if we don't already have state/category from AI
+      const term = searchTerms.join(" ");
+      dbQuery = dbQuery.or(`title.ilike.%${term}%,description.ilike.%${term}%`);
+    } else if (searchTerms.length > 0) {
+      // If we have state/category, also add keyword filter
+      const term = searchTerms[0];
+      dbQuery = dbQuery.or(`title.ilike.%${term}%,description.ilike.%${term}%`);
     }
 
     const { data: schemes, error } = await dbQuery.limit(20);
