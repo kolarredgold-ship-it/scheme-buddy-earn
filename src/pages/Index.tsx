@@ -536,7 +536,6 @@ const Index = () => {
                         <cat.icon className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
                         {cat.label}
                       </h2>
-                      </h2>
                       <button
                         onClick={() => setActiveCategory(cat.key)}
                         className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline"
