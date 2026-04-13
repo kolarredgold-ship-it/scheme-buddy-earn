@@ -81,6 +81,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
+                <Button variant="ghost" size="icon" onClick={() => setPrefsOpen(true)} className="rounded-xl h-9 w-9 hover:bg-primary/10 hover:text-primary" title="Personalize">
+                  <Settings2 className="h-4 w-4" />
+                </Button>
                 <NotificationBell />
                 <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-1.5">
                   <div className="h-7 w-7 rounded-lg bg-gradient-primary flex items-center justify-center">
