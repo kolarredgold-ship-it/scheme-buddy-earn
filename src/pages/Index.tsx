@@ -199,8 +199,6 @@ const HeroBanner = () => {
       {/* Content overlay */}
       <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
         <div className="max-w-lg">
-          {/* Techrola Icon */}
-          <img src={techrolaIcon} alt="" className="h-10 w-10 md:h-14 md:w-14 mb-3 opacity-90 drop-shadow-lg" />
           {/* Badge */}
           <div
             key={`badge-${current}`}
