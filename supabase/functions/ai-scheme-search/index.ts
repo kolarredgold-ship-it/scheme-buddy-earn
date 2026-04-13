@@ -82,7 +82,8 @@ Return ONLY valid JSON: {"state": "...", "category": "...", "keywords": ["...", 
       }
     }
 
-    // Build query
+    // Build query - prioritize state filter, use keywords for text search
+    // Don't filter by category (AI category mapping can be imprecise)
     let dbQuery = supabase
       .from("schemes")
       .select("id, title, category, description, state, image_url, eligibility, tags, beneficiary_type");
@@ -90,23 +91,15 @@ Return ONLY valid JSON: {"state": "...", "category": "...", "keywords": ["...", 
     if (searchState) {
       dbQuery = dbQuery.eq("state", searchState);
     }
-    if (searchCategory) {
-      dbQuery = dbQuery.eq("category", searchCategory);
-    }
 
     // Text search using ilike for keywords
     const searchTerms = searchKeywords.length > 0
       ? searchKeywords
       : query.split(/\s+/).filter((w: string) => w.length > 2);
 
-    if (searchTerms.length > 0 && !searchState && !searchCategory) {
-      // Only apply text filter if we don't already have state/category from AI
-      const term = searchTerms.join(" ");
-      dbQuery = dbQuery.or(`title.ilike.%${term}%,description.ilike.%${term}%`);
-    } else if (searchTerms.length > 0) {
-      // If we have state/category, also add keyword filter
+    if (searchTerms.length > 0) {
       const term = searchTerms[0];
-      dbQuery = dbQuery.or(`title.ilike.%${term}%,description.ilike.%${term}%`);
+      dbQuery = dbQuery.or(`title.ilike.%${term}%,description.ilike.%${term}%,eligibility.ilike.%${term}%`);
     }
 
     const { data: schemes, error } = await dbQuery.limit(20);
