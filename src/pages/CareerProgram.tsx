@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
@@ -6,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Eye, EyeOff } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -44,9 +46,11 @@ const MIN_STREAK_FOR_ELIGIBLE = 7;
 
 const CareerProgram = () => {
   const { user, profile, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [progress, setProgress] = useState<CareerProgress | null>(null);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // Fetch career progress
@@ -75,7 +79,7 @@ const CareerProgram = () => {
     }
   }, [profile]);
 
-  const currentStep = !user ? 0 : !progress?.registered ? 1 : 
+  const currentStep = !user ? 1 : !progress?.registered ? 1 : 
     profile?.subscription_status !== "active" ? 2 :
     !profile?.referral_code?.startsWith("EMP") ? 3 :
     progress.current_step;
@@ -86,12 +90,51 @@ const CareerProgram = () => {
   const todayStr = new Date().toISOString().split("T")[0];
   const dailyCount = progress?.last_promotion_date === todayStr ? (progress?.daily_promotions || 0) : 0;
 
-  // Step 1: Registration
+  // Step 1: Registration (also handles signup if not logged in)
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
     setSubmitting(true);
-    
+
+    if (!user) {
+      // Sign up the user first
+      if (!formData.password || formData.password.length < 6) {
+        toast.error("Password must be at least 6 characters");
+        setSubmitting(false);
+        return;
+      }
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name,
+          },
+        },
+      });
+      if (signUpError) {
+        toast.error(signUpError.message);
+        setSubmitting(false);
+        return;
+      }
+      // Wait for auth state to settle, then save career progress
+      const userId = signUpData.user?.id;
+      if (userId) {
+        await supabase.from("career_progress").upsert({
+          user_id: userId,
+          registered: true,
+          course: formData.course,
+          college: formData.college,
+          phone: formData.phone,
+          current_step: 2,
+        }, { onConflict: "user_id" });
+      }
+      toast.success("Account created! Please check your email to verify, then log in.");
+      navigate("/login");
+      setSubmitting(false);
+      return;
+    }
+
+    // Already logged in — just register career details
     const { error } = await supabase.from("career_progress").upsert({
       user_id: user.id,
       registered: true,
@@ -237,27 +280,41 @@ const CareerProgram = () => {
     switch (step) {
       case 1:
         if (isCompleted) return <CompletedBadge text="Registration Complete" />;
-        if (!user) {
-          return (
-            <div className="text-center py-6">
-              <p className="text-sm text-muted-foreground mb-4">Create an account to start the career program</p>
-              <Link to="/plans">
-                <Button className="gap-2"><UserPlus className="h-4 w-4" /> Sign Up Now</Button>
-              </Link>
-            </div>
-          );
-        }
         return (
           <form onSubmit={handleRegister} className="space-y-3">
             <Input placeholder="Full Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
             <Input type="email" placeholder="Email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} required />
+            {!user && (
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create Password (min 6 chars)"
+                  value={formData.password}
+                  onChange={e => setFormData({...formData, password: e.target.value})}
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            )}
             <Input placeholder="Phone Number" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} required />
             <Input placeholder="Course (e.g. B.Tech, MBA)" value={formData.course} onChange={e => setFormData({...formData, course: e.target.value})} required />
             <Input placeholder="College Name" value={formData.college} onChange={e => setFormData({...formData, college: e.target.value})} required />
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Apply Now
+              {user ? "Apply Now" : "Sign Up & Apply Now"}
             </Button>
+            {!user && (
+              <p className="text-xs text-center text-muted-foreground">
+                Already have an account? <Link to="/login" className="text-primary font-medium hover:underline">Sign In</Link>
+              </p>
+            )}
           </form>
         );
 
