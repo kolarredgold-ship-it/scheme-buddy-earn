@@ -172,7 +172,7 @@ const HeroBanner = () => {
   const slide = HERO_SLIDES[current];
 
   return (
-    <section className="relative w-full overflow-hidden aspect-[4/3] md:aspect-[16/7]">
+    <section className="relative w-full overflow-hidden aspect-[5/4] md:aspect-[16/7]">
       {HERO_SLIDES.map((s, i) => (
         <div
           key={i}
@@ -189,17 +189,14 @@ const HeroBanner = () => {
             loading={i === 0 ? "eager" : "lazy"}
             decoding="async"
           />
-          {/* Dark cinematic overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         </div>
       ))}
 
-
       {/* Content overlay */}
       <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
         <div className="max-w-lg">
-          {/* Badge */}
           <div
             key={`badge-${current}`}
             className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border animate-fade-in ${
@@ -247,7 +244,44 @@ const HeroBanner = () => {
         </div>
       </div>
 
-      {/* Progress bar instead of dots */}
+      {/* Search + Location on top of banner */}
+      <div className="absolute top-3 left-0 right-0 z-20 px-3 md:px-10">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
+            <input
+              type="text"
+              placeholder="AI Search: 'free laptop Tamil Nadu'"
+              value={searchQuery}
+              onChange={(e) => {
+                onSearchChange(e.target.value);
+              }}
+              onKeyDown={onSearchKeyDown}
+              className="w-full h-10 md:h-11 pl-9 pr-9 rounded-xl bg-white/90 backdrop-blur-md border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all placeholder:text-muted-foreground/60 shadow-lg"
+            />
+            {searchQuery && (
+              <button onClick={onClearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <Select value={selectedState} onValueChange={onStateChange}>
+            <SelectTrigger className="w-[100px] md:w-[150px] h-10 md:h-11 rounded-xl bg-white/90 backdrop-blur-md border-white/40 text-sm gap-1 shrink-0 shadow-lg">
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <SelectValue placeholder="State" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[300px]">
+              {INDIAN_STATES.map((state) => (
+                <SelectItem key={state.value} value={state.value} className="text-sm">
+                  {state.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Progress bar */}
       <div className="absolute bottom-0 left-0 right-0 z-20 flex gap-1 px-3 pb-3 md:px-10 md:pb-4">
         {HERO_SLIDES.map((_, i) => (
           <button
