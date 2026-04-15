@@ -99,33 +99,61 @@ const SchemeDetail = () => {
               </div>
               Description
             </h2>
-            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
-              {description}
-            </p>
+            <div className="relative">
+              <p className={`text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap ${!isPaid ? "line-clamp-4" : ""}`}>
+                {description}
+              </p>
+              {!isPaid && description.length > 200 && (
+                <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card to-transparent" />
+              )}
+            </div>
+            {!isPaid && (
+              <Link to={user ? "/subscription" : "/plans"}>
+                <Button variant="outline" size="sm" className="mt-3 gap-1.5 rounded-xl text-xs border-primary/30 text-primary">
+                  <Lock className="h-3.5 w-3.5" /> Subscribe to read full details
+                </Button>
+              </Link>
+            )}
           </CardContent>
         </Card>
 
-        {/* Eligibility */}
+        {/* Eligibility - Locked for non-subscribers */}
         {scheme.eligibility && (
-          <Card className="mb-4 border-border/40">
+          <Card className="mb-4 border-border/40 relative">
             <CardContent className="p-4 md:p-6">
               <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
                 <div className="p-1.5 rounded-lg bg-secondary/10">
                   <CheckCircle className="h-4 w-4 text-secondary" />
                 </div>
                 Eligibility
+                {!isPaid && <Lock className="h-3.5 w-3.5 text-muted-foreground ml-auto" />}
               </h2>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.eligibility}</p>
+              {isPaid ? (
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.eligibility}</p>
+              ) : (
+                <div className="text-sm text-muted-foreground/40 select-none blur-sm pointer-events-none" aria-hidden>
+                  {scheme.eligibility.slice(0, 120)}...
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
 
-        {/* Documents */}
+        {/* Documents - Locked for non-subscribers */}
         {scheme.documents && (
-          <Card className="mb-4 border-border/40">
+          <Card className="mb-4 border-border/40 relative">
             <CardContent className="p-4 md:p-6">
-              <h2 className="font-semibold text-base mb-3">📄 Required Documents</h2>
-              <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.documents}</p>
+              <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
+                📄 Required Documents
+                {!isPaid && <Lock className="h-3.5 w-3.5 text-muted-foreground ml-auto" />}
+              </h2>
+              {isPaid ? (
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{scheme.documents}</p>
+              ) : (
+                <div className="text-sm text-muted-foreground/40 select-none blur-sm pointer-events-none" aria-hidden>
+                  {scheme.documents.slice(0, 120)}...
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
