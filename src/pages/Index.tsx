@@ -236,13 +236,13 @@ const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearc
             <Link to={slide.ctaLink}>
               <Button
                 size="sm"
-                className={`rounded-lg font-semibold gap-1.5 text-xs md:text-sm px-3 md:px-5 py-1.5 ${
+                className={`rounded-lg font-semibold gap-1 text-[11px] md:text-sm px-2.5 md:px-5 py-1 md:py-1.5 h-auto ${
                   (slide as any).glow
                     ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 shadow-[0_0_20px_rgba(249,115,22,0.4)]"
                     : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
                 }`}
               >
-                {slide.cta} <ArrowRight className="h-3.5 w-3.5" />
+                {slide.cta} <ArrowRight className="h-3 w-3 md:h-3.5 md:w-3.5" />
               </Button>
             </Link>
             <div className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/10">
