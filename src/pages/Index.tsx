@@ -269,10 +269,17 @@ const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearc
               className="w-full h-10 md:h-11 pl-9 pr-9 rounded-xl bg-white/90 backdrop-blur-md border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all placeholder:text-muted-foreground/60 shadow-lg"
             />
             {searchQuery && (
-              <button onClick={onClearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+              <button onClick={onClearSearch} className="absolute right-10 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                 <X className="h-4 w-4" />
               </button>
             )}
+            <button
+              onClick={onSearch}
+              disabled={searching || searchQuery.trim().length < 3}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground disabled:opacity-40 transition-opacity"
+            >
+              {searching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
+            </button>
           </div>
           <Select value={selectedState} onValueChange={onStateChange}>
             <SelectTrigger className="w-[100px] md:w-[150px] h-10 md:h-11 rounded-xl bg-white/90 backdrop-blur-md border-white/40 text-sm gap-1 shrink-0 shadow-lg">
