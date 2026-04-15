@@ -274,7 +274,7 @@ const HeroBanner = () => {
 // Scheme Card - Compact list style, no image
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.slug}`} className="block">
-    <Card className="group overflow-hidden hover:border-primary/20 border-border/40 bg-card transition-all duration-200 hover:shadow-sm">
+    <Card className="group min-w-[260px] max-w-[300px] overflow-hidden hover:border-primary/20 border-border/40 bg-card transition-all duration-200 hover:shadow-sm">
       <CardContent className="p-3 md:p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
@@ -565,7 +565,7 @@ const Index = () => {
                   Clear Search
                 </button>
               </div>
-              <div className="space-y-2">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                 {aiResults.slice(0, 20).map((scheme: any) => (
                   <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
@@ -591,7 +591,7 @@ const Index = () => {
                   Clear Filter
                 </button>
               </div>
-              <div className="space-y-2">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
                   <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
@@ -608,7 +608,7 @@ const Index = () => {
                   </h2>
                   <span className="text-xs text-primary font-medium">View All</span>
                 </div>
-                <div className="space-y-2">
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                   {recentSchemes.map((scheme) => (
                     <SchemeCard key={scheme.id} scheme={scheme} />
                   ))}
@@ -633,7 +633,7 @@ const Index = () => {
                         See All <ChevronRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                    <div className="space-y-2">
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                       {catSchemes.slice(0, 5).map((scheme) => (
                         <SchemeCard key={scheme.id} scheme={scheme} />
                       ))}
