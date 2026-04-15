@@ -148,13 +148,15 @@ interface Scheme {
 }
 
 // Hero Banner with auto-scroll
-const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearch, selectedState, onStateChange }: {
+const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearch, selectedState, onStateChange, onSearch, searching }: {
   searchQuery: string;
   onSearchChange: (val: string) => void;
   onSearchKeyDown: (e: React.KeyboardEvent) => void;
   onClearSearch: () => void;
   selectedState: string;
   onStateChange: (val: string) => void;
+  onSearch: () => void;
+  searching: boolean;
 }) => {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
