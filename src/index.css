@@ -193,3 +193,8 @@
   animation: neon-border-spin 2.5s ease infinite;
   box-shadow: 0 0 12px rgba(0, 255, 136, 0.3), 0 0 24px rgba(255, 0, 255, 0.15);
 }
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
