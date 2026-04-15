@@ -298,24 +298,27 @@ const AdminSchemes = () => {
         <Card>
           <CardContent className="p-0">
             {loading ? (
-              <div className="flex justify-center py-8"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" /></div>
+              <div className="flex justify-center py-8">
+                <div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" />
+              </div>
             ) : (
+              <Table>
                 <TableHeader>
                   <TableRow>
-                     <TableHead>Title</TableHead>
-                     <TableHead>Category</TableHead>
-                     <TableHead className="hidden md:table-cell">State</TableHead>
-                     <TableHead className="hidden md:table-cell">Created</TableHead>
-                     <TableHead className="text-right">Actions</TableHead>
-                   </TableRow>
-                 </TableHeader>
-                 <TableBody>
-                   {schemes.map((s) => (
-                     <TableRow key={s.id}>
-                       <TableCell className="font-medium">{s.title}</TableCell>
-                       <TableCell>{s.category}</TableCell>
-                       <TableCell className="hidden md:table-cell">{STATES.find(st => st.value === s.state)?.label || s.state}</TableCell>
-                       <TableCell className="hidden md:table-cell">{new Date(s.created_at).toLocaleDateString()}</TableCell>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead className="hidden md:table-cell">State</TableHead>
+                    <TableHead className="hidden md:table-cell">Created</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {schemes.map((s) => (
+                    <TableRow key={s.id}>
+                      <TableCell className="font-medium">{s.title}</TableCell>
+                      <TableCell>{s.category}</TableCell>
+                      <TableCell className="hidden md:table-cell">{STATES.find(st => st.value === s.state)?.label || s.state}</TableCell>
+                      <TableCell className="hidden md:table-cell">{new Date(s.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" onClick={() => openEdit(s)}><Pencil className="h-4 w-4" /></Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
