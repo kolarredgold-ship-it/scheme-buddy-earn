@@ -294,7 +294,10 @@ const AdminSchemes = () => {
             </CardContent>
           </Card>
         </div>
-              <div className="flex justify-center py-8"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" /></div>
+
+        <Card>
+          <CardContent className="p-0">
+            {loading ? (
             ) : (
               <Table>
                 <TableHeader>
