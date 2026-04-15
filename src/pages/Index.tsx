@@ -591,11 +591,9 @@ const Index = () => {
                   Clear Filter
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
+              <div className="space-y-2">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
-                  <div key={scheme.id} className="w-full">
-                    <SchemeCard scheme={scheme} />
-                  </div>
+                  <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
               </div>
             </section>
