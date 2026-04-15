@@ -348,12 +348,9 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
         <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium border-border/60">
           {scheme.category}
         </Badge>
-        <h3 className="font-semibold text-xs md:text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors leading-tight">
+        <h3 className="font-semibold text-xs md:text-sm mb-1 group-hover:text-primary transition-colors leading-tight">
           {scheme.title}
         </h3>
-        <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-          {scheme.description?.slice(0, 80)}...
-        </p>
         <div className="mt-2 flex items-center text-[10px] md:text-xs text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
           View Details <ChevronRight className="h-3 w-3 ml-0.5" />
         </div>
