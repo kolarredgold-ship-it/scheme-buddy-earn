@@ -531,12 +531,10 @@ const Index = () => {
         {/* Install App Banner */}
         <div className="container mx-auto px-3 md:px-4 mt-4">
           <Link to="/install" className="block">
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary px-4 py-3 flex items-center gap-3 hover:opacity-95 transition-opacity">
-              <div className="h-9 w-9 rounded-lg bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center shrink-0">
-                <Download className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <h3 className="text-sm font-bold text-primary-foreground flex-1">Install Techrola App</h3>
-              <ChevronRight className="h-5 w-5 text-primary-foreground/60 shrink-0" />
+            <div className="rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 flex items-center gap-2 hover:opacity-95 transition-opacity">
+              <Download className="h-4 w-4 text-primary-foreground shrink-0" />
+              <span className="text-xs font-semibold text-primary-foreground flex-1">Install Techrola App</span>
+              <ChevronRight className="h-4 w-4 text-primary-foreground/60 shrink-0" />
             </div>
           </Link>
         </div>
