@@ -11,8 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Upload, ImageIcon, Wand2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, ImageIcon, Wand2, Bot, UserPen, BarChart3 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 const CATEGORIES = ["scholarships", "farmers", "sc_st", "minority", "housing", "health", "education", "business", "govt_jobs"];
 
@@ -69,10 +70,24 @@ const AdminSchemes = () => {
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [genProgress, setGenProgress] = useState({ current: 0, total: 0 });
+  const [todayStats, setTodayStats] = useState({ total: 0, auto: 0, manual: 0 });
 
   const fetchSchemes = async () => {
     const { data } = await supabase.from("schemes").select("*").order("created_at", { ascending: false });
-    if (data) setSchemes(data);
+    if (data) {
+      setSchemes(data);
+      // Calculate today's stats
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayISO = today.toISOString();
+      
+      const updatedToday = data.filter(s => new Date(s.updated_at) >= today);
+      // Auto = created today (synced/AI-discovered), Manual = existed before but updated today
+      const autoToday = updatedToday.filter(s => new Date(s.created_at) >= today);
+      const manualToday = updatedToday.filter(s => new Date(s.created_at) < today);
+      
+      setTodayStats({ total: updatedToday.length, auto: autoToday.length, manual: manualToday.length });
+    }
     setLoading(false);
   };
 
@@ -243,28 +258,67 @@ const AdminSchemes = () => {
           </div>
         </div>
 
+        {/* Today's Stats */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="border-primary/20">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <BarChart3 className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{todayStats.total}</p>
+                <p className="text-xs text-muted-foreground">Updated Today</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-green-500/20">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-green-500/10">
+                <Bot className="h-5 w-5 text-green-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{todayStats.auto}</p>
+                <p className="text-xs text-muted-foreground">Auto (Sync/AI)</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-orange-500/20">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-orange-500/10">
+                <UserPen className="h-5 w-5 text-orange-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{todayStats.manual}</p>
+                <p className="text-xs text-muted-foreground">Manual Edits</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card>
           <CardContent className="p-0">
             {loading ? (
-              <div className="flex justify-center py-8"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" /></div>
+              <div className="flex justify-center py-8">
+                <div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" />
+              </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                     <TableHead>Title</TableHead>
-                     <TableHead>Category</TableHead>
-                     <TableHead className="hidden md:table-cell">State</TableHead>
-                     <TableHead className="hidden md:table-cell">Created</TableHead>
-                     <TableHead className="text-right">Actions</TableHead>
-                   </TableRow>
-                 </TableHeader>
-                 <TableBody>
-                   {schemes.map((s) => (
-                     <TableRow key={s.id}>
-                       <TableCell className="font-medium">{s.title}</TableCell>
-                       <TableCell>{s.category}</TableCell>
-                       <TableCell className="hidden md:table-cell">{STATES.find(st => st.value === s.state)?.label || s.state}</TableCell>
-                       <TableCell className="hidden md:table-cell">{new Date(s.created_at).toLocaleDateString()}</TableCell>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead className="hidden md:table-cell">State</TableHead>
+                    <TableHead className="hidden md:table-cell">Created</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {schemes.map((s) => (
+                    <TableRow key={s.id}>
+                      <TableCell className="font-medium">{s.title}</TableCell>
+                      <TableCell>{s.category}</TableCell>
+                      <TableCell className="hidden md:table-cell">{STATES.find(st => st.value === s.state)?.label || s.state}</TableCell>
+                      <TableCell className="hidden md:table-cell">{new Date(s.created_at).toLocaleDateString()}</TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="icon" onClick={() => openEdit(s)}><Pencil className="h-4 w-4" /></Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
