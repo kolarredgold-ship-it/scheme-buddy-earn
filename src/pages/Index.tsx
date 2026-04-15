@@ -646,7 +646,7 @@ const Index = () => {
                     Trending Schemes
                   </h2>
                 </div>
-                <div className="overflow-hidden relative">
+                <div className="overflow-hidden relative group/ticker [&:hover>div]:pause-ticker [&:active>div]:pause-ticker">
                   <div className="flex animate-[ticker_30s_linear_infinite] gap-4 w-max">
                     {[...recentSchemes, ...recentSchemes].map((scheme, idx) => (
                       <Link
