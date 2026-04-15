@@ -486,68 +486,36 @@ const Index = () => {
   return (
     <Layout>
       <div className="pb-24 md:pb-8">
-        {/* Hero Banner */}
-        <HeroBanner />
+        {/* Hero Banner with Search */}
+        <HeroBanner
+          searchQuery={searchQuery}
+          onSearchChange={(val) => {
+            setSearchQuery(val);
+            if (val.trim().length < 3) {
+              setAiResults(null);
+              setAiSummary("");
+            }
+          }}
+          onSearchKeyDown={handleSearchKeyDown}
+          onClearSearch={clearSearch}
+          selectedState={selectedState}
+          onStateChange={setSelectedState}
+        />
 
-        {/* Unified Search Bar + State Filter */}
-        <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-              <input
-                type="text"
-                placeholder="AI Search: 'free laptop Tamil Nadu' or 'farmer subsidy'"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  if (e.target.value.trim().length < 3) {
-                    setAiResults(null);
-                    setAiSummary("");
-                  }
-                }}
-                onKeyDown={handleSearchKeyDown}
-                className="w-full h-11 md:h-12 pl-10 pr-10 rounded-xl bg-card border border-primary/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all placeholder:text-muted-foreground/50"
-              />
-              {searchQuery && (
-                <button onClick={clearSearch} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-            <Button
-              onClick={handleSearch}
-              disabled={searching || searchQuery.trim().length < 3}
-              className="h-11 md:h-12 px-4 rounded-xl gap-1.5 shrink-0"
-            >
-              {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-              <span className="hidden sm:inline">Search</span>
-            </Button>
-            <Select value={selectedState} onValueChange={setSelectedState}>
-              <SelectTrigger className="w-[120px] md:w-[160px] h-11 md:h-12 rounded-xl bg-card border-border/60 text-sm gap-1 shrink-0">
-                <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <SelectValue placeholder="State" />
-              </SelectTrigger>
-              <SelectContent className="max-h-[300px]">
-                {INDIAN_STATES.map((state) => (
-                  <SelectItem key={state.value} value={state.value} className="text-sm">
-                    {state.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-2 mt-3">
+        {/* Action Buttons */}
+        <div className="container mx-auto px-3 md:px-4 mt-3">
+          <div className="grid grid-cols-2 gap-2">
             <Link to="/create-report">
               <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
                 <FileText className="h-4 w-4 shrink-0" /> AI Internship Report
               </Button>
             </Link>
             <Link to="/mock-interview">
-              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
-                <Brain className="h-4 w-4 shrink-0" /> AI Mock Interview
-              </Button>
+              <div className="relative group rounded-xl p-[2px] animate-neon-border overflow-hidden">
+                <Button variant="outline" className="w-full h-11 rounded-[10px] gap-1.5 text-[11px] md:text-sm font-semibold border-0 bg-card hover:bg-primary/5 relative z-10">
+                  <Brain className="h-4 w-4 shrink-0" /> AI Mock Interview
+                </Button>
+              </div>
             </Link>
           </div>
         </div>
