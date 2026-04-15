@@ -565,7 +565,7 @@ const Index = () => {
                   Clear Search
                 </button>
               </div>
-              <div className="space-y-2">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                 {aiResults.slice(0, 20).map((scheme: any) => (
                   <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
@@ -591,7 +591,7 @@ const Index = () => {
                   Clear Filter
                 </button>
               </div>
-              <div className="space-y-2">
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
                   <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
@@ -608,7 +608,7 @@ const Index = () => {
                   </h2>
                   <span className="text-xs text-primary font-medium">View All</span>
                 </div>
-                <div className="space-y-2">
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                   {recentSchemes.map((scheme) => (
                     <SchemeCard key={scheme.id} scheme={scheme} />
                   ))}
@@ -633,7 +633,7 @@ const Index = () => {
                         See All <ChevronRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                    <div className="space-y-2">
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
                       {catSchemes.slice(0, 5).map((scheme) => (
                         <SchemeCard key={scheme.id} scheme={scheme} />
                       ))}
