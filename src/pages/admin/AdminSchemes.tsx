@@ -70,10 +70,24 @@ const AdminSchemes = () => {
   const [uploading, setUploading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [genProgress, setGenProgress] = useState({ current: 0, total: 0 });
+  const [todayStats, setTodayStats] = useState({ total: 0, auto: 0, manual: 0 });
 
   const fetchSchemes = async () => {
     const { data } = await supabase.from("schemes").select("*").order("created_at", { ascending: false });
-    if (data) setSchemes(data);
+    if (data) {
+      setSchemes(data);
+      // Calculate today's stats
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayISO = today.toISOString();
+      
+      const updatedToday = data.filter(s => new Date(s.updated_at) >= today);
+      // Auto = created today (synced/AI-discovered), Manual = existed before but updated today
+      const autoToday = updatedToday.filter(s => new Date(s.created_at) >= today);
+      const manualToday = updatedToday.filter(s => new Date(s.created_at) < today);
+      
+      setTodayStats({ total: updatedToday.length, auto: autoToday.length, manual: manualToday.length });
+    }
     setLoading(false);
   };
 
