@@ -514,21 +514,15 @@ const Index = () => {
           </Link>
         </div>
 
-        {/* Category Chips */}
-        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-            <button
-              onClick={() => setActiveCategory(null)}
-              className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-                !activeCategory
-                  ? "bg-primary text-primary-foreground shadow-glow"
-                  : "bg-muted text-muted-foreground hover:scale-105"
-              }`}
-            >
-              All
-            </button>
+        {/* Top Categories - Icon Grid */}
+        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base md:text-lg font-bold">Top Categories</h2>
+            <button onClick={() => setActiveCategory(null)} className="text-xs text-primary font-medium hover:underline">View All</button>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {CATEGORIES.map((cat) => (
-              <CategoryChip
+              <CategoryIconCard
                 key={cat.key}
                 cat={cat}
                 isActive={activeCategory === cat.key}
