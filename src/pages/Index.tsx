@@ -509,6 +509,8 @@ const Index = () => {
           onClearSearch={clearSearch}
           selectedState={selectedState}
           onStateChange={setSelectedState}
+          onSearch={handleSearch}
+          searching={searching}
         />
 
         {/* Action Buttons */}
