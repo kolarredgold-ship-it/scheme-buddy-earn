@@ -83,6 +83,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <Settings2 className="h-4 w-4" />
                 </Button>
                 <NotificationBell />
+                <Link to="/dashboard" className="flex items-center gap-1.5 bg-accent/10 rounded-xl px-3 py-1.5 hover:bg-accent/20 transition-colors">
+                  <Wallet className="h-3.5 w-3.5 text-accent" />
+                  <span className="text-sm font-bold">₹{profile?.wallet_balance?.toFixed(0) || '0'}</span>
+                </Link>
                 <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-1.5">
                   <div className="h-7 w-7 rounded-lg bg-gradient-primary flex items-center justify-center">
                     <User className="h-3.5 w-3.5 text-primary-foreground" />
@@ -105,13 +109,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             )}
           </div>
 
-          {/* Mobile menu toggle */}
-          <button
-            className="md:hidden h-10 w-10 rounded-xl flex items-center justify-center hover:bg-muted transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          {/* Mobile: wallet + menu toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            {user && profile && (
+              <Link to="/dashboard" className="flex items-center gap-1 bg-accent/10 rounded-lg px-2.5 py-1.5">
+                <Wallet className="h-3.5 w-3.5 text-accent" />
+                <span className="text-xs font-bold">₹{profile.wallet_balance?.toFixed(0) || '0'}</span>
+              </Link>
+            )}
+            <button
+              className="h-10 w-10 rounded-xl flex items-center justify-center hover:bg-muted transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu overlay */}
