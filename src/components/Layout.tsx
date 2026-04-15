@@ -109,13 +109,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             )}
           </div>
 
-          {/* Mobile menu toggle */}
-          <button
-            className="md:hidden h-10 w-10 rounded-xl flex items-center justify-center hover:bg-muted transition-colors"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          {/* Mobile: wallet + menu toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            {user && profile && (
+              <Link to="/dashboard" className="flex items-center gap-1 bg-accent/10 rounded-lg px-2.5 py-1.5">
+                <Wallet className="h-3.5 w-3.5 text-accent" />
+                <span className="text-xs font-bold">₹{profile.wallet_balance?.toFixed(0) || '0'}</span>
+              </Link>
+            )}
+            <button
+              className="h-10 w-10 rounded-xl flex items-center justify-center hover:bg-muted transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile menu overlay */}
