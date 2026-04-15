@@ -180,3 +180,16 @@
   from { transform: scale(1); }
   to { transform: scale(1.08); }
 }
+
+@keyframes neon-border-spin {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-neon-border {
+  background: linear-gradient(90deg, hsl(var(--primary)), #00ff88, #ff00ff, hsl(var(--accent)), hsl(var(--primary)));
+  background-size: 300% 300%;
+  animation: neon-border-spin 2.5s ease infinite;
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.3), 0 0 24px rgba(255, 0, 255, 0.15);
+}
