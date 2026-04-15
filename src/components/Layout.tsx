@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2 } from "lucide-react";
 import UserPreferences from "@/components/UserPreferences";
 import NotificationBell from "@/components/NotificationBell";
-import techrolaLogo from "@/assets/techrola_logo.png";
+import techrolaLogo from "@/assets/techrola_logo.webp";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import techrolaLogo from "@/assets/techrola_logo.png";
+import techrolaLogo from "@/assets/techrola_logo.webp";
 
 const Footer = () => (
   <footer className="bg-card border-t border-border/40 mt-12">
