@@ -258,9 +258,42 @@ const AdminSchemes = () => {
           </div>
         </div>
 
-        <Card>
-          <CardContent className="p-0">
-            {loading ? (
+        {/* Today's Stats */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="border-primary/20">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <BarChart3 className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{todayStats.total}</p>
+                <p className="text-xs text-muted-foreground">Updated Today</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-green-500/20">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-green-500/10">
+                <Bot className="h-5 w-5 text-green-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{todayStats.auto}</p>
+                <p className="text-xs text-muted-foreground">Auto (Sync/AI)</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-orange-500/20">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-orange-500/10">
+                <UserPen className="h-5 w-5 text-orange-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{todayStats.manual}</p>
+                <p className="text-xs text-muted-foreground">Manual Edits</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
               <div className="flex justify-center py-8"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" /></div>
             ) : (
               <Table>
