@@ -519,11 +519,11 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/mock-interview">
-              <div className="relative group rounded-xl p-[2px] animate-neon-border overflow-hidden">
-                <Button variant="outline" className="w-full h-11 rounded-[10px] gap-1.5 text-[11px] md:text-sm font-semibold border-0 bg-card hover:bg-primary/5 relative z-10">
-                  <Brain className="h-4 w-4 shrink-0" /> AI Mock Interview
-                </Button>
-              </div>
+              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-0 bg-card relative overflow-hidden neon-btn">
+                <span className="absolute inset-0 rounded-xl neon-glow-border" />
+                <Brain className="h-4 w-4 shrink-0 relative z-10" />
+                <span className="relative z-10">AI Mock Interview</span>
+              </Button>
             </Link>
           </div>
         </div>
