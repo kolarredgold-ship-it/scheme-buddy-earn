@@ -598,21 +598,19 @@ const Index = () => {
               </div>
             </section>
           ) : (
-            /* Default: Category-wise horizontal scroll */
             <>
-              {/* Recent / Trending */}
+              {/* Trending Schemes */}
               <section>
-                <div className="mb-3">
+                <div className="flex items-center justify-between mb-3">
                   <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
                     <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent" />
                     Trending Schemes
                   </h2>
+                  <span className="text-xs text-primary font-medium">View All</span>
                 </div>
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
+                <div className="space-y-2">
                   {recentSchemes.map((scheme) => (
-                    <div key={scheme.id} className="snap-start">
-                      <SchemeCard scheme={scheme} />
-                    </div>
+                    <SchemeCard key={scheme.id} scheme={scheme} />
                   ))}
                 </div>
               </section>
@@ -635,11 +633,9 @@ const Index = () => {
                         See All <ChevronRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-                      {catSchemes.map((scheme) => (
-                        <div key={scheme.id} className="snap-start">
-                          <SchemeCard scheme={scheme} />
-                        </div>
+                    <div className="space-y-2">
+                      {catSchemes.slice(0, 5).map((scheme) => (
+                        <SchemeCard key={scheme.id} scheme={scheme} />
                       ))}
                     </div>
                   </section>
