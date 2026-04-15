@@ -1,14 +1,33 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, Navigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Wallet, Users, BookOpen, ArrowRight, Copy, Share2 } from "lucide-react";
+import { Wallet, Users, BookOpen, ArrowRight, Copy, Share2, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
+import { format } from "date-fns";
 
 const Dashboard = () => {
   const { user, profile, loading } = useAuth();
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [txLoading, setTxLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchTx = async () => {
+      const { data } = await supabase
+        .from("transactions")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      if (data) setTransactions(data);
+      setTxLoading(false);
+    };
+    fetchTx();
+  }, [user]);
 
   if (loading) return (
     <Layout>
@@ -19,6 +38,10 @@ const Dashboard = () => {
   );
 
   if (!user) return <Navigate to="/login" />;
+
+  const totalEarnings = transactions
+    .filter((t) => t.type === "credit")
+    .reduce((sum, t) => sum + Number(t.amount), 0);
 
   const copyReferralCode = () => {
     if (profile?.referral_code) {
@@ -40,23 +63,37 @@ const Dashboard = () => {
           <p className="text-muted-foreground">Here's your account overview</p>
         </div>
 
-        {/* Wallet Card */}
-        <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-0">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm opacity-80">Wallet Balance</p>
-                <p className="text-3xl font-bold mt-1">₹{profile?.wallet_balance?.toFixed(2) || "0.00"}</p>
+        {/* Wallet & Earnings Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground border-0">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm opacity-80">Wallet Balance</p>
+                  <p className="text-3xl font-bold mt-1">₹{profile?.wallet_balance?.toFixed(2) || "0.00"}</p>
+                </div>
+                <Wallet className="h-10 w-10 opacity-50" />
               </div>
-              <Wallet className="h-10 w-10 opacity-50" />
-            </div>
-            <div className="mt-4 flex gap-2">
-              <Badge className="bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30">
-                {profile?.subscription_status === "active" ? "✅ Active" : "Free Plan"}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="mt-4 flex gap-2">
+                <Badge className="bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30">
+                  {profile?.subscription_status === "active" ? "✅ Active" : "Free Plan"}
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-accent/20 to-accent/5 border-accent/30">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Earnings</p>
+                  <p className="text-3xl font-bold text-accent-foreground">₹{totalEarnings.toFixed(2)}</p>
+                </div>
+                <TrendingUp className="h-10 w-10 text-accent" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Referral Section */}
         <Card>
@@ -82,15 +119,7 @@ const Dashboard = () => {
         </Card>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <Link to="/earnings">
-            <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
-              <CardContent className="p-4 flex flex-col items-center justify-center text-center gap-2">
-                <Wallet className="h-8 w-8 text-accent" />
-                <span className="font-medium text-sm">Earnings</span>
-              </CardContent>
-            </Card>
-          </Link>
+        <div className="grid grid-cols-2 gap-4">
           <Link to="/withdrawals">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="p-4 flex flex-col items-center justify-center text-center gap-2">
@@ -108,6 +137,36 @@ const Dashboard = () => {
             </Card>
           </Link>
         </div>
+
+        {/* Transaction History */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-primary" /> Transaction History
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {txLoading ? (
+              <div className="flex justify-center py-8"><div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" /></div>
+            ) : transactions.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">No transactions yet. Refer friends to start earning!</p>
+            ) : (
+              <div className="space-y-3">
+                {transactions.map((t) => (
+                  <div key={t.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                    <div>
+                      <p className="font-medium text-sm">{t.source}</p>
+                      <p className="text-xs text-muted-foreground">{format(new Date(t.created_at), "dd MMM yyyy, hh:mm a")}</p>
+                    </div>
+                    <Badge variant={t.type === "credit" ? "default" : "destructive"} className={t.type === "credit" ? "bg-secondary text-secondary-foreground" : ""}>
+                      {t.type === "credit" ? "+" : "-"}₹{Number(t.amount).toFixed(2)}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </Layout>
   );
