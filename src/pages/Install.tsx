@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Download, Smartphone, Share, MoreVertical, PlusSquare, Check } from "lucide-react";
-import techrolaLogo from "@/assets/techrola_logo.png";
+import techrolaLogo from "@/assets/techrola_logo.webp";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
