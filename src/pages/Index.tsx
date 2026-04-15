@@ -271,62 +271,75 @@ const HeroBanner = () => {
   );
 };
 
-// Scheme Card - Compact list style, no image
+// Scheme Card
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.slug}`} className="block">
-    <Card className="group min-w-[260px] max-w-[300px] overflow-hidden hover:border-primary/20 border-border/40 bg-card transition-all duration-200 hover:shadow-sm">
-      <CardContent className="p-3 md:p-4">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-xs md:text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors leading-tight">
-              {scheme.title}
-            </h3>
-            <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-1 leading-relaxed mb-2">
-              {scheme.description?.slice(0, 60)}...
-            </p>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium border-border/60">
-                {scheme.category}
-              </Badge>
-              {scheme.state && (
-                <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
-                  <MapPin className="h-2.5 w-2.5" /> {scheme.state}
-                </span>
-              )}
-            </div>
+    <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
+      <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
+        {scheme.image_url ? (
+          <img
+            src={scheme.image_url}
+            alt={scheme.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.currentTarget;
+              target.style.display = 'none';
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+            <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
           </div>
-          <Button size="sm" variant="default" className="shrink-0 text-[10px] h-7 px-2.5 rounded-lg">
-            Apply Now
-          </Button>
+        )}
+        <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
+      </div>
+      <CardContent className="p-3 md:p-4">
+        <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium border-border/60">
+          {scheme.category}
+        </Badge>
+        <h3 className="font-semibold text-xs md:text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors leading-tight">
+          {scheme.title}
+        </h3>
+        <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+          {scheme.description?.slice(0, 80)}...
+        </p>
+        <div className="mt-2 flex items-center text-[10px] md:text-xs text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+          View Details <ChevronRight className="h-3 w-3 ml-0.5" />
         </div>
       </CardContent>
     </Card>
   </Link>
 );
 
-// Category Icon Card (grid style like reference)
-const CategoryIconCard = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
-  const content = (
-    <div className="flex flex-col items-center gap-1.5 w-[72px] shrink-0">
-      <div className={`h-14 w-14 rounded-2xl flex items-center justify-center transition-all duration-200 ${
-        isActive ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105" : `${cat.color} hover:scale-105`
-      }`}>
-        <cat.icon className="h-6 w-6" />
-      </div>
-      <span className={`text-[10px] md:text-xs font-medium text-center leading-tight ${isActive ? "text-primary font-semibold" : "text-foreground"}`}>
-        {cat.label}
-      </span>
-    </div>
-  );
-
+// Category Chip
+const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
   if ('link' in cat && cat.link) {
     return (
-      <a href={cat.link as string} target="_blank" rel="noopener noreferrer">
-        {content}
+      <a
+        href={cat.link as string}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${cat.color} hover:scale-105`}
+      >
+        <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+        {cat.label}
       </a>
     );
   }
-  return <button onClick={onClick}>{content}</button>;
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
+        isActive
+          ? "bg-primary text-primary-foreground shadow-glow"
+          : `${cat.color} hover:scale-105`
+      }`}
+    >
+      <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+      {cat.label}
+    </button>
+  );
 };
 
 const Index = () => {
@@ -514,15 +527,21 @@ const Index = () => {
           </Link>
         </div>
 
-        {/* Top Categories - Icon Grid */}
-        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base md:text-lg font-bold">Top Categories</h2>
-            <button onClick={() => setActiveCategory(null)} className="text-xs text-primary font-medium hover:underline">View All</button>
-          </div>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+        {/* Category Chips */}
+        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
+            <button
+              onClick={() => setActiveCategory(null)}
+              className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
+                !activeCategory
+                  ? "bg-primary text-primary-foreground shadow-glow"
+                  : "bg-muted text-muted-foreground hover:scale-105"
+              }`}
+            >
+              All
+            </button>
             {CATEGORIES.map((cat) => (
-              <CategoryIconCard
+              <CategoryChip
                 key={cat.key}
                 cat={cat}
                 isActive={activeCategory === cat.key}
@@ -565,7 +584,7 @@ const Index = () => {
                   Clear Search
                 </button>
               </div>
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
                 {aiResults.slice(0, 20).map((scheme: any) => (
                   <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
@@ -591,26 +610,30 @@ const Index = () => {
                   Clear Filter
                 </button>
               </div>
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
                 {filteredSchemes.slice(0, 30).map((scheme) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} />
+                  <div key={scheme.id} className="w-full">
+                    <SchemeCard scheme={scheme} />
+                  </div>
                 ))}
               </div>
             </section>
           ) : (
+            /* Default: Category-wise horizontal scroll */
             <>
-              {/* Trending Schemes */}
+              {/* Recent / Trending */}
               <section>
-                <div className="flex items-center justify-between mb-3">
+                <div className="mb-3">
                   <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
                     <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent" />
                     Trending Schemes
                   </h2>
-                  <span className="text-xs text-primary font-medium">View All</span>
                 </div>
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
                   {recentSchemes.map((scheme) => (
-                    <SchemeCard key={scheme.id} scheme={scheme} />
+                    <div key={scheme.id} className="snap-start">
+                      <SchemeCard scheme={scheme} />
+                    </div>
                   ))}
                 </div>
               </section>
@@ -633,9 +656,11 @@ const Index = () => {
                         See All <ChevronRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-                      {catSchemes.slice(0, 5).map((scheme) => (
-                        <SchemeCard key={scheme.id} scheme={scheme} />
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
+                      {catSchemes.map((scheme) => (
+                        <div key={scheme.id} className="snap-start">
+                          <SchemeCard scheme={scheme} />
+                        </div>
                       ))}
                     </div>
                   </section>
