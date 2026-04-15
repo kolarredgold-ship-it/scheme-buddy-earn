@@ -208,3 +208,7 @@
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+.pause-ticker {
+  animation-play-state: paused !important;
+}
