@@ -33,7 +33,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     ...(user
       ? [
           { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-          { path: "/earnings", label: "Earnings", icon: Wallet },
         ]
       : []),
     ...(isAdmin ? [{ path: "/admin", label: "Admin", icon: Shield }] : []),
@@ -42,7 +41,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const bottomNavItems = [
     { path: "/", icon: Home, label: "Home" },
     { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/earnings", icon: Wallet, label: "Earnings" },
     { path: "/subscription", icon: CreditCard, label: "Plans" },
   ];
 

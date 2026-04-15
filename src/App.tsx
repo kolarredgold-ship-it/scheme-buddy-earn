@@ -1,6 +1,6 @@
 import { useEffect, lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,7 +13,7 @@ const Signup = lazy(() => import("./pages/Signup"));
 const Plans = lazy(() => import("./pages/Plans"));
 const SchemeDetail = lazy(() => import("./pages/SchemeDetail"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Earnings = lazy(() => import("./pages/Earnings"));
+
 const Withdrawals = lazy(() => import("./pages/Withdrawals"));
 const Subscription = lazy(() => import("./pages/Subscription"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
@@ -71,7 +71,7 @@ const App = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/scheme/:slug" element={<SchemeDetail />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/earnings" element={<Earnings />} />
+              <Route path="/earnings" element={<Navigate to="/dashboard" replace />} />
               <Route path="/withdrawals" element={<Withdrawals />} />
               <Route path="/subscription" element={<Subscription />} />
               <Route path="/admin" element={<AdminDashboard />} />
