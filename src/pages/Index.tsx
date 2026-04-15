@@ -271,41 +271,33 @@ const HeroBanner = () => {
   );
 };
 
-// Scheme Card
+// Scheme Card - Compact list style, no image
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.slug}`} className="block">
-    <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
-      <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
-        {scheme.image_url ? (
-          <img
-            src={scheme.image_url}
-            alt={scheme.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            loading="lazy"
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.style.display = 'none';
-            }}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-            <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
-          </div>
-        )}
-        <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
-      </div>
+    <Card className="group overflow-hidden hover:border-primary/20 border-border/40 bg-card transition-all duration-200 hover:shadow-sm">
       <CardContent className="p-3 md:p-4">
-        <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium border-border/60">
-          {scheme.category}
-        </Badge>
-        <h3 className="font-semibold text-xs md:text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors leading-tight">
-          {scheme.title}
-        </h3>
-        <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-          {scheme.description?.slice(0, 80)}...
-        </p>
-        <div className="mt-2 flex items-center text-[10px] md:text-xs text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-          View Details <ChevronRight className="h-3 w-3 ml-0.5" />
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-xs md:text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors leading-tight">
+              {scheme.title}
+            </h3>
+            <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-1 leading-relaxed mb-2">
+              {scheme.description?.slice(0, 60)}...
+            </p>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium border-border/60">
+                {scheme.category}
+              </Badge>
+              {scheme.state && (
+                <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                  <MapPin className="h-2.5 w-2.5" /> {scheme.state}
+                </span>
+              )}
+            </div>
+          </div>
+          <Button size="sm" variant="default" className="shrink-0 text-[10px] h-7 px-2.5 rounded-lg">
+            Apply Now
+          </Button>
         </div>
       </CardContent>
     </Card>
