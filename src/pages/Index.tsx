@@ -641,7 +641,7 @@ const Index = () => {
           ) : (
             /* Default: Category-wise horizontal scroll */
             <>
-              {/* Recent / Trending */}
+              {/* Recent / Trending - Text ticker */}
               <section>
                 <div className="mb-3">
                   <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
@@ -649,12 +649,22 @@ const Index = () => {
                     Trending Schemes
                   </h2>
                 </div>
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-                  {recentSchemes.map((scheme) => (
-                    <div key={scheme.id} className="snap-start">
-                      <SchemeCard scheme={scheme} />
-                    </div>
-                  ))}
+                <div className="overflow-hidden relative">
+                  <div className="flex animate-[ticker_30s_linear_infinite] gap-4 w-max">
+                    {[...recentSchemes, ...recentSchemes].map((scheme, idx) => (
+                      <Link
+                        key={`${scheme.id}-${idx}`}
+                        to={`/scheme/${scheme.slug}`}
+                        className="flex items-center gap-2 bg-card border border-border/50 rounded-xl px-4 py-2.5 hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0"
+                      >
+                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium border-border/60 shrink-0">
+                          {scheme.category}
+                        </Badge>
+                        <span className="text-xs md:text-sm font-medium truncate max-w-[220px]">{scheme.title}</span>
+                        <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </section>
 
