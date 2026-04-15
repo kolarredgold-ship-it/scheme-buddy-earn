@@ -274,7 +274,7 @@ const HeroBanner = () => {
 // Scheme Card - Compact list style, no image
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.slug}`} className="block">
-    <Card className="group overflow-hidden hover:border-primary/20 border-border/40 bg-card transition-all duration-200 hover:shadow-sm">
+    <Card className="group min-w-[260px] max-w-[300px] overflow-hidden hover:border-primary/20 border-border/40 bg-card transition-all duration-200 hover:shadow-sm">
       <CardContent className="p-3 md:p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
