@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import techrolaIcon from "@/assets/techrola_icon.png";
+import techrolaIcon from "@/assets/techrola_icon.webp";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -52,15 +52,15 @@ const INDIAN_STATES = [
   { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
   { value: "lakshadweep", label: "Lakshadweep" },
 ];
-import hero1 from "@/assets/hero-1.jpg";
-import hero2 from "@/assets/hero-2.jpg";
-import hero3 from "@/assets/hero-3.jpg";
-import heroJobs from "@/assets/hero-jobs.jpg";
-import heroSkills from "@/assets/hero-skills.jpg";
-import heroGovt from "@/assets/hero-govt.jpg";
-import heroAiInterview from "@/assets/hero-ai-interview.jpg";
-import heroReport from "@/assets/hero-report.jpg";
-import heroHrTraining from "@/assets/hero-hr-training.jpg";
+import hero1 from "@/assets/hero-1.webp";
+import hero2 from "@/assets/hero-2.webp";
+import hero3 from "@/assets/hero-3.webp";
+import heroJobs from "@/assets/hero-jobs.webp";
+import heroSkills from "@/assets/hero-skills.webp";
+import heroGovt from "@/assets/hero-govt.webp";
+import heroAiInterview from "@/assets/hero-ai-interview.webp";
+import heroReport from "@/assets/hero-report.webp";
+import heroHrTraining from "@/assets/hero-hr-training.webp";
 
 const HERO_SLIDES = [
   {
@@ -531,14 +531,11 @@ const Index = () => {
         {/* Install App Banner */}
         <div className="container mx-auto px-3 md:px-4 mt-4">
           <Link to="/install" className="block">
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary p-4 md:p-5 flex items-center gap-4 hover:opacity-95 transition-opacity">
-              <div className="h-12 w-12 rounded-xl bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center shrink-0">
-                <Download className="h-6 w-6 text-primary-foreground" />
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary px-4 py-3 flex items-center gap-3 hover:opacity-95 transition-opacity">
+              <div className="h-9 w-9 rounded-lg bg-primary-foreground/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                <Download className="h-5 w-5 text-primary-foreground" />
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-sm md:text-base font-bold text-primary-foreground">Install Techrola App</h3>
-                <p className="text-xs text-primary-foreground/80 truncate">Quick access from your home screen — no app store needed!</p>
-              </div>
+              <h3 className="text-sm font-bold text-primary-foreground flex-1">Install Techrola App</h3>
               <ChevronRight className="h-5 w-5 text-primary-foreground/60 shrink-0" />
             </div>
           </Link>
