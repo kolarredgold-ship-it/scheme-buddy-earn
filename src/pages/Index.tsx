@@ -312,34 +312,29 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   </Link>
 );
 
-// Category Chip
-const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
+// Category Icon Card (grid style like reference)
+const CategoryIconCard = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
+  const content = (
+    <div className="flex flex-col items-center gap-1.5 w-[72px] shrink-0">
+      <div className={`h-14 w-14 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+        isActive ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-105" : `${cat.color} hover:scale-105`
+      }`}>
+        <cat.icon className="h-6 w-6" />
+      </div>
+      <span className={`text-[10px] md:text-xs font-medium text-center leading-tight ${isActive ? "text-primary font-semibold" : "text-foreground"}`}>
+        {cat.label}
+      </span>
+    </div>
+  );
+
   if ('link' in cat && cat.link) {
     return (
-      <a
-        href={cat.link as string}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${cat.color} hover:scale-105`}
-      >
-        <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-        {cat.label}
+      <a href={cat.link as string} target="_blank" rel="noopener noreferrer">
+        {content}
       </a>
     );
   }
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-        isActive
-          ? "bg-primary text-primary-foreground shadow-glow"
-          : `${cat.color} hover:scale-105`
-      }`}
-    >
-      <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-      {cat.label}
-    </button>
-  );
+  return <button onClick={onClick}>{content}</button>;
 };
 
 const Index = () => {
