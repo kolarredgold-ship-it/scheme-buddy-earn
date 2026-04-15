@@ -565,7 +565,7 @@ const Index = () => {
                   Clear Search
                 </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+              <div className="space-y-2">
                 {aiResults.slice(0, 20).map((scheme: any) => (
                   <SchemeCard key={scheme.id} scheme={scheme} />
                 ))}
