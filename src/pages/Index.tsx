@@ -325,32 +325,14 @@ const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearc
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.slug}`} className="block">
     <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
-      <div className="h-32 md:h-36 relative overflow-hidden bg-muted">
-        {scheme.image_url ? (
-          <img
-            src={scheme.image_url}
-            alt={scheme.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            loading="lazy"
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.style.display = 'none';
-            }}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-            <img src={techrolaIcon} alt="Techrola" className="h-14 w-14 md:h-16 md:w-16 opacity-40" />
-          </div>
-        )}
-        <div className="absolute bottom-0 inset-x-0 h-12 bg-gradient-to-t from-card to-transparent" />
-      </div>
       <CardContent className="p-3 md:p-4">
         <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium border-border/60">
           {scheme.category}
         </Badge>
-        <h3 className="font-semibold text-xs md:text-sm mb-1 group-hover:text-primary transition-colors leading-tight">
+        <h3 className="font-semibold text-xs md:text-sm mb-1 group-hover:text-primary transition-colors leading-tight line-clamp-2">
           {scheme.title}
         </h3>
+        <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 mt-1">{scheme.description}</p>
         <div className="mt-2 flex items-center text-[10px] md:text-xs text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
           View Details <ChevronRight className="h-3 w-3 ml-0.5" />
         </div>
