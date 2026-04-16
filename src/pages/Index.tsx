@@ -126,7 +126,7 @@ const CATEGORIES = [
   { key: "scholarships", label: "Scholarships", icon: GraduationCap, color: "bg-primary/10 text-primary" },
   { key: "farmers", label: "Farmers", icon: Tractor, color: "bg-secondary/10 text-secondary" },
   { key: "sc_st", label: "SC/ST", icon: Tags, color: "bg-accent/10 text-accent-foreground" },
-  { key: "private_jobs", label: "🔥 Private Jobs", icon: ExternalLink, color: "bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 text-white shadow-lg shadow-emerald-500/30 animate-pulse-slow", featured: true },
+  { key: "private_jobs", label: "🔥 Private Jobs", icon: ExternalLink, color: "bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/30 animate-pulse-slow", featured: true },
   { key: "minority", label: "Minority", icon: Moon, color: "bg-purple-100 text-purple-700" },
   { key: "women_empowerment", label: "Women", icon: Users, color: "bg-pink-100 text-pink-700" },
   { key: "housing", label: "Housing", icon: HomeIcon, color: "bg-orange-100 text-orange-700" },
