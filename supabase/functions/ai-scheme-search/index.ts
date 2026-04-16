@@ -150,7 +150,7 @@ Return ONLY valid JSON: {"state": "...", "category": "...", "keywords": ["...", 
       );
     }
 
-    console.log(`Only ${localSchemes?.length || 0} local results for "${query}", fetching from AI...`);
+    console.log(`Only ${relevantLocal.length} relevant (${localSchemes?.length || 0} total) results for "${query}", fetching from AI...`);
 
     let aiSchemes: any[] = [];
     try {
