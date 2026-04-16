@@ -4,6 +4,7 @@ import { Search, Sparkles, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -106,8 +107,36 @@ const SmartSearch = ({ onClose }: SmartSearchProps) => {
         </div>
       )}
 
+      {/* Loading Skeleton */}
+      {loading && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 mb-3">
+            <Skeleton className="h-3 w-3 rounded-full" />
+            <Skeleton className="h-3 w-40" />
+          </div>
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="border-border/40">
+              <CardContent className="p-3 flex gap-3">
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-full" />
+                  <Skeleton className="h-3 w-1/2" />
+                  <div className="flex gap-2 mt-1.5">
+                    <Skeleton className="h-4 w-16 rounded-full" />
+                    <Skeleton className="h-4 w-20 rounded-full" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+          <p className="text-[10px] text-center text-primary animate-pulse mt-2">
+            ✨ AI is discovering schemes for you...
+          </p>
+        </div>
+      )}
+
       {/* Results */}
-      {hasSearched && (
+      {hasSearched && !loading && (
         <div>
           <p className="text-xs text-muted-foreground mb-3">
             {results.length} result{results.length !== 1 ? "s" : ""} found
