@@ -34,52 +34,29 @@ Deno.serve(async (req) => {
         ? { url: "https://ai-gateway.lovable.dev/chat/completions", key: lovableKey, model: "google/gemini-2.5-flash" }
         : null;
 
-    // Step 1: Parse user intent with AI
+    // Step 1: Parse user intent locally (no AI call — saves time)
+    const stateMap: Record<string, string> = {
+      "andhra pradesh": "andhra_pradesh", "arunachal pradesh": "arunachal_pradesh",
+      "assam": "assam", "bihar": "bihar", "chhattisgarh": "chhattisgarh",
+      "goa": "goa", "gujarat": "gujarat", "haryana": "haryana",
+      "himachal pradesh": "himachal_pradesh", "jharkhand": "jharkhand",
+      "karnataka": "karnataka", "kerala": "kerala", "madhya pradesh": "madhya_pradesh",
+      "maharashtra": "maharashtra", "manipur": "manipur", "meghalaya": "meghalaya",
+      "mizoram": "mizoram", "nagaland": "nagaland", "odisha": "odisha",
+      "punjab": "punjab", "rajasthan": "rajasthan", "sikkim": "sikkim",
+      "tamil nadu": "tamil_nadu", "telangana": "telangana", "tripura": "tripura",
+      "uttar pradesh": "uttar_pradesh", "uttarakhand": "uttarakhand",
+      "west bengal": "west_bengal", "delhi": "delhi",
+    };
+    const queryLowerFull = query.toLowerCase();
     let searchState: string | null = null;
-    let searchKeywords: string[] = [];
-
-    if (aiConfig) {
-      try {
-        const aiResponse = await fetch(aiConfig.url, {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${aiConfig.key}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: aiConfig.model,
-            messages: [
-              {
-                role: "system",
-                content: `You parse Indian government scheme search queries. Extract:
-- state: Indian state name in snake_case (e.g., "tamil_nadu", "karnataka") or null
-- category: one of [scholarships, farmers, sc_st, minority, housing, health, education, business, govt_jobs] or null
-- keywords: array of relevant search terms
-
-Return ONLY valid JSON: {"state": "...", "category": "...", "keywords": ["...", "..."]}`
-              },
-              { role: "user", content: query }
-            ],
-            temperature: 0.1,
-          }),
-        });
-
-        if (aiResponse.ok) {
-          const aiData = await aiResponse.json();
-          const content = aiData.choices?.[0]?.message?.content || "";
-          try {
-            const jsonMatch = content.match(/\{[\s\S]*\}/);
-            if (jsonMatch) {
-              const parsed = JSON.parse(jsonMatch[0]);
-              searchState = parsed.state;
-              searchKeywords = parsed.keywords || [];
-            }
-          } catch { /* fallback to text search */ }
-        }
-      } catch (e) {
-        console.error("AI parse error:", e);
+    for (const [name, code] of Object.entries(stateMap)) {
+      if (queryLowerFull.includes(name)) {
+        searchState = code;
+        break;
       }
     }
+    const searchKeywords = query.split(/\s+/).filter((w: string) => w.length > 2);
 
     // Step 2: Search local database first
     let dbQuery = supabase
