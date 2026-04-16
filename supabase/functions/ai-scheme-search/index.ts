@@ -249,7 +249,10 @@ IMPORTANT: Only include REAL government schemes. Do not make up fictional scheme
       }
     }
 
-    const aiSummary = await generateSummary(aiConfig, query, allSchemes);
+    // Skip summary for AI-enriched to avoid timeout (already 1 AI call used)
+    const aiSummary = storedSchemes.length > 0
+      ? `Found ${allSchemes.length} schemes matching "${query}", including ${storedSchemes.length} newly discovered.`
+      : await generateSummary(aiConfig, query, allSchemes);
 
     return new Response(
       JSON.stringify({
