@@ -111,14 +111,23 @@ Return ONLY valid JSON: {"state": "...", "category": "...", "keywords": ["...", 
       );
     }
 
-    // Step 3: If local results are sufficient (3+), return them
-    if (localSchemes && localSchemes.length >= 3) {
-      const aiSummary = await generateSummary(aiConfig, query, localSchemes);
+    // Step 3: Check if local results are relevant (title must closely match query keywords)
+    const queryLower = query.toLowerCase();
+    const queryWords = queryLower.split(/\s+/).filter((w: string) => w.length > 2);
+    const relevantLocal = (localSchemes || []).filter((s: any) => {
+      const titleLower = (s.title || "").toLowerCase();
+      // A result is relevant if at least half the query words appear in title
+      const matchCount = queryWords.filter((w: string) => titleLower.includes(w)).length;
+      return matchCount >= Math.ceil(queryWords.length / 2);
+    });
+
+    if (relevantLocal.length >= 3) {
+      const aiSummary = await generateSummary(aiConfig, query, relevantLocal);
       return new Response(
         JSON.stringify({
           success: true,
-          schemes: localSchemes,
-          total: localSchemes.length,
+          schemes: relevantLocal,
+          total: relevantLocal.length,
           ai_summary: aiSummary,
           source: "database",
         }),
