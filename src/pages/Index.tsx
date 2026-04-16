@@ -649,16 +649,20 @@ const Index = () => {
               {CATEGORIES.map((cat) => {
                 const catSchemes = getSchemesByCategory(cat.key);
                 if (catSchemes.length === 0) return null;
+                const isPrivateJobs = cat.key === 'private_jobs';
                 return (
-                  <section key={cat.key} className="animate-fade-in">
-                    <div className="flex items-center justify-between mb-3">
-                      <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
-                        <cat.icon className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
+                  <section key={cat.key} className={`animate-fade-in ${isPrivateJobs ? 'relative' : ''}`}>
+                    {isPrivateJobs && (
+                      <div className="absolute -inset-1 bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 rounded-2xl opacity-20 blur-sm -z-10" />
+                    )}
+                    <div className={`flex items-center justify-between mb-3 p-2 rounded-xl ${isPrivateJobs ? 'bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/20' : ''}`}>
+                      <h2 className={`text-base md:text-lg font-bold flex items-center gap-2 ${isPrivateJobs ? 'text-white' : ''}`}>
+                        <cat.icon className={`h-4 w-4 md:h-5 md:w-5 ${isPrivateJobs ? 'text-white' : 'text-muted-foreground'}`} />
                         {cat.label}
                       </h2>
                       <button
                         onClick={() => setActiveCategory(cat.key)}
-                        className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline"
+                        className={`text-xs md:text-sm font-medium flex items-center gap-0.5 hover:underline ${isPrivateJobs ? 'text-white/90 hover:text-white' : 'text-primary'}`}
                       >
                         See All <ChevronRight className="h-3.5 w-3.5" />
                       </button>
