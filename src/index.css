@@ -209,6 +209,11 @@
   100% { transform: translateX(-50%); }
 }
 
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 5px hsl(152 69% 41% / 0.4), 0 0 20px hsl(152 69% 41% / 0.2), 0 0 40px hsl(152 69% 41% / 0.1); }
+  50% { box-shadow: 0 0 10px hsl(152 69% 41% / 0.6), 0 0 30px hsl(152 69% 41% / 0.3), 0 0 60px hsl(152 69% 41% / 0.15); }
+}
+
 .pause-ticker {
   animation-play-state: paused !important;
 }
