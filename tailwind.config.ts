@@ -121,6 +121,7 @@ export default {
         "slide-up": "slide-up 0.5s ease-out",
         "hero-scroll": "hero-scroll 30s linear infinite",
         "pulse-soft": "pulse-soft 2s ease-in-out infinite",
+        "pulse-slow": "pulse-soft 3s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
         "float": "float 3s ease-in-out infinite",
         "enter": "fade-in 0.3s ease-out, scale-in 0.2s ease-out",
