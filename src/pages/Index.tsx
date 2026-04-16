@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download, X, Loader2, Settings2 } from "lucide-react";
+import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download, X, Loader2, Settings2, Users } from "lucide-react";
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -127,13 +127,13 @@ const CATEGORIES = [
   { key: "farmers", label: "Farmers", icon: Tractor, color: "bg-secondary/10 text-secondary" },
   { key: "sc_st", label: "SC/ST", icon: Tags, color: "bg-accent/10 text-accent-foreground" },
   { key: "minority", label: "Minority", icon: Moon, color: "bg-purple-100 text-purple-700" },
+  { key: "women_empowerment", label: "Women", icon: Users, color: "bg-pink-100 text-pink-700" },
   { key: "housing", label: "Housing", icon: HomeIcon, color: "bg-orange-100 text-orange-700" },
   { key: "health", label: "Health", icon: Heart, color: "bg-red-100 text-red-700" },
   { key: "education", label: "Education", icon: BookOpen, color: "bg-cyan-100 text-cyan-700" },
-  
   { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
   { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
-  { key: "private_jobs", label: "Private Jobs", icon: ExternalLink, color: "bg-emerald-100 text-emerald-700", link: "https://interreport.in" },
+  { key: "private_jobs", label: "Private Jobs", icon: ExternalLink, color: "bg-emerald-100 text-emerald-700" },
 ];
 
 interface Scheme {
