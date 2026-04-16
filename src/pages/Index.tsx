@@ -126,6 +126,7 @@ const CATEGORIES = [
   { key: "scholarships", label: "Scholarships", icon: GraduationCap, color: "bg-primary/10 text-primary" },
   { key: "farmers", label: "Farmers", icon: Tractor, color: "bg-secondary/10 text-secondary" },
   { key: "sc_st", label: "SC/ST", icon: Tags, color: "bg-accent/10 text-accent-foreground" },
+  { key: "private_jobs", label: "🔥 Private Jobs", icon: ExternalLink, color: "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md", featured: true },
   { key: "minority", label: "Minority", icon: Moon, color: "bg-purple-100 text-purple-700" },
   { key: "women_empowerment", label: "Women", icon: Users, color: "bg-pink-100 text-pink-700" },
   { key: "housing", label: "Housing", icon: HomeIcon, color: "bg-orange-100 text-orange-700" },
@@ -133,7 +134,6 @@ const CATEGORIES = [
   { key: "education", label: "Education", icon: BookOpen, color: "bg-cyan-100 text-cyan-700" },
   { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
   { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
-  { key: "private_jobs", label: "Private Jobs", icon: ExternalLink, color: "bg-emerald-100 text-emerald-700" },
 ];
 
 interface Scheme {
@@ -356,16 +356,19 @@ const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; i
       </a>
     );
   }
+  const isFeatured = 'featured' in cat && cat.featured;
   return (
     <button
       onClick={onClick}
       className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
         isActive
           ? "bg-primary text-primary-foreground shadow-glow"
-          : `${cat.color} hover:scale-105`
+          : isFeatured
+            ? `${cat.color} hover:shadow-lg hover:scale-105 ring-1 ring-emerald-400/30`
+            : `${cat.color} hover:scale-105`
       }`}
     >
-      <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+      <cat.icon className={`h-3.5 w-3.5 md:h-4 md:w-4 ${isFeatured && !isActive ? 'animate-pulse' : ''}`} />
       {cat.label}
     </button>
   );
