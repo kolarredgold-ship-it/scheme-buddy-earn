@@ -149,7 +149,7 @@ For each scheme, provide:
 - title: Official scheme name
 - description: 2-3 sentence description
 - eligibility: Who can apply
-- category: One of [scholarships, farmers, sc_st, minority, housing, health, education, business, govt_jobs]
+- category: One of [scholarships, farmers, sc_st, minority, women_empowerment, housing, health, education, business, govt_jobs, private_jobs]
 - state: Indian state in snake_case or "central" for central govt schemes
 - apply_link: The OFFICIAL government website URL where users can apply. This is MANDATORY. Use the actual .gov.in or .nic.in portal URL. If you're not 100% sure of the exact apply URL, provide the department's official website URL instead.
 - department_website: The official department/ministry website URL (e.g., https://pmkisan.gov.in, https://scholarships.gov.in)
