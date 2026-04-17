@@ -40,7 +40,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const bottomNavItems = [
     { path: "/", icon: Home, label: "Home" },
-    { path: "/#schemes", icon: Briefcase, label: "Schemes" },
     { path: "/mock-interview", icon: Trophy, label: "AI Tools" },
     { path: user ? "/dashboard" : "/login", icon: LayoutDashboard, label: "Dashboard" },
     { path: user ? "/dashboard" : "/login", icon: User, label: "Profile" },
