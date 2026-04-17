@@ -90,36 +90,6 @@ const HERO_SLIDES = [
     badge: "🎓 Upskill",
     stat: "Free Courses",
   },
-  {
-    image: heroAiInterview,
-    title: "AI Mock Interview Training",
-    subtitle: "Practice with AI-powered HR interviews & get instant feedback to ace your next round",
-    cta: "Start Practice",
-    ctaLink: "/mock-interview",
-    badge: "🔥 Hot",
-    stat: "AI Powered",
-    glow: true,
-  },
-  {
-    image: heroReport,
-    title: "Internship Report Generator",
-    subtitle: "Generate professional internship reports instantly — Get Real Experience!",
-    cta: "Generate Report",
-    ctaLink: "/create-report",
-    badge: "🔥 Get Real Experience",
-    stat: "AI Reports",
-    glow: true,
-  },
-  {
-    image: heroHrTraining,
-    title: "AI HR Interview Training",
-    subtitle: "Simulate real HR interview rounds and prepare like a pro with AI coaching",
-    cta: "Train Now",
-    ctaLink: "/mock-interview",
-    badge: "🔥 New",
-    stat: "Live Practice",
-    glow: true,
-  },
 ];
 
 const CATEGORIES = [
@@ -495,22 +465,20 @@ const Index = () => {
           searching={searching}
         />
 
-        {/* Action Buttons */}
+        {/* AI Tools Quick Access */}
         <div className="container mx-auto px-3 md:px-4 mt-3">
-          <div className="grid grid-cols-2 gap-2">
-            <Link to="/create-report">
-              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
-                <FileText className="h-4 w-4 shrink-0" /> AI Internship Report
-              </Button>
-            </Link>
-            <Link to="/mock-interview">
-              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-0 bg-card relative overflow-hidden neon-btn">
-                <span className="absolute inset-0 rounded-xl neon-glow-border" />
-                <Brain className="h-4 w-4 shrink-0 relative z-10" />
-                <span className="relative z-10">AI Mock Interview</span>
-              </Button>
-            </Link>
-          </div>
+          <Link to="/ai-tools" className="block group">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 border border-purple-400/30 px-4 py-3 flex items-center gap-3 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] transition-all">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <Sparkles className="h-5 w-5 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-sm text-foreground">AI Tools</div>
+                <div className="text-[11px] text-muted-foreground truncate">Internship Reports & Mock Interviews — powered by AI</div>
+              </div>
+              <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
+            </div>
+          </Link>
         </div>
 
         {/* Install App Banner */}
@@ -754,59 +722,11 @@ const Index = () => {
               </div>
             </Link>
 
-            {/* AI Mock Interviews - GLOW */}
-            <Link to="/mock-interview" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] hover:border-purple-400/50">
-                <div className="absolute top-2 right-2">
-                  <span className="inline-flex items-center gap-1 bg-purple-500/15 text-purple-700 dark:text-purple-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 Hot</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
-                    <span className="text-xl">🤖</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">AI Mock Interview Training</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Practice with AI-powered HR interviews & get instant feedback</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
+          </div>
+        </div>
 
-            {/* Internship Report Generator - GLOW */}
-            <Link to="/create-report" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)] hover:border-blue-400/50">
-                <div className="absolute top-2 right-2">
-                  <span className="inline-flex items-center gap-1 bg-blue-500/15 text-blue-700 dark:text-blue-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 Get Real Experience</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
-                    <span className="text-xl">📄</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Internship Report Generator</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Generate professional internship reports instantly with AI</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* AI HR Interview Training - GLOW */}
-            <Link to="/mock-interview" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:border-emerald-400/50">
-                <div className="absolute top-2 right-2">
-                  <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 New</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
-                    <span className="text-xl">🤖</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">AI HR Interview Training</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Simulate real HR rounds & ace your next interview</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
+        {/* Note: AI Mock Interview, Internship Report Generator & HR Training moved to /ai-tools */}
+        <div style={{ display: 'none' }}>
           </div>
         </div>
 
