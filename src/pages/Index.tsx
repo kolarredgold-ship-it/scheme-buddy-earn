@@ -725,11 +725,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Note: AI Mock Interview, Internship Report Generator & HR Training moved to /ai-tools */}
-        <div style={{ display: 'none' }}>
-          </div>
-        </div>
-
         {/* Personalize Preferences Popup */}
         {user && (
           <UserPreferences
