@@ -40,9 +40,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const bottomNavItems = [
     { path: "/", icon: Home, label: "Home" },
-    { path: "/mock-interview", icon: Trophy, label: "AI Tools" },
-    { path: user ? "/dashboard" : "/login", icon: LayoutDashboard, label: "Dashboard" },
-    { path: user ? "/dashboard" : "/login", icon: User, label: "Profile" },
+    { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { path: "/subscription", icon: CreditCard, label: "Plans" },
   ];
 
   return (
@@ -247,26 +246,31 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Footer */}
       <Footer />
 
-      {/* Mobile Bottom Nav — always visible like the mockup */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border/60 safe-area-bottom shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-        <div className="flex justify-around items-end py-1.5 px-1">
-          {bottomNavItems.map((item) => {
-            const active = isActive(item.path.split("#")[0]);
-            return (
+      {/* Mobile Bottom Nav */}
+      {user && (
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong safe-area-bottom">
+          <div className="flex justify-around py-1.5 px-2">
+            {bottomNavItems.map((item) => (
               <Link
-                key={item.label}
+                key={item.path}
                 to={item.path}
-                className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl flex-1 transition-all duration-200 ${
-                  active ? "text-primary" : "text-muted-foreground"
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl min-w-[64px] transition-all duration-200 ${
+                  isActive(item.path)
+                    ? "text-primary"
+                    : "text-muted-foreground"
                 }`}
               >
-                <item.icon className={`h-5 w-5 transition-transform duration-200 ${active ? "scale-110" : ""}`} strokeWidth={active ? 2.4 : 2} />
-                <span className={`text-[10px] ${active ? "font-bold" : "font-medium"}`}>{item.label}</span>
+                <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+                  isActive(item.path) ? "bg-primary/10" : ""
+                }`}>
+                  <item.icon className={`h-5 w-5 transition-transform duration-200 ${isActive(item.path) ? "scale-110" : ""}`} />
+                </div>
+                <span className="text-[10px] font-medium">{item.label}</span>
               </Link>
-            );
-          })}
-        </div>
-      </nav>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {/* Personalize Preferences Popup */}
       {user && (
