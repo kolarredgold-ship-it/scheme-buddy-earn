@@ -1,139 +1,71 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download, X, Loader2, Settings2, Users } from "lucide-react";
+import {
+  GraduationCap, Briefcase, BookOpen, Wrench, Award, FileSearch, Layers,
+  Search, ChevronRight, Sparkles, MapPin, Brain, FileText, Bot, Loader2, X,
+  Tractor, Tags, Moon, Home as HomeIcon, Heart, Building2, Landmark, ExternalLink, Users
+} from "lucide-react";
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import heroGraduation from "@/assets/hero-graduation.png";
 
 const INDIAN_STATES = [
   { value: "all", label: "All India" },
   { value: "central", label: "Central Govt" },
   { value: "andhra_pradesh", label: "Andhra Pradesh" },
-  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
-  { value: "assam", label: "Assam" },
   { value: "bihar", label: "Bihar" },
-  { value: "chhattisgarh", label: "Chhattisgarh" },
   { value: "delhi", label: "Delhi" },
-  { value: "goa", label: "Goa" },
   { value: "gujarat", label: "Gujarat" },
   { value: "haryana", label: "Haryana" },
-  { value: "himachal_pradesh", label: "Himachal Pradesh" },
-  { value: "jammu_kashmir", label: "Jammu & Kashmir" },
-  { value: "jharkhand", label: "Jharkhand" },
   { value: "karnataka", label: "Karnataka" },
   { value: "kerala", label: "Kerala" },
-  { value: "ladakh", label: "Ladakh" },
   { value: "madhya_pradesh", label: "Madhya Pradesh" },
   { value: "maharashtra", label: "Maharashtra" },
-  { value: "manipur", label: "Manipur" },
-  { value: "meghalaya", label: "Meghalaya" },
-  { value: "mizoram", label: "Mizoram" },
-  { value: "nagaland", label: "Nagaland" },
   { value: "odisha", label: "Odisha" },
   { value: "punjab", label: "Punjab" },
   { value: "rajasthan", label: "Rajasthan" },
-  { value: "sikkim", label: "Sikkim" },
   { value: "tamil_nadu", label: "Tamil Nadu" },
   { value: "telangana", label: "Telangana" },
-  { value: "tripura", label: "Tripura" },
   { value: "uttar_pradesh", label: "Uttar Pradesh" },
-  { value: "uttarakhand", label: "Uttarakhand" },
   { value: "west_bengal", label: "West Bengal" },
-  { value: "chandigarh", label: "Chandigarh" },
-  { value: "puducherry", label: "Puducherry" },
-  { value: "andaman_nicobar", label: "Andaman & Nicobar" },
-  { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
-  { value: "lakshadweep", label: "Lakshadweep" },
-];
-import hero1 from "@/assets/hero-1.webp";
-import hero2 from "@/assets/hero-2.webp";
-import hero3 from "@/assets/hero-3.webp";
-import heroJobs from "@/assets/hero-jobs.webp";
-import heroSkills from "@/assets/hero-skills.webp";
-import heroGovt from "@/assets/hero-govt.webp";
-import heroAiInterview from "@/assets/hero-ai-interview.webp";
-import heroReport from "@/assets/hero-report.webp";
-import heroHrTraining from "@/assets/hero-hr-training.webp";
-
-const HERO_SLIDES = [
-  {
-    image: heroGovt,
-    title: "Discover Government Schemes",
-    subtitle: "Access 550+ scholarships, subsidies & welfare programs across India",
-    cta: "Explore Now",
-    ctaLink: "/plans",
-    badge: "🏛 Government",
-    stat: "550+ Schemes",
-  },
-  {
-    image: heroJobs,
-    title: "Explore Job Opportunities",
-    subtitle: "Discover curated jobs matching your skills and career aspirations",
-    cta: "Find Jobs",
-    ctaLink: "/career-program",
-    badge: "💼 Jobs",
-    stat: "New Openings",
-  },
-  {
-    image: heroSkills,
-    title: "Skill Development Programs",
-    subtitle: "Upskill with industry-relevant courses & get certified",
-    cta: "Start Learning",
-    ctaLink: "/career-program",
-    badge: "🎓 Upskill",
-    stat: "Free Courses",
-  },
-  {
-    image: heroAiInterview,
-    title: "AI Mock Interview Training",
-    subtitle: "Practice with AI-powered HR interviews & get instant feedback to ace your next round",
-    cta: "Start Practice",
-    ctaLink: "/mock-interview",
-    badge: "🔥 Hot",
-    stat: "AI Powered",
-    glow: true,
-  },
-  {
-    image: heroReport,
-    title: "Internship Report Generator",
-    subtitle: "Generate professional internship reports instantly — Get Real Experience!",
-    cta: "Generate Report",
-    ctaLink: "/create-report",
-    badge: "🔥 Get Real Experience",
-    stat: "AI Reports",
-    glow: true,
-  },
-  {
-    image: heroHrTraining,
-    title: "AI HR Interview Training",
-    subtitle: "Simulate real HR interview rounds and prepare like a pro with AI coaching",
-    cta: "Train Now",
-    ctaLink: "/mock-interview",
-    badge: "🔥 New",
-    stat: "Live Practice",
-    glow: true,
-  },
 ];
 
-const CATEGORIES = [
-  { key: "scholarships", label: "Scholarships", icon: GraduationCap, color: "bg-primary/10 text-primary" },
-  { key: "farmers", label: "Farmers", icon: Tractor, color: "bg-secondary/10 text-secondary" },
-  { key: "sc_st", label: "SC/ST", icon: Tags, color: "bg-accent/10 text-accent-foreground" },
-  { key: "private_jobs", label: "🔥 Private Jobs", icon: ExternalLink, color: "bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/30 animate-pulse-slow", featured: true },
-  { key: "minority", label: "Minority", icon: Moon, color: "bg-purple-100 text-purple-700" },
-  { key: "women_empowerment", label: "Women", icon: Users, color: "bg-pink-100 text-pink-700" },
-  { key: "housing", label: "Housing", icon: HomeIcon, color: "bg-orange-100 text-orange-700" },
-  { key: "health", label: "Health", icon: Heart, color: "bg-red-100 text-red-700" },
-  { key: "education", label: "Education", icon: BookOpen, color: "bg-cyan-100 text-cyan-700" },
-  { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
-  { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
+// Top Categories — grid tiles like the mockup (8 tiles)
+const TOP_CATEGORIES = [
+  { key: "scholarships",  label: "Scholarships", icon: GraduationCap, bg: "bg-blue-50",   fg: "text-blue-600" },
+  { key: "internships",   label: "Internships",  icon: Briefcase,     bg: "bg-emerald-50",fg: "text-emerald-600", link: "/career-program" },
+  { key: "education",     label: "Education",    icon: BookOpen,      bg: "bg-violet-50", fg: "text-violet-600" },
+  { key: "private_jobs",  label: "Jobs",         icon: Briefcase,     bg: "bg-sky-50",    fg: "text-sky-600", featured: true },
+  { key: "skills",        label: "Skills",       icon: Wrench,        bg: "bg-amber-50",  fg: "text-amber-600", link: "/career-program" },
+  { key: "fellowships",   label: "Fellowships",  icon: Award,         bg: "bg-rose-50",   fg: "text-rose-600" },
+  { key: "exams",         label: "Exams",        icon: FileSearch,    bg: "bg-orange-50", fg: "text-orange-600" },
+  { key: "all",           label: "All Schemes",  icon: Layers,        bg: "bg-slate-100", fg: "text-slate-700" },
+];
+
+// Full category list (used for horizontal scheme rails)
+const SCHEME_CATEGORIES = [
+  { key: "scholarships", label: "Scholarships", icon: GraduationCap },
+  { key: "private_jobs", label: "Private Jobs", icon: ExternalLink, featured: true },
+  { key: "farmers", label: "Farmers", icon: Tractor },
+  { key: "women_empowerment", label: "Women Empowerment", icon: Users },
+  { key: "education", label: "Education", icon: BookOpen },
+  { key: "health", label: "Health", icon: Heart },
+  { key: "housing", label: "Housing", icon: HomeIcon },
+  { key: "minority", label: "Minority", icon: Moon },
+  { key: "sc_st", label: "SC/ST", icon: Tags },
+  { key: "business", label: "Business", icon: Building2 },
+  { key: "govt_jobs", label: "Govt Jobs", icon: Landmark },
+];
+
+const AI_TOOLS = [
+  { to: "/mock-interview", title: "AI Interview Training", subtitle: "Practice. Improve. Get Hired.", emoji: "🤖", iconBg: "bg-blue-100" },
+  { to: "/create-report",  title: "Report Generator",     subtitle: "Create Professional Reports in Seconds", emoji: "📝", iconBg: "bg-violet-100" },
+  { to: "/mock-interview", title: "AI Mock Interview",    subtitle: "Real Questions. Smart Feedback.", emoji: "🤖", iconBg: "bg-emerald-100" },
 ];
 
 interface Scheme {
@@ -147,235 +79,25 @@ interface Scheme {
   slug: string;
 }
 
-// Hero Banner with auto-scroll
-const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearch, selectedState, onStateChange, onSearch, searching }: {
-  searchQuery: string;
-  onSearchChange: (val: string) => void;
-  onSearchKeyDown: (e: React.KeyboardEvent) => void;
-  onClearSearch: () => void;
-  selectedState: string;
-  onStateChange: (val: string) => void;
-  onSearch: () => void;
-  searching: boolean;
-}) => {
-  const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const startTimer = useCallback(() => {
-    timerRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 4500);
-  }, []);
-
-  useEffect(() => {
-    startTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [startTimer]);
-
-  const goTo = (i: number) => {
-    setCurrent(i);
-    if (timerRef.current) clearInterval(timerRef.current);
-    startTimer();
-  };
-
-  const slide = HERO_SLIDES[current];
-
-  return (
-    <section className="relative w-full overflow-hidden aspect-[5/4] md:aspect-[16/7]">
-      {HERO_SLIDES.map((s, i) => (
-        <div
-          key={i}
-          className={`absolute inset-0 transition-all duration-1000 ease-out ${
-            i === current ? "opacity-100 scale-100" : "opacity-0 scale-110"
-          }`}
-        >
-          <img
-            src={s.image}
-            alt={s.title}
-            className={`w-full h-full object-cover ${i === current ? "animate-[ken-burns_4.5s_ease-out_forwards]" : ""}`}
-            width={1280}
-            height={512}
-            loading={i === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        </div>
-      ))}
-
-      {/* Content overlay */}
-      <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
-        <div className="max-w-lg">
-          <div
-            key={`badge-${current}`}
-            className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border animate-fade-in ${
-              (slide as any).glow
-                ? "bg-orange-500/30 border-orange-400/40 shadow-[0_0_15px_rgba(249,115,22,0.4)]"
-                : "bg-white/15 border-white/20"
-            }`}
-          >
-            {slide.badge}
-          </div>
-
-          <h1
-            key={current}
-            className="text-2xl md:text-5xl font-extrabold text-white mb-2 md:mb-3 leading-tight animate-fade-in"
-            style={{ fontFamily: 'Plus Jakarta Sans' }}
-          >
-            {slide.title}
-          </h1>
-          <p
-            key={`sub-${current}`}
-            className="text-sm md:text-lg text-white/80 mb-4 md:mb-6 animate-fade-in max-w-md leading-relaxed"
-            style={{ animationDelay: '0.1s' }}
-          >
-            {slide.subtitle}
-          </p>
-
-          <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Link to={slide.ctaLink}>
-              <Button
-                size="sm"
-                className={`rounded-lg font-semibold gap-1 text-[11px] md:text-sm px-2.5 md:px-5 py-1 md:py-1.5 h-auto ${
-                  (slide as any).glow
-                    ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 shadow-[0_0_20px_rgba(249,115,22,0.4)]"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
-                }`}
-              >
-                {slide.cta} <ArrowRight className="h-3 w-3 md:h-3.5 md:w-3.5" />
-              </Button>
-            </Link>
-            <div className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/10">
-              <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-white text-sm font-semibold">{slide.stat}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Search + Location on top of banner */}
-      <div className="absolute top-3 left-0 right-0 z-20 px-3 md:px-10">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-            <input
-              type="text"
-              placeholder="AI Search: 'free laptop Tamil Nadu'"
-              value={searchQuery}
-              onChange={(e) => {
-                onSearchChange(e.target.value);
-              }}
-              onKeyDown={onSearchKeyDown}
-              className="w-full h-10 md:h-11 pl-9 pr-9 rounded-xl bg-white/90 backdrop-blur-md border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all placeholder:text-muted-foreground/60 shadow-lg"
-            />
-            {searchQuery && (
-              <button onClick={onClearSearch} className="absolute right-10 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                <X className="h-4 w-4" />
-              </button>
-            )}
-            <button
-              onClick={onSearch}
-              disabled={searching || searchQuery.trim().length < 3}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground disabled:opacity-40 transition-opacity"
-            >
-              {searching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
-            </button>
-          </div>
-          <Select value={selectedState} onValueChange={onStateChange}>
-            <SelectTrigger className="w-[100px] md:w-[150px] h-10 md:h-11 rounded-xl bg-white/90 backdrop-blur-md border-white/40 text-sm gap-1 shrink-0 shadow-lg">
-              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <SelectValue placeholder="State" />
-            </SelectTrigger>
-            <SelectContent className="max-h-[300px]">
-              {INDIAN_STATES.map((state) => (
-                <SelectItem key={state.value} value={state.value} className="text-sm">
-                  {state.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 flex gap-1 px-3 pb-3 md:px-10 md:pb-4">
-        {HERO_SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            className="flex-1 h-1 rounded-full bg-white/20 overflow-hidden"
-          >
-            <div
-              className={`h-full rounded-full transition-all duration-300 ${
-                i === current
-                  ? "bg-white w-full animate-[hero-progress_4.5s_linear]"
-                  : i < current
-                    ? "bg-white/60 w-full"
-                    : "bg-transparent w-0"
-              }`}
-            />
-          </button>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-// Scheme Card
+// Compact horizontal scheme card
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
-  <Link to={`/scheme/${scheme.slug}`} className="block">
-    <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
-      <CardContent className="p-3 md:p-4">
-        <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium border-border/60">
+  <Link to={`/scheme/${scheme.slug}`} className="block shrink-0 snap-start">
+    <Card className="w-[180px] md:w-[220px] overflow-hidden border-border/50 hover:border-primary/30 hover:shadow-md transition-all bg-card">
+      <CardContent className="p-3">
+        <Badge variant="outline" className="mb-1.5 text-[10px] px-1.5 py-0 font-medium border-border/60">
           {scheme.category}
         </Badge>
-        <h3 className="font-semibold text-xs md:text-sm mb-1 group-hover:text-primary transition-colors leading-tight line-clamp-2">
+        <h3 className="font-semibold text-xs md:text-sm leading-snug line-clamp-2 mb-1">
           {scheme.title}
         </h3>
-        <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 mt-1">{scheme.description}</p>
-        <div className="mt-2 flex items-center text-[10px] md:text-xs text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-          View Details <ChevronRight className="h-3 w-3 ml-0.5" />
-        </div>
+        <p className="text-[10px] text-muted-foreground line-clamp-2">{scheme.description}</p>
       </CardContent>
     </Card>
   </Link>
 );
 
-// Category Chip
-const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
-  if ('link' in cat && cat.link) {
-    return (
-      <a
-        href={cat.link as string}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${cat.color} hover:scale-105`}
-      >
-        <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-        {cat.label}
-      </a>
-    );
-  }
-  const isFeatured = 'featured' in cat && cat.featured;
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-        isActive
-          ? "bg-primary text-primary-foreground shadow-glow"
-          : isFeatured
-            ? `${cat.color} hover:shadow-lg hover:scale-105 ring-1 ring-emerald-400/30`
-            : `${cat.color} hover:scale-105`
-      }`}
-    >
-      <cat.icon className={`h-3.5 w-3.5 md:h-4 md:w-4 ${isFeatured && !isActive ? 'animate-pulse' : ''}`} />
-      {cat.label}
-    </button>
-  );
-};
-
 const Index = () => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -383,25 +105,20 @@ const Index = () => {
   const [selectedState, setSelectedState] = useState("all");
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
   const [aiSummary, setAiSummary] = useState("");
-  const [aiSource, setAiSource] = useState("");
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  // Load user preferences to set default state filter
   useEffect(() => {
     if (!user) return;
     const loadPrefs = async () => {
       const { data } = await supabase
         .from("user_preferences")
-        .select("preferred_state, preferred_categories")
+        .select("preferred_state")
         .eq("user_id", user.id)
         .maybeSingle();
-      if (data) {
-        if (data.preferred_state && data.preferred_state !== "all") {
-          setSelectedState(data.preferred_state);
-        }
-      } else {
-        // No preferences yet — show popup for new users
+      if (data?.preferred_state && data.preferred_state !== "all") {
+        setSelectedState(data.preferred_state);
+      } else if (!data) {
         setPrefsOpen(true);
       }
     };
@@ -410,269 +127,237 @@ const Index = () => {
 
   useEffect(() => {
     const fetchSchemes = async () => {
-      const { data } = await supabase.from("schemes").select("id, title, category, description, image_url, created_at, state, slug").order("created_at", { ascending: false });
+      const { data } = await supabase
+        .from("schemes")
+        .select("id, title, category, description, image_url, created_at, state, slug")
+        .order("created_at", { ascending: false });
       if (data) setSchemes(data as unknown as Scheme[]);
       setLoading(false);
     };
     fetchSchemes();
   }, []);
 
-  // Unified search: local first, then AI if needed
   const handleSearch = async () => {
     const q = searchQuery.trim();
-    if (q.length < 3) {
-      setAiResults(null);
-      setAiSummary("");
-      return;
-    }
-
+    if (q.length < 3) { setAiResults(null); setAiSummary(""); return; }
     setSearching(true);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-scheme-search", {
-        body: { query: q },
-      });
+      const { data, error } = await supabase.functions.invoke("ai-scheme-search", { body: { query: q } });
       if (error) throw error;
       setAiResults(data.schemes || []);
       setAiSummary(data.ai_summary || "");
-      setAiSource(data.source || "database");
-    } catch (err) {
-      console.error("Search error:", err);
+    } catch {
       const local = schemes.filter((s) =>
         s.title.toLowerCase().includes(q.toLowerCase()) ||
         s.description?.toLowerCase().includes(q.toLowerCase())
       );
       setAiResults(local);
-      setAiSummary("");
-      setAiSource("local");
     } finally {
       setSearching(false);
     }
   };
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSearch();
-  };
+  const clearSearch = () => { setSearchQuery(""); setAiResults(null); setAiSummary(""); };
 
-  const clearSearch = () => {
-    setSearchQuery("");
-    setAiResults(null);
-    setAiSummary("");
-  };
-
-  // State-filtered base
   const stateFiltered = selectedState === "all"
     ? schemes
     : schemes.filter((s) => s.state === selectedState);
 
-  const getSchemesByCategory = (cat: string) => {
-    return stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
-  };
+  const getSchemesByCategory = (cat: string) =>
+    stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
 
   const filteredSchemes = activeCategory
     ? stateFiltered.filter((s) => s.category === activeCategory)
     : stateFiltered;
 
-  const recentSchemes = stateFiltered.slice(0, 12);
-
   return (
     <Layout>
-      <div className="pb-24 md:pb-8">
-        {/* Hero Banner with Search */}
-        <HeroBanner
-          searchQuery={searchQuery}
-          onSearchChange={(val) => {
-            setSearchQuery(val);
-            if (val.trim().length < 3) {
-              setAiResults(null);
-              setAiSummary("");
-            }
-          }}
-          onSearchKeyDown={handleSearchKeyDown}
-          onClearSearch={clearSearch}
-          selectedState={selectedState}
-          onStateChange={setSelectedState}
-          onSearch={handleSearch}
-          searching={searching}
-        />
+      <div className="pb-24 md:pb-8 bg-background">
+        <div className="container mx-auto max-w-2xl px-4 pt-3 space-y-4">
 
-        {/* Action Buttons */}
-        <div className="container mx-auto px-3 md:px-4 mt-3">
-          <div className="grid grid-cols-2 gap-2">
-            <Link to="/create-report">
-              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-primary/30 hover:bg-primary/5">
-                <FileText className="h-4 w-4 shrink-0" /> AI Internship Report
-              </Button>
-            </Link>
-            <Link to="/mock-interview">
-              <Button variant="outline" className="w-full h-11 rounded-xl gap-1.5 text-[11px] md:text-sm font-semibold border-0 bg-card relative overflow-hidden neon-btn">
-                <span className="absolute inset-0 rounded-xl neon-glow-border" />
-                <Brain className="h-4 w-4 shrink-0 relative z-10" />
-                <span className="relative z-10">AI Mock Interview</span>
-              </Button>
-            </Link>
+          {/* Search bar */}
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search schemes, scholarships, internships..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (e.target.value.trim().length < 3) { setAiResults(null); setAiSummary(""); }
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                className="w-full h-12 pl-4 pr-10 rounded-2xl bg-card border border-border/60 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted-foreground/70 shadow-sm"
+              />
+              {searchQuery && (
+                <button onClick={clearSearch} className="absolute right-12 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+              <button
+                onClick={handleSearch}
+                disabled={searching}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
+                aria-label="Search"
+              >
+                {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Install App Banner */}
-        <div className="container mx-auto px-3 md:px-4 mt-4">
-          <Link to="/install" className="block">
-            <div className="rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 flex items-center gap-2 hover:opacity-95 transition-opacity">
-              <Download className="h-4 w-4 text-primary-foreground shrink-0" />
-              <span className="text-xs font-semibold text-primary-foreground flex-1">Install Techrola App</span>
-              <ChevronRight className="h-4 w-4 text-primary-foreground/60 shrink-0" />
+          {/* State select */}
+          <Select value={selectedState} onValueChange={setSelectedState}>
+            <SelectTrigger className="h-10 rounded-xl bg-card border-border/60 text-sm gap-1 shadow-sm">
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="max-h-[300px]">
+              {INDIAN_STATES.map((state) => (
+                <SelectItem key={state.value} value={state.value} className="text-sm">{state.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Hero Card */}
+          <Link to="/plans" className="block">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[hsl(220,70%,20%)] via-[hsl(220,75%,25%)] to-[hsl(220,80%,30%)] p-5 md:p-6 shadow-lg shadow-blue-900/20">
+              <div className="relative z-10 max-w-[60%]">
+                <h1 className="text-xl md:text-3xl font-extrabold text-white leading-tight mb-1.5" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                  Find Every Opportunity You Deserve
+                </h1>
+                <p className="text-xs md:text-sm text-white/80 font-medium">Easy. Fast. Reliable.</p>
+              </div>
+              <img
+                src={heroGraduation}
+                alt="Graduation"
+                width={140}
+                height={140}
+                className="absolute right-2 bottom-0 h-[110px] md:h-[140px] w-auto object-contain"
+              />
             </div>
           </Link>
-        </div>
 
-        {/* Category Chips */}
-        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-            <button
-              onClick={() => setActiveCategory(null)}
-              className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-                !activeCategory
-                  ? "bg-primary text-primary-foreground shadow-glow"
-                  : "bg-muted text-muted-foreground hover:scale-105"
-              }`}
-            >
-              All
-            </button>
-            {CATEGORIES.map((cat) => (
-              <CategoryChip
-                key={cat.key}
-                cat={cat}
-                isActive={activeCategory === cat.key}
-                onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6 space-y-8">
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="h-8 w-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+          {/* Top Categories */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base md:text-lg font-bold text-foreground" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                Top Categories
+              </h2>
+              <button
+                onClick={() => setActiveCategory(null)}
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                View All
+              </button>
             </div>
-          ) : searching ? (
-            <div className="flex flex-col items-center py-16 gap-3 animate-fade-in">
+            <div className="grid grid-cols-4 gap-2.5">
+              {TOP_CATEGORIES.map((cat) => {
+                const Inner = (
+                  <div className="flex flex-col items-center gap-1.5 p-2.5 rounded-2xl bg-card border border-border/40 hover:border-primary/30 hover:shadow-md transition-all">
+                    <div className={`relative h-12 w-12 rounded-xl flex items-center justify-center ${cat.bg} ${cat.featured ? 'ring-2 ring-sky-300 shadow-md shadow-sky-200/60 animate-pulse-slow' : ''}`}>
+                      <cat.icon className={`h-6 w-6 ${cat.fg}`} strokeWidth={2.2} />
+                      {cat.featured && (
+                        <span className="absolute -top-1 -right-1 text-[8px]">🔥</span>
+                      )}
+                    </div>
+                    <span className="text-[11px] font-semibold text-foreground/80 text-center leading-tight">{cat.label}</span>
+                  </div>
+                );
+                if (cat.link) return <Link key={cat.key} to={cat.link}>{Inner}</Link>;
+                return (
+                  <button
+                    key={cat.key}
+                    onClick={() => setActiveCategory(cat.key === "all" ? null : cat.key)}
+                    className="text-left"
+                  >
+                    {Inner}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* AI Tools for Your Success */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base md:text-lg font-bold text-foreground" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                AI Tools for Your Success
+              </h2>
+              <Link to="/mock-interview" className="text-xs font-semibold text-primary hover:underline">View All</Link>
+            </div>
+            <div className="space-y-2.5">
+              {AI_TOOLS.map((tool) => (
+                <Link key={tool.title} to={tool.to} className="flex items-center gap-3 p-3 rounded-2xl bg-card border border-border/40 hover:border-primary/30 hover:shadow-md transition-all">
+                  <div className={`h-11 w-11 rounded-xl flex items-center justify-center text-2xl shrink-0 ${tool.iconBg}`}>
+                    {tool.emoji}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-bold text-foreground leading-tight">{tool.title}</h3>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{tool.subtitle}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                </Link>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        {/* Schemes Section — wider container, side-scrolling rails */}
+        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-6 space-y-6">
+          {loading ? (
+            <div className="flex justify-center py-16">
               <Loader2 className="h-8 w-8 text-primary animate-spin" />
-              <p className="text-sm text-muted-foreground">AI is searching for schemes...</p>
             </div>
           ) : aiResults ? (
-            /* AI Search Results */
             <section className="animate-fade-in">
               {aiSummary && (
                 <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 mb-4">
                   <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-foreground/80">{aiSummary}</p>
-                    {aiSource === "ai_enriched" && (
-                      <p className="text-[10px] text-primary mt-1 font-medium">✨ AI discovered new schemes for you</p>
-                    )}
-                  </div>
+                  <p className="text-xs text-foreground/80">{aiSummary}</p>
                 </div>
               )}
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base md:text-lg font-bold">
-                  {aiResults.length} result{aiResults.length !== 1 ? 's' : ''} found
-                </h2>
-                <button onClick={clearSearch} className="text-xs text-primary font-medium hover:underline">
-                  Clear Search
-                </button>
+                <h2 className="text-base md:text-lg font-bold">{aiResults.length} result{aiResults.length !== 1 ? 's' : ''}</h2>
+                <button onClick={clearSearch} className="text-xs text-primary font-medium hover:underline">Clear</button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                {aiResults.slice(0, 20).map((scheme: any) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} />
-                ))}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {aiResults.slice(0, 20).map((s) => <SchemeCard key={s.id} scheme={s} />)}
               </div>
-              {aiResults.length === 0 && (
-                <div className="text-center py-12">
-                  <Search className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground text-sm">No schemes found. Try different keywords.</p>
-                </div>
-              )}
             </section>
           ) : activeCategory ? (
-            /* Category View */
             <section className="animate-fade-in">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
-                  {CATEGORIES.find(c => c.key === activeCategory)?.label} Schemes
+                <h2 className="text-base md:text-lg font-bold">
+                  {SCHEME_CATEGORIES.find(c => c.key === activeCategory)?.label || activeCategory} Schemes
                 </h2>
-                <button
-                  onClick={() => setActiveCategory(null)}
-                  className="text-xs text-primary font-medium flex items-center gap-0.5 hover:underline"
-                >
-                  Clear Filter
-                </button>
+                <button onClick={() => setActiveCategory(null)} className="text-xs text-primary font-medium hover:underline">Clear</button>
               </div>
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
-                {filteredSchemes.slice(0, 30).map((scheme) => (
-                  <div key={scheme.id} className="w-full">
-                    <SchemeCard scheme={scheme} />
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {filteredSchemes.slice(0, 30).map((s) => <SchemeCard key={s.id} scheme={s} />)}
               </div>
             </section>
           ) : (
-            /* Default: Category-wise horizontal scroll */
             <>
-              {/* Recent / Trending - Text ticker */}
-              <section>
-                <div className="mb-3">
-                  <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent" />
-                    Trending Schemes
-                  </h2>
-                </div>
-                <div className="overflow-hidden relative group/ticker [&:hover>div]:pause-ticker [&:active>div]:pause-ticker">
-                  <div className="flex animate-[ticker_30s_linear_infinite] gap-4 w-max">
-                    {[...recentSchemes, ...recentSchemes].map((scheme, idx) => (
-                      <Link
-                        key={`${scheme.id}-${idx}`}
-                        to={`/scheme/${scheme.slug}`}
-                        className="flex items-center gap-2 bg-card border border-border/50 rounded-xl px-4 py-2.5 hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0"
-                      >
-                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium border-border/60 shrink-0">
-                          {scheme.category}
-                        </Badge>
-                        <span className="text-xs md:text-sm font-medium truncate max-w-[220px]">{scheme.title}</span>
-                        <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              {/* Category Sections */}
-              {CATEGORIES.map((cat) => {
+              {SCHEME_CATEGORIES.map((cat) => {
                 const catSchemes = getSchemesByCategory(cat.key);
                 if (catSchemes.length === 0) return null;
-                const isPrivateJobs = cat.key === 'private_jobs';
+                const isFeatured = cat.featured;
                 return (
-                  <section key={cat.key} className={`animate-fade-in ${isPrivateJobs ? 'relative' : ''}`}>
-                    {isPrivateJobs && (
-                      <div className="absolute -inset-1 bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 rounded-2xl opacity-20 blur-sm -z-10" />
-                    )}
-                    <div className={`flex items-center justify-between mb-3 p-2 rounded-xl ${isPrivateJobs ? 'bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/20' : ''}`}>
-                      <h2 className={`text-base md:text-lg font-bold flex items-center gap-2 ${isPrivateJobs ? 'text-white' : ''}`}>
-                        <cat.icon className={`h-4 w-4 md:h-5 md:w-5 ${isPrivateJobs ? 'text-white' : 'text-muted-foreground'}`} />
+                  <section key={cat.key} className="animate-fade-in">
+                    <div className={`flex items-center justify-between mb-3 px-1 ${isFeatured ? 'py-2 px-3 rounded-xl bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-md shadow-blue-300/40' : ''}`}>
+                      <h2 className={`text-sm md:text-base font-bold flex items-center gap-2 ${isFeatured ? 'text-white' : 'text-foreground'}`}>
+                        <cat.icon className={`h-4 w-4 ${isFeatured ? 'text-white' : 'text-muted-foreground'}`} />
                         {cat.label}
                       </h2>
                       <button
                         onClick={() => setActiveCategory(cat.key)}
-                        className={`text-xs md:text-sm font-medium flex items-center gap-0.5 hover:underline ${isPrivateJobs ? 'text-white/90 hover:text-white' : 'text-primary'}`}
+                        className={`text-xs font-medium flex items-center gap-0.5 hover:underline ${isFeatured ? 'text-white' : 'text-primary'}`}
                       >
                         See All <ChevronRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-                      {catSchemes.map((scheme) => (
-                        <div key={scheme.id} className="snap-start">
-                          <SchemeCard scheme={scheme} />
-                        </div>
-                      ))}
+                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory -mx-3 px-3 md:-mx-4 md:px-4">
+                      {catSchemes.map((s) => <SchemeCard key={s.id} scheme={s} />)}
                     </div>
                   </section>
                 );
@@ -681,143 +366,11 @@ const Index = () => {
           )}
         </div>
 
-        {/* CTA Banner */}
-        {!user && (
-          <div className="container mx-auto px-3 md:px-4 mt-10">
-            <div className="rounded-2xl bg-gradient-primary p-6 md:p-10 text-center">
-              <h2 className="text-xl md:text-3xl font-extrabold text-primary-foreground mb-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                Unlock All Schemes for Just ₹1000
-              </h2>
-              <p className="text-primary-foreground/80 text-sm md:text-base mb-5 max-w-md mx-auto">
-                Get full access to eligibility details, required documents, and direct apply links for 550+ schemes.
-              </p>
-              <Link to="/plans">
-                <Button size="lg" className="rounded-xl bg-card text-foreground hover:bg-card/90 font-semibold gap-2 shadow-lg">
-                  Get Started Free <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* Featured Highlights Section */}
-        <div className="container mx-auto px-3 md:px-4 mt-10">
-          <div className="text-center mb-6">
-            <h2 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-              Everything You Need to <span className="text-primary">Build Your Career</span>
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">Powered by AI & Real Opportunities</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {/* Job Opportunities */}
-            <Link to="/career-program" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-primary/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">💼</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Explore Job Opportunities</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Discover curated jobs matching your skills and aspirations</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Skill Development */}
-            <Link to="/career-program" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-secondary/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">🎓</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Skill Development Programs</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Upskill with industry-relevant courses & certifications</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Government Schemes */}
-            <Link to="/#schemes" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-accent/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">🏛</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Government Scheme Updates</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 550+ latest government welfare programs</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* AI Mock Interviews - GLOW */}
-            <Link to="/mock-interview" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] hover:border-purple-400/50">
-                <div className="absolute top-2 right-2">
-                  <span className="inline-flex items-center gap-1 bg-purple-500/15 text-purple-700 dark:text-purple-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 Hot</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
-                    <span className="text-xl">🤖</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">AI Mock Interview Training</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Practice with AI-powered HR interviews & get instant feedback</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Internship Report Generator - GLOW */}
-            <Link to="/create-report" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(59,130,246,0.25)] hover:border-blue-400/50">
-                <div className="absolute top-2 right-2">
-                  <span className="inline-flex items-center gap-1 bg-blue-500/15 text-blue-700 dark:text-blue-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 Get Real Experience</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
-                    <span className="text-xl">📄</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Internship Report Generator</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Generate professional internship reports instantly with AI</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* AI HR Interview Training - GLOW */}
-            <Link to="/mock-interview" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-400/30 p-5 transition-all duration-300 hover:shadow-[0_0_25px_rgba(16,185,129,0.25)] hover:border-emerald-400/50">
-                <div className="absolute top-2 right-2">
-                  <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">🔥 New</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse" style={{ animationDuration: '3s' }}>
-                    <span className="text-xl">🤖</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">AI HR Interview Training</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Simulate real HR rounds & ace your next interview</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-
-        {/* Personalize Preferences Popup */}
         {user && (
           <UserPreferences
             open={prefsOpen}
             onOpenChange={setPrefsOpen}
-            onPreferencesSaved={(state) => {
-              if (state !== "all") setSelectedState(state);
-            }}
+            onPreferencesSaved={(state) => { if (state !== "all") setSelectedState(state); }}
           />
         )}
       </div>
