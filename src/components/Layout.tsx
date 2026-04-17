@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2 } from "lucide-react";
+import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2, Sparkles } from "lucide-react";
 import UserPreferences from "@/components/UserPreferences";
 import NotificationBell from "@/components/NotificationBell";
 import techrolaLogo from "@/assets/techrola_logo.webp";
@@ -39,9 +39,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   const bottomNavItems = [
-    { path: "/", icon: Home, label: "Home" },
-    { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { path: "/subscription", icon: CreditCard, label: "Plans" },
+    { type: "menu" as const, icon: Menu, label: "Menu" },
+    { type: "link" as const, path: "/", icon: Home, label: "Home" },
+    { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "AI Tools" },
+    { type: "link" as const, path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { type: "link" as const, path: user ? "/dashboard" : "/login", icon: User, label: "Profile" },
   ];
 
   return (
@@ -246,31 +248,52 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Footer */}
       <Footer />
 
-      {/* Mobile Bottom Nav */}
-      {user && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong safe-area-bottom">
-          <div className="flex justify-around py-1.5 px-2">
-            {bottomNavItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl min-w-[64px] transition-all duration-200 ${
-                  isActive(item.path)
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                }`}
-              >
+      {/* Mobile Bottom Nav - always visible */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong safe-area-bottom border-t border-border/40">
+        <div className="flex justify-around py-1.5 px-1">
+          {bottomNavItems.map((item, idx) => {
+            const active = item.type === "link" && isActive(item.path);
+            const isAITools = item.type === "link" && item.path === "/ai-tools";
+            const content = (
+              <>
                 <div className={`p-1.5 rounded-xl transition-all duration-200 ${
-                  isActive(item.path) ? "bg-primary/10" : ""
-                }`}>
-                  <item.icon className={`h-5 w-5 transition-transform duration-200 ${isActive(item.path) ? "scale-110" : ""}`} />
+                  active ? "bg-primary/10" : ""
+                } ${isAITools ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20" : ""}`}>
+                  <item.icon className={`h-5 w-5 transition-transform duration-200 ${
+                    active ? "scale-110 text-primary" : "text-muted-foreground"
+                  } ${isAITools ? "text-purple-600 dark:text-purple-300" : ""}`} />
                 </div>
-                <span className="text-[10px] font-medium">{item.label}</span>
+                <span className={`text-[10px] font-medium ${
+                  active ? "text-primary" : "text-muted-foreground"
+                } ${isAITools ? "text-purple-600 dark:text-purple-300 font-semibold" : ""}`}>{item.label}</span>
+              </>
+            );
+            if (item.type === "menu") {
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[60px]"
+                >
+                  {content}
+                </button>
+              );
+            }
+            return (
+              <Link
+                key={idx}
+                to={item.path}
+                className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[60px]"
+              >
+                {content}
               </Link>
-            ))}
-          </div>
-        </nav>
-      )}
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Bottom nav spacer for mobile */}
+      <div className="md:hidden h-16" aria-hidden="true" />
 
       {/* Personalize Preferences Popup */}
       {user && (

@@ -23,6 +23,7 @@ const AdminWithdrawals = lazy(() => import("./pages/admin/AdminWithdrawals"));
 const CreateReport = lazy(() => import("./pages/CreateReport"));
 const AIReportGenerator = lazy(() => import("./pages/AIReportGenerator"));
 const MockInterview = lazy(() => import("./pages/MockInterview"));
+const AITools = lazy(() => import("./pages/AITools"));
 const Install = lazy(() => import("./pages/Install"));
 const CareerProgram = lazy(() => import("./pages/CareerProgram"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
@@ -81,6 +82,7 @@ const App = () => {
               <Route path="/create-report" element={<CreateReport />} />
               <Route path="/ai-report" element={<AIReportGenerator />} />
               <Route path="/mock-interview" element={<MockInterview />} />
+              <Route path="/ai-tools" element={<AITools />} />
               <Route path="/install" element={<Install />} />
               <Route path="/career-program" element={<CareerProgram />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
