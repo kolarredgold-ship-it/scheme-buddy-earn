@@ -114,11 +114,13 @@ Deno.serve(async (req) => {
 
     let targetState = "all";
     let mode = "check";
+    let focus: string | undefined;
     
     try {
       const body = await req.json();
       targetState = body.state || "all";
       mode = body.mode || "check";
+      focus = body.focus;
     } catch {
       // defaults
     }
@@ -166,8 +168,10 @@ Deno.serve(async (req) => {
       );
     }
 
+    // For private_jobs focus, ignore the 30-cap and always try to add fresh listings
+    const isPrivateJobsFocus = focus === "private_jobs";
     const statesToSync = targetState === "all"
-      ? ALL_STATES.filter(s => (stateCounts[s] || 0) < 30)
+      ? ALL_STATES.filter(s => isPrivateJobsFocus || (stateCounts[s] || 0) < 30)
       : [targetState];
 
     let totalAdded = 0;
@@ -179,12 +183,12 @@ Deno.serve(async (req) => {
     for (const state of statesToSync.slice(0, 5)) {
       const stateLabel = state.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       const currentCount = stateCounts[state] || 0;
-      if (currentCount >= 30) {
+      if (!isPrivateJobsFocus && currentCount >= 30) {
         skipped.push(state);
         continue;
       }
 
-      const schemesToGenerate = Math.min(10, 30 - currentCount);
+      const schemesToGenerate = isPrivateJobsFocus ? 10 : Math.min(10, 30 - currentCount);
       const existingForState = (existingSchemes || [])
         .filter((s: any) => s.state === state)
         .map((s: any) => s.title);
@@ -195,13 +199,13 @@ Deno.serve(async (req) => {
 
       for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
         try {
-          schemes = await fetchSchemesFromAI(aiConfig, state, stateLabel, schemesToGenerate, existingForState);
+          schemes = await fetchSchemesFromAI(aiConfig, state, stateLabel, schemesToGenerate, existingForState, focus);
           succeeded = true;
           break;
         } catch (err) {
           console.error(`Attempt ${attempt}/${MAX_RETRIES} failed for ${state}:`, err.message);
           if (attempt < MAX_RETRIES) {
-            await new Promise(r => setTimeout(r, 2000)); // wait 2s before retry
+            await new Promise(r => setTimeout(r, 2000));
           }
         }
       }
@@ -219,7 +223,7 @@ Deno.serve(async (req) => {
         })
         .map((s: SchemeData) => ({
           title: s.title,
-          category: s.category || "education",
+          category: isPrivateJobsFocus ? "private_jobs" : (s.category || "education"),
           state: state,
           description: s.description,
           eligibility: s.eligibility || null,
