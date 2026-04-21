@@ -465,33 +465,6 @@ const Index = () => {
           searching={searching}
         />
 
-        {/* AI Tools Quick Access */}
-        <div className="container mx-auto px-3 md:px-4 mt-3">
-          <Link to="/ai-tools" className="block group">
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 border border-purple-400/30 px-4 py-3 flex items-center gap-3 hover:shadow-[0_0_25px_rgba(168,85,247,0.25)] transition-all">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                <Sparkles className="h-5 w-5 text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-bold text-sm text-foreground">AI Tools</div>
-                <div className="text-[11px] text-muted-foreground truncate">Internship Reports & Mock Interviews — powered by AI</div>
-              </div>
-              <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0" />
-            </div>
-          </Link>
-        </div>
-
-        {/* Install App Banner */}
-        <div className="container mx-auto px-3 md:px-4 mt-4">
-          <Link to="/install" className="block">
-            <div className="rounded-xl bg-gradient-to-r from-primary to-secondary px-3 py-2 flex items-center gap-2 hover:opacity-95 transition-opacity">
-              <Download className="h-4 w-4 text-primary-foreground shrink-0" />
-              <span className="text-xs font-semibold text-primary-foreground flex-1">Install Techrola App</span>
-              <ChevronRight className="h-4 w-4 text-primary-foreground/60 shrink-0" />
-            </div>
-          </Link>
-        </div>
-
         {/* Category Chips */}
         <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
           <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
