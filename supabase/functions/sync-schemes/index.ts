@@ -36,13 +36,33 @@ async function fetchSchemesFromAI(
   state: string,
   stateLabel: string,
   schemesToGenerate: number,
-  existingForState: string[]
+  existingForState: string[],
+  focus?: string
 ): Promise<SchemeData[]> {
-  const prompt = `Generate ${schemesToGenerate} real, currently active government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
+  const isPrivateJobs = focus === "private_jobs";
+
+  const prompt = isPrivateJobs
+    ? `Generate ${schemesToGenerate} REAL, currently OPEN private sector job openings in ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
+
+Focus on actual companies hiring NOW in ${stateLabel} (IT, BPO, manufacturing, retail, banking, startups, MNCs etc.).
+
+Return a JSON array. Each object must have:
+- title: "Job Role at Company Name" (e.g., "Software Engineer at Infosys", "Customer Support at Wipro")
+- category: must be exactly "private_jobs"
+- description: 2-3 sentence description of the role, location & company
+- eligibility: Required qualifications, experience, skills
+- documents: Required documents (resume, ID proof, certificates, etc.)
+- apply_link: Direct application URL on company careers page or LinkedIn/Naukri
+- tags: Array like ["full-time", "fresher", "experienced", "remote", "wfh", "it", "bpo"]
+- beneficiary_type: One of: youth, general, students
+- source_website: Company careers page or job portal URL
+
+Focus on REAL, VERIFIABLE openings. Return ONLY a valid JSON array.`
+    : `Generate ${schemesToGenerate} real, currently active government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
 
 Return a JSON array. Each object must have:
 - title: Official scheme name
-- category: One of: scholarships, farmers, sc_st, minority, housing, health, education, business, govt_jobs
+- category: One of: scholarships, farmers, sc_st, minority, housing, health, education, business, govt_jobs, private_jobs
 - description: 2-3 sentence description
 - eligibility: Who can apply
 - documents: Required documents (comma-separated)
@@ -62,7 +82,7 @@ Focus on REAL schemes from official state departments. Return ONLY a valid JSON 
     body: JSON.stringify({
       model: aiConfig.model,
       messages: [
-        { role: "system", content: "You are a government scheme research assistant. Only output valid JSON arrays. No markdown, no explanations." },
+        { role: "system", content: isPrivateJobs ? "You are a job-listings research assistant. Only output valid JSON arrays of real private-sector openings. No markdown, no explanations." : "You are a government scheme research assistant. Only output valid JSON arrays. No markdown, no explanations." },
         { role: "user", content: prompt }
       ],
       temperature: 0.3,
@@ -94,11 +114,13 @@ Deno.serve(async (req) => {
 
     let targetState = "all";
     let mode = "check";
+    let focus: string | undefined;
     
     try {
       const body = await req.json();
       targetState = body.state || "all";
       mode = body.mode || "check";
+      focus = body.focus;
     } catch {
       // defaults
     }
@@ -146,8 +168,10 @@ Deno.serve(async (req) => {
       );
     }
 
+    // For private_jobs focus, ignore the 30-cap and always try to add fresh listings
+    const isPrivateJobsFocus = focus === "private_jobs";
     const statesToSync = targetState === "all"
-      ? ALL_STATES.filter(s => (stateCounts[s] || 0) < 30)
+      ? ALL_STATES.filter(s => isPrivateJobsFocus || (stateCounts[s] || 0) < 30)
       : [targetState];
 
     let totalAdded = 0;
@@ -159,12 +183,12 @@ Deno.serve(async (req) => {
     for (const state of statesToSync.slice(0, 5)) {
       const stateLabel = state.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       const currentCount = stateCounts[state] || 0;
-      if (currentCount >= 30) {
+      if (!isPrivateJobsFocus && currentCount >= 30) {
         skipped.push(state);
         continue;
       }
 
-      const schemesToGenerate = Math.min(10, 30 - currentCount);
+      const schemesToGenerate = isPrivateJobsFocus ? 10 : Math.min(10, 30 - currentCount);
       const existingForState = (existingSchemes || [])
         .filter((s: any) => s.state === state)
         .map((s: any) => s.title);
@@ -175,13 +199,13 @@ Deno.serve(async (req) => {
 
       for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
         try {
-          schemes = await fetchSchemesFromAI(aiConfig, state, stateLabel, schemesToGenerate, existingForState);
+          schemes = await fetchSchemesFromAI(aiConfig, state, stateLabel, schemesToGenerate, existingForState, focus);
           succeeded = true;
           break;
         } catch (err) {
           console.error(`Attempt ${attempt}/${MAX_RETRIES} failed for ${state}:`, err.message);
           if (attempt < MAX_RETRIES) {
-            await new Promise(r => setTimeout(r, 2000)); // wait 2s before retry
+            await new Promise(r => setTimeout(r, 2000));
           }
         }
       }
@@ -199,7 +223,7 @@ Deno.serve(async (req) => {
         })
         .map((s: SchemeData) => ({
           title: s.title,
-          category: s.category || "education",
+          category: isPrivateJobsFocus ? "private_jobs" : (s.category || "education"),
           state: state,
           description: s.description,
           eligibility: s.eligibility || null,
