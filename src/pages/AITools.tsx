@@ -63,19 +63,19 @@ const AITools = () => {
           {tools.map((t, i) => (
             <Link key={i} to={t.to} className="group">
               <div
-                className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} p-5 md:p-6 transition-all duration-300 ${t.glow} h-full`}
+                className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} p-4 md:p-6 transition-all duration-300 ${t.glow} h-full`}
               >
-                <div className="absolute top-3 right-3">
-                  <span className={`inline-flex items-center gap-1 ${t.badgeBg} rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider`}>
-                    {t.badge}
-                  </span>
-                </div>
                 <div className="flex items-start gap-3 md:gap-4">
-                  <div className={`h-12 w-12 md:h-14 md:w-14 rounded-2xl ${t.iconBg} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse`} style={{ animationDuration: '3s' }}>
-                    <span className="text-2xl md:text-3xl">{t.icon}</span>
+                  <div className={`h-11 w-11 md:h-14 md:w-14 rounded-2xl ${t.iconBg} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform animate-pulse`} style={{ animationDuration: '3s' }}>
+                    <span className="text-xl md:text-3xl">{t.icon}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-base md:text-lg text-foreground mb-1.5">{t.title}</h3>
+                    <div className="flex items-start justify-between gap-2 mb-1.5">
+                      <h3 className="font-bold text-[15px] md:text-lg text-foreground leading-tight flex-1 min-w-0">{t.title}</h3>
+                      <span className={`inline-flex items-center gap-1 ${t.badgeBg} rounded-full px-1.5 py-0.5 text-[9px] md:text-[10px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0`}>
+                        {t.badge}
+                      </span>
+                    </div>
                     <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-3">{t.desc}</p>
                     <div className="inline-flex items-center gap-1 text-xs md:text-sm font-semibold text-primary group-hover:gap-2 transition-all">
                       Open <ArrowRight className="h-3.5 w-3.5" />
