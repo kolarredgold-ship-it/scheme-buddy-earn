@@ -39,11 +39,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   const bottomNavItems = [
-    { type: "menu" as const, icon: Menu, label: "Menu" },
     { type: "link" as const, path: "/", icon: Home, label: "Home" },
     { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "AI Tools" },
     { type: "link" as const, path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { type: "link" as const, path: user ? "/dashboard" : "/login", icon: User, label: "Profile" },
+    { type: "link" as const, path: "/install", icon: Download, label: "Install App" },
   ];
 
   return (
