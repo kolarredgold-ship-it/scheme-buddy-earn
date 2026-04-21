@@ -251,10 +251,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong safe-area-bottom border-t border-border/40">
         <div className="flex justify-around py-1.5 px-1">
           {bottomNavItems.map((item, idx) => {
-            const active = item.type === "link" && isActive(item.path);
-            const isAITools = item.type === "link" && item.path === "/ai-tools";
-            const content = (
-              <>
+            const active = isActive(item.path);
+            const isAITools = item.path === "/ai-tools";
+            return (
+              <Link
+                key={idx}
+                to={item.path}
+                className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[60px]"
+              >
                 <div className={`p-1.5 rounded-xl transition-all duration-200 ${
                   active ? "bg-primary/10" : ""
                 } ${isAITools ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20" : ""}`}>
@@ -265,26 +269,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <span className={`text-[10px] font-medium ${
                   active ? "text-primary" : "text-muted-foreground"
                 } ${isAITools ? "text-purple-600 dark:text-purple-300 font-semibold" : ""}`}>{item.label}</span>
-              </>
-            );
-            if (item.type === "menu") {
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[60px]"
-                >
-                  {content}
-                </button>
-              );
-            }
-            return (
-              <Link
-                key={idx}
-                to={item.path}
-                className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[60px]"
-              >
-                {content}
               </Link>
             );
           })}
