@@ -125,6 +125,30 @@ export type Database = {
         }
         Relationships: []
       }
+      processed_payments: {
+        Row: {
+          amount: number
+          ap_transaction_id: string
+          created_at: string
+          id: string
+          order_id: string
+        }
+        Insert: {
+          amount?: number
+          ap_transaction_id: string
+          created_at?: string
+          id?: string
+          order_id: string
+        }
+        Update: {
+          amount?: number
+          ap_transaction_id?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
