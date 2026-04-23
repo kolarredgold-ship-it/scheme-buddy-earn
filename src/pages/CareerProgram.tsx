@@ -349,7 +349,7 @@ const CareerProgram = () => {
       case 3:
         if (isCompleted || profile?.referral_code?.startsWith("EMP")) {
           const code = profile?.referral_code || "";
-          const link = `${window.location.origin}/signup?ref=${code}`;
+          const link = `https://techrola.in/signup?ref=${code}`;
           return (
             <div className="space-y-3">
               <CompletedBadge text="Referral Code Generated" />
