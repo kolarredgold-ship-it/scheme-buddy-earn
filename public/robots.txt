@@ -1,8 +1,33 @@
+# Techrola robots.txt
+# Sitemap is regenerated on every publish (build-time) and served from the CDN.
+
 User-agent: Googlebot
 Allow: /
+Allow: /scheme/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /emp
+Disallow: /earnings
+Disallow: /withdrawals
+Disallow: /subscription
+Disallow: /payment-status
+Disallow: /login
+Disallow: /signup
 
 User-agent: Bingbot
 Allow: /
+Allow: /scheme/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /emp
+Disallow: /earnings
+Disallow: /withdrawals
+Disallow: /subscription
+Disallow: /payment-status
+Disallow: /login
+Disallow: /signup
 
 User-agent: Twitterbot
 Allow: /
@@ -12,5 +37,16 @@ Allow: /
 
 User-agent: *
 Allow: /
+Allow: /scheme/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /emp
+Disallow: /earnings
+Disallow: /withdrawals
+Disallow: /subscription
+Disallow: /payment-status
+Disallow: /login
+Disallow: /signup
 
 Sitemap: https://techrola.in/sitemap.xml
