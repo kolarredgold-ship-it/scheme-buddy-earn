@@ -389,7 +389,7 @@ const CareerProgram = () => {
         return (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Share via WhatsApp, Instagram, or college groups. <strong>Minimum 3 promotions per day</strong> required — no upper limit!
+              Share via WhatsApp, Instagram, or college groups. <strong>Minimum 3 promotions per day required It is count when subscription is Done by your referal</strong> — no upper limit!
             </p>
             <div className="flex items-center justify-between bg-muted rounded-xl p-3">
               <span className="text-sm font-medium">Today's Promotions</span>
