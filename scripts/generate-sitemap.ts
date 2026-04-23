@@ -42,17 +42,28 @@ async function main() {
 
   let schemes: { slug: string; updated_at: string | null }[] = [];
   try {
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/schemes?select=slug,updated_at&slug=not.is.null&order=updated_at.desc&limit=50000`,
-      {
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    const pageSize = 1000;
+    for (let from = 0; from < 50000; from += pageSize) {
+      const to = from + pageSize - 1;
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/schemes?select=slug,updated_at&slug=not.is.null&order=updated_at.desc`,
+        {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Range: `${from}-${to}`,
+            "Range-Unit": "items",
+          },
         },
-      },
-    );
-    if (res.ok) schemes = await res.json();
-    else console.warn(`[sitemap] schemes fetch failed: ${res.status}`);
+      );
+      if (!res.ok) {
+        console.warn(`[sitemap] schemes fetch failed at ${from}: ${res.status}`);
+        break;
+      }
+      const batch = (await res.json()) as { slug: string; updated_at: string | null }[];
+      schemes = schemes.concat(batch);
+      if (batch.length < pageSize) break;
+    }
   } catch (e) {
     console.warn(`[sitemap] schemes fetch error:`, e);
   }
