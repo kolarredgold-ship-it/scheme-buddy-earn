@@ -151,6 +151,11 @@ export type Database = {
       }
       profiles: {
         Row: {
+          bank_account_holder: string | null
+          bank_account_number: string | null
+          bank_ifsc_code: string | null
+          bank_locked: boolean
+          bank_name: string | null
           created_at: string
           email: string | null
           id: string
@@ -165,6 +170,11 @@ export type Database = {
           wallet_balance: number
         }
         Insert: {
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_locked?: boolean
+          bank_name?: string | null
           created_at?: string
           email?: string | null
           id?: string
@@ -179,6 +189,11 @@ export type Database = {
           wallet_balance?: number
         }
         Update: {
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_locked?: boolean
+          bank_name?: string | null
           created_at?: string
           email?: string | null
           id?: string
@@ -439,27 +454,48 @@ export type Database = {
       withdrawals: {
         Row: {
           amount: number
+          bank_account_holder: string | null
+          bank_account_number: string | null
+          bank_ifsc_code: string | null
+          bank_name: string | null
+          completed_at: string | null
           created_at: string
           id: string
+          processed_at: string | null
           status: Database["public"]["Enums"]["withdrawal_status"]
           updated_at: string
           user_id: string
+          utr_number: string | null
         }
         Insert: {
           amount: number
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_name?: string | null
+          completed_at?: string | null
           created_at?: string
           id?: string
+          processed_at?: string | null
           status?: Database["public"]["Enums"]["withdrawal_status"]
           updated_at?: string
           user_id: string
+          utr_number?: string | null
         }
         Update: {
           amount?: number
+          bank_account_holder?: string | null
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_name?: string | null
+          completed_at?: string | null
           created_at?: string
           id?: string
+          processed_at?: string | null
           status?: Database["public"]["Enums"]["withdrawal_status"]
           updated_at?: string
           user_id?: string
+          utr_number?: string | null
         }
         Relationships: []
       }
@@ -482,7 +518,12 @@ export type Database = {
       app_role: "admin" | "moderator" | "user"
       subscription_status: "free" | "active" | "expired"
       transaction_type: "credit" | "debit"
-      withdrawal_status: "pending" | "approved" | "rejected"
+      withdrawal_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "processing"
+        | "success"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -613,7 +654,13 @@ export const Constants = {
       app_role: ["admin", "moderator", "user"],
       subscription_status: ["free", "active", "expired"],
       transaction_type: ["credit", "debit"],
-      withdrawal_status: ["pending", "approved", "rejected"],
+      withdrawal_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "processing",
+        "success",
+      ],
     },
   },
 } as const
