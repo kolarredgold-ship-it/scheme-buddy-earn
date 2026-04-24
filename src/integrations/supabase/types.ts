@@ -451,6 +451,45 @@ export type Database = {
         }
         Relationships: []
       }
+      withdrawal_batches: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          status: Database["public"]["Enums"]["withdrawal_status"]
+          total_amount: number
+          total_count: number
+          updated_at: string
+          utr_number: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          total_amount?: number
+          total_count?: number
+          updated_at?: string
+          utr_number?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          status?: Database["public"]["Enums"]["withdrawal_status"]
+          total_amount?: number
+          total_count?: number
+          updated_at?: string
+          utr_number?: string | null
+        }
+        Relationships: []
+      }
       withdrawals: {
         Row: {
           amount: number
@@ -458,6 +497,7 @@ export type Database = {
           bank_account_number: string | null
           bank_ifsc_code: string | null
           bank_name: string | null
+          batch_id: string | null
           completed_at: string | null
           created_at: string
           id: string
@@ -473,6 +513,7 @@ export type Database = {
           bank_account_number?: string | null
           bank_ifsc_code?: string | null
           bank_name?: string | null
+          batch_id?: string | null
           completed_at?: string | null
           created_at?: string
           id?: string
@@ -488,6 +529,7 @@ export type Database = {
           bank_account_number?: string | null
           bank_ifsc_code?: string | null
           bank_name?: string | null
+          batch_id?: string | null
           completed_at?: string | null
           created_at?: string
           id?: string
@@ -497,7 +539,15 @@ export type Database = {
           user_id?: string
           utr_number?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "withdrawals_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "withdrawal_batches"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
