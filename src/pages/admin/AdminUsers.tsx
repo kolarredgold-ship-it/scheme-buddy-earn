@@ -160,11 +160,18 @@ const AdminUsers = () => {
   if (authLoading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
   if (!isAdmin) return <Navigate to="/" />;
 
-  const filtered = users.filter((u) =>
-    (u.name || "").toLowerCase().includes(search.toLowerCase()) ||
-    (u.email || "").toLowerCase().includes(search.toLowerCase()) ||
-    (u.referral_code || "").toLowerCase().includes(search.toLowerCase())
-  );
+  const q = search.trim().toLowerCase();
+  const digits = q.replace(/\D/g, "");
+  const filtered = users.filter((u) => {
+    if (!q) return true;
+    const mobile = (u.mobile || "").replace(/\D/g, "");
+    return (
+      (u.name || "").toLowerCase().includes(q) ||
+      (u.email || "").toLowerCase().includes(q) ||
+      (u.referral_code || "").toLowerCase().includes(q) ||
+      (digits && mobile.includes(digits))
+    );
+  });
 
   const pendingUsers = filtered.filter(u => u.subscription_status !== "active");
   const activeUsers = filtered.filter(u => u.subscription_status === "active");
