@@ -249,7 +249,7 @@ const AdminUsers = () => {
                   <TableCell className="hidden lg:table-cell text-xs text-muted-foreground">{new Date(u.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center gap-1">
-                      <Button size="icon" variant="ghost" onClick={() => setViewUser(u)} title="View">
+                      <Button size="icon" variant="ghost" onClick={() => openView(u)} title="View">
                         <Eye className="h-4 w-4" />
                       </Button>
                       <Button size="icon" variant="ghost" onClick={() => openEdit(u)} title="Edit">
