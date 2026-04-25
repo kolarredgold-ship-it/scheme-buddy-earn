@@ -108,15 +108,17 @@ serve(async (req) => {
 
     for (const r of rolesToProcess) {
       for (const c of categoriesToProcess) {
-        // Check if already generated
-        const { count } = await supabase
+        // Top up to 200 questions per (role, category)
+        const TARGET = 200;
+        const { count: existingCount } = await supabase
           .from("interview_questions")
           .select("id", { count: "exact", head: true })
           .eq("role", r)
           .eq("category", c);
 
-        if (count && count >= 35) {
-          results.push(`${r} - ${c}: Already exists (${count} questions)`);
+        let currentCount = existingCount || 0;
+        if (currentCount >= TARGET) {
+          results.push(`${r} - ${c}: Already has ${currentCount}/${TARGET} questions`);
           continue;
         }
 
