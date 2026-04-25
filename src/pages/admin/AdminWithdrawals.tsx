@@ -251,6 +251,20 @@ const AdminWithdrawals = () => {
       toast.error("Enter the UTR number first");
       return;
     }
+    setMarkingBatch(batch.id);
+    // Pre-check: UTR must be unique across all batches
+    const { data: dup } = await supabase
+      .from("withdrawal_batches")
+      .select("id, name")
+      .eq("utr_number", utr)
+      .neq("id", batch.id)
+      .maybeSingle();
+    if (dup) {
+      setMarkingBatch(null);
+      toast.error(`UTR "${utr}" is already used by batch "${dup.name}". Enter a unique UTR.`);
+      return;
+    }
+
     const now = new Date().toISOString();
     const [r1, r2] = await Promise.all([
       supabase
@@ -262,8 +276,15 @@ const AdminWithdrawals = () => {
         .update({ utr_number: utr, status: "success" as WStatus, completed_at: now })
         .eq("batch_id", batch.id),
     ]);
-    if (r1.error || r2.error) toast.error(r1.error?.message || r2.error?.message || "Failed");
-    else {
+    setMarkingBatch(null);
+    const err = r1.error || r2.error;
+    if (err) {
+      if ((err as any).code === "23505" || /duplicate|unique/i.test(err.message)) {
+        toast.error(`UTR "${utr}" is already used by another batch.`);
+      } else {
+        toast.error(err.message || "Failed");
+      }
+    } else {
       toast.success(`Batch "${batch.name}" marked successful`);
       setUtrInputs((s) => ({ ...s, [batch.id]: "" }));
       fetchAll();
