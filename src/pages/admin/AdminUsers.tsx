@@ -37,6 +37,13 @@ const AdminUsers = () => {
   const [updating, setUpdating] = useState<string | null>(null);
   const [editUser, setEditUser] = useState<UserProfile | null>(null);
   const [viewUser, setViewUser] = useState<UserProfile | null>(null);
+  const [viewLoading, setViewLoading] = useState(false);
+  const [viewData, setViewData] = useState<{
+    transactions: any[];
+    withdrawals: any[];
+    referrals: UserProfile[];
+    referrer: UserProfile | null;
+  }>({ transactions: [], withdrawals: [], referrals: [], referrer: null });
   const [passwordUser, setPasswordUser] = useState<UserProfile | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [editForm, setEditForm] = useState({
@@ -47,6 +54,27 @@ const AdminUsers = () => {
     wallet_balance: 0,
     report_credits: 0,
   });
+
+  const openView = async (u: UserProfile) => {
+    setViewUser(u);
+    setViewLoading(true);
+    setViewData({ transactions: [], withdrawals: [], referrals: [], referrer: null });
+    const [tx, wd, refs, refBy] = await Promise.all([
+      supabase.from("transactions").select("*").eq("user_id", u.user_id).order("created_at", { ascending: false }),
+      supabase.from("withdrawals").select("*").eq("user_id", u.user_id).order("created_at", { ascending: false }),
+      supabase.from("profiles").select("*").eq("referred_by", u.referral_code).order("created_at", { ascending: false }),
+      u.referred_by
+        ? supabase.from("profiles").select("*").eq("referral_code", u.referred_by).maybeSingle()
+        : Promise.resolve({ data: null }),
+    ]);
+    setViewData({
+      transactions: tx.data || [],
+      withdrawals: wd.data || [],
+      referrals: (refs.data as UserProfile[]) || [],
+      referrer: (refBy.data as UserProfile) || null,
+    });
+    setViewLoading(false);
+  };
 
   const fetchUsers = async () => {
     const { data } = await supabase.from("profiles").select("*").order("created_at", { ascending: false });
