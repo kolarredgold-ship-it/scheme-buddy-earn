@@ -115,10 +115,11 @@ const Withdrawals = () => {
       bank_name: bankProfile.bank_name,
     });
     if (error) {
-      toast.error("Failed to submit withdrawal request");
+      toast.error(error.message || "Failed to submit withdrawal request");
     } else {
-      toast.success("Withdrawal request submitted!");
+      toast.success("Withdrawal request submitted! Amount debited from wallet.");
       setAmount("");
+      await refreshProfile();
       fetchAll();
     }
     setSubmitting(false);
