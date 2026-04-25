@@ -82,8 +82,34 @@ const AdminWithdrawals = () => {
   }, [tab]);
 
   const pending = useMemo(() => withdrawals.filter((w) => w.status === "pending"), [withdrawals]);
-  const processingBatches = useMemo(() => batches.filter((b) => b.status === "processing"), [batches]);
-  const successBatches = useMemo(() => batches.filter((b) => b.status === "success"), [batches]);
+
+  const filterBatches = (list: any[]) => {
+    const q = filterQuery.trim().toLowerCase();
+    return list.filter((b) => {
+      if (q) {
+        const hay = `${b.name || ""} ${b.utr_number || ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      if (filterFrom) {
+        if (new Date(b.created_at) < new Date(filterFrom)) return false;
+      }
+      if (filterTo) {
+        const end = new Date(filterTo);
+        end.setHours(23, 59, 59, 999);
+        if (new Date(b.created_at) > end) return false;
+      }
+      return true;
+    });
+  };
+
+  const processingBatches = useMemo(
+    () => filterBatches(batches.filter((b) => b.status === "processing")),
+    [batches, filterQuery, filterFrom, filterTo]
+  );
+  const successBatches = useMemo(
+    () => filterBatches(batches.filter((b) => b.status === "success")),
+    [batches, filterQuery, filterFrom, filterTo]
+  );
 
   const withdrawalsByBatch = useMemo(() => {
     const map: Record<string, any[]> = {};
@@ -92,6 +118,14 @@ const AdminWithdrawals = () => {
     });
     return map;
   }, [withdrawals]);
+
+  const clearFilters = () => {
+    setFilterQuery("");
+    setFilterStatus("all");
+    setFilterFrom("");
+    setFilterTo("");
+  };
+  const hasFilters = !!(filterQuery || filterFrom || filterTo || filterStatus !== "all");
 
   if (authLoading)
     return (
