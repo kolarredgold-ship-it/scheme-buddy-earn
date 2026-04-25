@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Check, X, Pencil, Download, ChevronRight } from "lucide-react";
+import { Check, X, Pencil, Download, ChevronRight, Search, X as XIcon } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import * as XLSX from "xlsx";
 
 type WStatus = "pending" | "processing" | "approved" | "success" | "rejected";
