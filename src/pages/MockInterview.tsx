@@ -293,7 +293,7 @@ const MockInterview = () => {
                 Choose Your <span className="text-primary">Training Path</span>
               </h1>
               <p className="text-muted-foreground text-xs sm:text-sm max-w-xl mx-auto px-2">
-                1400+ pre-loaded questions across courses, programming languages & job roles
+                Up to 200 questions per category • Swipe left/right to navigate • Tap to flip
               </p>
             </div>
 
