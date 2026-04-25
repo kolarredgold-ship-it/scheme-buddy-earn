@@ -514,10 +514,11 @@ const AdminWithdrawals = () => {
                         />
                         <Button
                           onClick={() => markBatchSuccess(batch)}
-                          disabled={!(utrInputs[batch.id] || "").trim()}
+                          disabled={!(utrInputs[batch.id] || "").trim() || markingBatch === batch.id}
                           className="gap-1"
                         >
-                          <Check className="h-4 w-4" /> Mark Success
+                          <Check className="h-4 w-4" />
+                          {markingBatch === batch.id ? "Verifying UTR..." : "Mark Success"}
                         </Button>
                       </div>
                     </CardContent>
