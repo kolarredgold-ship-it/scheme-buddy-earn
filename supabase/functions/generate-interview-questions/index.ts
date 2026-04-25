@@ -222,7 +222,7 @@ Return ONLY the JSON array, no markdown, no extra text.`;
         results.push(`${r} - ${c}: Inserted ${totalInserted} (total now ${currentCount}/${TARGET})`);
       }
     }
-    }
+
 
     return new Response(JSON.stringify({ results }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
