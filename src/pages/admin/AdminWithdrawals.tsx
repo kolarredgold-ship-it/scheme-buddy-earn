@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Check, X, Pencil, Download, ChevronRight } from "lucide-react";
+import { Check, X, Pencil, Download, ChevronRight, Search, X as XIcon } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import * as XLSX from "xlsx";
 
 type WStatus = "pending" | "processing" | "approved" | "success" | "rejected";
@@ -44,6 +45,13 @@ const AdminWithdrawals = () => {
 
   // Processing tab state — UTR per batch
   const [utrInputs, setUtrInputs] = useState<Record<string, string>>({});
+  const [markingBatch, setMarkingBatch] = useState<string | null>(null);
+
+  // Filters
+  const [filterQuery, setFilterQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState<"all" | "processing" | "success">("all");
+  const [filterFrom, setFilterFrom] = useState("");
+  const [filterTo, setFilterTo] = useState("");
 
   // Bank edit dialog
   const [editing, setEditing] = useState<any | null>(null);
@@ -74,8 +82,34 @@ const AdminWithdrawals = () => {
   }, [tab]);
 
   const pending = useMemo(() => withdrawals.filter((w) => w.status === "pending"), [withdrawals]);
-  const processingBatches = useMemo(() => batches.filter((b) => b.status === "processing"), [batches]);
-  const successBatches = useMemo(() => batches.filter((b) => b.status === "success"), [batches]);
+
+  const filterBatches = (list: any[]) => {
+    const q = filterQuery.trim().toLowerCase();
+    return list.filter((b) => {
+      if (q) {
+        const hay = `${b.name || ""} ${b.utr_number || ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      if (filterFrom) {
+        if (new Date(b.created_at) < new Date(filterFrom)) return false;
+      }
+      if (filterTo) {
+        const end = new Date(filterTo);
+        end.setHours(23, 59, 59, 999);
+        if (new Date(b.created_at) > end) return false;
+      }
+      return true;
+    });
+  };
+
+  const processingBatches = useMemo(
+    () => filterBatches(batches.filter((b) => b.status === "processing")),
+    [batches, filterQuery, filterFrom, filterTo]
+  );
+  const successBatches = useMemo(
+    () => filterBatches(batches.filter((b) => b.status === "success")),
+    [batches, filterQuery, filterFrom, filterTo]
+  );
 
   const withdrawalsByBatch = useMemo(() => {
     const map: Record<string, any[]> = {};
@@ -84,6 +118,14 @@ const AdminWithdrawals = () => {
     });
     return map;
   }, [withdrawals]);
+
+  const clearFilters = () => {
+    setFilterQuery("");
+    setFilterStatus("all");
+    setFilterFrom("");
+    setFilterTo("");
+  };
+  const hasFilters = !!(filterQuery || filterFrom || filterTo || filterStatus !== "all");
 
   if (authLoading)
     return (
@@ -209,6 +251,20 @@ const AdminWithdrawals = () => {
       toast.error("Enter the UTR number first");
       return;
     }
+    setMarkingBatch(batch.id);
+    // Pre-check: UTR must be unique across all batches
+    const { data: dup } = await supabase
+      .from("withdrawal_batches")
+      .select("id, name")
+      .eq("utr_number", utr)
+      .neq("id", batch.id)
+      .maybeSingle();
+    if (dup) {
+      setMarkingBatch(null);
+      toast.error(`UTR "${utr}" is already used by batch "${dup.name}". Enter a unique UTR.`);
+      return;
+    }
+
     const now = new Date().toISOString();
     const [r1, r2] = await Promise.all([
       supabase
@@ -220,8 +276,15 @@ const AdminWithdrawals = () => {
         .update({ utr_number: utr, status: "success" as WStatus, completed_at: now })
         .eq("batch_id", batch.id),
     ]);
-    if (r1.error || r2.error) toast.error(r1.error?.message || r2.error?.message || "Failed");
-    else {
+    setMarkingBatch(null);
+    const err = r1.error || r2.error;
+    if (err) {
+      if ((err as any).code === "23505" || /duplicate|unique/i.test(err.message)) {
+        toast.error(`UTR "${utr}" is already used by another batch.`);
+      } else {
+        toast.error(err.message || "Failed");
+      }
+    } else {
       toast.success(`Batch "${batch.name}" marked successful`);
       setUtrInputs((s) => ({ ...s, [batch.id]: "" }));
       fetchAll();
@@ -270,6 +333,60 @@ const AdminWithdrawals = () => {
     <Layout>
       <div className="container mx-auto px-4 py-6 space-y-6">
         <h1 className="text-2xl font-bold">Withdrawal Requests</h1>
+
+        {/* Batch search & filters (apply to Processing + Success tabs) */}
+        <Card>
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Search batches</p>
+              {hasFilters && (
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 h-7">
+                  <XIcon className="h-3 w-3" /> Clear
+                </Button>
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div className="relative md:col-span-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Batch name or UTR…"
+                  value={filterQuery}
+                  onChange={(e) => setFilterQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <Select value={filterStatus} onValueChange={(v: any) => { setFilterStatus(v); if (v !== "all") setTab(v); }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All statuses</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="success">Success</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex gap-2">
+                <Input
+                  type="date"
+                  value={filterFrom}
+                  onChange={(e) => setFilterFrom(e.target.value)}
+                  aria-label="From date"
+                />
+                <Input
+                  type="date"
+                  value={filterTo}
+                  onChange={(e) => setFilterTo(e.target.value)}
+                  aria-label="To date"
+                />
+              </div>
+            </div>
+            {hasFilters && (
+              <p className="text-xs text-muted-foreground">
+                Showing {processingBatches.length} processing · {successBatches.length} success
+              </p>
+            )}
+          </CardContent>
+        </Card>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
           <TabsList className="flex flex-wrap h-auto">
@@ -451,10 +568,11 @@ const AdminWithdrawals = () => {
                         />
                         <Button
                           onClick={() => markBatchSuccess(batch)}
-                          disabled={!(utrInputs[batch.id] || "").trim()}
+                          disabled={!(utrInputs[batch.id] || "").trim() || markingBatch === batch.id}
                           className="gap-1"
                         >
-                          <Check className="h-4 w-4" /> Mark Success
+                          <Check className="h-4 w-4" />
+                          {markingBatch === batch.id ? "Verifying UTR..." : "Mark Success"}
                         </Button>
                       </div>
                     </CardContent>
