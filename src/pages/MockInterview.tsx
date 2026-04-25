@@ -293,7 +293,7 @@ const MockInterview = () => {
                 Choose Your <span className="text-primary">Training Path</span>
               </h1>
               <p className="text-muted-foreground text-xs sm:text-sm max-w-xl mx-auto px-2">
-                1400+ pre-loaded questions across courses, programming languages & job roles
+                Up to 200 questions per category • Swipe left/right to navigate • Tap to flip
               </p>
             </div>
 
@@ -303,7 +303,7 @@ const MockInterview = () => {
                   <CardContent className="p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
                       <p className="font-semibold text-xs sm:text-sm">Admin: Generate Q&A Database</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Generate 200 questions per role using DeepSeek AI</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Top up each category to 200 questions (auto-resumes from current count)</p>
                     </div>
                     <Button 
                       onClick={generateAllQuestions} 
@@ -483,14 +483,55 @@ const MockInterview = () => {
                   </div>
                 </div>
 
-                {/* Flashcard */}
+                {/* Flashcard with swipe */}
                 <div
-                  className="cursor-pointer mx-auto max-w-2xl"
-                  onClick={() => setFlipped(!flipped)}
+                  className="mx-auto max-w-2xl select-none"
                   style={{ perspective: '1000px' }}
+                  onTouchStart={(e) => {
+                    (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
+                    (e.currentTarget as any)._touchStartY = e.touches[0].clientY;
+                    (e.currentTarget as any)._touchMoved = false;
+                  }}
+                  onTouchMove={(e) => {
+                    const startX = (e.currentTarget as any)._touchStartX || 0;
+                    const startY = (e.currentTarget as any)._touchStartY || 0;
+                    const dx = e.touches[0].clientX - startX;
+                    const dy = e.touches[0].clientY - startY;
+                    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                      (e.currentTarget as any)._touchMoved = true;
+                    }
+                  }}
+                  onTouchEnd={(e) => {
+                    const startX = (e.currentTarget as any)._touchStartX || 0;
+                    const startY = (e.currentTarget as any)._touchStartY || 0;
+                    const endX = e.changedTouches[0].clientX;
+                    const endY = e.changedTouches[0].clientY;
+                    const dx = endX - startX;
+                    const dy = endY - startY;
+                    const moved = (e.currentTarget as any)._touchMoved;
+                    // Horizontal swipe takes precedence
+                    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                      if (dx < 0 && currentIndex < questions.length - 1) {
+                        setCurrentIndex((p) => p + 1);
+                        setFlipped(false);
+                      } else if (dx > 0 && currentIndex > 0) {
+                        setCurrentIndex((p) => p - 1);
+                        setFlipped(false);
+                      }
+                    } else if (!moved) {
+                      // Treat as tap → flip
+                      setFlipped((f) => !f);
+                    }
+                  }}
+                  onClick={(e) => {
+                    // Desktop click flip (touch handled above)
+                    if ((e as any).nativeEvent.pointerType === 'mouse' || !('ontouchstart' in window)) {
+                      setFlipped(!flipped);
+                    }
+                  }}
                 >
                   <div
-                    className="relative transition-transform duration-500"
+                    className="relative transition-transform duration-500 cursor-pointer"
                     style={{
                       transformStyle: 'preserve-3d',
                       transform: flipped ? 'rotateY(180deg)' : 'rotateY(0)',
@@ -505,8 +546,9 @@ const MockInterview = () => {
                         </Badge>
                         <p className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground mb-2 font-medium">Question</p>
                         <p className="text-base sm:text-xl text-center font-semibold leading-relaxed px-1">{currentQ?.question}</p>
-                        <div className="mt-5 sm:mt-8 flex items-center gap-2 text-primary text-xs animate-pulse">
-                          <span>Tap to reveal answer</span>
+                        <div className="mt-5 sm:mt-8 flex flex-col items-center gap-1 text-primary text-xs">
+                          <span className="animate-pulse">Tap to reveal answer</span>
+                          <span className="text-[10px] text-muted-foreground">← Swipe left/right to navigate →</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -516,8 +558,9 @@ const MockInterview = () => {
                       <CardContent className="p-5 sm:p-8 flex flex-col items-center justify-center h-full min-h-[260px]">
                         <p className="text-[10px] sm:text-xs uppercase tracking-wider text-primary mb-3 font-bold">Answer</p>
                         <p className="text-center text-muted-foreground text-sm sm:text-base whitespace-pre-wrap leading-relaxed px-1">{currentQ?.answer}</p>
-                        <div className="mt-5 sm:mt-8 flex items-center gap-2 text-muted-foreground text-xs">
+                        <div className="mt-5 sm:mt-8 flex flex-col items-center gap-1 text-muted-foreground text-xs">
                           <span>Tap to see question</span>
+                          <span className="text-[10px]">← Swipe left/right to navigate →</span>
                         </div>
                       </CardContent>
                     </Card>
