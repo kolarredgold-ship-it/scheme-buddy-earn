@@ -45,6 +45,13 @@ const AdminWithdrawals = () => {
 
   // Processing tab state — UTR per batch
   const [utrInputs, setUtrInputs] = useState<Record<string, string>>({});
+  const [markingBatch, setMarkingBatch] = useState<string | null>(null);
+
+  // Filters
+  const [filterQuery, setFilterQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState<"all" | "processing" | "success">("all");
+  const [filterFrom, setFilterFrom] = useState("");
+  const [filterTo, setFilterTo] = useState("");
 
   // Bank edit dialog
   const [editing, setEditing] = useState<any | null>(null);
