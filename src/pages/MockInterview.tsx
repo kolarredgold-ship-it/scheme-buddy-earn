@@ -303,7 +303,7 @@ const MockInterview = () => {
                   <CardContent className="p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
                       <p className="font-semibold text-xs sm:text-sm">Admin: Generate Q&A Database</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Generate 200 questions per role using DeepSeek AI</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Top up each category to 200 questions (auto-resumes from current count)</p>
                     </div>
                     <Button 
                       onClick={generateAllQuestions} 
