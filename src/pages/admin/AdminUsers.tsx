@@ -268,7 +268,7 @@ const AdminUsers = () => {
 
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search by name, email, or code..." className="pl-10" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <Input placeholder="Search by mobile, name, email, or referral code..." className="pl-10" value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
 
         <Tabs defaultValue="all">
