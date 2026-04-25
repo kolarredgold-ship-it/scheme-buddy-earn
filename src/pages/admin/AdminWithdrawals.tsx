@@ -334,6 +334,60 @@ const AdminWithdrawals = () => {
       <div className="container mx-auto px-4 py-6 space-y-6">
         <h1 className="text-2xl font-bold">Withdrawal Requests</h1>
 
+        {/* Batch search & filters (apply to Processing + Success tabs) */}
+        <Card>
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Search batches</p>
+              {hasFilters && (
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 h-7">
+                  <XIcon className="h-3 w-3" /> Clear
+                </Button>
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div className="relative md:col-span-2">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Batch name or UTR…"
+                  value={filterQuery}
+                  onChange={(e) => setFilterQuery(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <Select value={filterStatus} onValueChange={(v: any) => { setFilterStatus(v); if (v !== "all") setTab(v); }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All statuses</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="success">Success</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex gap-2">
+                <Input
+                  type="date"
+                  value={filterFrom}
+                  onChange={(e) => setFilterFrom(e.target.value)}
+                  aria-label="From date"
+                />
+                <Input
+                  type="date"
+                  value={filterTo}
+                  onChange={(e) => setFilterTo(e.target.value)}
+                  aria-label="To date"
+                />
+              </div>
+            </div>
+            {hasFilters && (
+              <p className="text-xs text-muted-foreground">
+                Showing {processingBatches.length} processing · {successBatches.length} success
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
         <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
           <TabsList className="flex flex-wrap h-auto">
             <TabsTrigger value="pending" className="gap-2">
