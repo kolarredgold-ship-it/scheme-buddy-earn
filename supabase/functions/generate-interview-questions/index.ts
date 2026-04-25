@@ -129,84 +129,99 @@ serve(async (req) => {
         const contextLabel = isCourse ? `course: ${r}` : isProgramming ? `programming language: ${r}` : isEngineering ? `engineering specialization: ${r}` : `job role: ${r}`;
         const questionType = isProgramming ? "coding and technical interview" : isCourse ? "academic viva and placement interview" : isEngineering ? "academic and technical interview" : "interview";
 
-        const prompt = `Act as a senior industry expert and interviewer.
-Generate exactly 40 ${questionType} questions and answers for the ${contextLabel}
+        let totalInserted = 0;
+        let attempts = 0;
+        const MAX_ATTEMPTS = 8; // safety: ~40/batch * 8 = 320 max per call
+
+        while (currentCount < TARGET && attempts < MAX_ATTEMPTS) {
+          attempts++;
+          const needed = TARGET - currentCount;
+          const batchSize = Math.min(40, needed);
+
+          const prompt = `Act as a senior industry expert and interviewer.
+Generate exactly ${batchSize} UNIQUE ${questionType} questions and answers for the ${contextLabel}
 Category: ${c}
 Topics to cover: ${roleTopics[r] || r}
 
 Requirements:
 - Realistic, commonly asked in 2025 interviews/exams
-- No repetition, gradually increase difficulty
+- DO NOT repeat common/basic questions; vary topics, scenarios, and angles
+- Gradually increase difficulty within the batch
 - 2-5 lines per answer, clear, concise, practical
 - Include examples where possible
 - Avoid textbook definitions
+- Generate fresh, varied questions (batch #${attempts})
 
 Return a JSON array of objects with keys "question" and "answer". Example:
 [{"question":"What is...","answer":"It is..."}]
 Return ONLY the JSON array, no markdown, no extra text.`;
 
-        const response = await fetch("https://api.deepseek.com/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "deepseek-chat",
-            messages: [
-              { role: "system", content: "You are an expert interviewer. Return ONLY valid JSON array. No markdown." },
-              { role: "user", content: prompt },
-            ],
-            temperature: 0.7,
-            max_tokens: 8000,
-          }),
-        });
+          const response = await fetch("https://api.deepseek.com/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "deepseek-chat",
+              messages: [
+                { role: "system", content: "You are an expert interviewer. Return ONLY valid JSON array. No markdown." },
+                { role: "user", content: prompt },
+              ],
+              temperature: 0.8,
+              max_tokens: 8000,
+            }),
+          });
 
-        if (!response.ok) {
-          const errText = await response.text();
-          results.push(`${r} - ${c}: API error ${response.status}`);
-          console.error(`DeepSeek error for ${r}-${c}:`, errText);
-          continue;
+          if (!response.ok) {
+            const errText = await response.text();
+            console.error(`DeepSeek error for ${r}-${c}:`, errText);
+            break;
+          }
+
+          const data = await response.json();
+          const raw = data.choices?.[0]?.message?.content || "";
+
+          let parsed;
+          try {
+            const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, raw];
+            parsed = JSON.parse(jsonMatch[1].trim());
+          } catch {
+            console.error(`JSON parse error for ${r}-${c} attempt ${attempts}`);
+            continue;
+          }
+
+          if (!Array.isArray(parsed)) continue;
+
+          const difficulty = difficultyMap[c] || "medium";
+          const rows = parsed
+            .filter((item: any) => item.question && item.answer)
+            .map((item: any) => ({
+              role: r,
+              category: c,
+              question: item.question,
+              answer: item.answer,
+              difficulty,
+            }));
+
+          if (rows.length === 0) continue;
+
+          const { error: insertError } = await supabase
+            .from("interview_questions")
+            .insert(rows);
+
+          if (insertError) {
+            console.error(`Insert error for ${r}-${c}:`, insertError.message);
+            break;
+          }
+
+          totalInserted += rows.length;
+          currentCount += rows.length;
         }
 
-        const data = await response.json();
-        const raw = data.choices?.[0]?.message?.content || "";
-
-        let parsed;
-        try {
-          const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, raw];
-          parsed = JSON.parse(jsonMatch[1].trim());
-        } catch {
-          results.push(`${r} - ${c}: JSON parse error`);
-          continue;
-        }
-
-        if (!Array.isArray(parsed)) {
-          results.push(`${r} - ${c}: Not an array`);
-          continue;
-        }
-
-        const difficulty = difficultyMap[c] || "medium";
-        const rows = parsed
-          .filter((item: any) => item.question && item.answer)
-          .map((item: any) => ({
-            role: r,
-            category: c,
-            question: item.question,
-            answer: item.answer,
-            difficulty,
-          }));
-
-        const { error: insertError } = await supabase
-          .from("interview_questions")
-          .insert(rows);
-
-        if (insertError) {
-          results.push(`${r} - ${c}: Insert error: ${insertError.message}`);
-        } else {
-          results.push(`${r} - ${c}: Inserted ${rows.length} questions`);
-        }
+        results.push(`${r} - ${c}: Inserted ${totalInserted} (total now ${currentCount}/${TARGET})`);
       }
+    }
     }
 
     return new Response(JSON.stringify({ results }), {
