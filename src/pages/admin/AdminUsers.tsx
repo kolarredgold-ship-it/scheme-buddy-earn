@@ -322,23 +322,137 @@ const AdminUsers = () => {
 
       {/* View User Dialog */}
       <Dialog open={!!viewUser} onOpenChange={() => setViewUser(null)}>
-        <DialogContent>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>User Details</DialogTitle>
+            <DialogTitle>
+              {viewUser?.name || viewUser?.email || "User Details"}
+            </DialogTitle>
           </DialogHeader>
           {viewUser && (
-            <div className="space-y-3 text-sm">
-              <div className="grid grid-cols-2 gap-2">
-                <div><span className="text-muted-foreground">Name:</span> <strong>{viewUser.name || "—"}</strong></div>
-                <div><span className="text-muted-foreground">Email:</span> <strong>{viewUser.email || "—"}</strong></div>
+            <div className="space-y-4">
+              {/* Profile summary */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm p-3 rounded-lg bg-muted/50">
                 <div><span className="text-muted-foreground">Mobile:</span> <strong>{viewUser.mobile || "—"}</strong></div>
-                <div><span className="text-muted-foreground">Referral Code:</span> <strong>{viewUser.referral_code}</strong></div>
-                <div><span className="text-muted-foreground">Referred By:</span> <strong>{viewUser.referred_by || "—"}</strong></div>
+                <div><span className="text-muted-foreground">Email:</span> <strong className="break-all">{viewUser.email || "—"}</strong></div>
+                <div><span className="text-muted-foreground">Code:</span> <code>{viewUser.referral_code}</code></div>
+                <div><span className="text-muted-foreground">Referred By:</span> <strong>{viewData.referrer ? `${viewData.referrer.name || viewData.referrer.email} (${viewUser.referred_by})` : viewUser.referred_by || "—"}</strong></div>
                 <div><span className="text-muted-foreground">Status:</span> <Badge variant={viewUser.subscription_status === "active" ? "default" : "secondary"}>{viewUser.subscription_status}</Badge></div>
                 <div><span className="text-muted-foreground">Wallet:</span> <strong>₹{Number(viewUser.wallet_balance).toFixed(2)}</strong></div>
-                <div><span className="text-muted-foreground">Report Credits:</span> <strong>{viewUser.report_credits}</strong></div>
-                <div className="col-span-2"><span className="text-muted-foreground">Joined:</span> <strong>{new Date(viewUser.created_at).toLocaleDateString()}</strong></div>
+                <div><span className="text-muted-foreground">Credits:</span> <strong>{viewUser.report_credits}</strong></div>
+                <div><span className="text-muted-foreground">Joined:</span> <strong>{new Date(viewUser.created_at).toLocaleDateString("en-IN")}</strong></div>
+                <div><span className="text-muted-foreground">Referrals:</span> <strong>{viewData.referrals.length}</strong></div>
               </div>
+
+              {viewLoading ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full" />
+                </div>
+              ) : (
+                <Tabs defaultValue="transactions">
+                  <TabsList className="w-full justify-start flex-wrap h-auto">
+                    <TabsTrigger value="transactions">Transactions ({viewData.transactions.length})</TabsTrigger>
+                    <TabsTrigger value="referrals">Referrals ({viewData.referrals.length})</TabsTrigger>
+                    <TabsTrigger value="withdrawals">Withdrawals ({viewData.withdrawals.length})</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="transactions" className="mt-3">
+                    {viewData.transactions.length === 0 ? (
+                      <p className="text-center text-muted-foreground text-sm py-6">No transactions</p>
+                    ) : (
+                      <div className="border rounded-md overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Date</TableHead>
+                              <TableHead>Source</TableHead>
+                              <TableHead>Type</TableHead>
+                              <TableHead className="text-right">Amount</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {viewData.transactions.map((t) => (
+                              <TableRow key={t.id}>
+                                <TableCell className="text-xs">{new Date(t.created_at).toLocaleString("en-IN")}</TableCell>
+                                <TableCell className="text-sm">{t.source}</TableCell>
+                                <TableCell>
+                                  <Badge variant={t.type === "credit" ? "default" : "destructive"} className={t.type === "credit" ? "bg-secondary text-secondary-foreground" : ""}>
+                                    {t.type}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-right font-medium">
+                                  {t.type === "credit" ? "+" : "-"}₹{Number(t.amount).toFixed(2)}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="referrals" className="mt-3">
+                    {viewData.referrals.length === 0 ? (
+                      <p className="text-center text-muted-foreground text-sm py-6">No referrals yet</p>
+                    ) : (
+                      <div className="border rounded-md overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Mobile</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Joined</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {viewData.referrals.map((r) => (
+                              <TableRow key={r.id}>
+                                <TableCell className="font-medium text-sm">{r.name || r.email || "—"}</TableCell>
+                                <TableCell className="text-sm">{r.mobile || "—"}</TableCell>
+                                <TableCell>
+                                  <Badge variant={r.subscription_status === "active" ? "default" : "secondary"} className={r.subscription_status === "active" ? "bg-secondary text-secondary-foreground" : ""}>
+                                    {r.subscription_status}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-xs">{new Date(r.created_at).toLocaleDateString("en-IN")}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="withdrawals" className="mt-3">
+                    {viewData.withdrawals.length === 0 ? (
+                      <p className="text-center text-muted-foreground text-sm py-6">No withdrawals</p>
+                    ) : (
+                      <div className="border rounded-md overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Date</TableHead>
+                              <TableHead className="text-right">Amount</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>UTR</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {viewData.withdrawals.map((w) => (
+                              <TableRow key={w.id}>
+                                <TableCell className="text-xs">{new Date(w.created_at).toLocaleString("en-IN")}</TableCell>
+                                <TableCell className="text-right font-medium">₹{Number(w.amount).toFixed(2)}</TableCell>
+                                <TableCell><Badge variant="secondary">{w.status}</Badge></TableCell>
+                                <TableCell className="font-mono text-xs">{w.utr_number || "—"}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
+              )}
             </div>
           )}
         </DialogContent>
