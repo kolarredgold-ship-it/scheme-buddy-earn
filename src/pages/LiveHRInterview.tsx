@@ -50,9 +50,14 @@ const LiveHRInterview = () => {
   const [loading, setLoading] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [voiceReady, setVoiceReady] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
 
+  const ANSWER_SECONDS = 60;
   const recognitionRef = useRef<any>(null);
   const indianVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const submitRef = useRef<() => void>(() => {});
+  const answerRef = useRef("");
 
   // Pick best Indian female voice
   useEffect(() => {
@@ -165,18 +170,50 @@ const LiveHRInterview = () => {
       setPhase("interviewing");
       setCurrentIdx(0);
       await speak(data.questions[0]);
+      startTimer();
     } catch (e: any) {
       setLoading(false);
       toast({ title: "Could not start interview", description: e.message, variant: "destructive" });
     }
   };
 
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const startTimer = () => {
+    stopTimer();
+    setTimeLeft(ANSWER_SECONDS);
+    timerRef.current = window.setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          stopTimer();
+          // Auto-submit on next tick so latest answer is captured
+          setTimeout(() => submitRef.current(), 0);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+  };
+
+  // Keep latest answer in ref for timer auto-submit
+  useEffect(() => {
+    answerRef.current = currentAnswer;
+  }, [currentAnswer]);
+
   const submitAndNext = async () => {
+    stopTimer();
     stopListening();
+    const finalAnswer = answerRef.current.trim();
     const newAnswers = [...answers];
-    newAnswers[currentIdx] = currentAnswer.trim();
+    newAnswers[currentIdx] = finalAnswer || "(no answer)";
     setAnswers(newAnswers);
     setCurrentAnswer("");
+    answerRef.current = "";
 
     const next = currentIdx + 1;
     if (next >= questions.length) {
@@ -200,7 +237,13 @@ const LiveHRInterview = () => {
     }
     setCurrentIdx(next);
     await speak(questions[next]);
+    startTimer();
   };
+
+  // Keep submitRef pointing at latest submitAndNext
+  useEffect(() => {
+    submitRef.current = submitAndNext;
+  });
 
   const skipQuestion = async () => {
     setCurrentAnswer("(skipped)");
@@ -212,6 +255,7 @@ const LiveHRInterview = () => {
   };
 
   const restart = () => {
+    stopTimer();
     window.speechSynthesis.cancel();
     stopListening();
     setPhase("setup");
@@ -221,9 +265,11 @@ const LiveHRInterview = () => {
     setCurrentIdx(0);
     setCurrentAnswer("");
     setVerdict(null);
+    setTimeLeft(0);
   };
 
   useEffect(() => () => {
+    stopTimer();
     window.speechSynthesis.cancel();
     recognitionRef.current?.stop();
   }, []);
@@ -348,11 +394,19 @@ const LiveHRInterview = () => {
                 </div>
               ) : (
                 <>
-                  {/* Progress */}
+                  {/* Progress + Timer */}
                   <div className="mb-4">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                    <div className="flex justify-between items-center text-xs text-muted-foreground mb-1">
                       <span>Question {currentIdx + 1} of {questions.length}</span>
-                      <Badge variant="secondary" className="text-xs">{Math.round(((currentIdx) / questions.length) * 100)}%</Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={timeLeft <= 10 && timeLeft > 0 ? "destructive" : "secondary"}
+                          className={`text-xs font-mono tabular-nums ${timeLeft <= 10 && timeLeft > 0 ? "animate-pulse" : ""}`}
+                        >
+                          ⏱ {String(Math.floor(timeLeft / 60)).padStart(1, "0")}:{String(timeLeft % 60).padStart(2, "0")}
+                        </Badge>
+                        <Badge variant="secondary" className="text-xs">{Math.round(((currentIdx) / questions.length) * 100)}%</Badge>
+                      </div>
                     </div>
                     <Progress value={((currentIdx) / questions.length) * 100} className="h-2" />
                   </div>
