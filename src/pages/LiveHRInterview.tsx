@@ -50,9 +50,14 @@ const LiveHRInterview = () => {
   const [loading, setLoading] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [voiceReady, setVoiceReady] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
 
+  const ANSWER_SECONDS = 60;
   const recognitionRef = useRef<any>(null);
   const indianVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const submitRef = useRef<() => void>(() => {});
+  const answerRef = useRef("");
 
   // Pick best Indian female voice
   useEffect(() => {
