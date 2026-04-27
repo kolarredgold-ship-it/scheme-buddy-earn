@@ -255,6 +255,7 @@ const LiveHRInterview = () => {
   };
 
   const restart = () => {
+    stopTimer();
     window.speechSynthesis.cancel();
     stopListening();
     setPhase("setup");
@@ -264,9 +265,11 @@ const LiveHRInterview = () => {
     setCurrentIdx(0);
     setCurrentAnswer("");
     setVerdict(null);
+    setTimeLeft(0);
   };
 
   useEffect(() => () => {
+    stopTimer();
     window.speechSynthesis.cancel();
     recognitionRef.current?.stop();
   }, []);
