@@ -102,6 +102,7 @@ const LiveHRInterview = () => {
   }, []);
 
   // Setup speech recognition
+  const finalTranscriptRef = useRef("");
   useEffect(() => {
     const SR =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -109,21 +110,54 @@ const LiveHRInterview = () => {
     const rec = new SR();
     rec.continuous = true;
     rec.interimResults = true;
-    rec.lang = "en-IN";
+    rec.maxAlternatives = 3;
+    // en-US tends to have better acoustic models than en-IN in Chrome
+    rec.lang = "en-US";
     rec.onresult = (e: any) => {
-      let txt = "";
-      for (let i = 0; i < e.results.length; i++) {
-        txt += e.results[i][0].transcript + " ";
+      let interim = "";
+      // Only iterate from resultIndex to avoid re-processing finalized chunks
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const result = e.results[i];
+        // Pick the alternative with the highest confidence
+        let best = result[0];
+        for (let j = 1; j < result.length; j++) {
+          if ((result[j].confidence ?? 0) > (best.confidence ?? 0)) best = result[j];
+        }
+        const text = best.transcript;
+        if (result.isFinal) {
+          finalTranscriptRef.current += text + " ";
+        } else {
+          interim += text;
+        }
       }
-      setCurrentAnswer(txt.trim());
+      setCurrentAnswer((finalTranscriptRef.current + interim).trim());
     };
     rec.onerror = (e: any) => {
       console.warn("Speech recognition error:", e.error);
+      if (e.error !== "no-speech" && e.error !== "aborted") {
+        setIsListening(false);
+      }
+    };
+    rec.onend = () => {
+      // Auto-restart if user is still in listening mode (Chrome stops after silence)
+      if (isListeningRef.current) {
+        try {
+          rec.start();
+          return;
+        } catch {
+          // ignore
+        }
+      }
       setIsListening(false);
     };
-    rec.onend = () => setIsListening(false);
     recognitionRef.current = rec;
   }, []);
+
+  // Track listening state in a ref so onend can read latest value
+  const isListeningRef = useRef(false);
+  useEffect(() => {
+    isListeningRef.current = isListening;
+  }, [isListening]);
 
   const startListening = () => {
     if (!recognitionRef.current) {
