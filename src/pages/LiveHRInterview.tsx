@@ -169,9 +169,10 @@ const LiveHRInterview = () => {
       return;
     }
     setCurrentAnswer("");
+    finalTranscriptRef.current = "";
+    setIsListening(true);
     try {
       recognitionRef.current.start();
-      setIsListening(true);
     } catch {
       // already started
     }
