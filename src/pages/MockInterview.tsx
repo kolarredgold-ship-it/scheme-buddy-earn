@@ -329,6 +329,31 @@ const MockInterview = () => {
               </div>
             </div>
 
+            {/* Featured: Live HR Interview */}
+            <div className="max-w-2xl mx-auto mb-5 sm:mb-8">
+              <Card
+                className="group cursor-pointer overflow-hidden border-0 shadow-xl bg-gradient-to-br from-primary via-primary to-purple-600 text-primary-foreground active:scale-[0.99] transition-transform"
+                onClick={() => navigate('/live-hr-interview')}
+              >
+                <CardContent className="p-4 sm:p-5 flex items-center gap-4">
+                  <div className="relative flex-shrink-0">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-background/20 backdrop-blur flex items-center justify-center text-2xl sm:text-3xl">
+                      👩‍💼
+                    </div>
+                    <span className="absolute -top-1 -right-1 bg-yellow-400 text-yellow-900 text-[9px] font-bold px-1.5 py-0.5 rounded-full">LIVE</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <h3 className="text-base sm:text-lg font-bold">Live HR Interview with Priya</h3>
+                      <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
+                    </div>
+                    <p className="text-xs sm:text-sm opacity-90">25 voice questions • Spot Selection / Rejection result</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 flex-shrink-0" />
+                </CardContent>
+              </Card>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6">
               {[
                 { mode: 'course' as TrainingMode, icon: GraduationCap, title: 'Course Based', desc: 'BCom, BBA, BCA, MBA, BE/BTech & more', color: 'from-blue-500 to-indigo-600', badge: '7 Courses' },
