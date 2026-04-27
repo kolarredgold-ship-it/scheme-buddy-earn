@@ -170,18 +170,50 @@ const LiveHRInterview = () => {
       setPhase("interviewing");
       setCurrentIdx(0);
       await speak(data.questions[0]);
+      startTimer();
     } catch (e: any) {
       setLoading(false);
       toast({ title: "Could not start interview", description: e.message, variant: "destructive" });
     }
   };
 
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const startTimer = () => {
+    stopTimer();
+    setTimeLeft(ANSWER_SECONDS);
+    timerRef.current = window.setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          stopTimer();
+          // Auto-submit on next tick so latest answer is captured
+          setTimeout(() => submitRef.current(), 0);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+  };
+
+  // Keep latest answer in ref for timer auto-submit
+  useEffect(() => {
+    answerRef.current = currentAnswer;
+  }, [currentAnswer]);
+
   const submitAndNext = async () => {
+    stopTimer();
     stopListening();
+    const finalAnswer = answerRef.current.trim();
     const newAnswers = [...answers];
-    newAnswers[currentIdx] = currentAnswer.trim();
+    newAnswers[currentIdx] = finalAnswer || "(no answer)";
     setAnswers(newAnswers);
     setCurrentAnswer("");
+    answerRef.current = "";
 
     const next = currentIdx + 1;
     if (next >= questions.length) {
@@ -205,7 +237,13 @@ const LiveHRInterview = () => {
     }
     setCurrentIdx(next);
     await speak(questions[next]);
+    startTimer();
   };
+
+  // Keep submitRef pointing at latest submitAndNext
+  useEffect(() => {
+    submitRef.current = submitAndNext;
+  });
 
   const skipQuestion = async () => {
     setCurrentAnswer("(skipped)");
