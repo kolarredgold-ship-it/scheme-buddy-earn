@@ -394,11 +394,19 @@ const LiveHRInterview = () => {
                 </div>
               ) : (
                 <>
-                  {/* Progress */}
+                  {/* Progress + Timer */}
                   <div className="mb-4">
-                    <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                    <div className="flex justify-between items-center text-xs text-muted-foreground mb-1">
                       <span>Question {currentIdx + 1} of {questions.length}</span>
-                      <Badge variant="secondary" className="text-xs">{Math.round(((currentIdx) / questions.length) * 100)}%</Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant={timeLeft <= 10 && timeLeft > 0 ? "destructive" : "secondary"}
+                          className={`text-xs font-mono tabular-nums ${timeLeft <= 10 && timeLeft > 0 ? "animate-pulse" : ""}`}
+                        >
+                          ⏱ {String(Math.floor(timeLeft / 60)).padStart(1, "0")}:{String(timeLeft % 60).padStart(2, "0")}
+                        </Badge>
+                        <Badge variant="secondary" className="text-xs">{Math.round(((currentIdx) / questions.length) * 100)}%</Badge>
+                      </div>
                     </div>
                     <Progress value={((currentIdx) / questions.length) * 100} className="h-2" />
                   </div>
