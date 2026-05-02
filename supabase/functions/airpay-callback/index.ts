@@ -119,7 +119,7 @@ serve(async (req) => {
           user_id: userId,
           amount: parseFloat(amount) || 999,
           type: "credit",
-          source: `Airpay Payment - ${apTransactionId}`,
+          source: `Airpay|${orderId}|${apTransactionId}|success|${parseFloat(amount) || 999}`,
         });
 
         const { data: profile } = await supabaseClient
@@ -196,6 +196,20 @@ serve(async (req) => {
             }
           }
         }
+      }
+    }
+
+    // Log failed attempts so the polling status page and dashboard can surface them.
+    if (!isSuccess && orderId) {
+      const parts = orderId.split("_");
+      if (parts.length >= 2) {
+        const userId = parts[1];
+        await supabaseClient.from("transactions").insert({
+          user_id: userId,
+          amount: parseFloat(amount) || 0,
+          type: "debit",
+          source: `Airpay|${orderId}|${apTransactionId || "n/a"}|failed|${parseFloat(amount) || 0}`,
+        }).then(() => {}).catch(() => {});
       }
     }
 
