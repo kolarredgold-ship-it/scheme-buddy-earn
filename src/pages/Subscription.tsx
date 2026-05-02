@@ -248,6 +248,23 @@ const Subscription = () => {
 
         {user ? (
           <>
+            {initError && (
+              <Card className="mb-3 border-destructive/50 bg-destructive/5">
+                <CardContent className="p-3 text-sm">
+                  <p className="font-medium text-destructive mb-1">Payment couldn't start</p>
+                  <p className="text-xs text-muted-foreground mb-2">{initError}</p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full"
+                    onClick={handlePayNow}
+                    disabled={paying}
+                  >
+                    {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : `Retry payment (attempt ${lastAttempt + 1})`}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
             <Button
               size="lg"
               className="w-full text-lg py-6"
@@ -256,6 +273,8 @@ const Subscription = () => {
             >
               {paying ? (
                 <><Loader2 className="h-5 w-5 mr-2 animate-spin" /> Redirecting to Airpay...</>
+              ) : initError ? (
+                <>Try again — Pay ₹{price.toLocaleString()}</>
               ) : (
                 <>Pay ₹{price.toLocaleString()} Securely</>
               )}
