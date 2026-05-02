@@ -83,9 +83,59 @@ const Subscription = () => {
     setApplyingCoupon(false);
   };
 
-  const handleWhatsAppContact = () => {
-    const msg = `Hi, I want to subscribe to Techrola Premium (₹${price.toLocaleString()}).%0AMy name: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}%0AReferral code used: ${profile?.referred_by || couponCode || "None"}`;
-    window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
+  const [paying, setPaying] = useState(false);
+
+  const handlePayNow = async () => {
+    if (!user || !profile) {
+      toast.error("Please login to continue");
+      return;
+    }
+    const phone = (profile.mobile || "").replace(/\D/g, "");
+    if (!phone || phone.length < 10) {
+      toast.error("Please add your mobile number in your profile first");
+      return;
+    }
+    const [firstName, ...rest] = (profile.name || "Customer").trim().split(" ");
+    const lastName = rest.join(" ") || "User";
+    const email = profile.email || user.email || "";
+    const orderId = `TR${Date.now()}${Math.floor(Math.random() * 1000)}`;
+
+    setPaying(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("airpay-payment", {
+        body: {
+          userId: user.id,
+          orderId,
+          amount: price,
+          buyerEmail: email,
+          buyerPhone: phone.slice(-10),
+          buyerFirstname: firstName,
+          buyerLastname: lastName,
+        },
+      });
+
+      if (error || !data?.success) {
+        throw new Error((data as any)?.error || error?.message || "Payment init failed");
+      }
+
+      // Build and auto-submit form to Airpay checkout
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = data.paymentUrl;
+      form.style.display = "none";
+      Object.entries(data.formData as Record<string, string>).forEach(([k, v]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = v;
+        form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      form.submit();
+    } catch (e: any) {
+      toast.error(e.message || "Could not start payment");
+      setPaying(false);
+    }
   };
 
   return (
@@ -172,14 +222,32 @@ const Subscription = () => {
         </Card>
 
         {user ? (
-          <Button 
-            size="lg" 
-            className="w-full text-lg py-6 bg-green-600 hover:bg-green-700" 
-            onClick={handleWhatsAppContact}
-          >
-            <MessageCircle className="h-5 w-5 mr-2" />
-            Pay ₹{price.toLocaleString()} via WhatsApp
-          </Button>
+          <>
+            <Button
+              size="lg"
+              className="w-full text-lg py-6"
+              onClick={handlePayNow}
+              disabled={paying}
+            >
+              {paying ? (
+                <><Loader2 className="h-5 w-5 mr-2 animate-spin" /> Redirecting to Airpay...</>
+              ) : (
+                <>Pay ₹{price.toLocaleString()} Securely</>
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full mt-2"
+              onClick={() => {
+                const msg = `Hi, I need help paying for Techrola Premium (₹${price.toLocaleString()}).%0AName: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}`;
+                window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
+              }}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Need help? Contact on WhatsApp
+            </Button>
+          </>
         ) : (
           <Link to="/plans">
             <Button size="lg" className="w-full text-lg py-6">
@@ -189,7 +257,7 @@ const Subscription = () => {
         )}
 
         <p className="text-center text-xs text-muted-foreground mt-3">
-          Contact us on WhatsApp to complete your payment. Your account will be activated within minutes.
+          🔒 Secure payment powered by Airpay. Your subscription activates instantly upon successful payment.
         </p>
       </div>
     </Layout>
