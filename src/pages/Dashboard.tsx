@@ -152,17 +152,40 @@ const Dashboard = () => {
               <p className="text-center text-muted-foreground py-8">No transactions yet. Refer friends to start earning!</p>
             ) : (
               <div className="space-y-3">
-                {transactions.map((t) => (
-                  <div key={t.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                    <div>
-                      <p className="font-medium text-sm">{t.source}</p>
-                      <p className="text-xs text-muted-foreground">{format(new Date(t.created_at), "dd MMM yyyy, hh:mm a")}</p>
+                {transactions.map((t) => {
+                  const isAirpay = typeof t.source === "string" && t.source.startsWith("Airpay|");
+                  const parts = isAirpay ? String(t.source).split("|") : [];
+                  const orderId = parts[1];
+                  const txnId = parts[2];
+                  const payStatus = parts[3]; // success | failed
+                  const isFail = payStatus === "failed";
+
+                  return (
+                    <div key={t.id} className="p-3 rounded-lg bg-muted/50">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="font-medium text-sm truncate">
+                            {isAirpay ? (isFail ? "Airpay Payment Failed" : "Premium Subscription Payment") : t.source}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{format(new Date(t.created_at), "dd MMM yyyy, hh:mm a")}</p>
+                        </div>
+                        <Badge
+                          variant={t.type === "credit" && !isFail ? "default" : "destructive"}
+                          className={t.type === "credit" && !isFail ? "bg-secondary text-secondary-foreground shrink-0" : "shrink-0"}
+                        >
+                          {t.type === "credit" ? "+" : "-"}₹{Number(t.amount).toFixed(2)}
+                        </Badge>
+                      </div>
+                      {isAirpay && (
+                        <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-muted-foreground border-t border-border/40 pt-2">
+                          {orderId && <div className="truncate">Order: <span className="font-mono">{orderId.slice(0, 18)}…</span></div>}
+                          {txnId && txnId !== "n/a" && <div className="truncate">Txn: <span className="font-mono">{txnId}</span></div>}
+                          <div>Status: <span className={isFail ? "text-destructive font-medium" : "text-secondary font-medium"}>{isFail ? "Failed" : "Success"}</span></div>
+                        </div>
+                      )}
                     </div>
-                    <Badge variant={t.type === "credit" ? "default" : "destructive"} className={t.type === "credit" ? "bg-secondary text-secondary-foreground" : ""}>
-                      {t.type === "credit" ? "+" : "-"}₹{Number(t.amount).toFixed(2)}
-                    </Badge>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
