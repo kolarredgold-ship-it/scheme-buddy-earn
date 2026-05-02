@@ -119,7 +119,7 @@ serve(async (req) => {
           user_id: userId,
           amount: parseFloat(amount) || 999,
           type: "credit",
-          source: `Airpay Payment - ${apTransactionId}`,
+          source: `Airpay|${orderId}|${apTransactionId}|success|${parseFloat(amount) || 999}`,
         });
 
         const { data: profile } = await supabaseClient
