@@ -84,6 +84,8 @@ const Subscription = () => {
   };
 
   const [paying, setPaying] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
+  const [lastAttempt, setLastAttempt] = useState<number>(0);
 
   const handlePayNow = async () => {
     if (!user || !profile) {
@@ -98,27 +100,46 @@ const Subscription = () => {
     const [firstName, ...rest] = (profile.name || "Customer").trim().split(" ");
     const lastName = rest.join(" ") || "User";
     const email = profile.email || user.email || "";
-    const orderId = `TR${Date.now()}${Math.floor(Math.random() * 1000)}`;
+    // Format must be SUB_{userId}_{timestamp} so the callback can extract the user_id
+    const orderId = `SUB_${user.id}_${Date.now()}`;
 
+    setInitError(null);
     setPaying(true);
+    setLastAttempt((n) => n + 1);
+
     try {
-      const { data, error } = await supabase.functions.invoke("airpay-payment", {
-        body: {
-          userId: user.id,
-          orderId,
-          amount: price,
-          buyerEmail: email,
-          buyerPhone: phone.slice(-10),
-          buyerFirstname: firstName,
-          buyerLastname: lastName,
-        },
-      });
+      localStorage.setItem(
+        "airpay_pending_order",
+        JSON.stringify({ orderId, amount: price, createdAt: Date.now() })
+      );
+    } catch {}
+
+    // Hard timeout so a stuck request surfaces a retry button
+    const timeoutPromise = new Promise<never>((_, rej) =>
+      setTimeout(() => rej(new Error("timeout")), 20000)
+    );
+
+    try {
+      const result: any = await Promise.race([
+        supabase.functions.invoke("airpay-payment", {
+          body: {
+            userId: user.id,
+            orderId,
+            amount: price,
+            buyerEmail: email,
+            buyerPhone: phone.slice(-10),
+            buyerFirstname: firstName,
+            buyerLastname: lastName,
+          },
+        }),
+        timeoutPromise,
+      ]);
+      const { data, error } = result;
 
       if (error || !data?.success) {
         throw new Error((data as any)?.error || error?.message || "Payment init failed");
       }
 
-      // Build and auto-submit form to Airpay checkout
       const form = document.createElement("form");
       form.method = "POST";
       form.action = data.paymentUrl;
@@ -133,7 +154,11 @@ const Subscription = () => {
       document.body.appendChild(form);
       form.submit();
     } catch (e: any) {
-      toast.error(e.message || "Could not start payment");
+      const msg = e?.message === "timeout"
+        ? "Airpay took too long to respond. Please retry."
+        : (e?.message || "Could not start payment");
+      setInitError(msg);
+      toast.error(msg);
       setPaying(false);
     }
   };
