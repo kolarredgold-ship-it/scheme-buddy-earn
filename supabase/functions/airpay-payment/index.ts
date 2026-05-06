@@ -137,7 +137,7 @@ serve(async (req) => {
         const oauthChecksumBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(oauthChecksumStr));
         const oauthChecksum = Array.from(new Uint8Array(oauthChecksumBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
 
-        const oauthResponse = await fetch("https://kraken.airpay.co.in/airpay/pay/v4/api/oauth2/", {
+        const oauthResponse = await fetch(oauthEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({
