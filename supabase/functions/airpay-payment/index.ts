@@ -56,7 +56,7 @@ serve(async (req) => {
     // Prepare payment data
     const paymentData: Record<string, string> = {
       orderid: orderId,
-      amount: parseFloat(amount).toFixed(2),
+      amount: parseFloat(String(effectiveAmount)).toFixed(2),
       currency_code: "356",
       iso_currency: "inr",
       buyer_email: buyerEmail,
