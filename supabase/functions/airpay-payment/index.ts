@@ -185,6 +185,8 @@ serve(async (req) => {
     return new Response(JSON.stringify({
       success: true,
       paymentUrl,
+      mode: isTest ? "test" : "live",
+      effectiveAmount,
       formData: {
         privatekey: privateKey,
         merchant_id: merchantId,
