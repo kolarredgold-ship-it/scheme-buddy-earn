@@ -252,6 +252,29 @@ const Subscription = () => {
 
         {user ? (
           <>
+            {isAdmin && (
+              <Card className={`mb-3 border-2 ${testMode ? "border-amber-500/60 bg-amber-500/5" : "border-muted"}`}>
+                <CardContent className="p-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <FlaskConical className={`h-4 w-4 ${testMode ? "text-amber-600" : "text-muted-foreground"}`} />
+                    <div>
+                      <Label htmlFor="test-mode" className="text-sm font-semibold cursor-pointer">
+                        Airpay {testMode ? "Test (Sandbox)" : "Live"} Mode
+                      </Label>
+                      <p className="text-xs text-muted-foreground">
+                        {testMode ? "Sandbox checkout, charges ₹1 only" : "Real payment on production gateway"}
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    id="test-mode"
+                    checked={testMode}
+                    onCheckedChange={setTestMode}
+                    disabled={paying}
+                  />
+                </CardContent>
+              </Card>
+            )}
             {initError && (
               <Card className="mb-3 border-destructive/50 bg-destructive/5">
                 <CardContent className="p-3 text-sm">
