@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { userId, orderId, amount, buyerEmail, buyerPhone, buyerFirstname, buyerLastname } = await req.json();
+    const { userId, orderId, amount, buyerEmail, buyerPhone, buyerFirstname, buyerLastname, mode } = await req.json();
 
     if (!userId || !orderId || !amount || !buyerEmail || !buyerPhone || !buyerFirstname) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -20,6 +20,16 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Test/Live mode: in test mode, force ₹1 amount and use Airpay sandbox endpoints
+    const isTest = mode === "test";
+    const effectiveAmount = isTest ? 1 : amount;
+    const oauthEndpoint = isTest
+      ? "https://sandbox.airpay.co.in/airpay/pay/v4/api/oauth2/"
+      : "https://kraken.airpay.co.in/airpay/pay/v4/api/oauth2/";
+    const checkoutBase = isTest
+      ? "https://sandbox.airpay.co.in/pay/v4/"
+      : "https://payments.airpay.co.in/pay/v4/";
 
     // Airpay credentials from secrets
     const merchantId = Deno.env.get("AIRPAY_MERCHANT_ID");
