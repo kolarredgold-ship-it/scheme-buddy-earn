@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Check, Star, Zap, Shield, Loader2, Tag, MessageCircle, FlaskConical } from "lucide-react";
+import { Check, Star, Zap, Shield, Loader2, Tag, MessageCircle, FlaskConical, AlertCircle, RefreshCw } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
