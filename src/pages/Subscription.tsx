@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Check, Star, Zap, Shield, Loader2, Tag, MessageCircle, FlaskConical } from "lucide-react";
+import { Check, Star, Zap, Shield, Loader2, Tag, MessageCircle, FlaskConical, AlertCircle, RefreshCw } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
@@ -87,25 +87,90 @@ const Subscription = () => {
   };
 
   const [paying, setPaying] = useState(false);
-  const [initError, setInitError] = useState<string | null>(null);
   const [lastAttempt, setLastAttempt] = useState<number>(0);
+  const [initError, setInitError] = useState<{
+    title: string;
+    detail: string;
+    hint: string;
+    code: "network" | "timeout" | "validation" | "auth" | "config" | "gateway" | "unknown";
+    raw?: string;
+  } | null>(null);
+  // Persist order context across retries so the same orderId is reused
+  const [pendingOrder, setPendingOrder] = useState<{
+    orderId: string;
+    amount: number;
+    buyerEmail: string;
+    buyerPhone: string;
+    buyerFirstname: string;
+    buyerLastname: string;
+  } | null>(null);
 
-  const handlePayNow = async () => {
-    if (!user || !profile) {
-      toast.error("Please login to continue");
-      return;
+  const classifyError = (raw: string): NonNullable<typeof initError> => {
+    const m = raw.toLowerCase();
+    if (m === "timeout" || m.includes("timed out")) {
+      return {
+        title: "Airpay didn't respond in time",
+        detail: "The payment gateway took too long to start your checkout.",
+        hint: "Check your internet connection and tap retry. Your order ID is preserved.",
+        code: "timeout",
+        raw,
+      };
     }
-    const phone = (profile.mobile || "").replace(/\D/g, "");
-    if (!phone || phone.length < 10) {
-      toast.error("Please add your mobile number in your profile first");
-      return;
+    if (m.includes("failed to fetch") || m.includes("network") || m.includes("load failed")) {
+      return {
+        title: "Network connection issue",
+        detail: "We couldn't reach the payment service from your device.",
+        hint: "Reconnect to Wi-Fi or mobile data, then retry.",
+        code: "network",
+        raw,
+      };
     }
-    const [firstName, ...rest] = (profile.name || "Customer").trim().split(" ");
-    const lastName = rest.join(" ") || "User";
-    const email = profile.email || user.email || "";
-    // Format must be SUB_{userId}_{timestamp} so the callback can extract the user_id
-    const orderId = `SUB_${user.id}_${Date.now()}`;
+    if (m.includes("missing required")) {
+      return {
+        title: "Profile information missing",
+        detail: "Some details required by Airpay are missing from your profile.",
+        hint: "Make sure your name, email, and 10-digit mobile are filled in.",
+        code: "validation",
+        raw,
+      };
+    }
+    if (m.includes("login") || m.includes("auth") || m.includes("unauthorized") || m.includes("jwt")) {
+      return {
+        title: "Session expired",
+        detail: "Your login session has expired during checkout.",
+        hint: "Please log in again to continue.",
+        code: "auth",
+        raw,
+      };
+    }
+    if (m.includes("airpay credentials") || m.includes("not configured") || m.includes("misconfigured")) {
+      return {
+        title: "Payment gateway not configured",
+        detail: "Airpay credentials are missing on the server.",
+        hint: "Please contact support — this is on our side, not yours.",
+        code: "config",
+        raw,
+      };
+    }
+    if (m.includes("airpay") || m.includes("checksum") || m.includes("encrypt")) {
+      return {
+        title: "Payment gateway error",
+        detail: "Airpay rejected the request to start your checkout.",
+        hint: "Wait a few seconds and try again. If it keeps failing, contact support.",
+        code: "gateway",
+        raw,
+      };
+    }
+    return {
+      title: "Couldn't start payment",
+      detail: raw || "An unexpected error occurred while contacting the gateway.",
+      hint: "Tap retry — your order will be reused.",
+      code: "unknown",
+      raw,
+    };
+  };
 
+  const startPayment = async (order: NonNullable<typeof pendingOrder>) => {
     setInitError(null);
     setPaying(true);
     setLastAttempt((n) => n + 1);
@@ -113,11 +178,10 @@ const Subscription = () => {
     try {
       localStorage.setItem(
         "airpay_pending_order",
-        JSON.stringify({ orderId, amount: price, createdAt: Date.now() })
+        JSON.stringify({ orderId: order.orderId, amount: order.amount, createdAt: Date.now() })
       );
     } catch {}
 
-    // Hard timeout so a stuck request surfaces a retry button
     const timeoutPromise = new Promise<never>((_, rej) =>
       setTimeout(() => rej(new Error("timeout")), 20000)
     );
@@ -126,13 +190,13 @@ const Subscription = () => {
       const result: any = await Promise.race([
         supabase.functions.invoke("airpay-payment", {
           body: {
-            userId: user.id,
-            orderId,
-            amount: price,
-            buyerEmail: email,
-            buyerPhone: phone.slice(-10),
-            buyerFirstname: firstName,
-            buyerLastname: lastName,
+            userId: user!.id,
+            orderId: order.orderId,
+            amount: order.amount,
+            buyerEmail: order.buyerEmail,
+            buyerPhone: order.buyerPhone,
+            buyerFirstname: order.buyerFirstname,
+            buyerLastname: order.buyerLastname,
             mode: testMode ? "test" : "live",
           },
         }),
@@ -158,13 +222,53 @@ const Subscription = () => {
       document.body.appendChild(form);
       form.submit();
     } catch (e: any) {
-      const msg = e?.message === "timeout"
-        ? "Airpay took too long to respond. Please retry."
-        : (e?.message || "Could not start payment");
-      setInitError(msg);
-      toast.error(msg);
+      const friendly = classifyError(e?.message || String(e));
+      setInitError(friendly);
+      toast.error(friendly.title);
       setPaying(false);
     }
+  };
+
+  const handlePayNow = async () => {
+    if (!user || !profile) {
+      toast.error("Please login to continue");
+      return;
+    }
+    const phone = (profile.mobile || "").replace(/\D/g, "");
+    if (!phone || phone.length < 10) {
+      toast.error("Please add your mobile number in your profile first");
+      return;
+    }
+    const [firstName, ...rest] = (profile.name || "Customer").trim().split(" ");
+    const lastName = rest.join(" ") || "User";
+    const email = profile.email || user.email || "";
+    const orderId = `SUB_${user.id}_${Date.now()}`;
+
+    const order = {
+      orderId,
+      amount: price,
+      buyerEmail: email,
+      buyerPhone: phone.slice(-10),
+      buyerFirstname: firstName,
+      buyerLastname: lastName,
+    };
+    setPendingOrder(order);
+    await startPayment(order);
+  };
+
+  const handleRetry = async () => {
+    if (pendingOrder) {
+      await startPayment(pendingOrder);
+    } else {
+      await handlePayNow();
+    }
+  };
+
+  const handleFreshOrder = async () => {
+    setPendingOrder(null);
+    setInitError(null);
+    setLastAttempt(0);
+    await handlePayNow();
   };
 
   return (
@@ -276,19 +380,65 @@ const Subscription = () => {
               </Card>
             )}
             {initError && (
-              <Card className="mb-3 border-destructive/50 bg-destructive/5">
-                <CardContent className="p-3 text-sm">
-                  <p className="font-medium text-destructive mb-1">Payment couldn't start</p>
-                  <p className="text-xs text-muted-foreground mb-2">{initError}</p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="w-full"
-                    onClick={handlePayNow}
-                    disabled={paying}
-                  >
-                    {paying ? <Loader2 className="h-4 w-4 animate-spin" /> : `Retry payment (attempt ${lastAttempt + 1})`}
-                  </Button>
+              <Card className="mb-3 border-destructive/40 bg-destructive/5">
+                <CardContent className="p-4 text-sm space-y-3">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-destructive">{initError.title}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{initError.detail}</p>
+                      <p className="text-xs text-foreground/80 mt-2">💡 {initError.hint}</p>
+                      {pendingOrder && (
+                        <p className="text-[10px] text-muted-foreground mt-2 font-mono break-all">
+                          Order: {pendingOrder.orderId}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {initError.code === "auth" ? (
+                    <Button size="sm" className="w-full" onClick={() => (window.location.href = "/login")}>
+                      Log in again
+                    </Button>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        size="sm"
+                        className="w-full"
+                        onClick={handleRetry}
+                        disabled={paying}
+                      >
+                        {paying ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <><RefreshCw className="h-3.5 w-3.5 mr-1.5" /> Retry (try {lastAttempt + 1})</>
+                        )}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-full"
+                        onClick={handleFreshOrder}
+                        disabled={paying}
+                      >
+                        New order
+                      </Button>
+                    </div>
+                  )}
+
+                  {(initError.code === "config" || initError.code === "gateway") && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="w-full text-xs"
+                      onClick={() => {
+                        const msg = `Hi, payment failed for Techrola Premium.%0AReason: ${encodeURIComponent(initError.title)}%0AOrder: ${pendingOrder?.orderId || "n/a"}%0AName: ${profile?.name || "N/A"}`;
+                        window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
+                      }}
+                    >
+                      <MessageCircle className="h-3.5 w-3.5 mr-1.5" /> Contact support on WhatsApp
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             )}
