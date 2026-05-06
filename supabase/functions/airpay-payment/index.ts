@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { userId, orderId, amount, buyerEmail, buyerPhone, buyerFirstname, buyerLastname } = await req.json();
+    const { userId, orderId, amount, buyerEmail, buyerPhone, buyerFirstname, buyerLastname, mode } = await req.json();
 
     if (!userId || !orderId || !amount || !buyerEmail || !buyerPhone || !buyerFirstname) {
       return new Response(JSON.stringify({ error: "Missing required fields" }), {
@@ -20,6 +20,16 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Test/Live mode: in test mode, force ₹1 amount and use Airpay sandbox endpoints
+    const isTest = mode === "test";
+    const effectiveAmount = isTest ? 1 : amount;
+    const oauthEndpoint = isTest
+      ? "https://sandbox.airpay.co.in/airpay/pay/v4/api/oauth2/"
+      : "https://kraken.airpay.co.in/airpay/pay/v4/api/oauth2/";
+    const checkoutBase = isTest
+      ? "https://sandbox.airpay.co.in/pay/v4/"
+      : "https://payments.airpay.co.in/pay/v4/";
 
     // Airpay credentials from secrets
     const merchantId = Deno.env.get("AIRPAY_MERCHANT_ID");
@@ -46,7 +56,7 @@ serve(async (req) => {
     // Prepare payment data
     const paymentData: Record<string, string> = {
       orderid: orderId,
-      amount: parseFloat(amount).toFixed(2),
+      amount: parseFloat(String(effectiveAmount)).toFixed(2),
       currency_code: "356",
       iso_currency: "inr",
       buyer_email: buyerEmail,
@@ -127,7 +137,7 @@ serve(async (req) => {
         const oauthChecksumBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(oauthChecksumStr));
         const oauthChecksum = Array.from(new Uint8Array(oauthChecksumBuffer)).map(b => b.toString(16).padStart(2, "0")).join("");
 
-        const oauthResponse = await fetch("https://kraken.airpay.co.in/airpay/pay/v4/api/oauth2/", {
+        const oauthResponse = await fetch(oauthEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({
@@ -169,12 +179,14 @@ serve(async (req) => {
 
     // Return payment form data for client-side form submission
     const paymentUrl = token 
-      ? `https://payments.airpay.co.in/pay/v4/?token=${token}`
-      : `https://payments.airpay.co.in/pay/v4/`;
+      ? `${checkoutBase}?token=${token}`
+      : checkoutBase;
 
     return new Response(JSON.stringify({
       success: true,
       paymentUrl,
+      mode: isTest ? "test" : "live",
+      effectiveAmount,
       formData: {
         privatekey: privateKey,
         merchant_id: merchantId,
