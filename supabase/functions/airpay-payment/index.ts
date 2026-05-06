@@ -179,8 +179,8 @@ serve(async (req) => {
 
     // Return payment form data for client-side form submission
     const paymentUrl = token 
-      ? `https://payments.airpay.co.in/pay/v4/?token=${token}`
-      : `https://payments.airpay.co.in/pay/v4/`;
+      ? `${checkoutBase}?token=${token}`
+      : checkoutBase;
 
     return new Response(JSON.stringify({
       success: true,
