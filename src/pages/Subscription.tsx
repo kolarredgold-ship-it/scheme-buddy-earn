@@ -299,11 +299,11 @@ const Subscription = () => {
               disabled={paying}
             >
               {paying ? (
-                <><Loader2 className="h-5 w-5 mr-2 animate-spin" /> Redirecting to Airpay...</>
+                <><Loader2 className="h-5 w-5 mr-2 animate-spin" /> Redirecting to Airpay{testMode ? " Sandbox" : ""}...</>
               ) : initError ? (
-                <>Try again — Pay ₹{price.toLocaleString()}</>
+                <>Try again — Pay ₹{(testMode ? 1 : price).toLocaleString()}</>
               ) : (
-                <>Pay ₹{price.toLocaleString()} Securely</>
+                <>Pay ₹{(testMode ? 1 : price).toLocaleString()} {testMode ? "(Test)" : "Securely"}</>
               )}
             </Button>
             <Button
