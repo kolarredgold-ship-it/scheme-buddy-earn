@@ -133,6 +133,7 @@ const Subscription = () => {
             buyerPhone: phone.slice(-10),
             buyerFirstname: firstName,
             buyerLastname: lastName,
+            mode: testMode ? "test" : "live",
           },
         }),
         timeoutPromise,
