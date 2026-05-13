@@ -430,9 +430,10 @@ const Index = () => {
   };
 
   // State-filtered base
+  // Central govt schemes are always visible across all state filters
   const stateFiltered = selectedState === "all"
     ? schemes
-    : schemes.filter((s) => s.state === selectedState);
+    : schemes.filter((s) => s.state === selectedState || s.state === "central");
 
   const getSchemesByCategory = (cat: string) => {
     return stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
