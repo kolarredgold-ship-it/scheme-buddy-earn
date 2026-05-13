@@ -120,6 +120,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             )}
             <button
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
               className="h-10 w-10 rounded-xl flex items-center justify-center hover:bg-muted transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
