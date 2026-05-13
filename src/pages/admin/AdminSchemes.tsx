@@ -215,7 +215,7 @@ const AdminSchemes = () => {
                   <label className="text-sm font-medium">Scheme Image</label>
                   {form.image_url && (
                     <div className="relative w-full h-32 rounded-lg overflow-hidden bg-muted mb-2">
-                      <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
+                      <img src={form.image_url} alt="Scheme image preview" className="w-full h-full object-cover" />
                       <button type="button" onClick={() => setForm({ ...form, image_url: "" })} className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 text-xs">✕</button>
                     </div>
                   )}
