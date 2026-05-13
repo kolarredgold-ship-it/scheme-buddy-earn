@@ -80,7 +80,7 @@ const SmartSearch = ({ onClose }: SmartSearchProps) => {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full h-12 pl-10 pr-4 rounded-xl bg-card border border-primary/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all placeholder:text-muted-foreground/50"
+            className="w-full h-12 pl-10 pr-4 rounded-xl bg-card border border-primary/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/40 transition-all placeholder:text-muted-foreground"
             autoFocus
           />
         </div>
