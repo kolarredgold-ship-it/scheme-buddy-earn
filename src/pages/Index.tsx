@@ -274,6 +274,7 @@ const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearc
         {HERO_SLIDES.map((_, i) => (
           <button
             key={i}
+            aria-label={`Go to slide ${i + 1}`}
             onClick={() => goTo(i)}
             className="flex-1 h-1 rounded-full bg-white/20 overflow-hidden"
           >
