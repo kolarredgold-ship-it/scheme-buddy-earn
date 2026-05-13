@@ -51,9 +51,9 @@ const NotificationBell = () => {
         .order("created_at", { ascending: false })
         .limit(20);
 
-      // Filter by user's preferred state if set
+      // Filter by user's preferred state, but always include central govt notifications
       if (preferredState && preferredState !== "all") {
-        query = query.eq("state", preferredState);
+        query = query.in("state", [preferredState, "central"]);
       }
 
       const { data } = await query;
