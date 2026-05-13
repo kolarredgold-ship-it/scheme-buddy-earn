@@ -81,7 +81,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
-                <Button variant="ghost" size="icon" onClick={() => setPrefsOpen(true)} className="rounded-xl h-9 w-9 hover:bg-primary/10 hover:text-primary" title="Personalize">
+                <Button aria-label="Personalize feed" variant="ghost" size="icon" onClick={() => setPrefsOpen(true)} className="rounded-xl h-9 w-9 hover:bg-primary/10 hover:text-primary" title="Personalize">
                   <Settings2 className="h-4 w-4" />
                 </Button>
                 <NotificationBell />
@@ -95,7 +95,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   </div>
                   <span className="text-sm font-medium max-w-[120px] truncate">{profile?.name || 'User'}</span>
                 </div>
-                <Button variant="ghost" size="icon" onClick={signOut} className="rounded-xl h-9 w-9 hover:bg-destructive/10 hover:text-destructive">
+                <Button aria-label="Log out" variant="ghost" size="icon" onClick={signOut} className="rounded-xl h-9 w-9 hover:bg-destructive/10 hover:text-destructive">
                   <LogOut className="h-4 w-4" />
                 </Button>
               </div>
