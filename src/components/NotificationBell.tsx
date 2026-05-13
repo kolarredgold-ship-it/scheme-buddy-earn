@@ -67,7 +67,7 @@ const NotificationBell = () => {
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "scheme_notifications" }, (payload) => {
         const newNotif = payload.new as Notification;
         // Only show if matches preferences
-        if (preferredState && preferredState !== "all" && newNotif.state !== preferredState) return;
+        if (preferredState && preferredState !== "all" && newNotif.state !== preferredState && newNotif.state !== "central") return;
         if (preferredCategories.length > 0 && !preferredCategories.includes(newNotif.category)) return;
         setNotifications(prev => [newNotif, ...prev].slice(0, 20));
       })
