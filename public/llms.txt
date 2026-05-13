@@ -1,0 +1,25 @@
+# Techrola
+
+> Techrola is India's platform for discovering 550+ government schemes, scholarships, and welfare programs, plus AI-powered career tools (internship reports, mock interviews) and a referral earning program.
+
+## Pages
+
+- [Home](/): Browse and search government schemes by state and category.
+- [Career Program](/career-program): 6-step gated career growth path for promoters.
+- [AI Tools](/ai-tools): AI-powered career and learning utilities.
+- [AI Report Generator](/create-report): Generate internship reports as DOCX.
+- [Mock Interview](/mock-interview): AI-driven interview practice across 4 paths.
+- [Plans](/plans): Free vs Pro subscription tiers.
+- [Subscription](/subscription): Manage Pro subscription via WhatsApp.
+- [Leaderboard](/leaderboard): Top earners in the referral program.
+- [Install](/install): Install Techrola as a PWA on Android/iOS.
+- [About Us](/about-us): Mission and what we offer.
+- [Contact Us](/contact-us): Email, phone, and address.
+- [Privacy Policy](/privacy-policy): Data handling.
+- [Terms & Conditions](/terms-conditions): Usage terms.
+- [Refund Policy](/refund-policy): Refund rules.
+
+## Notes
+
+- Scheme detail pages live at /scheme/{slug}.
+- All AI-generated scheme info includes a disclaimer to verify on official government sites.

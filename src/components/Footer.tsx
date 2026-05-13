@@ -8,7 +8,7 @@ const Footer = () => (
         {/* Brand */}
         <div className="col-span-2 md:col-span-1">
           <Link to="/">
-            <img src={techrolaLogo} alt="Techrola" className="h-8 w-auto mb-3" />
+            <img src={techrolaLogo} alt="Techrola Logo" className="h-8 w-auto mb-3" />
           </Link>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Empowering citizens with easy access to 550+ government schemes, scholarships & welfare programs.
