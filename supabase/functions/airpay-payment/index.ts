@@ -71,8 +71,17 @@ serve(async (req) => {
     for (const key of sortedKeys) {
       checksumStr += paymentData[key];
     }
-    const today = new Date();
-    const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    // Airpay servers run in IST (Asia/Kolkata, UTC+5:30). Use IST date for checksum.
+    const istParts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(new Date());
+    const istY = istParts.find(p => p.type === "year")!.value;
+    const istM = istParts.find(p => p.type === "month")!.value;
+    const istD = istParts.find(p => p.type === "day")!.value;
+    const dateStr = `${istY}-${istM}-${istD}`;
     checksumStr += dateStr;
     
     const checksumBuffer = await crypto.subtle.digest("SHA-256", encoder.encode(checksumStr));
