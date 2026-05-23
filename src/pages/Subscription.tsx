@@ -31,6 +31,23 @@ const Subscription = () => {
   const [couponApplied, setCouponApplied] = useState(false);
   const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [testMode, setTestMode] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [lastAttempt, setLastAttempt] = useState<number>(0);
+  const [initError, setInitError] = useState<{
+    title: string;
+    detail: string;
+    hint: string;
+    code: "network" | "timeout" | "validation" | "auth" | "config" | "gateway" | "unknown";
+    raw?: string;
+  } | null>(null);
+  const [pendingOrder, setPendingOrder] = useState<{
+    orderId: string;
+    amount: number;
+    buyerEmail: string;
+    buyerPhone: string;
+    buyerFirstname: string;
+    buyerLastname: string;
+  } | null>(null);
 
   if (loading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
 
