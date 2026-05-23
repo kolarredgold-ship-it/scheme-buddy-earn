@@ -90,7 +90,7 @@ serve(async (req) => {
       keyData.slice(0, 32),
       { name: "AES-CBC" },
       false,
-      ["encrypt"]
+      ["encrypt", "decrypt"]
     );
 
     const ivBytes = encoder.encode(ivHex);
