@@ -103,24 +103,6 @@ const Subscription = () => {
     setApplyingCoupon(false);
   };
 
-  const [paying, setPaying] = useState(false);
-  const [lastAttempt, setLastAttempt] = useState<number>(0);
-  const [initError, setInitError] = useState<{
-    title: string;
-    detail: string;
-    hint: string;
-    code: "network" | "timeout" | "validation" | "auth" | "config" | "gateway" | "unknown";
-    raw?: string;
-  } | null>(null);
-  // Persist order context across retries so the same orderId is reused
-  const [pendingOrder, setPendingOrder] = useState<{
-    orderId: string;
-    amount: number;
-    buyerEmail: string;
-    buyerPhone: string;
-    buyerFirstname: string;
-    buyerLastname: string;
-  } | null>(null);
 
   const classifyError = (raw: string): NonNullable<typeof initError> => {
     const m = raw.toLowerCase();
