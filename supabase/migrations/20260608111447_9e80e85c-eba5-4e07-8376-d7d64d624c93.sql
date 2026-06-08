@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.handle_payment_verified() FROM PUBLIC, anon, authenticated;
