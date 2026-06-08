@@ -30,7 +30,7 @@ const CareerProgram = lazy(() => import("./pages/CareerProgram"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const AdminCareer = lazy(() => import("./pages/admin/AdminCareer"));
 const EmpDashboard = lazy(() => import("./pages/EmpDashboard"));
-const PaymentStatus = lazy(() => import("./pages/PaymentStatus"));
+const AdminPayments = lazy(() => import("./pages/admin/AdminPayments"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
@@ -90,7 +90,7 @@ const App = () => {
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/admin/career" element={<AdminCareer />} />
               <Route path="/emp" element={<EmpDashboard />} />
-              <Route path="/payment-status" element={<PaymentStatus />} />
+              <Route path="/admin/payments" element={<AdminPayments />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-conditions" element={<TermsConditions />} />
               <Route path="/refund-policy" element={<RefundPolicy />} />
