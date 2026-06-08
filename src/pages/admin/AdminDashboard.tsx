@@ -4,27 +4,29 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, BookOpen, Wallet, Clock } from "lucide-react";
+import { Users, BookOpen, Wallet, Clock, IndianRupee } from "lucide-react";
 
 const AdminDashboard = () => {
   const { isAdmin, loading: authLoading } = useAuth();
-  const [stats, setStats] = useState({ users: 0, schemes: 0, pendingWithdrawals: 0, paidUsers: 0 });
+  const [stats, setStats] = useState({ users: 0, schemes: 0, pendingWithdrawals: 0, paidUsers: 0, pendingPayments: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isAdmin) return;
     const fetch = async () => {
-      const [users, schemes, withdrawals, paid] = await Promise.all([
+      const [users, schemes, withdrawals, paid, pendingPay] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("schemes").select("id", { count: "exact", head: true }),
         supabase.from("withdrawals").select("id", { count: "exact", head: true }).eq("status", "pending"),
         supabase.from("profiles").select("id", { count: "exact", head: true }).eq("subscription_status", "active"),
+        supabase.from("payments").select("id", { count: "exact", head: true }).eq("status", "pending"),
       ]);
       setStats({
         users: users.count || 0,
         schemes: schemes.count || 0,
         pendingWithdrawals: withdrawals.count || 0,
         paidUsers: paid.count || 0,
+        pendingPayments: pendingPay.count || 0,
       });
       setLoading(false);
     };
@@ -37,6 +39,7 @@ const AdminDashboard = () => {
   const cards = [
     { label: "Total Users", value: stats.users, icon: Users, color: "text-primary", link: "/admin/users" },
     { label: "Paid Users", value: stats.paidUsers, icon: Users, color: "text-secondary", link: "/admin/users" },
+    { label: "Pending Payments", value: stats.pendingPayments, icon: IndianRupee, color: "text-accent-foreground", link: "/admin/payments" },
     { label: "Total Schemes", value: stats.schemes, icon: BookOpen, color: "text-accent", link: "/admin/schemes" },
     { label: "Pending Withdrawals", value: stats.pendingWithdrawals, icon: Clock, color: "text-destructive", link: "/admin/withdrawals" },
   ];
