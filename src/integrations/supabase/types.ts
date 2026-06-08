@@ -125,6 +125,63 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          admin_note: string | null
+          amount: number
+          created_at: string
+          currency: string
+          id: string
+          payer_email: string | null
+          payer_mobile: string | null
+          payer_name: string | null
+          payment_type: string
+          screenshot_url: string | null
+          status: string
+          transaction_number: string | null
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          admin_note?: string | null
+          amount: number
+          created_at?: string
+          currency?: string
+          id?: string
+          payer_email?: string | null
+          payer_mobile?: string | null
+          payer_name?: string | null
+          payment_type?: string
+          screenshot_url?: string | null
+          status?: string
+          transaction_number?: string | null
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          admin_note?: string | null
+          amount?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          payer_email?: string | null
+          payer_mobile?: string | null
+          payer_name?: string | null
+          payment_type?: string
+          screenshot_url?: string | null
+          status?: string
+          transaction_number?: string | null
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       processed_payments: {
         Row: {
           amount: number
