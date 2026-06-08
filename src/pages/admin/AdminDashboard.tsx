@@ -63,7 +63,13 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4 pt-4">
+        <div className="grid md:grid-cols-4 gap-4 pt-4">
+          <Link to="/admin/payments">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer p-6 text-center">
+              <IndianRupee className="h-8 w-8 mx-auto text-accent-foreground mb-2" />
+              <p className="font-semibold">Payment Approvals</p>
+            </Card>
+          </Link>
           <Link to="/admin/schemes">
             <Card className="hover:shadow-md transition-shadow cursor-pointer p-6 text-center">
               <BookOpen className="h-8 w-8 mx-auto text-primary mb-2" />
