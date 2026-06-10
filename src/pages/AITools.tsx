@@ -29,7 +29,7 @@ const tools = [
   },
   {
     to: "/live-hr-interview",
-    title: "Live HR Interview",
+    title: "AI Live HR Interview",
     desc: "Real-time HR interview simulation with verdict and feedback.",
     badge: "🎯 New",
     icon: "🎯",
@@ -65,7 +65,7 @@ const tools = [
   },
   {
     to: "/student-tool/sop",
-    title: "Statement of Purpose (SOP)",
+    title: "AI Statement of Purpose (SOP)",
     desc: "700-900 word SOP for higher studies applications.",
     badge: "🎓 Study Abroad",
     icon: "🎓",
@@ -89,7 +89,7 @@ const tools = [
   },
   {
     to: "/student-tool/roadmap",
-    title: "6-Month Career Roadmap",
+    title: "AI 6-Month Career Roadmap",
     desc: "Personalized month-by-month plan to become job-ready.",
     badge: "🗺 Plan",
     icon: "🗺️",
@@ -101,7 +101,7 @@ const tools = [
   },
   {
     to: "/student-tool/leave-letter",
-    title: "Leave Application Letter",
+    title: "AI Leave Application Letter",
     desc: "Formal leave letter for college, school or office in seconds.",
     badge: "⚡ Quick",
     icon: "📨",
@@ -113,7 +113,7 @@ const tools = [
   },
   {
     to: "/student-tool/lor",
-    title: "Letter of Recommendation",
+    title: "AI Letter of Recommendation",
     desc: "Professor/manager-style LOR draft for higher studies or jobs.",
     badge: "🎓 Study Abroad",
     icon: "📜",
@@ -125,7 +125,7 @@ const tools = [
   },
   {
     to: "/student-tool/project-report",
-    title: "Mini Project Report",
+    title: "AI Mini Project Report",
     desc: "Academic-format project report with abstract, modules & conclusion.",
     badge: "⬇ Download",
     icon: "📘",
@@ -137,7 +137,7 @@ const tools = [
   },
   {
     to: "/student-tool/email-writer",
-    title: "Professional Email Writer",
+    title: "AI Professional Email Writer",
     desc: "Write polished emails to professors, HRs and recruiters.",
     badge: "⚡ Quick",
     icon: "📧",
@@ -149,7 +149,7 @@ const tools = [
   },
   {
     to: "/student-tool/viva-questions",
-    title: "Viva / Interview Questions",
+    title: "AI Viva / Interview Questions",
     desc: "Predict 20+ viva questions with model answers for any topic.",
     badge: "📚 Exam",
     icon: "🎙️",
@@ -161,7 +161,7 @@ const tools = [
   },
   {
     to: "/student-tool/ppt-outline",
-    title: "Presentation (PPT) Outline",
+    title: "AI Presentation (PPT) Outline",
     desc: "Slide-by-slide outline with titles, points and speaker notes.",
     badge: "🗂 Slides",
     icon: "📊",
@@ -173,7 +173,7 @@ const tools = [
   },
   {
     to: "/student-tool/scholarship-essay",
-    title: "Scholarship Essay",
+    title: "AI Scholarship Essay",
     desc: "Compelling scholarship essay tailored to your story.",
     badge: "💰 Funding",
     icon: "🏆",
@@ -185,7 +185,7 @@ const tools = [
   },
   {
     to: "/student-tool/linkedin-bio",
-    title: "LinkedIn Bio & Headline",
+    title: "AI LinkedIn Bio & Headline",
     desc: "Magnetic LinkedIn About section + 3 headline options.",
     badge: "🔗 LinkedIn",
     icon: "💼",
@@ -197,7 +197,7 @@ const tools = [
   },
   {
     to: "/student-tool/business-plan",
-    title: "Startup / Business Plan",
+    title: "AI Startup / Business Plan",
     desc: "Lean business plan with problem, solution, market & revenue.",
     badge: "🚀 Startup",
     icon: "📈",
@@ -209,7 +209,7 @@ const tools = [
   },
   {
     to: "/student-tool/assignment",
-    title: "Assignment Helper",
+    title: "AI Assignment Helper",
     desc: "Well-structured college assignment with citations placeholder.",
     badge: "📝 Homework",
     icon: "📑",
@@ -221,7 +221,7 @@ const tools = [
   },
   {
     to: "/student-tool/essay",
-    title: "Essay Writer",
+    title: "AI Essay Writer",
     desc: "Structured essay on any topic with intro, body & conclusion.",
     badge: "✍️ Writing",
     icon: "✍️",
@@ -233,7 +233,7 @@ const tools = [
   },
   {
     to: "/student-tool/speech",
-    title: "Speech Writer",
+    title: "AI Speech Writer",
     desc: "Powerful speech for events, debates and college functions.",
     badge: "🎤 Speak",
     icon: "🎤",
