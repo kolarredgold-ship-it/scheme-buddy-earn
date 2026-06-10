@@ -18,6 +18,7 @@ import {
   HeadingLevel,
   LevelFormat,
   PageBreak,
+  BorderStyle,
 } from "docx";
 import { saveAs } from "file-saver";
 
@@ -434,10 +435,111 @@ const StudentTool = () => {
     });
   };
 
+  const buildResumeDoc = () => {
+    const accent = "1E3A8A";
+    const lines = output.split(/\n/).map((l) => l.replace(/\s+$/g, ""));
+    const isHeading = (l: string) => /^[A-Z][A-Z0-9 &/().,-]{2,}$/.test(l.trim());
+    const isBullet = (l: string) => /^[-•*]\s+/.test(l.trim());
+
+    const fullName = (form.name || "Your Name").trim();
+    const contactBits = [form.email, form.phone, form.address].filter(Boolean).join("  •  ");
+
+    const children: Paragraph[] = [
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 60 },
+        children: [new TextRun({ text: fullName.toUpperCase(), bold: true, size: 44, color: accent })],
+      }),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 120 },
+        children: [new TextRun({ text: contactBits, size: 20, color: "555555" })],
+      }),
+      new Paragraph({
+        border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: accent, space: 1 } },
+        spacing: { after: 120 },
+        children: [new TextRun("")],
+      }),
+    ];
+
+    // Skip the AI-generated HEADER section (we render our own header).
+    let skipHeader = true;
+
+    for (const raw of lines) {
+      const line = raw;
+      const trimmed = line.trim();
+
+      if (isHeading(line)) {
+        if (/^HEADER\b/.test(trimmed)) {
+          skipHeader = true;
+          continue;
+        }
+        skipHeader = false;
+        children.push(
+          new Paragraph({
+            spacing: { before: 220, after: 60, line: 320 },
+            border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: accent, space: 2 } },
+            children: [new TextRun({ text: trimmed, bold: true, size: 24, color: accent })],
+          }),
+        );
+        continue;
+      }
+
+      if (skipHeader) continue;
+      if (!trimmed) {
+        children.push(new Paragraph({ children: [new TextRun(" ")], spacing: { after: 60 } }));
+        continue;
+      }
+
+      if (isBullet(line)) {
+        children.push(
+          new Paragraph({
+            numbering: { reference: "bullets", level: 0 },
+            spacing: { line: 300, after: 40 },
+            children: [new TextRun({ text: line.replace(/^[-•*]\s+/, ""), size: 22 })],
+          }),
+        );
+      } else {
+        children.push(
+          new Paragraph({
+            spacing: { line: 320, after: 60 },
+            children: [new TextRun({ text: trimmed, size: 22 })],
+          }),
+        );
+      }
+    }
+
+    return new Document({
+      styles: { default: { document: { run: { font: "Calibri", size: 22 } } } },
+      numbering: {
+        config: [
+          {
+            reference: "bullets",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.BULLET,
+                text: "•",
+                alignment: AlignmentType.LEFT,
+                style: { paragraph: { indent: { left: 540, hanging: 270 } } },
+              },
+            ],
+          },
+        ],
+      },
+      sections: [
+        {
+          properties: { page: { margin: { top: 900, right: 1000, bottom: 900, left: 1000 } } },
+          children,
+        },
+      ],
+    });
+  };
+
   const downloadDocx = async () => {
     if (!output) return;
     try {
-      const doc = buildDoc();
+      const doc = tool.slug === "resume" ? buildResumeDoc() : buildDoc();
       const blob = await Packer.toBlob(doc);
       const fname = `${tool.fileBase}_${(form.name || "Student").replace(/\s+/g, "_")}.docx`;
       saveAs(blob, fname);
