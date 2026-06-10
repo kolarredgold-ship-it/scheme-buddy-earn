@@ -31,6 +31,7 @@ const Signup = () => {
   const [referralCode, setReferralCode] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const redirectTo = new URLSearchParams(window.location.search).get("redirect") || "/subscription";
 
   const strength = useMemo(() => getPasswordStrength(password), [password]);
 
