@@ -11,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const redirectTo = new URLSearchParams(window.location.search).get("redirect") || "/";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +21,7 @@ const Login = () => {
       toast.error(error.message);
     } else {
       toast.success("Welcome back!");
-      navigate("/");
+      navigate(redirectTo);
     }
     setLoading(false);
   };
