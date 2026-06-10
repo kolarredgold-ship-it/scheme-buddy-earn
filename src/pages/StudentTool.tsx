@@ -316,6 +316,8 @@ const TOOLS: Record<string, ToolConfig> = {
 const StudentTool = () => {
   const { slug = "" } = useParams();
   const tool = TOOLS[slug];
+  const { profile, user } = useAuth();
+  const isPro = profile?.subscription_status === "active";
   const [form, setForm] = useState<Record<string, string>>({});
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
