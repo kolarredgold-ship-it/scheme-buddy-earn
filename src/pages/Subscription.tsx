@@ -248,7 +248,7 @@ const Subscription = () => {
             </Button>
           </>
         ) : (
-          <Link to="/plans">
+          <Link to="/signup?redirect=/subscription">
             <Button size="lg" className="w-full text-lg py-6">
               Sign Up to Subscribe
             </Button>
