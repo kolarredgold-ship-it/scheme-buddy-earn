@@ -555,6 +555,94 @@ const StudentTool = () => {
     saveAs(blob, `${tool.fileBase}_${(form.name || "Student").replace(/\s+/g, "_")}.txt`);
   };
 
+  const downloadPptx = async () => {
+    if (!output) return;
+    try {
+      const { default: PptxGenJS } = await import("pptxgenjs");
+      const pptx = new PptxGenJS();
+      pptx.layout = "LAYOUT_WIDE";
+      pptx.title = form.topic || tool.title;
+
+      const PRIMARY = "1E3A8A";
+      const ACCENT = "F59E0B";
+      const TEXT = "1F2937";
+      const MUTED = "6B7280";
+      const BG = "F8FAFC";
+
+      const text = output.replace(/\r/g, "");
+      const blocks = text.split(/\n(?=SLIDE\s+\d+\s*[:.\-])/i).map((b) => b.trim()).filter(Boolean);
+
+      const titleSlide = pptx.addSlide();
+      titleSlide.background = { color: PRIMARY };
+      titleSlide.addShape("rect", { x: 0, y: 6.7, w: 13.33, h: 0.8, fill: { color: ACCENT } });
+      titleSlide.addText(form.topic || tool.title, {
+        x: 0.7, y: 2.4, w: 12, h: 1.8,
+        fontSize: 48, bold: true, color: "FFFFFF", fontFace: "Calibri",
+      });
+      titleSlide.addText(form.audience ? `For: ${form.audience}` : "Presentation", {
+        x: 0.7, y: 4.2, w: 12, h: 0.6,
+        fontSize: 20, color: "CADCFC", fontFace: "Calibri",
+      });
+
+      for (const block of blocks) {
+        const lines = block.split("\n").map((l) => l.trim()).filter(Boolean);
+        if (!lines.length) continue;
+
+        const titleLine = lines[0].replace(/^SLIDE\s+\d+\s*[:.\-]\s*/i, "");
+        const bullets: string[] = [];
+        let notes = "";
+        for (const l of lines.slice(1)) {
+          if (/^speaker\s*notes\s*[:\-]/i.test(l)) {
+            notes = l.replace(/^speaker\s*notes\s*[:\-]\s*/i, "");
+          } else if (/^[-•*]\s+/.test(l)) {
+            bullets.push(l.replace(/^[-•*]\s+/, ""));
+          } else if (notes) {
+            notes += " " + l;
+          } else {
+            bullets.push(l);
+          }
+        }
+
+        const slide = pptx.addSlide();
+        slide.background = { color: BG };
+        slide.addShape("rect", { x: 0, y: 0, w: 13.33, h: 0.9, fill: { color: PRIMARY } });
+        slide.addShape("rect", { x: 0, y: 0.9, w: 13.33, h: 0.08, fill: { color: ACCENT } });
+        slide.addText(titleLine, {
+          x: 0.5, y: 0.1, w: 12.3, h: 0.7,
+          fontSize: 28, bold: true, color: "FFFFFF", fontFace: "Calibri",
+          valign: "middle",
+        });
+
+        if (bullets.length) {
+          slide.addText(
+            bullets.map((b) => ({ text: b, options: { bullet: { code: "25CF" }, color: TEXT } })),
+            {
+              x: 0.7, y: 1.4, w: 11.9, h: 5.4,
+              fontSize: 22, fontFace: "Calibri", color: TEXT,
+              paraSpaceAfter: 10, valign: "top",
+            },
+          );
+        }
+
+        slide.addText("Techrola • Students AI Tools", {
+          x: 0.5, y: 7.05, w: 12.3, h: 0.3,
+          fontSize: 10, color: MUTED, fontFace: "Calibri", align: "right",
+        });
+
+        if (notes) slide.addNotes(notes);
+      }
+
+      const fname = `${tool.fileBase}_${(form.topic || "Presentation").replace(/\s+/g, "_")}.pptx`;
+      await pptx.writeFile({ fileName: fname });
+      toast.success("Downloaded PPTX!");
+    } catch (e) {
+      console.error(e);
+      toast.error("PPTX download failed");
+    }
+  };
+
+
+
   const copyOut = async () => {
     await navigator.clipboard.writeText(output);
     toast.success("Copied to clipboard");
@@ -625,9 +713,15 @@ const StudentTool = () => {
               <Button variant="outline" size="sm" onClick={downloadTxt}>
                 <Download className="h-4 w-4 mr-1" /> .TXT
               </Button>
-              <Button size="sm" onClick={downloadDocx}>
-                <Download className="h-4 w-4 mr-1" /> Download DOCX
+              {tool.slug === "ppt-outline" && (
+                <Button size="sm" onClick={downloadPptx}>
+                  <Download className="h-4 w-4 mr-1" /> Download PPTX
+                </Button>
+              )}
+              <Button size="sm" variant={tool.slug === "ppt-outline" ? "outline" : "default"} onClick={downloadDocx}>
+                <Download className="h-4 w-4 mr-1" /> DOCX
               </Button>
+
             </div>
             <div className="rounded-lg border bg-muted/30 p-4 max-h-[600px] overflow-auto">
               <pre className="whitespace-pre-wrap text-sm font-sans leading-relaxed text-foreground">
