@@ -31,6 +31,7 @@ const Signup = () => {
   const [referralCode, setReferralCode] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const redirectTo = new URLSearchParams(window.location.search).get("redirect") || "/subscription";
 
   const strength = useMemo(() => getPasswordStrength(password), [password]);
 
@@ -54,8 +55,8 @@ const Signup = () => {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Account created! Please check your email to verify.");
-      navigate("/login");
+      toast.success("Account created!");
+      navigate(redirectTo);
     }
     setLoading(false);
   };

@@ -108,7 +108,7 @@ const SchemeDetail = () => {
               )}
             </div>
             {!isPaid && (
-              <Link to={user ? "/subscription" : "/plans"}>
+              <Link to="/plans">
                 <Button variant="outline" size="sm" className="mt-3 gap-1.5 rounded-xl text-xs border-primary/30 text-primary">
                   <Lock className="h-3.5 w-3.5" /> Subscribe to read full details
                 </Button>
@@ -179,7 +179,7 @@ const SchemeDetail = () => {
               </Button>
             )
           ) : (
-            <Link to={user ? "/subscription" : "/plans"}>
+            <Link to="/plans">
               <Button size="lg" className="w-full md:w-auto gap-2 rounded-xl bg-gradient-primary font-semibold">
                 <Lock className="h-4 w-4" /> {user ? "Subscribe to Apply" : "Subscribe to Apply"}
               </Button>
