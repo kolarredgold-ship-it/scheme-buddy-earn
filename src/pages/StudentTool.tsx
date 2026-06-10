@@ -1,0 +1,379 @@
+import { useState, useMemo } from "react";
+import { useParams, Link, Navigate } from "react-router-dom";
+import Layout from "@/components/Layout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
+import { ArrowLeft, Download, Sparkles, Loader2, Copy } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import {
+  Document,
+  Packer,
+  Paragraph,
+  TextRun,
+  AlignmentType,
+  HeadingLevel,
+  LevelFormat,
+  PageBreak,
+} from "docx";
+import { saveAs } from "file-saver";
+
+type Field = {
+  name: string;
+  label: string;
+  type?: "text" | "textarea" | "email" | "tel" | "date" | "number";
+  required?: boolean;
+  placeholder?: string;
+};
+
+type ToolConfig = {
+  slug: string;
+  title: string;
+  emoji: string;
+  desc: string;
+  fields: Field[];
+  fileBase: string;
+};
+
+const TOOLS: Record<string, ToolConfig> = {
+  resume: {
+    slug: "resume",
+    title: "AI Resume Builder",
+    emoji: "📝",
+    desc: "Fill the form — AI builds a polished one-page resume you can download as DOCX.",
+    fileBase: "Resume",
+    fields: [
+      { name: "name", label: "Full Name", required: true },
+      { name: "email", label: "Email", type: "email", required: true },
+      { name: "phone", label: "Phone", type: "tel", required: true },
+      { name: "address", label: "Address (City, State)", required: true },
+      { name: "course", label: "Course / Degree", required: true, placeholder: "B.Tech CSE" },
+      { name: "college", label: "College Name", required: true },
+      { name: "year", label: "Year of Study / Passing", required: true, placeholder: "2025" },
+      { name: "skills", label: "Key Skills (comma separated)", type: "textarea", required: true, placeholder: "Python, React, SQL, Communication" },
+      { name: "projects", label: "Projects (brief)", type: "textarea", required: true, placeholder: "1. Library Management System ..." },
+      { name: "experience", label: "Internships / Experience (optional)", type: "textarea" },
+      { name: "objective", label: "Career Objective hint (optional)" },
+      { name: "languages", label: "Languages Known", placeholder: "English, Hindi, Kannada" },
+      { name: "hobbies", label: "Hobbies (optional)" },
+    ],
+  },
+  "cover-letter": {
+    slug: "cover-letter",
+    title: "AI Cover Letter Generator",
+    emoji: "✉️",
+    desc: "Generate a job-winning cover letter customised for the role and company.",
+    fileBase: "Cover_Letter",
+    fields: [
+      { name: "name", label: "Your Full Name", required: true },
+      { name: "email", label: "Your Email", type: "email", required: true },
+      { name: "phone", label: "Your Phone", type: "tel", required: true },
+      { name: "course", label: "Your Course", required: true },
+      { name: "college", label: "Your College", required: true },
+      { name: "skills", label: "Top Strengths / Skills", type: "textarea", required: true },
+      { name: "role", label: "Role Applying For", required: true, placeholder: "Software Engineer Intern" },
+      { name: "company", label: "Company Name", required: true },
+      { name: "reason", label: "Why this company/role (optional)", type: "textarea" },
+    ],
+  },
+  sop: {
+    slug: "sop",
+    title: "Statement of Purpose (SOP)",
+    emoji: "🎓",
+    desc: "Generate a 700-900 word SOP for higher studies applications.",
+    fileBase: "Statement_of_Purpose",
+    fields: [
+      { name: "name", label: "Your Full Name", required: true },
+      { name: "target_course", label: "Course Applying For", required: true, placeholder: "MS in Computer Science" },
+      { name: "target_university", label: "University / Country", required: true },
+      { name: "course", label: "Current Education", required: true },
+      { name: "college", label: "Current College", required: true },
+      { name: "background", label: "Academic Background", type: "textarea", required: true },
+      { name: "projects", label: "Projects / Research", type: "textarea", required: true },
+      { name: "experience", label: "Internships / Work Experience (optional)", type: "textarea" },
+      { name: "goal", label: "Career Goal", type: "textarea", required: true },
+      { name: "reason", label: "Why this program?", type: "textarea", required: true },
+    ],
+  },
+  "study-notes": {
+    slug: "study-notes",
+    title: "AI Study Notes Maker",
+    emoji: "📚",
+    desc: "Paste any topic / raw notes — get clean revision notes + likely exam questions.",
+    fileBase: "Study_Notes",
+    fields: [
+      { name: "topic", label: "Subject / Topic", required: true, placeholder: "DBMS - Normalization" },
+      { name: "level", label: "Class / Level", required: true, placeholder: "B.Tech 3rd year" },
+      { name: "material", label: "Paste any raw text / topic outline", type: "textarea", required: true, placeholder: "Paste topic outline, chapter text, or just the topic name..." },
+    ],
+  },
+  roadmap: {
+    slug: "roadmap",
+    title: "6-Month Career Roadmap",
+    emoji: "🗺️",
+    desc: "Personalized month-by-month plan to become job ready for your target role.",
+    fileBase: "Career_Roadmap",
+    fields: [
+      { name: "name", label: "Your Name", required: true },
+      { name: "course", label: "Current Education", required: true },
+      { name: "college", label: "College", required: true },
+      { name: "skills", label: "Current Skills", type: "textarea", required: true },
+      { name: "target_role", label: "Target Role / Job", required: true, placeholder: "Full Stack Developer" },
+      { name: "hours", label: "Daily Hours Available", placeholder: "2-3", type: "number" },
+      { name: "style", label: "Preferred Learning Style (optional)", placeholder: "videos + projects" },
+    ],
+  },
+  "leave-letter": {
+    slug: "leave-letter",
+    title: "Leave Application Letter",
+    emoji: "📨",
+    desc: "Instantly draft a formal leave letter for college, school or office.",
+    fileBase: "Leave_Application",
+    fields: [
+      { name: "name", label: "Your Name", required: true },
+      { name: "course", label: "Course / Designation", required: true },
+      { name: "college", label: "College / Company", required: true },
+      { name: "recipient", label: "To (Principal / HOD / Manager)", required: true, placeholder: "The Principal, ABC College" },
+      { name: "reason", label: "Reason for leave", type: "textarea", required: true },
+      { name: "from_date", label: "From Date", type: "date", required: true },
+      { name: "to_date", label: "To Date", type: "date", required: true },
+      { name: "days", label: "Number of days", type: "number", required: true },
+    ],
+  },
+};
+
+const StudentTool = () => {
+  const { slug = "" } = useParams();
+  const tool = TOOLS[slug];
+  const [form, setForm] = useState<Record<string, string>>({});
+  const [output, setOutput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const missing = useMemo(() => {
+    if (!tool) return [];
+    return tool.fields.filter((f) => f.required && !form[f.name]?.trim()).map((f) => f.label);
+  }, [tool, form]);
+
+  if (!tool) return <Navigate to="/ai-tools" replace />;
+
+  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  const generate = async () => {
+    if (missing.length) {
+      toast.error(`Please fill: ${missing.join(", ")}`);
+      return;
+    }
+    setLoading(true);
+    setOutput("");
+    try {
+      const { data, error } = await supabase.functions.invoke("student-ai-tool", {
+        body: { tool: tool.slug, data: form },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      setOutput(data?.content || "");
+      toast.success("Generated! Scroll down to download.");
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to generate. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const buildDoc = () => {
+    const lines = output.split(/\n/);
+    const children: Paragraph[] = [];
+    const isHeading = (l: string) => /^[A-Z][A-Z0-9 &/().,-]{3,}$/.test(l.trim());
+    const isSubHeading = (l: string) => /^\d+(\.\d+)*\s+\S/.test(l.trim());
+    const isBullet = (l: string) => /^[-•*]\s+/.test(l.trim());
+
+    children.push(
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 200 },
+        children: [
+          new TextRun({ text: tool.title, bold: true, size: 32, color: "1E3A8A" }),
+        ],
+      }),
+    );
+
+    for (const raw of lines) {
+      const line = raw.replace(/\s+$/g, "");
+      if (!line.trim()) {
+        children.push(new Paragraph({ children: [new TextRun(" ")] }));
+        continue;
+      }
+      if (isHeading(line)) {
+        children.push(
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 240, after: 120, line: 360 },
+            children: [new TextRun({ text: line.trim(), bold: true, size: 26 })],
+          }),
+        );
+      } else if (isSubHeading(line)) {
+        children.push(
+          new Paragraph({
+            spacing: { before: 160, after: 80, line: 340 },
+            children: [new TextRun({ text: line.trim(), bold: true, size: 24 })],
+          }),
+        );
+      } else if (isBullet(line)) {
+        children.push(
+          new Paragraph({
+            numbering: { reference: "bullets", level: 0 },
+            spacing: { line: 340 },
+            children: [new TextRun({ text: line.replace(/^[-•*]\s+/, ""), size: 22 })],
+          }),
+        );
+      } else {
+        children.push(
+          new Paragraph({
+            spacing: { line: 360, after: 100 },
+            children: [new TextRun({ text: line, size: 22 })],
+          }),
+        );
+      }
+    }
+
+    return new Document({
+      styles: {
+        default: { document: { run: { font: "Calibri", size: 22 } } },
+      },
+      numbering: {
+        config: [
+          {
+            reference: "bullets",
+            levels: [
+              {
+                level: 0,
+                format: LevelFormat.BULLET,
+                text: "•",
+                alignment: AlignmentType.LEFT,
+                style: { paragraph: { indent: { left: 720, hanging: 360 } } },
+              },
+            ],
+          },
+        ],
+      },
+      sections: [
+        {
+          properties: { page: { margin: { top: 1080, right: 1080, bottom: 1080, left: 1080 } } },
+          children,
+        },
+      ],
+    });
+  };
+
+  const downloadDocx = async () => {
+    if (!output) return;
+    try {
+      const doc = buildDoc();
+      const blob = await Packer.toBlob(doc);
+      const fname = `${tool.fileBase}_${(form.name || "Student").replace(/\s+/g, "_")}.docx`;
+      saveAs(blob, fname);
+      toast.success("Downloaded!");
+    } catch (e) {
+      toast.error("Download failed");
+    }
+  };
+
+  const downloadTxt = () => {
+    if (!output) return;
+    const blob = new Blob([output], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, `${tool.fileBase}_${(form.name || "Student").replace(/\s+/g, "_")}.txt`);
+  };
+
+  const copyOut = async () => {
+    await navigator.clipboard.writeText(output);
+    toast.success("Copied to clipboard");
+  };
+
+  return (
+    <Layout>
+      <div className="container mx-auto px-3 md:px-4 py-6 md:py-10 pb-24 max-w-4xl">
+        <Link to="/ai-tools" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4">
+          <ArrowLeft className="h-4 w-4" /> Back to Students AI Tools
+        </Link>
+
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-semibold mb-3">
+            <Sparkles className="h-3.5 w-3.5" /> AI Powered
+          </div>
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight">
+            <span className="mr-2">{tool.emoji}</span>{tool.title}
+          </h1>
+          <p className="text-sm md:text-base text-muted-foreground mt-1">{tool.desc}</p>
+        </div>
+
+        <Card className="p-4 md:p-6 space-y-4">
+          {tool.fields.map((f) => (
+            <div key={f.name} className="space-y-1.5">
+              <Label htmlFor={f.name} className="text-sm">
+                {f.label} {f.required && <span className="text-destructive">*</span>}
+              </Label>
+              {f.type === "textarea" ? (
+                <Textarea
+                  id={f.name}
+                  rows={4}
+                  placeholder={f.placeholder}
+                  value={form[f.name] || ""}
+                  onChange={(e) => set(f.name, e.target.value)}
+                />
+              ) : (
+                <Input
+                  id={f.name}
+                  type={f.type || "text"}
+                  placeholder={f.placeholder}
+                  value={form[f.name] || ""}
+                  onChange={(e) => set(f.name, e.target.value)}
+                />
+              )}
+            </div>
+          ))}
+
+          <Button onClick={generate} disabled={loading} className="w-full" size="lg">
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generating with AI...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4 mr-2" /> Generate with AI
+              </>
+            )}
+          </Button>
+        </Card>
+
+        {output && (
+          <Card className="p-4 md:p-6 mt-6 space-y-4">
+            <div className="flex flex-wrap gap-2 justify-end">
+              <Button variant="outline" size="sm" onClick={copyOut}>
+                <Copy className="h-4 w-4 mr-1" /> Copy
+              </Button>
+              <Button variant="outline" size="sm" onClick={downloadTxt}>
+                <Download className="h-4 w-4 mr-1" /> .TXT
+              </Button>
+              <Button size="sm" onClick={downloadDocx}>
+                <Download className="h-4 w-4 mr-1" /> Download DOCX
+              </Button>
+            </div>
+            <div className="rounded-lg border bg-muted/30 p-4 max-h-[600px] overflow-auto">
+              <pre className="whitespace-pre-wrap text-sm font-sans leading-relaxed text-foreground">
+                {output}
+              </pre>
+            </div>
+            <p className="text-[11px] text-muted-foreground text-center">
+              Note: AI-generated. Please review and personalize before submitting.
+            </p>
+          </Card>
+        )}
+      </div>
+    </Layout>
+  );
+};
+
+export default StudentTool;

@@ -30,7 +30,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const navItems = [
     { path: "/", label: "Schemes", icon: Home },
     { path: "/career-program", label: "Career", icon: Briefcase },
-    { path: "/ai-tools", label: "AI Tools", icon: Sparkles },
+    { path: "/ai-tools", label: "Students AI", icon: Sparkles },
     ...(user
       ? [
           { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -41,7 +41,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const bottomNavItems = [
     { type: "link" as const, path: "/", icon: Home, label: "Home" },
-    { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "AI Tools" },
+    { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "Students AI Tools" },
     { type: "link" as const, path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { type: "link" as const, path: "/install", icon: Download, label: "Install App" },
   ];
