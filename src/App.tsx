@@ -25,6 +25,7 @@ const AIReportGenerator = lazy(() => import("./pages/AIReportGenerator"));
 const MockInterview = lazy(() => import("./pages/MockInterview"));
 const LiveHRInterview = lazy(() => import("./pages/LiveHRInterview"));
 const AITools = lazy(() => import("./pages/AITools"));
+const StudentTool = lazy(() => import("./pages/StudentTool"));
 const Install = lazy(() => import("./pages/Install"));
 const CareerProgram = lazy(() => import("./pages/CareerProgram"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
@@ -85,6 +86,7 @@ const App = () => {
               <Route path="/mock-interview" element={<MockInterview />} />
               <Route path="/live-hr-interview" element={<LiveHRInterview />} />
               <Route path="/ai-tools" element={<AITools />} />
+              <Route path="/student-tool/:slug" element={<StudentTool />} />
               <Route path="/install" element={<Install />} />
               <Route path="/career-program" element={<CareerProgram />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
