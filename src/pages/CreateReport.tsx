@@ -48,12 +48,12 @@ const initialFormData: FormData = {
 };
 
 const chapters = [
-  { key: 'front', label: 'Front Matter', description: 'Certificate, Declaration, Acknowledgement, Abstract' },
-  { key: '1', label: 'Chapter I', description: 'Introduction (5-8 pages)' },
-  { key: '2', label: 'Chapter II', description: 'Description of the Organisation (8-12 pages)' },
-  { key: '3', label: 'Chapter III', description: 'Experiential Learning (6-10 pages)' },
-  { key: '4', label: 'Chapter IV', description: 'Internship Outcomes and Conclusion (6-10 pages)' },
-  { key: '5', label: 'Bibliography', description: 'References & Annexures' },
+  { key: 'front', label: 'Front Matter', description: 'Declaration, Certificate, Acknowledgement, Executive Summary, TOC' },
+  { key: '1', label: 'Chapter 1', description: 'Introduction — topic, department, features, advantages (8-10 pages)' },
+  { key: '2', label: 'Chapter 2', description: 'Description of the Company (8-12 pages)' },
+  { key: '3', label: 'Chapter 3', description: 'Experiential Learning — Tasks, Skills, Challenges (bullets, 6-10 pages)' },
+  { key: '4', label: 'Chapter 4', description: 'Outcomes, Findings, Suggestions, Conclusion (bullets, 6-10 pages)' },
+  { key: '5', label: 'Bibliography', description: 'One-page reference list (APA)' },
 ];
 
 interface Report {
