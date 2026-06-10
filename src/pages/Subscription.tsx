@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ const BENEFITS = [
 
 const Subscription = () => {
   const { user, profile, loading, refreshProfile } = useAuth();
+  const navigate = useNavigate();
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [applyingCoupon, setApplyingCoupon] = useState(false);
@@ -113,7 +114,8 @@ const Subscription = () => {
 
   const handlePayNow = () => {
     if (!user || !profile) {
-      toast.error("Please login to continue");
+      toast.error("Please sign up to continue");
+      navigate("/signup?redirect=/subscription");
       return;
     }
     const phone = (profile.mobile || "").replace(/\D/g, "");
