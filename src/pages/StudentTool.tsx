@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Download, Sparkles, Loader2, Copy } from "lucide-react";
+import { ArrowLeft, Download, Sparkles, Loader2, Copy, Crown, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Document,
   Packer,
@@ -315,6 +316,8 @@ const TOOLS: Record<string, ToolConfig> = {
 const StudentTool = () => {
   const { slug = "" } = useParams();
   const tool = TOOLS[slug];
+  const { profile, user } = useAuth();
+  const isPro = profile?.subscription_status === "active";
   const [form, setForm] = useState<Record<string, string>>({});
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -691,18 +694,54 @@ const StudentTool = () => {
             </div>
           ))}
 
-          <Button onClick={generate} disabled={loading} className="w-full" size="lg">
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generating with AI...
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4 mr-2" /> Generate with AI
-              </>
-            )}
-          </Button>
+          {isPro ? (
+            <Button onClick={generate} disabled={loading} className="w-full" size="lg">
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generating with AI...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" /> Generate with AI
+                </>
+              )}
+            </Button>
+          ) : (
+            <div className="relative overflow-hidden rounded-2xl border-2 border-yellow-400/60 bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950/30 dark:via-amber-950/30 dark:to-orange-950/30 p-5 md:p-6 shadow-[0_0_30px_rgba(234,179,8,0.25)]">
+              <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-yellow-400/20 blur-3xl" />
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-9 w-9 rounded-xl bg-yellow-400 flex items-center justify-center">
+                    <Crown className="h-5 w-5 text-yellow-900" />
+                  </div>
+                  <span className="inline-flex items-center gap-1 bg-yellow-400 text-yellow-950 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider">
+                    Pro Only
+                  </span>
+                </div>
+                <h3 className="text-lg md:text-xl font-extrabold text-foreground mb-1">
+                  Pay for Subscription & Get ALL AI Tools FREE 🎁
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Unlock unlimited use of <b>20+ Students AI Tools</b> — Resume, SOP, Cover Letter, Study Notes, PPTs, Career Roadmap and more — with one Techrola Pro subscription.
+                </p>
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold shadow-lg"
+                >
+                  <Link to={user ? "/subscription" : "/plans"}>
+                    <Crown className="h-4 w-4 mr-2" /> Upgrade to Pro & Unlock
+                  </Link>
+                </Button>
+                <Button disabled variant="outline" className="w-full mt-2 opacity-60" size="sm">
+                  <Lock className="h-3.5 w-3.5 mr-2" /> Generate with AI (locked)
+                </Button>
+              </div>
+            </div>
+          )}
         </Card>
+
+
 
         {output && (
           <Card className="p-4 md:p-6 mt-6 space-y-4">
