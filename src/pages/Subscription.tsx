@@ -26,6 +26,7 @@ const BENEFITS = [
 
 const Subscription = () => {
   const { user, profile, loading, refreshProfile } = useAuth();
+  const navigate = useNavigate();
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
   const [applyingCoupon, setApplyingCoupon] = useState(false);
