@@ -39,94 +39,106 @@ Duration: ${internshipDuration}, Year: ${academicYear}
 Topic/Specialization: ${topicSpecialization}
 Target: ${pagesCount} pages total`;
 
-      systemPrompt = "You are an expert academic report writer. Write comprehensive, detailed, professional internship report content. Use formal academic English. Do NOT use markdown formatting like ** or #. Write plain text with clear section headers.";
+      systemPrompt = "You are an expert academic report writer. Write comprehensive, detailed, professional, grammatically perfect internship report content in formal academic English. Do NOT use markdown symbols like **, ##, or backticks. Use plain text with clear ALL-CAPS chapter headings (e.g. 'CHAPTER 1: INTRODUCTION'), numbered sub-headings (1.1, 1.2), and bullet points using '- ' at the start of a line. Use tables written in pipe format ( | col | col | ) wherever data, comparisons or lists of features make sense. Keep paragraphs well-structured with 1.5 line spacing in mind. NEVER include Research Methodology, Limitations of the Study, or Lessons Learned anywhere.";
 
       const chapterPrompts: Record<string, string> = {
         'front': `${baseContext}
 
-Generate the FRONT MATTER for an internship report (1500-2000 words total):
+Generate the FRONT MATTER for an internship report. Output the sections in this exact order with these ALL-CAPS headings:
+
+STUDENT DECLARATION
+(120-150 words. First-person declaration by ${studentName} (Reg: ${registerNumber}) confirming the report is original work submitted to ${university} through ${collegeName} for ${course}, under the guidance of ${guideName}. End with placeholders for Place, Date and Signature.)
 
 CERTIFICATE
-(Write a formal certificate - 80-100 words with institutional formatting, signature placeholders for Principal, HOD, and Guide)
-
-DECLARATION
-(Write student declaration - 100-120 words stating authenticity)
+(100-120 words. Formal institutional certificate from ${collegeName} certifying that ${studentName} has completed the internship at ${companyName}, ${companyLocation} during ${internshipDuration}. Include signature placeholders for Internal Guide, HOD and Principal.)
 
 ACKNOWLEDGEMENT
-(Write acknowledgement - 150-180 words thanking institution, guide, company supervisors, colleagues, family)
-
-ABSTRACT
-(Write abstract - 200-250 words summarizing the internship experience, objectives, methodology, findings)
+(150-180 words thanking the institution, guide, company supervisors, colleagues and family.)
 
 EXECUTIVE SUMMARY
-(Write executive summary - 300-400 words providing comprehensive overview)
+(350-450 words giving a comprehensive overview of the internship, the topic ${topicSpecialization}, the company ${companyName}, key tasks, skills gained, findings and outcomes.)
 
 TABLE OF CONTENTS
-(Create a clean table of contents listing all chapters and sub-sections)
-
-LIST OF ABBREVIATIONS
-(Include 10-15 relevant abbreviations)
-
-Write clear, professional content with formal academic English.`,
+(Clean numbered list covering: Student Declaration, Certificate, Acknowledgement, Executive Summary, Chapter 1 Introduction (with 1.1–1.x sub-sections), Chapter 2 Description of the Company (2.1–2.x), Chapter 3 Experiential Learning (3.1 Tasks Undertaken, 3.2 Skills Acquired, 3.3 Challenges Faced), Chapter 4 Internship Outcomes and Conclusion (4.1 Outcome, 4.2 Findings, 4.3 Suggestions, 4.4 Conclusion), Bibliography. Show page-number placeholders.)`,
 
         '1': `${baseContext}
 
-Generate CHAPTER I: INTRODUCTION (2500-3500 words, 5-8 pages):
+Generate CHAPTER 1: INTRODUCTION (about 8-10 pages, 3000-4000 words) covering the TOPIC and DEPARTMENT only. DO NOT mention the company name. DO NOT include research methodology or limitations.
 
-1.1 Background of the Study (400-500 words - industry context, historical development of ${topicSpecialization})
-1.2 Meaning of ${topicSpecialization} (350-450 words - definitions, theoretical framework)
-1.3 Importance of ${topicSpecialization} in the Industry (350-450 words - industry statistics, trends)
-1.4 Objectives of the Study (bullet format with "To study/analyse/understand..." objectives)
-1.5 Scope of the Study (250-350 words)
-1.6 Need and Significance (300-400 words)
-1.7 Research Methodology (250-350 words)
-1.8 Limitations of the Study (200-300 words)
+Use these numbered sub-headings in order:
 
-DO NOT mention company name in this chapter. Focus on topic/field only.`,
+1.1 About the Topic — ${topicSpecialization} (detailed background, industry context)
+1.2 Title Meaning — meaning and interpretation of "${internshipTitle}"
+1.3 Department Meaning — meaning, role and importance of the relevant department
+1.4 Features of ${topicSpecialization} (use bullet points; include a small features table)
+1.5 Objectives of ${topicSpecialization} (bullet points starting with "To ...")
+1.6 Functions of ${topicSpecialization} (bullet points, include a table mapping function -> purpose)
+1.7 Advantages (clear bullet points)
+1.8 Disadvantages (clear bullet points)
+1.9 Objective of the Internship (bullet points)
+1.10 Scope of the Internship (well-developed paragraphs + bullets)
+
+Write in formal academic English with grammar checked.`,
 
         '2': `${baseContext}
 
-Generate CHAPTER II: DESCRIPTION OF THE ORGANISATION (3000-4000 words, 8-12 pages):
+Generate CHAPTER 2: DESCRIPTION OF THE COMPANY (about 8-12 pages, 3000-4000 words) about ${companyName}, ${companyLocation}. Use these numbered sub-headings:
 
-2.1 Company Profile (400-500 words about ${companyName})
-2.2 History of the Organisation (350-450 words)
-2.3 Vision and Mission (300-400 words)
-2.4 Organizational Structure (350-450 words)
-2.5 Products and Services (400-500 words)
-2.6 Market Presence (300-400 words)
-2.7 Role of ${topicSpecialization} in the Organisation (400-500 words)`,
+2.1 About the Company (detailed profile of ${companyName})
+2.2 Company Photo (insert a placeholder line: "[Insert Photo of ${companyName}]" and a one-paragraph caption describing the premises)
+2.3 History and Milestones
+2.4 Vision
+2.5 Mission
+2.6 Objectives of the Company (bullet points)
+2.7 Organisation Structure (describe hierarchy and include a textual org-chart table: Level | Role | Responsibility)
+2.8 Products / Services Offered (bullet points + a table: Product/Service | Description | Target Customer)
+2.9 Market Presence and Achievements
+2.10 Role of ${topicSpecialization} in the Company
+
+Use tables wherever they make the data clearer. Formal academic English, grammar perfect.`,
 
         '3': `${baseContext}
 
-Generate CHAPTER III: EXPERIENTIAL LEARNING (2500-3500 words, 6-10 pages):
+Generate CHAPTER 3: EXPERIENTIAL LEARNING (about 6-10 pages). This chapter MUST be written in clear, easy-to-understand BULLET POINTS, NOT long paragraphs. Use tables where helpful. DO NOT include "Lessons Learned".
 
-3.1 Internship Overview (350-450 words at ${companyName}, ${companyLocation})
-3.2 Department Worked (300-400 words)
-3.3 Daily Activities and Tasks (500-600 words during ${internshipDuration})
-3.4 Skills and Knowledge Acquired (450-550 words - technical and soft skills)
-3.5 Challenges Faced (350-450 words)`,
+Use only these three sub-headings:
+
+3.1 Tasks Undertaken
+- Provide 15-25 detailed bullet points describing the actual tasks ${studentName} performed at ${companyName} during ${internshipDuration} related to ${topicSpecialization}.
+- Include a table: Week | Task | Tools/Methods Used | Outcome (cover at least 6-8 weeks).
+
+3.2 Skills Acquired
+- Provide bullet points grouped under two sub-bullets: Technical Skills and Soft Skills (10-15 bullets total).
+- Include a table: Skill | How It Was Acquired | Where Applied.
+
+3.3 Challenges Faced
+- Provide 10-15 bullet points describing real challenges and how they were handled.
+- Include a table: Challenge | Impact | How It Was Overcome.
+
+Keep sentences short, simple and easy to understand.`,
 
         '4': `${baseContext}
 
-Generate CHAPTER IV: INTERNSHIP OUTCOMES AND CONCLUSION (2500-3500 words, 6-10 pages):
+Generate CHAPTER 4: INTERNSHIP OUTCOMES AND CONCLUSION (about 6-10 pages). Write in clear, easy-to-understand BULLET POINTS, not long paragraphs. Use tables wherever useful. DO NOT include lessons learned, methodology or limitations.
 
-4.1 Outcomes of Internship (350-450 words)
-4.2 Findings Related to ${topicSpecialization} (500-600 words with data)
-4.3 Operational Impact (350-450 words)
-4.4 Key Learnings (400-500 words)
-4.5 Suggestions and Recommendations (400-500 words)
-4.6 Conclusion (350-450 words)`,
+Use only these four sub-headings in order:
+
+4.1 Outcome
+- 12-18 bullet points covering the tangible and intangible outcomes of the internship related to ${topicSpecialization} at ${companyName}.
+
+4.2 Findings
+- 12-18 bullet points presenting specific findings observed during the internship.
+- Include a findings table: Area | Observation | Implication.
+
+4.3 Suggestions
+- 10-15 bullet-point recommendations to the company and to future interns.
+
+4.4 Conclusion
+- A focused conclusion (250-350 words) summarising the entire report, key learnings about ${topicSpecialization} and the internship at ${companyName}. This conclusion comes BEFORE the bibliography.`,
 
         '5': `${baseContext}
 
-Generate BIBLIOGRAPHY section:
-
-Provide 15-20 properly formatted references in APA format related to ${topicSpecialization}, ${internshipTitle}, and the industry of ${companyName}. Include books, journal articles, websites, and reports.
-
-Then write ANNEXURES section with:
-- Sample questionnaire (if applicable)
-- Any additional data tables
-- Glossary of terms`,
+Generate the BIBLIOGRAPHY only. It MUST fit on a single page (maximum 12-15 references). Use proper APA format. Mix books, journal articles, official websites and industry reports relevant to ${topicSpecialization} and the industry of ${companyName}. Do NOT add annexures, glossary, or any other section. Output heading: BIBLIOGRAPHY, then the numbered reference list only.`,
       };
 
       prompt = chapterPrompts[chapter] || chapterPrompts['1'];

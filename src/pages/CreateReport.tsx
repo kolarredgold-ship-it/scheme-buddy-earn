@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { FileText, ArrowLeft, Loader2, Download, Sparkles, Lock, CheckCircle2, RotateCcw, CreditCard, History } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
-import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, PageBreak, Header, Footer, PageNumber } from 'docx';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, PageBreak, Header, Footer, PageNumber, Table, TableRow, TableCell, WidthType, BorderStyle, LevelFormat } from 'docx';
 import { saveAs } from 'file-saver';
 import Layout from '@/components/Layout';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -48,12 +48,12 @@ const initialFormData: FormData = {
 };
 
 const chapters = [
-  { key: 'front', label: 'Front Matter', description: 'Certificate, Declaration, Acknowledgement, Abstract' },
-  { key: '1', label: 'Chapter I', description: 'Introduction (5-8 pages)' },
-  { key: '2', label: 'Chapter II', description: 'Description of the Organisation (8-12 pages)' },
-  { key: '3', label: 'Chapter III', description: 'Experiential Learning (6-10 pages)' },
-  { key: '4', label: 'Chapter IV', description: 'Internship Outcomes and Conclusion (6-10 pages)' },
-  { key: '5', label: 'Bibliography', description: 'References & Annexures' },
+  { key: 'front', label: 'Front Matter', description: 'Declaration, Certificate, Acknowledgement, Executive Summary, TOC' },
+  { key: '1', label: 'Chapter 1', description: 'Introduction — topic, department, features, advantages (8-10 pages)' },
+  { key: '2', label: 'Chapter 2', description: 'Description of the Company (8-12 pages)' },
+  { key: '3', label: 'Chapter 3', description: 'Experiential Learning — Tasks, Skills, Challenges (bullets, 6-10 pages)' },
+  { key: '4', label: 'Chapter 4', description: 'Outcomes, Findings, Suggestions, Conclusion (bullets, 6-10 pages)' },
+  { key: '5', label: 'Bibliography', description: 'One-page reference list (APA)' },
 ];
 
 interface Report {
@@ -285,119 +285,184 @@ const CreateReport = () => {
     const useContent = content || chapterContent;
     const useForm = formOverride || formData;
 
-    const allContent = chapters
-      .map(ch => useContent[ch.key])
-      .filter(Boolean)
-      .join('\n\n');
-
-    if (!allContent) {
+    const hasAny = chapters.some(ch => useContent[ch.key]);
+    if (!hasAny) {
       toast.error('No content to download');
       return;
     }
 
-    const paragraphs: Paragraph[] = [];
+    const FONT = 'Times New Roman';
+    const LINE = 360; // 1.5 line spacing
+
+    const makeTextRun = (text: string, opts: { bold?: boolean; size?: number; italics?: boolean } = {}) =>
+      new TextRun({ text, font: FONT, size: opts.size ?? 24, bold: opts.bold, italics: opts.italics });
+
+    const buildTable = (rows: string[][]) => {
+      const colCount = Math.max(...rows.map(r => r.length));
+      const totalWidth = 9000;
+      const colWidth = Math.floor(totalWidth / colCount);
+      const border = { style: BorderStyle.SINGLE, size: 4, color: '999999' };
+      const borders = { top: border, bottom: border, left: border, right: border };
+      return new Table({
+        width: { size: totalWidth, type: WidthType.DXA },
+        columnWidths: Array(colCount).fill(colWidth),
+        rows: rows.map((cells, rIdx) => new TableRow({
+          children: Array.from({ length: colCount }).map((_, cIdx) => new TableCell({
+            borders,
+            width: { size: colWidth, type: WidthType.DXA },
+            margins: { top: 80, bottom: 80, left: 120, right: 120 },
+            shading: rIdx === 0 ? { fill: 'E7E6E6', type: 'clear' as any, color: 'auto' } : undefined,
+            children: [new Paragraph({
+              spacing: { line: LINE },
+              children: [makeTextRun(cells[cIdx] || '', { bold: rIdx === 0, size: 22 })],
+            })],
+          })),
+        })),
+      });
+    };
+
+    const parseChapter = (raw: string): (Paragraph | Table)[] => {
+      const out: (Paragraph | Table)[] = [];
+      const lines = raw.split('\n');
+      let i = 0;
+      let pendingBullets: string[] = [];
+      let pendingTable: string[][] = [];
+
+      const flushBullets = () => {
+        for (const b of pendingBullets) {
+          out.push(new Paragraph({
+            numbering: { reference: 'report-bullets', level: 0 },
+            spacing: { after: 80, line: LINE },
+            children: [makeTextRun(b)],
+          }));
+        }
+        pendingBullets = [];
+      };
+      const flushTable = () => {
+        if (pendingTable.length) {
+          out.push(buildTable(pendingTable));
+          out.push(new Paragraph({ spacing: { after: 120 }, children: [] }));
+          pendingTable = [];
+        }
+      };
+
+      while (i < lines.length) {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        // Pipe table row
+        if (/^\|.*\|$/.test(trimmed)) {
+          flushBullets();
+          // Skip markdown separator row like |---|---|
+          if (!/^\|[\s\-:|]+\|$/.test(trimmed)) {
+            const cells = trimmed.slice(1, -1).split('|').map(c => c.trim());
+            pendingTable.push(cells);
+          }
+          i++;
+          continue;
+        } else {
+          flushTable();
+        }
+
+        // Bullet
+        if (/^[-•]\s+/.test(trimmed)) {
+          pendingBullets.push(trimmed.replace(/^[-•]\s+/, ''));
+          i++;
+          continue;
+        } else {
+          flushBullets();
+        }
+
+        if (!trimmed) {
+          out.push(new Paragraph({ spacing: { after: 100 }, children: [] }));
+          i++;
+          continue;
+        }
+
+        // Headings
+        if (/^(CHAPTER\s|STUDENT DECLARATION|CERTIFICATE|ACKNOWLEDGEMENT|EXECUTIVE SUMMARY|TABLE OF CONTENTS|BIBLIOGRAPHY)/i.test(trimmed)) {
+          out.push(new Paragraph({
+            heading: HeadingLevel.HEADING_1,
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 300, after: 240, line: LINE },
+            children: [makeTextRun(trimmed.toUpperCase(), { bold: true, size: 32 })],
+          }));
+        } else if (/^\d+\.\d+\.\d+/.test(trimmed)) {
+          out.push(new Paragraph({
+            heading: HeadingLevel.HEADING_3,
+            spacing: { before: 200, after: 120, line: LINE },
+            children: [makeTextRun(trimmed, { bold: true, size: 24 })],
+          }));
+        } else if (/^\d+\.\d+\s/.test(trimmed)) {
+          out.push(new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 280, after: 140, line: LINE },
+            children: [makeTextRun(trimmed, { bold: true, size: 26 })],
+          }));
+        } else {
+          out.push(new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            spacing: { after: 140, line: LINE },
+            children: [makeTextRun(trimmed)],
+          }));
+        }
+        i++;
+      }
+      flushBullets();
+      flushTable();
+      return out;
+    };
+
+    const children: (Paragraph | Table)[] = [];
 
     // Title page
-    paragraphs.push(
+    children.push(
       new Paragraph({ spacing: { before: 3000 }, children: [] }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        children: [new TextRun({ text: useForm.internshipTitle.toUpperCase(), bold: true, size: 36, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 400 },
-        children: [new TextRun({ text: 'INTERNSHIP REPORT', bold: true, size: 28, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 600 },
-        children: [new TextRun({ text: `Submitted by`, size: 24, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 100 },
-        children: [new TextRun({ text: useForm.studentName, bold: true, size: 26, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 200 },
-        children: [new TextRun({ text: `Register Number: ${useForm.registerNumber}`, size: 22, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 100 },
-        children: [new TextRun({ text: useForm.course, size: 22, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 400 },
-        children: [new TextRun({ text: useForm.collegeName, size: 22, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 100 },
-        children: [new TextRun({ text: useForm.university, size: 22, font: 'Times New Roman' })],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 400 },
-        children: [new TextRun({ text: `Academic Year: ${useForm.academicYear}`, size: 22, font: 'Times New Roman' })],
-      }),
-      new Paragraph({ children: [new PageBreak()] })
+      new Paragraph({ alignment: AlignmentType.CENTER, children: [makeTextRun(useForm.internshipTitle.toUpperCase(), { bold: true, size: 36 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400 }, children: [makeTextRun('INTERNSHIP REPORT', { bold: true, size: 28 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 600 }, children: [makeTextRun('Submitted by', { size: 24 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 100 }, children: [makeTextRun(useForm.studentName, { bold: true, size: 26 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200 }, children: [makeTextRun(`Register Number: ${useForm.registerNumber}`, { size: 22 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 100 }, children: [makeTextRun(useForm.course, { size: 22 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400 }, children: [makeTextRun(useForm.collegeName, { size: 22 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 100 }, children: [makeTextRun(useForm.university, { size: 22 })] }),
+      new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400 }, children: [makeTextRun(`Academic Year: ${useForm.academicYear}`, { size: 22 })] }),
+      new Paragraph({ children: [new PageBreak()] }),
     );
 
-    // Content pages
-    const lines = allContent.split('\n');
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed) {
-        paragraphs.push(new Paragraph({ spacing: { after: 100 }, children: [] }));
-        continue;
+    // Each chapter on a NEW page
+    chapters.forEach((ch, idx) => {
+      const raw = useContent[ch.key];
+      if (!raw) return;
+      const parsed = parseChapter(raw);
+      children.push(...parsed);
+      if (idx < chapters.length - 1) {
+        children.push(new Paragraph({ children: [new PageBreak()] }));
       }
-
-      if (trimmed.match(/^(CHAPTER|CERTIFICATE|DECLARATION|ACKNOWLEDGEMENT|ABSTRACT|EXECUTIVE SUMMARY|TABLE OF CONTENTS|BIBLIOGRAPHY|ANNEXURES)/i)) {
-        paragraphs.push(new Paragraph({
-          heading: HeadingLevel.HEADING_1,
-          spacing: { before: 400, after: 200 },
-          children: [new TextRun({ text: trimmed, bold: true, size: 28, font: 'Times New Roman' })],
-        }));
-      } else if (trimmed.match(/^\d+\.\d+/)) {
-        paragraphs.push(new Paragraph({
-          heading: HeadingLevel.HEADING_2,
-          spacing: { before: 300, after: 150 },
-          children: [new TextRun({ text: trimmed, bold: true, size: 24, font: 'Times New Roman' })],
-        }));
-      } else {
-        paragraphs.push(new Paragraph({
-          spacing: { after: 120, line: 360 },
-          children: [new TextRun({ text: trimmed, size: 24, font: 'Times New Roman' })],
-        }));
-      }
-    }
+    });
 
     const doc = new Document({
+      styles: {
+        default: { document: { run: { font: FONT, size: 24 } } },
+      },
+      numbering: {
+        config: [{
+          reference: 'report-bullets',
+          levels: [{
+            level: 0, format: LevelFormat.BULLET, text: '•', alignment: AlignmentType.LEFT,
+            style: { paragraph: { indent: { left: 720, hanging: 360 } } },
+          }],
+        }],
+      },
       sections: [{
-        properties: {
-          page: { margin: { top: 1440, right: 1440, bottom: 1440, left: 1800 } },
-        },
+        properties: { page: { margin: { top: 1440, right: 1440, bottom: 1440, left: 1800 } } },
         headers: {
-          default: new Header({
-            children: [new Paragraph({
-              alignment: AlignmentType.CENTER,
-              children: [new TextRun({ text: useForm.collegeName, italics: true, size: 18, font: 'Times New Roman' })],
-            })],
-          }),
+          default: new Header({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [makeTextRun(useForm.collegeName, { italics: true, size: 18 })] })] }),
         },
         footers: {
-          default: new Footer({
-            children: [new Paragraph({
-              alignment: AlignmentType.CENTER,
-              children: [new TextRun({ children: [PageNumber.CURRENT], size: 20, font: 'Times New Roman' })],
-            })],
-          }),
+          default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ children: [PageNumber.CURRENT], size: 20, font: FONT })] })] }),
         },
-        children: paragraphs,
+        children,
       }],
     });
 
