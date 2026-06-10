@@ -113,9 +113,13 @@ const Subscription = () => {
   };
 
   const handlePayNow = () => {
-    if (!user || !profile) {
+    if (!user) {
       toast.error("Please sign up to continue");
       navigate("/signup?redirect=/subscription");
+      return;
+    }
+    if (!profile) {
+      toast.error("Loading your profile, please try again in a moment");
       return;
     }
     const phone = (profile.mobile || "").replace(/\D/g, "");
