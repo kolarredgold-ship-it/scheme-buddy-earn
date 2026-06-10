@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 // Lazy load all non-homepage routes
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
+const Plans = lazy(() => import("./pages/Plans"));
 const SchemeDetail = lazy(() => import("./pages/SchemeDetail"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
