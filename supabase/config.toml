@@ -2,3 +2,6 @@ project_id = "bhfjlxizuwwzvhdzpoxs"
 
 [functions.sitemap]
 verify_jwt = false
+
+[functions.student-ai-tool]
+verify_jwt = false
