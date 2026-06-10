@@ -739,6 +739,9 @@ const StudentTool = () => {
               </div>
             </div>
           )}
+        </Card>
+
+
 
         {output && (
           <Card className="p-4 md:p-6 mt-6 space-y-4">
