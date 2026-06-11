@@ -68,7 +68,7 @@ const HERO_SLIDES = [
     title: "Discover Government Schemes",
     subtitle: "Access 550+ scholarships, subsidies & welfare programs across India",
     cta: "Explore Now",
-    ctaLink: "/plans",
+    ctaLink: "/subscription",
     badge: "🏛 Government",
     stat: "550+ Schemes",
   },
@@ -636,7 +636,7 @@ const Index = () => {
               <p className="text-primary-foreground/80 text-sm md:text-base mb-5 max-w-md mx-auto">
                 Get full access to eligibility details, required documents, and direct apply links for 550+ schemes.
               </p>
-              <Link to="/plans">
+              <Link to="/subscription">
                 <Button size="lg" className="rounded-xl bg-card text-foreground hover:bg-card/90 font-semibold gap-2 shadow-lg">
                   Get Started Free <ArrowRight className="h-4 w-4" />
                 </Button>
