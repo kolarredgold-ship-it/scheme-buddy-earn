@@ -112,19 +112,26 @@ const Subscription = () => {
     setApplyingCoupon(false);
   };
 
-  const handlePayNow = () => {
+  const handlePayNow = async () => {
     if (!user) {
       toast.error("Please sign up to continue");
       navigate("/signup?redirect=/subscription");
       return;
     }
-    if (!profile) {
-      toast.error("Loading your profile, please try again in a moment");
-      return;
+    let currentProfile = profile;
+    if (!currentProfile) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (data) {
+        currentProfile = data as typeof profile;
+        await refreshProfile();
+      }
     }
-    const phone = (profile.mobile || "").replace(/\D/g, "");
-    if (!phone || phone.length < 10) {
-      toast.error("Please add your mobile number in your profile first");
+    if (!currentProfile) {
+      toast.error("Loading your profile, please try again in a moment");
       return;
     }
     setModalOpen(true);
