@@ -729,7 +729,7 @@ const StudentTool = () => {
                   size="lg"
                   className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold shadow-lg"
                 >
-                  <Link to="/plans">
+                  <Link to="/subscription">
                     <Crown className="h-4 w-4 mr-2" /> Upgrade to Pro & Unlock
                   </Link>
                 </Button>

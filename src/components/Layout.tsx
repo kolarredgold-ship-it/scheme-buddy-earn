@@ -104,7 +104,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <Link to="/login">
                   <Button variant="ghost" size="sm" className="rounded-xl font-medium">Login</Button>
                 </Link>
-                <Link to="/plans">
+                <Link to="/subscription">
                   <Button size="sm" className="rounded-xl font-semibold bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">Sign Up</Button>
                 </Link>
               </div>
@@ -171,7 +171,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <Link to="/login" className="flex-1">
                       <Button variant="outline" className="w-full rounded-xl">Login</Button>
                     </Link>
-                    <Link to="/plans" className="flex-1">
+                    <Link to="/subscription" className="flex-1">
                       <Button className="w-full rounded-xl bg-gradient-primary">Sign Up</Button>
                     </Link>
                   </div>
