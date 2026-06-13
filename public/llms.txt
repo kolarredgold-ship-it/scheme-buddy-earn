@@ -1,6 +1,6 @@
 # Techrola
 
-> Techrola is India's platform for discovering 550+ government schemes, scholarships, and welfare programs, plus AI-powered career tools (internship reports, mock interviews) and a referral earning program.
+> Techrola is India's platform for discovering 2500+ government schemes, scholarships, and welfare programs, plus AI-powered career tools (internship reports, mock interviews) and a referral earning program.
 
 ## Pages
 

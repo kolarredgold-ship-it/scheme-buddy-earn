@@ -9,10 +9,10 @@ const AboutUs = () => (
           Techrola is India's premier platform for discovering and accessing government schemes, scholarships, and welfare programs. We empower students, farmers, minorities, and citizens to find the right schemes with ease.
         </p>
         <h2 className="text-lg font-semibold text-foreground">Our Mission</h2>
-        <p>To bridge the gap between government schemes and the citizens who need them most. We make it simple to discover, understand, and apply for 550+ schemes across India.</p>
+        <p>To bridge the gap between government schemes and the citizens who need them most. We make it simple to discover, understand, and apply for 2500+ schemes across India.</p>
         <h2 className="text-lg font-semibold text-foreground">What We Offer</h2>
         <ul className="list-disc pl-5 space-y-1">
-          <li>Comprehensive database of 550+ government schemes</li>
+          <li>Comprehensive database of 2500+ government schemes</li>
           <li>Direct apply links and eligibility criteria</li>
           <li>AI-powered internship report generator</li>
           <li>AI mock interview training</li>

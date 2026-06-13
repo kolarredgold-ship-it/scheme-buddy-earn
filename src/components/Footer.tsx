@@ -11,7 +11,7 @@ const Footer = () => (
             <img src={techrolaLogo} alt="Techrola Logo" className="h-8 w-auto mb-3" />
           </Link>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Empowering citizens with easy access to 550+ government schemes, scholarships & welfare programs.
+            Empowering citizens with easy access to 2500+ government schemes, scholarships & welfare programs.
           </p>
         </div>
 

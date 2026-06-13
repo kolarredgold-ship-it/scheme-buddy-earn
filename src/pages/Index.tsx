@@ -66,11 +66,11 @@ const HERO_SLIDES = [
   {
     image: heroGovt,
     title: "Discover Government Schemes",
-    subtitle: "Access 550+ scholarships, subsidies & welfare programs across India",
+    subtitle: "Access 2500+ scholarships, subsidies & welfare programs across India",
     cta: "Explore Now",
     ctaLink: "/subscription",
     badge: "🏛 Government",
-    stat: "550+ Schemes",
+    stat: "2500+ Schemes",
   },
   {
     image: heroJobs,
@@ -469,34 +469,6 @@ const Index = () => {
           searching={searching}
         />
 
-        {/* About / Nature of Business — for transparency & payment compliance */}
-        <section aria-labelledby="about-business" className="container mx-auto px-3 md:px-4 mt-5">
-          <div className="rounded-2xl border border-border/60 bg-card p-4 md:p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-[10px] font-semibold border-primary/40 text-primary">About Techrola</Badge>
-              <span className="text-[11px] text-muted-foreground">Operated by Omlay Technologies, Bengaluru, India</span>
-            </div>
-            <h2 id="about-business" className="text-lg md:text-2xl font-bold leading-tight mb-2">
-              Government schemes discovery & digital career-education platform
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">Techrola</strong> is an Indian edu-tech web & mobile platform. We help students,
-              farmers, jobseekers and citizens <strong>discover, understand and apply for 550+ Central and State Government
-              schemes, scholarships and welfare programs</strong>. Alongside this directory, we sell paid <strong>digital
-              career-education services</strong> — AI-powered mock interviews, internship report generation,
-              skill-development content, and career guidance — delivered online through a <strong>₹999 annual Pro
-              subscription</strong>. Customers pay digitally via UPI; access to premium content is delivered instantly inside
-              the user account after verification. We do not sell physical goods, financial products, loans, or government
-              services themselves — all official applications are completed on the respective government portals via the links we provide.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
-              <span className="px-2 py-1 rounded-md bg-primary/10 text-primary font-medium">Edu-tech SaaS</span>
-              <span className="px-2 py-1 rounded-md bg-secondary/10 text-secondary font-medium">Government scheme directory</span>
-              <span className="px-2 py-1 rounded-md bg-accent/10 text-accent-foreground font-medium">AI career tools</span>
-              <span className="px-2 py-1 rounded-md bg-muted text-muted-foreground font-medium">Digital subscription (₹999/yr)</span>
-            </div>
-          </div>
-        </section>
 
         {/* Category Chips */}
         <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
@@ -663,7 +635,7 @@ const Index = () => {
                 Unlock All Schemes for Just ₹1000
               </h2>
               <p className="text-primary-foreground/80 text-sm md:text-base mb-5 max-w-md mx-auto">
-                Get full access to eligibility details, required documents, and direct apply links for 550+ schemes.
+                Get full access to eligibility details, required documents, and direct apply links for 2500+ schemes.
               </p>
               <Link to="/subscription">
                 <Button size="lg" className="rounded-xl bg-card text-foreground hover:bg-card/90 font-semibold gap-2 shadow-lg">
@@ -722,7 +694,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Government Scheme Updates</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 550+ latest government welfare programs</p>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 2500+ latest government welfare programs</p>
                   </div>
                 </div>
               </div>
@@ -730,6 +702,39 @@ const Index = () => {
 
           </div>
         </div>
+
+        {/* About / Nature of Business — for transparency & payment compliance */}
+        <section aria-labelledby="about-business" className="container mx-auto px-3 md:px-4 mt-8">
+          <div className="rounded-2xl border border-border/60 bg-card p-4 md:p-6 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <Badge variant="outline" className="text-[10px] font-semibold border-primary/40 text-primary">About Techrola</Badge>
+              <span className="text-[11px] text-muted-foreground">Operated by Omlay Technologies, Bengaluru, India</span>
+            </div>
+            <h2 id="about-business" className="text-lg md:text-2xl font-bold leading-tight mb-2">
+              Government schemes discovery & digital career-education platform
+            </h2>
+            <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+              <strong className="text-foreground">Techrola</strong> is an Indian edu-tech web & mobile platform. We help students,
+              farmers, jobseekers and citizens <strong>discover, understand and apply for 2500+ Central and State Government
+              schemes, scholarships and welfare programs</strong>. Alongside this directory, we offer a complete suite of paid{" "}
+              <strong>Student AI Tools & digital career-education services</strong> — including AI Internship Report Generator,
+              AI Mock Interview, AI Live HR Interview, AI Resume Builder, AI Cover Letter, AI SOP, AI Study Notes, AI Career
+              Roadmap, AI Leave Letter, AI LOR, AI Project Report, AI Email Writer, AI Viva Questions, AI PPT Outline,
+              AI Scholarship Essay, AI LinkedIn Bio, AI Business Plan, AI Assignment, AI Essay & AI Speech Writer — delivered
+              online through a <strong>₹999 annual Pro subscription</strong>. Customers pay digitally via UPI; access to
+              premium content is delivered instantly inside the user account after verification. We do not sell physical
+              goods, financial products, loans, or government services themselves — all official applications are completed
+              on the respective government portals via the links we provide.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+              <span className="px-2 py-1 rounded-md bg-primary/10 text-primary font-medium">Edu-tech SaaS</span>
+              <span className="px-2 py-1 rounded-md bg-secondary/10 text-secondary font-medium">Government scheme directory</span>
+              <span className="px-2 py-1 rounded-md bg-accent/10 text-accent-foreground font-medium">Student AI Tools (20+)</span>
+              <span className="px-2 py-1 rounded-md bg-muted text-muted-foreground font-medium">Digital subscription (₹999/yr)</span>
+            </div>
+          </div>
+        </section>
+
 
         {/* Personalize Preferences Popup */}
         {user && (
