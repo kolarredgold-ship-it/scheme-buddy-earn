@@ -66,11 +66,11 @@ const HERO_SLIDES = [
   {
     image: heroGovt,
     title: "Discover Government Schemes",
-    subtitle: "Access 550+ scholarships, subsidies & welfare programs across India",
+    subtitle: "Access 2500+ scholarships, subsidies & welfare programs across India",
     cta: "Explore Now",
     ctaLink: "/subscription",
     badge: "🏛 Government",
-    stat: "550+ Schemes",
+    stat: "2500+ Schemes",
   },
   {
     image: heroJobs,
@@ -481,7 +481,7 @@ const Index = () => {
             </h2>
             <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
               <strong className="text-foreground">Techrola</strong> is an Indian edu-tech web & mobile platform. We help students,
-              farmers, jobseekers and citizens <strong>discover, understand and apply for 550+ Central and State Government
+              farmers, jobseekers and citizens <strong>discover, understand and apply for 2500+ Central and State Government
               schemes, scholarships and welfare programs</strong>. Alongside this directory, we sell paid <strong>digital
               career-education services</strong> — AI-powered mock interviews, internship report generation,
               skill-development content, and career guidance — delivered online through a <strong>₹999 annual Pro
@@ -663,7 +663,7 @@ const Index = () => {
                 Unlock All Schemes for Just ₹1000
               </h2>
               <p className="text-primary-foreground/80 text-sm md:text-base mb-5 max-w-md mx-auto">
-                Get full access to eligibility details, required documents, and direct apply links for 550+ schemes.
+                Get full access to eligibility details, required documents, and direct apply links for 2500+ schemes.
               </p>
               <Link to="/subscription">
                 <Button size="lg" className="rounded-xl bg-card text-foreground hover:bg-card/90 font-semibold gap-2 shadow-lg">
@@ -722,7 +722,7 @@ const Index = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Government Scheme Updates</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 550+ latest government welfare programs</p>
+                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 2500+ latest government welfare programs</p>
                   </div>
                 </div>
               </div>
