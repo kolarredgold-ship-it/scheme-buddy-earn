@@ -564,6 +564,16 @@ const Index = () => {
           ) : (
             /* Default: Category-wise horizontal scroll */
             <>
+              {/* AI Students Tools - Full-width CTA */}
+              <Link
+                to="/ai-tools"
+                className="block w-full mb-4 rounded-2xl bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground px-4 py-3.5 md:py-4 font-bold text-sm md:text-base text-center shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
+              >
+                <Sparkles className="h-4 w-4 md:h-5 md:w-5" />
+                AI Students Tools
+                <span className="text-[10px] md:text-xs bg-white/20 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
+              </Link>
+
               {/* Recent / Trending - Text ticker */}
               <section>
                 <div className="mb-3">
@@ -572,6 +582,7 @@ const Index = () => {
                     Trending Schemes
                   </h2>
                 </div>
+
                 <div className="overflow-hidden relative group/ticker [&:hover>div]:pause-ticker [&:active>div]:pause-ticker">
                   <div className="flex animate-[ticker_30s_linear_infinite] gap-4 w-max">
                     {[...recentSchemes, ...recentSchemes].map((scheme, idx) => (
