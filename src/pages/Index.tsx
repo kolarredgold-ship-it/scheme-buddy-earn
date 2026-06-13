@@ -564,6 +564,16 @@ const Index = () => {
           ) : (
             /* Default: Category-wise horizontal scroll */
             <>
+              {/* AI Students Tools - Full-width CTA */}
+              <Link
+                to="/ai-tools"
+                className="block w-full mb-4 rounded-2xl bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground px-4 py-3.5 md:py-4 font-bold text-sm md:text-base text-center shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
+              >
+                <Sparkles className="h-4 w-4 md:h-5 md:w-5" />
+                AI Students Tools
+                <span className="text-[10px] md:text-xs bg-white/20 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
+              </Link>
+
               {/* Recent / Trending - Text ticker */}
               <section>
                 <div className="mb-3">
@@ -572,6 +582,7 @@ const Index = () => {
                     Trending Schemes
                   </h2>
                 </div>
+
                 <div className="overflow-hidden relative group/ticker [&:hover>div]:pause-ticker [&:active>div]:pause-ticker">
                   <div className="flex animate-[ticker_30s_linear_infinite] gap-4 w-max">
                     {[...recentSchemes, ...recentSchemes].map((scheme, idx) => (
@@ -703,37 +714,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* About / Nature of Business — for transparency & payment compliance */}
-        <section aria-labelledby="about-business" className="container mx-auto px-3 md:px-4 mt-8">
-          <div className="rounded-2xl border border-border/60 bg-card p-4 md:p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-[10px] font-semibold border-primary/40 text-primary">About Techrola</Badge>
-              <span className="text-[11px] text-muted-foreground">Operated by Omlay Technologies, Bengaluru, India</span>
-            </div>
-            <h2 id="about-business" className="text-lg md:text-2xl font-bold leading-tight mb-2">
-              Government schemes discovery & digital career-education platform
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">Techrola</strong> is an Indian edu-tech web & mobile platform. We help students,
-              farmers, jobseekers and citizens <strong>discover, understand and apply for 2500+ Central and State Government
-              schemes, scholarships and welfare programs</strong>. Alongside this directory, we offer a complete suite of paid{" "}
-              <strong>Student AI Tools & digital career-education services</strong> — including AI Internship Report Generator,
-              AI Mock Interview, AI Live HR Interview, AI Resume Builder, AI Cover Letter, AI SOP, AI Study Notes, AI Career
-              Roadmap, AI Leave Letter, AI LOR, AI Project Report, AI Email Writer, AI Viva Questions, AI PPT Outline,
-              AI Scholarship Essay, AI LinkedIn Bio, AI Business Plan, AI Assignment, AI Essay & AI Speech Writer — delivered
-              online through a <strong>₹999 annual Pro subscription</strong>. Customers pay digitally via UPI; access to
-              premium content is delivered instantly inside the user account after verification. We do not sell physical
-              goods, financial products, loans, or government services themselves — all official applications are completed
-              on the respective government portals via the links we provide.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
-              <span className="px-2 py-1 rounded-md bg-primary/10 text-primary font-medium">Edu-tech SaaS</span>
-              <span className="px-2 py-1 rounded-md bg-secondary/10 text-secondary font-medium">Government scheme directory</span>
-              <span className="px-2 py-1 rounded-md bg-accent/10 text-accent-foreground font-medium">Student AI Tools (20+)</span>
-              <span className="px-2 py-1 rounded-md bg-muted text-muted-foreground font-medium">Digital subscription (₹999/yr)</span>
-            </div>
-          </div>
-        </section>
+
+
 
 
         {/* Personalize Preferences Popup */}
