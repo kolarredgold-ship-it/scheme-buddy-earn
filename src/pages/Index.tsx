@@ -470,29 +470,42 @@ const Index = () => {
         />
 
 
-        {/* Category Chips */}
+        {/* Category Chips + AI Tools CTA */}
         <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-            <button
-              onClick={() => setActiveCategory(null)}
-              className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-                !activeCategory
-                  ? "bg-primary text-primary-foreground shadow-glow"
-                  : "bg-muted text-muted-foreground hover:scale-105"
-              }`}
+          <div className="flex flex-col md:flex-row md:items-stretch md:gap-3">
+            <div className="md:basis-[65%] md:flex-shrink-0 min-w-0">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
+                <button
+                  onClick={() => setActiveCategory(null)}
+                  className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
+                    !activeCategory
+                      ? "bg-primary text-primary-foreground shadow-glow"
+                      : "bg-muted text-muted-foreground hover:scale-105"
+                  }`}
+                >
+                  All
+                </button>
+                {CATEGORIES.map((cat) => (
+                  <CategoryChip
+                    key={cat.key}
+                    cat={cat}
+                    isActive={activeCategory === cat.key}
+                    onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
+                  />
+                ))}
+              </div>
+            </div>
+            <Link
+              to="/ai-tools"
+              className="hidden md:flex md:basis-[35%] md:flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-yellow-950 px-4 py-2.5 font-bold text-sm shadow-lg shadow-yellow-400/40 hover:shadow-xl hover:shadow-yellow-400/50 hover:scale-[1.01] transition-all"
             >
-              All
-            </button>
-            {CATEGORIES.map((cat) => (
-              <CategoryChip
-                key={cat.key}
-                cat={cat}
-                isActive={activeCategory === cat.key}
-                onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
-              />
-            ))}
+              <Sparkles className="h-5 w-5" />
+              AI Students Tools
+              <span className="text-xs bg-yellow-950/15 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
+            </Link>
           </div>
         </div>
+
 
         {/* Content */}
         <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6 space-y-8">
