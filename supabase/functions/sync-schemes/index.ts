@@ -58,11 +58,11 @@ Return a JSON array. Each object must have:
 - source_website: Company careers page or job portal URL
 
 Focus on REAL, VERIFIABLE openings. Return ONLY a valid JSON array.`
-    : `Generate ${schemesToGenerate} real, currently active government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
+    : `Generate ${schemesToGenerate} real, currently active ${focus ? `${focus.replace(/_/g, ' ')} ` : ''}government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
 
 Return a JSON array. Each object must have:
 - title: Official scheme name
-- category: One of: scholarships, farmers, sc_st, minority, housing, health, education, business, govt_jobs, private_jobs
+- category: ${focus && focus !== 'private_jobs' ? `must be exactly "${focus}"` : 'One of: scholarships, farmers, sc_st, minority, women_empowerment, housing, health, education, business, govt_jobs, private_jobs'}
 - description: 2-3 sentence description
 - eligibility: Who can apply
 - documents: Required documents (comma-separated)
@@ -111,20 +111,27 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Require admin caller
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
-    const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
-    const { data: claimsData, error: claimsErr } = await anonClient.auth.getClaims(authHeader.replace("Bearer ", ""));
-    if (claimsErr || !claimsData?.claims?.sub) {
-      return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
+    // Allow cron secret bypass OR admin user
+    const cronSecret = Deno.env.get("CRON_SECRET");
+    const providedCron = req.headers.get("x-cron-secret");
+    const isCron = !!(cronSecret && providedCron && providedCron === cronSecret);
+
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: claimsData.claims.sub, _role: "admin" });
-    if (!isAdmin) {
-      return new Response(JSON.stringify({ success: false, error: "Forbidden: admin only" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+
+    if (!isCron) {
+      const authHeader = req.headers.get("Authorization");
+      if (!authHeader?.startsWith("Bearer ")) {
+        return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
+      const { data: claimsData, error: claimsErr } = await anonClient.auth.getClaims(authHeader.replace("Bearer ", ""));
+      if (claimsErr || !claimsData?.claims?.sub) {
+        return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: claimsData.claims.sub, _role: "admin" });
+      if (!isAdmin) {
+        return new Response(JSON.stringify({ success: false, error: "Forbidden: admin only" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
     }
 
     let targetState = "all";
@@ -183,8 +190,95 @@ Deno.serve(async (req) => {
       );
     }
 
+    const ALL_CATEGORIES = ["scholarships","farmers","sc_st","minority","women_empowerment","housing","health","education","business","govt_jobs"];
+    const PER_CATEGORY_TARGET = 12;
+
     // For private_jobs focus, ignore the 30-cap and always try to add fresh listings
     const isPrivateJobsFocus = focus === "private_jobs";
+
+    // Per-category top-up mode: specific state, no focus → fill each category up to target
+    if (targetState !== "all" && !focus) {
+      const state = targetState;
+      const stateLabel = state.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const catCounts: Record<string, number> = {};
+      for (const s of (existingSchemes || []).filter((x: any) => x.state === state)) {
+        catCounts[s.category] = (catCounts[s.category] || 0) + 1;
+      }
+      const existingForState = (existingSchemes || [])
+        .filter((s: any) => s.state === state)
+        .map((s: any) => s.title);
+
+      let totalAddedCat = 0;
+      const byCat: Record<string, number> = {};
+      const failedCat: string[] = [];
+      const newNotifs: any[] = [];
+
+      for (const cat of ALL_CATEGORIES) {
+        const have = catCounts[cat] || 0;
+        if (have >= PER_CATEGORY_TARGET) continue;
+        const need = Math.min(8, PER_CATEGORY_TARGET - have);
+
+        let schemes: SchemeData[] = [];
+        let ok = false;
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+          try {
+            schemes = await fetchSchemesFromAI(aiConfig, state, stateLabel, need, existingForState, cat);
+            ok = true; break;
+          } catch (err) {
+            console.error(`[${state}/${cat}] attempt ${attempt} failed:`, (err as Error).message);
+            if (attempt < MAX_RETRIES) await new Promise(r => setTimeout(r, 1500));
+          }
+        }
+        if (!ok) { failedCat.push(cat); continue; }
+
+        const toInsert = schemes
+          .filter(s => {
+            const key = `${s.title}__${state}`.toLowerCase();
+            return !existingTitles.has(key) && s.title && s.description;
+          })
+          .map(s => ({
+            title: s.title,
+            category: cat,
+            state,
+            description: s.description,
+            eligibility: s.eligibility || null,
+            documents: s.documents || null,
+            apply_link: s.apply_link || null,
+            tags: s.tags || [],
+            beneficiary_type: s.beneficiary_type || null,
+            source_website: s.source_website || null,
+            is_active: true,
+          }));
+
+        if (toInsert.length === 0) continue;
+        const { data: inserted, error: insErr } = await supabase
+          .from("schemes").insert(toInsert).select("id, title, state, category");
+        if (insErr) { console.error(`Insert failed [${state}/${cat}]:`, insErr.message); failedCat.push(cat); continue; }
+        totalAddedCat += toInsert.length;
+        byCat[cat] = toInsert.length;
+        toInsert.forEach((s: any) => existingTitles.add(`${s.title}__${s.state}`.toLowerCase()));
+        if (inserted) for (const sc of inserted) newNotifs.push({
+          scheme_id: sc.id, state: sc.state, category: sc.category,
+          title: `New Scheme in ${stateLabel}`,
+          message: `${sc.title} has been added to ${sc.category} schemes.`,
+        });
+      }
+
+      if (newNotifs.length > 0) await supabase.from("scheme_notifications").insert(newNotifs);
+
+      return new Response(JSON.stringify({
+        success: true,
+        state,
+        mode: "per_category",
+        total_added: totalAddedCat,
+        by_category: byCat,
+        failed: failedCat,
+        notifications_created: newNotifs.length,
+        synced_at: new Date().toISOString(),
+        ai_engine: deepseekKey ? "deepseek" : "lovable-ai",
+      }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     const statesToSync = targetState === "all"
       ? ALL_STATES.filter(s => isPrivateJobsFocus || (stateCounts[s] || 0) < 30)
       : [targetState];
