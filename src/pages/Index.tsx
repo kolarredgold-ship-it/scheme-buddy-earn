@@ -475,10 +475,36 @@ const Index = () => {
           <div className="flex flex-col md:flex-row md:items-stretch md:gap-3">
             <div className="md:basis-[65%] md:flex-shrink-0 min-w-0">
               <div
-                className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory cursor-grab active:cursor-grabbing"
+                className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory cursor-grab active:cursor-grabbing select-none"
                 onWheel={(e) => {
                   if (e.deltaY === 0) return;
                   e.currentTarget.scrollLeft += e.deltaY;
+                }}
+                onMouseDown={(e) => {
+                  const el = e.currentTarget;
+                  const startX = e.pageX - el.offsetLeft;
+                  const startScroll = el.scrollLeft;
+                  let dragged = false;
+                  const onMove = (ev: MouseEvent) => {
+                    const x = ev.pageX - el.offsetLeft;
+                    const dx = x - startX;
+                    if (Math.abs(dx) > 3) dragged = true;
+                    el.scrollLeft = startScroll - dx;
+                  };
+                  const onUp = (ev: MouseEvent) => {
+                    window.removeEventListener("mousemove", onMove);
+                    window.removeEventListener("mouseup", onUp);
+                    if (dragged) {
+                      const stop = (e2: Event) => {
+                        e2.stopPropagation();
+                        e2.preventDefault();
+                        window.removeEventListener("click", stop, true);
+                      };
+                      window.addEventListener("click", stop, true);
+                    }
+                  };
+                  window.addEventListener("mousemove", onMove);
+                  window.addEventListener("mouseup", onUp);
                 }}
               >
                 <button
