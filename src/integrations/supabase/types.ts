@@ -612,6 +612,7 @@ export type Database = {
     }
     Functions: {
       generate_referral_code: { Args: never; Returns: string }
+      get_cron_secret: { Args: never; Returns: string }
       get_user_referral_code: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
@@ -620,6 +621,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      verify_cron_secret: { Args: { _token: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

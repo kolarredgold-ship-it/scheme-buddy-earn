@@ -111,12 +111,15 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Allow cron secret bypass OR admin user
-    const cronSecret = Deno.env.get("CRON_SECRET");
-    const providedCron = req.headers.get("x-cron-secret");
-    const isCron = !!(cronSecret && providedCron && providedCron === cronSecret);
-
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Allow cron secret bypass OR admin user
+    const providedCron = req.headers.get("x-cron-secret");
+    let isCron = false;
+    if (providedCron) {
+      const { data: ok } = await supabase.rpc("verify_cron_secret", { _token: providedCron });
+      isCron = ok === true;
+    }
 
     if (!isCron) {
       const authHeader = req.headers.get("Authorization");
@@ -137,7 +140,6 @@ Deno.serve(async (req) => {
     let targetState = "all";
     let mode = "check";
     let focus: string | undefined;
-    
     try {
       const body = await req.json();
       targetState = body.state || "all";
@@ -146,6 +148,8 @@ Deno.serve(async (req) => {
     } catch {
       // defaults
     }
+
+
 
     const { data: existingSchemes, error: fetchError } = await supabase
       .from("schemes")
