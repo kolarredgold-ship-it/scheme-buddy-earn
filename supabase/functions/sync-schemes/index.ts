@@ -58,11 +58,11 @@ Return a JSON array. Each object must have:
 - source_website: Company careers page or job portal URL
 
 Focus on REAL, VERIFIABLE openings. Return ONLY a valid JSON array.`
-    : `Generate ${schemesToGenerate} real, currently active government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
+    : `Generate ${schemesToGenerate} real, currently active ${focus ? `${focus.replace(/_/g, ' ')} ` : ''}government schemes for ${stateLabel}, India that are NOT in this list: ${existingForState.join(", ")}.
 
 Return a JSON array. Each object must have:
 - title: Official scheme name
-- category: One of: scholarships, farmers, sc_st, minority, housing, health, education, business, govt_jobs, private_jobs
+- category: ${focus && focus !== 'private_jobs' ? `must be exactly "${focus}"` : 'One of: scholarships, farmers, sc_st, minority, women_empowerment, housing, health, education, business, govt_jobs, private_jobs'}
 - description: 2-3 sentence description
 - eligibility: Who can apply
 - documents: Required documents (comma-separated)
