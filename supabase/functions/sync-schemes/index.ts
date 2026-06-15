@@ -137,6 +137,20 @@ Deno.serve(async (req) => {
       }
     }
 
+    let targetState = "all";
+    let mode = "check";
+    let focus: string | undefined;
+    try {
+      const body = await req.json();
+      targetState = body.state || "all";
+      mode = body.mode || "check";
+      focus = body.focus;
+    } catch {
+      // defaults
+    }
+
+
+
     const { data: existingSchemes, error: fetchError } = await supabase
       .from("schemes")
       .select("title, state, category");
