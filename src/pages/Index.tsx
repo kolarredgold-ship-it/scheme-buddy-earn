@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,304 +6,212 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download, X, Loader2, Settings2, Users } from "lucide-react";
+import {
+  ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen,
+  ChevronRight, ChevronLeft, Search, Sparkles, MapPin, Building2, Landmark, ExternalLink,
+  X, Loader2, Users, FileText, Brain, Mic, Award, Zap
+} from "lucide-react";
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const INDIAN_STATES = [
-  { value: "all", label: "All India" },
-  { value: "central", label: "Central Govt" },
-  { value: "andhra_pradesh", label: "Andhra Pradesh" },
-  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
-  { value: "assam", label: "Assam" },
-  { value: "bihar", label: "Bihar" },
-  { value: "chhattisgarh", label: "Chhattisgarh" },
-  { value: "delhi", label: "Delhi" },
-  { value: "goa", label: "Goa" },
-  { value: "gujarat", label: "Gujarat" },
-  { value: "haryana", label: "Haryana" },
-  { value: "himachal_pradesh", label: "Himachal Pradesh" },
-  { value: "jammu_kashmir", label: "Jammu & Kashmir" },
-  { value: "jharkhand", label: "Jharkhand" },
-  { value: "karnataka", label: "Karnataka" },
-  { value: "kerala", label: "Kerala" },
-  { value: "ladakh", label: "Ladakh" },
-  { value: "madhya_pradesh", label: "Madhya Pradesh" },
-  { value: "maharashtra", label: "Maharashtra" },
-  { value: "manipur", label: "Manipur" },
-  { value: "meghalaya", label: "Meghalaya" },
-  { value: "mizoram", label: "Mizoram" },
-  { value: "nagaland", label: "Nagaland" },
-  { value: "odisha", label: "Odisha" },
-  { value: "punjab", label: "Punjab" },
-  { value: "rajasthan", label: "Rajasthan" },
-  { value: "sikkim", label: "Sikkim" },
-  { value: "tamil_nadu", label: "Tamil Nadu" },
-  { value: "telangana", label: "Telangana" },
-  { value: "tripura", label: "Tripura" },
-  { value: "uttar_pradesh", label: "Uttar Pradesh" },
-  { value: "uttarakhand", label: "Uttarakhand" },
-  { value: "west_bengal", label: "West Bengal" },
-  { value: "chandigarh", label: "Chandigarh" },
-  { value: "puducherry", label: "Puducherry" },
-  { value: "andaman_nicobar", label: "Andaman & Nicobar" },
-  { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
+  { value: "all", label: "All India" }, { value: "central", label: "Central Govt" },
+  { value: "andhra_pradesh", label: "Andhra Pradesh" }, { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
+  { value: "assam", label: "Assam" }, { value: "bihar", label: "Bihar" }, { value: "chhattisgarh", label: "Chhattisgarh" },
+  { value: "delhi", label: "Delhi" }, { value: "goa", label: "Goa" }, { value: "gujarat", label: "Gujarat" },
+  { value: "haryana", label: "Haryana" }, { value: "himachal_pradesh", label: "Himachal Pradesh" },
+  { value: "jammu_kashmir", label: "Jammu & Kashmir" }, { value: "jharkhand", label: "Jharkhand" },
+  { value: "karnataka", label: "Karnataka" }, { value: "kerala", label: "Kerala" }, { value: "ladakh", label: "Ladakh" },
+  { value: "madhya_pradesh", label: "Madhya Pradesh" }, { value: "maharashtra", label: "Maharashtra" },
+  { value: "manipur", label: "Manipur" }, { value: "meghalaya", label: "Meghalaya" }, { value: "mizoram", label: "Mizoram" },
+  { value: "nagaland", label: "Nagaland" }, { value: "odisha", label: "Odisha" }, { value: "punjab", label: "Punjab" },
+  { value: "rajasthan", label: "Rajasthan" }, { value: "sikkim", label: "Sikkim" }, { value: "tamil_nadu", label: "Tamil Nadu" },
+  { value: "telangana", label: "Telangana" }, { value: "tripura", label: "Tripura" }, { value: "uttar_pradesh", label: "Uttar Pradesh" },
+  { value: "uttarakhand", label: "Uttarakhand" }, { value: "west_bengal", label: "West Bengal" },
+  { value: "chandigarh", label: "Chandigarh" }, { value: "puducherry", label: "Puducherry" },
+  { value: "andaman_nicobar", label: "Andaman & Nicobar" }, { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
   { value: "lakshadweep", label: "Lakshadweep" },
-];
-import hero1 from "@/assets/hero-1.webp";
-import hero2 from "@/assets/hero-2.webp";
-import hero3 from "@/assets/hero-3.webp";
-import heroJobs from "@/assets/hero-jobs.webp";
-import heroSkills from "@/assets/hero-skills.webp";
-import heroGovt from "@/assets/hero-govt.webp";
-import heroAiInterview from "@/assets/hero-ai-interview.webp";
-import heroReport from "@/assets/hero-report.webp";
-import heroHrTraining from "@/assets/hero-hr-training.webp";
-
-const HERO_SLIDES = [
-  {
-    image: heroGovt,
-    title: "Discover Government Schemes",
-    subtitle: "Access 2500+ scholarships, subsidies & welfare programs across India",
-    cta: "Explore Now",
-    ctaLink: "/subscription",
-    badge: "🏛 Government",
-    stat: "2500+ Schemes",
-  },
-  {
-    image: heroJobs,
-    title: "Explore Job Opportunities",
-    subtitle: "Discover curated jobs matching your skills and career aspirations",
-    cta: "Find Jobs",
-    ctaLink: "/career-program",
-    badge: "💼 Jobs",
-    stat: "New Openings",
-  },
-  {
-    image: heroSkills,
-    title: "Skill Development Programs",
-    subtitle: "Upskill with industry-relevant courses & get certified",
-    cta: "Start Learning",
-    ctaLink: "/career-program",
-    badge: "🎓 Upskill",
-    stat: "Free Courses",
-  },
 ];
 
 const CATEGORIES = [
-  { key: "scholarships", label: "Scholarships", icon: GraduationCap, color: "bg-primary/10 text-primary" },
-  { key: "farmers", label: "Farmers", icon: Tractor, color: "bg-secondary/10 text-secondary" },
-  { key: "sc_st", label: "SC/ST", icon: Tags, color: "bg-accent/10 text-accent-foreground" },
-  { key: "private_jobs", label: "🔥 Private Jobs", icon: ExternalLink, color: "bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/30 animate-pulse-slow", featured: true },
-  { key: "minority", label: "Minority", icon: Moon, color: "bg-purple-100 text-purple-700" },
-  { key: "women_empowerment", label: "Women", icon: Users, color: "bg-pink-100 text-pink-700" },
-  { key: "housing", label: "Housing", icon: HomeIcon, color: "bg-orange-100 text-orange-700" },
-  { key: "health", label: "Health", icon: Heart, color: "bg-red-100 text-red-700" },
-  { key: "education", label: "Education", icon: BookOpen, color: "bg-cyan-100 text-cyan-700" },
-  { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
-  { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
+  { key: "scholarships", label: "Scholarships", icon: GraduationCap, color: "from-blue-500 to-indigo-500" },
+  { key: "farmers", label: "Farmers", icon: Tractor, color: "from-emerald-500 to-teal-500" },
+  { key: "private_jobs", label: "Private Jobs", icon: ExternalLink, color: "from-sky-500 to-blue-600", featured: true },
+  { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "from-indigo-500 to-violet-600" },
+  { key: "women_empowerment", label: "Women", icon: Users, color: "from-pink-500 to-rose-500" },
+  { key: "education", label: "Education", icon: BookOpen, color: "from-cyan-500 to-sky-500" },
+  { key: "health", label: "Health", icon: Heart, color: "from-red-500 to-rose-500" },
+  { key: "housing", label: "Housing", icon: HomeIcon, color: "from-orange-500 to-amber-500" },
+  { key: "business", label: "Business", icon: Building2, color: "from-amber-500 to-yellow-500" },
+  { key: "sc_st", label: "SC / ST", icon: Tags, color: "from-fuchsia-500 to-purple-500" },
+  { key: "minority", label: "Minority", icon: Moon, color: "from-purple-500 to-indigo-500" },
+];
+
+const AI_TOOLS = [
+  { to: "/create-report", title: "Internship Report", desc: "AI DOCX in 60 seconds", icon: FileText, gradient: "from-blue-500 to-cyan-500", badge: "TOP" },
+  { to: "/mock-interview", title: "Mock Interview", desc: "Practice with AI feedback", icon: Brain, gradient: "from-purple-500 to-pink-500", badge: "HOT" },
+  { to: "/live-hr-interview", title: "Live HR Interview", desc: "Real-time HR simulation", icon: Mic, gradient: "from-emerald-500 to-teal-500", badge: "NEW" },
+  { to: "/student-tool/resume", title: "Resume Builder", desc: "One-page pro resume", icon: FileText, gradient: "from-orange-500 to-amber-500", badge: "DOC" },
+  { to: "/student-tool/cover-letter", title: "Cover Letter", desc: "Tailored to the role", icon: FileText, gradient: "from-rose-500 to-pink-500", badge: "DOC" },
+  { to: "/student-tool/sop", title: "SOP Generator", desc: "For study abroad", icon: Award, gradient: "from-indigo-500 to-blue-500", badge: "STUDY" },
+  { to: "/student-tool/roadmap", title: "Career Roadmap", desc: "6-month plan", icon: Zap, gradient: "from-cyan-500 to-blue-500", badge: "PLAN" },
+  { to: "/student-tool/study-notes", title: "Study Notes", desc: "Topic to revision notes", icon: BookOpen, gradient: "from-yellow-500 to-orange-500", badge: "EXAM" },
 ];
 
 interface Scheme {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  image_url: string | null;
-  created_at: string;
-  state: string | null;
-  slug: string;
+  id: string; title: string; category: string; description: string;
+  image_url: string | null; created_at: string; state: string | null; slug: string;
 }
 
-// Hero Banner with auto-scroll
-const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearch, selectedState, onStateChange, onSearch, searching }: {
-  searchQuery: string;
-  onSearchChange: (val: string) => void;
-  onSearchKeyDown: (e: React.KeyboardEvent) => void;
-  onClearSearch: () => void;
-  selectedState: string;
-  onStateChange: (val: string) => void;
-  onSearch: () => void;
-  searching: boolean;
+/* ====================== HERO ====================== */
+const Hero = (props: {
+  searchQuery: string; onSearchChange: (v: string) => void; onSearchKeyDown: (e: React.KeyboardEvent) => void;
+  onClearSearch: () => void; selectedState: string; onStateChange: (v: string) => void;
+  onSearch: () => void; searching: boolean;
 }) => {
-  const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const startTimer = useCallback(() => {
-    timerRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 4500);
-  }, []);
-
-  useEffect(() => {
-    startTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [startTimer]);
-
-  const goTo = (i: number) => {
-    setCurrent(i);
-    if (timerRef.current) clearInterval(timerRef.current);
-    startTimer();
-  };
-
-  const slide = HERO_SLIDES[current];
-
   return (
-    <section className="relative w-full overflow-hidden aspect-[5/4] md:aspect-[16/7]">
-      {HERO_SLIDES.map((s, i) => (
-        <div
-          key={i}
-          className={`absolute inset-0 transition-all duration-1000 ease-out ${
-            i === current ? "opacity-100 scale-100" : "opacity-0 scale-110"
-          }`}
-        >
-          <img
-            src={s.image}
-            alt={s.title}
-            className={`w-full h-full object-cover ${i === current ? "animate-[ken-burns_4.5s_ease-out_forwards]" : ""}`}
-            width={1280}
-            height={512}
-            loading={i === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        </div>
-      ))}
+    <section className="relative w-full overflow-hidden animated-hero-bg">
+      {/* Decorative orbs */}
+      <div className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full bg-yellow-400/20 blur-3xl float-y" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-sky-400/20 blur-3xl float-y" style={{ animationDelay: "1.5s" }} />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "22px 22px" }} />
 
-      {/* Content overlay */}
-      <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
-        <div className="max-w-lg">
-          <div
-            key={`badge-${current}`}
-            className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border animate-fade-in ${
-              (slide as any).glow
-                ? "bg-orange-500/30 border-orange-400/40 shadow-[0_0_15px_rgba(249,115,22,0.4)]"
-                : "bg-white/15 border-white/20"
-            }`}
-          >
-            {slide.badge}
+      <div className="relative container mx-auto px-4 md:px-6 pt-8 pb-10 md:pt-16 md:pb-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-400/15 border border-yellow-400/30 text-yellow-300 text-[11px] font-semibold tracking-wider uppercase mb-4 backdrop-blur-sm">
+            <Sparkles className="h-3.5 w-3.5" />
+            India's #1 Career & Schemes Platform
           </div>
-
-          <h1
-            key={current}
-            className="text-2xl md:text-5xl font-extrabold text-white mb-2 md:mb-3 leading-tight animate-fade-in"
-            style={{ fontFamily: 'Plus Jakarta Sans' }}
-          >
-            {slide.title}
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.05] mb-4">
+            Discover <span className="text-yellow-400">2500+ Schemes</span>,<br className="hidden md:block" />
+            Jobs & AI Career Tools
           </h1>
-          <p
-            key={`sub-${current}`}
-            className="text-sm md:text-lg text-white/80 mb-4 md:mb-6 animate-fade-in max-w-md leading-relaxed"
-            style={{ animationDelay: '0.1s' }}
-          >
-            {slide.subtitle}
+          <p className="text-sm md:text-lg text-white/75 mb-7 max-w-xl mx-auto">
+            From scholarships to private jobs, AI mock interviews to internship reports — everything you need in one app.
           </p>
 
-          <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Link to={slide.ctaLink}>
-              <Button
-                size="sm"
-                className={`rounded-lg font-semibold gap-1 text-[11px] md:text-sm px-2.5 md:px-5 py-1 md:py-1.5 h-auto ${
-                  (slide as any).glow
-                    ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 shadow-[0_0_20px_rgba(249,115,22,0.4)]"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
-                }`}
-              >
-                {slide.cta} <ArrowRight className="h-3 w-3 md:h-3.5 md:w-3.5" />
-              </Button>
-            </Link>
-            <div className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/10">
-              <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-white text-sm font-semibold">{slide.stat}</span>
+          {/* Search */}
+          <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/40 p-2 flex gap-2 max-w-2xl mx-auto border border-white/40">
+            <div className="relative flex-1">
+              <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
+              <input
+                type="text"
+                aria-label="Search government schemes"
+                placeholder="AI Search: 'free laptop Tamil Nadu'"
+                value={props.searchQuery}
+                onChange={(e) => props.onSearchChange(e.target.value)}
+                onKeyDown={props.onSearchKeyDown}
+                className="w-full h-11 pl-9 pr-9 rounded-xl bg-transparent text-sm focus:outline-none placeholder:text-muted-foreground/60"
+              />
+              {props.searchQuery && (
+                <button aria-label="Clear" onClick={props.onClearSearch}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
+            <Select value={props.selectedState} onValueChange={props.onStateChange}>
+              <SelectTrigger className="hidden sm:flex w-[140px] h-11 rounded-xl border-0 bg-muted/60 gap-1 shrink-0">
+                <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
+                <SelectValue placeholder="State" />
+              </SelectTrigger>
+              <SelectContent className="max-h-[300px]">
+                {INDIAN_STATES.map((s) => (<SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>))}
+              </SelectContent>
+            </Select>
+            <Button onClick={props.onSearch} disabled={props.searching || props.searchQuery.trim().length < 3}
+              className="h-11 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-[#0c2340] font-bold px-4 md:px-6 shadow-md shadow-yellow-400/40">
+              {props.searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4 md:mr-1.5" /><span className="hidden md:inline">Search</span></>}
+            </Button>
           </div>
-        </div>
-      </div>
-
-      {/* Search + Location on top of banner */}
-      <div className="absolute top-3 left-0 right-0 z-20 px-3 md:px-10">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-            <input
-              type="text"
-              aria-label="Search government schemes"
-              placeholder="AI Search: 'free laptop Tamil Nadu'"
-              value={searchQuery}
-              onChange={(e) => {
-                onSearchChange(e.target.value);
-              }}
-              onKeyDown={onSearchKeyDown}
-              className="w-full h-10 md:h-11 pl-9 pr-9 rounded-xl bg-white/90 backdrop-blur-md border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all placeholder:text-muted-foreground/60 shadow-lg"
-            />
-            {searchQuery && (
-              <button aria-label="Clear search" onClick={onClearSearch} className="absolute right-10 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                <X className="h-4 w-4" />
-              </button>
-            )}
-            <button
-              aria-label="Search schemes"
-              onClick={onSearch}
-              disabled={searching || searchQuery.trim().length < 3}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground disabled:opacity-40 transition-opacity"
-            >
-              {searching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
-            </button>
-          </div>
-          <Select value={selectedState} onValueChange={onStateChange}>
-            <SelectTrigger className="w-[100px] md:w-[150px] h-10 md:h-11 rounded-xl bg-white/90 backdrop-blur-md border-white/40 text-sm gap-1 shrink-0 shadow-lg">
-              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+          <Select value={props.selectedState} onValueChange={props.onStateChange}>
+            <SelectTrigger className="sm:hidden mt-2 mx-auto max-w-[200px] h-9 rounded-xl bg-white/90 border-white/30 gap-1">
+              <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
               <SelectValue placeholder="State" />
             </SelectTrigger>
             <SelectContent className="max-h-[300px]">
-              {INDIAN_STATES.map((state) => (
-                <SelectItem key={state.value} value={state.value} className="text-sm">
-                  {state.label}
-                </SelectItem>
-              ))}
+              {INDIAN_STATES.map((s) => (<SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>))}
             </SelectContent>
           </Select>
+
+          {/* Stats strip */}
+          <div className="mt-7 flex items-center justify-center gap-5 md:gap-10 text-white/90">
+            {[
+              { v: "2500+", l: "Schemes" }, { v: "20+", l: "AI Tools" }, { v: "100K+", l: "Students" },
+            ].map((s) => (
+              <div key={s.l} className="text-center">
+                <div className="text-xl md:text-3xl font-extrabold text-yellow-400">{s.v}</div>
+                <div className="text-[10px] md:text-xs uppercase tracking-wider text-white/60 font-semibold">{s.l}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 flex gap-1 px-3 pb-3 md:px-10 md:pb-4">
-        {HERO_SLIDES.map((_, i) => (
-          <button
-            key={i}
-            aria-label={`Go to slide ${i + 1}`}
-            onClick={() => goTo(i)}
-            className="flex-1 h-1 rounded-full bg-white/20 overflow-hidden"
-          >
-            <div
-              className={`h-full rounded-full transition-all duration-300 ${
-                i === current
-                  ? "bg-white w-full animate-[hero-progress_4.5s_linear]"
-                  : i < current
-                    ? "bg-white/60 w-full"
-                    : "bg-transparent w-0"
-              }`}
-            />
-          </button>
-        ))}
-      </div>
+      {/* Wave bottom */}
+      <svg className="block w-full h-8 md:h-12 text-background" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="currentColor" d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" />
+      </svg>
     </section>
   );
 };
 
-// Scheme Card
+/* ====================== HORIZONTAL SLIDER ====================== */
+const HSlider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const scroll = (dir: -1 | 1) => {
+    const el = ref.current; if (!el) return;
+    el.scrollBy({ left: dir * (el.clientWidth * 0.8), behavior: "smooth" });
+  };
+  return (
+    <div className="relative group">
+      <button onClick={() => scroll(-1)} aria-label="Previous"
+        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 h-9 w-9 rounded-full bg-white shadow-lg items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110">
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+      <div ref={ref}
+        className="flex gap-3 md:gap-4 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory scroll-px-4 cursor-grab active:cursor-grabbing select-none"
+        onMouseDown={(e) => {
+          const el = e.currentTarget; const startX = e.pageX - el.offsetLeft; const startScroll = el.scrollLeft;
+          let dragged = false;
+          const onMove = (ev: MouseEvent) => {
+            const dx = (ev.pageX - el.offsetLeft) - startX;
+            if (Math.abs(dx) > 3) dragged = true; el.scrollLeft = startScroll - dx;
+          };
+          const onUp = () => {
+            window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp);
+            if (dragged) { const stop = (e2: Event) => { e2.stopPropagation(); e2.preventDefault(); window.removeEventListener("click", stop, true); }; window.addEventListener("click", stop, true); }
+          };
+          window.addEventListener("mousemove", onMove); window.addEventListener("mouseup", onUp);
+        }}>
+        {children}
+      </div>
+      <button onClick={() => scroll(1)} aria-label="Next"
+        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 h-9 w-9 rounded-full bg-white shadow-lg items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:scale-110">
+        <ChevronRight className="h-5 w-5" />
+      </button>
+    </div>
+  );
+};
+
+const SectionHeading = ({ eyebrow, title, action }: { eyebrow?: string; title: string; action?: React.ReactNode }) => (
+  <div className="flex items-end justify-between mb-4 md:mb-5">
+    <div>
+      {eyebrow && <div className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-primary mb-1">{eyebrow}</div>}
+      <h2 className="text-xl md:text-2xl font-extrabold text-foreground">{title}</h2>
+    </div>
+    {action}
+  </div>
+);
+
+/* ====================== SCHEME CARD ====================== */
 const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   <Link to={`/scheme/${scheme.slug}`} className="block">
-    <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
+    <Card className="group min-w-[200px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/30 bg-card">
       <CardContent className="p-3 md:p-4">
-        <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium border-border/60">
-          {scheme.category}
-        </Badge>
-        <h3 className="font-semibold text-xs md:text-sm mb-1 group-hover:text-primary transition-colors leading-tight line-clamp-2">
-          {scheme.title}
-        </h3>
+        <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium">{scheme.category}</Badge>
+        <h3 className="font-semibold text-xs md:text-sm mb-1 group-hover:text-primary transition-colors leading-tight line-clamp-2">{scheme.title}</h3>
         <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 mt-1">{scheme.description}</p>
         <div className="mt-2 flex items-center text-[10px] md:text-xs text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
           View Details <ChevronRight className="h-3 w-3 ml-0.5" />
@@ -314,44 +221,11 @@ const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
   </Link>
 );
 
-// Category Chip
-const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
-  if ('link' in cat && cat.link) {
-    return (
-      <a
-        href={cat.link as string}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${cat.color} hover:scale-105`}
-      >
-        <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-        {cat.label}
-      </a>
-    );
-  }
-  const isFeatured = 'featured' in cat && cat.featured;
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-        isActive
-          ? "bg-primary text-primary-foreground shadow-glow"
-          : isFeatured
-            ? `${cat.color} hover:shadow-lg hover:scale-105 ring-1 ring-emerald-400/30`
-            : `${cat.color} hover:scale-105`
-      }`}
-    >
-      <cat.icon className={`h-3.5 w-3.5 md:h-4 md:w-4 ${isFeatured && !isActive ? 'animate-pulse' : ''}`} />
-      {cat.label}
-    </button>
-  );
-};
-
+/* ====================== INDEX ====================== */
 const Index = () => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
@@ -360,107 +234,54 @@ const Index = () => {
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  // Load user preferences to set default state filter
   useEffect(() => {
     if (!user) return;
-    const loadPrefs = async () => {
-      const { data } = await supabase
-        .from("user_preferences")
-        .select("preferred_state, preferred_categories")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (data) {
-        if (data.preferred_state && data.preferred_state !== "all") {
-          setSelectedState(data.preferred_state);
-        }
-      } else {
-        // No preferences yet — show popup for new users
-        setPrefsOpen(true);
-      }
-    };
-    loadPrefs();
+    (async () => {
+      const { data } = await supabase.from("user_preferences").select("preferred_state").eq("user_id", user.id).maybeSingle();
+      if (data?.preferred_state && data.preferred_state !== "all") setSelectedState(data.preferred_state);
+      else if (!data) setPrefsOpen(true);
+    })();
   }, [user]);
 
   useEffect(() => {
-    const fetchSchemes = async () => {
-      const { data } = await supabase.from("schemes").select("id, title, category, description, image_url, created_at, state, slug").order("created_at", { ascending: false });
+    (async () => {
+      const { data } = await supabase.from("schemes")
+        .select("id, title, category, description, image_url, created_at, state, slug")
+        .order("created_at", { ascending: false });
       if (data) setSchemes(data as unknown as Scheme[]);
       setLoading(false);
-    };
-    fetchSchemes();
+    })();
   }, []);
 
-  // Unified search: local first, then AI if needed
   const handleSearch = async () => {
     const q = searchQuery.trim();
-    if (q.length < 3) {
-      setAiResults(null);
-      setAiSummary("");
-      return;
-    }
-
+    if (q.length < 3) { setAiResults(null); setAiSummary(""); return; }
     setSearching(true);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-scheme-search", {
-        body: { query: q },
-      });
+      const { data, error } = await supabase.functions.invoke("ai-scheme-search", { body: { query: q } });
       if (error) throw error;
-      setAiResults(data.schemes || []);
-      setAiSummary(data.ai_summary || "");
-      setAiSource(data.source || "database");
+      setAiResults(data.schemes || []); setAiSummary(data.ai_summary || ""); setAiSource(data.source || "database");
     } catch (err) {
-      console.error("Search error:", err);
       const local = schemes.filter((s) =>
-        s.title.toLowerCase().includes(q.toLowerCase()) ||
-        s.description?.toLowerCase().includes(q.toLowerCase())
+        s.title.toLowerCase().includes(q.toLowerCase()) || s.description?.toLowerCase().includes(q.toLowerCase())
       );
-      setAiResults(local);
-      setAiSummary("");
-      setAiSource("local");
-    } finally {
-      setSearching(false);
-    }
+      setAiResults(local); setAiSummary(""); setAiSource("local");
+    } finally { setSearching(false); }
   };
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSearch();
-  };
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => { if (e.key === "Enter") handleSearch(); };
+  const clearSearch = () => { setSearchQuery(""); setAiResults(null); setAiSummary(""); };
 
-  const clearSearch = () => {
-    setSearchQuery("");
-    setAiResults(null);
-    setAiSummary("");
-  };
-
-  // State-filtered base
-  // Central govt schemes are always visible across all state filters
-  const stateFiltered = selectedState === "all"
-    ? schemes
-    : schemes.filter((s) => s.state === selectedState || s.state === "central");
-
-  const getSchemesByCategory = (cat: string) => {
-    return stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
-  };
-
-  const filteredSchemes = activeCategory
-    ? stateFiltered.filter((s) => s.category === activeCategory)
-    : stateFiltered;
-
-  const recentSchemes = stateFiltered.slice(0, 12);
+  const stateFiltered = selectedState === "all" ? schemes : schemes.filter((s) => s.state === selectedState || s.state === "central");
+  const getSchemesByCategory = (cat: string) => stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 12);
 
   return (
     <Layout>
       <div className="pb-24 md:pb-8">
-        {/* Hero Banner with Search */}
-        <HeroBanner
+        {/* ======== 1. HERO BANNER ======== */}
+        <Hero
           searchQuery={searchQuery}
-          onSearchChange={(val) => {
-            setSearchQuery(val);
-            if (val.trim().length < 3) {
-              setAiResults(null);
-              setAiSummary("");
-            }
-          }}
+          onSearchChange={(val) => { setSearchQuery(val); if (val.trim().length < 3) { setAiResults(null); setAiSummary(""); } }}
           onSearchKeyDown={handleSearchKeyDown}
           onClearSearch={clearSearch}
           selectedState={selectedState}
@@ -469,284 +290,151 @@ const Index = () => {
           searching={searching}
         />
 
-
-        {/* Category Chips + AI Tools CTA */}
-        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
-          <div className="flex flex-col md:flex-row md:items-stretch md:gap-3">
-            <div className="md:basis-[65%] md:flex-shrink-0 min-w-0">
-              <div
-                className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory cursor-grab active:cursor-grabbing select-none"
-                onWheel={(e) => {
-                  if (e.deltaY === 0) return;
-                  e.currentTarget.scrollLeft += e.deltaY;
-                }}
-                onMouseDown={(e) => {
-                  const el = e.currentTarget;
-                  const startX = e.pageX - el.offsetLeft;
-                  const startScroll = el.scrollLeft;
-                  let dragged = false;
-                  const onMove = (ev: MouseEvent) => {
-                    const x = ev.pageX - el.offsetLeft;
-                    const dx = x - startX;
-                    if (Math.abs(dx) > 3) dragged = true;
-                    el.scrollLeft = startScroll - dx;
-                  };
-                  const onUp = (ev: MouseEvent) => {
-                    window.removeEventListener("mousemove", onMove);
-                    window.removeEventListener("mouseup", onUp);
-                    if (dragged) {
-                      const stop = (e2: Event) => {
-                        e2.stopPropagation();
-                        e2.preventDefault();
-                        window.removeEventListener("click", stop, true);
-                      };
-                      window.addEventListener("click", stop, true);
-                    }
-                  };
-                  window.addEventListener("mousemove", onMove);
-                  window.addEventListener("mouseup", onUp);
-                }}
-              >
-                <button
-                  onClick={() => setActiveCategory(null)}
-                  className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-                    !activeCategory
-                      ? "bg-primary text-primary-foreground shadow-glow"
-                      : "bg-muted text-muted-foreground hover:scale-105"
-                  }`}
-                >
-                  All
-                </button>
-                {CATEGORIES.map((cat) => (
-                  <CategoryChip
-                    key={cat.key}
-                    cat={cat}
-                    isActive={activeCategory === cat.key}
-                    onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
-                  />
-                ))}
-              </div>
-            </div>
-            <Link
-              to="/ai-tools"
-              className="hidden md:flex md:basis-[35%] md:flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-yellow-950 px-4 py-2.5 font-bold text-sm shadow-lg shadow-yellow-400/40 hover:shadow-xl hover:shadow-yellow-400/50 hover:scale-[1.01] transition-all"
-            >
-              <Sparkles className="h-5 w-5" />
-              AI Students Tools
-              <span className="text-xs bg-yellow-950/15 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
-            </Link>
-          </div>
-        </div>
-
-
-        {/* Content */}
-        <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6 space-y-8">
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="h-8 w-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : searching ? (
-            <div className="flex flex-col items-center py-16 gap-3 animate-fade-in">
-              <Loader2 className="h-8 w-8 text-primary animate-spin" />
-              <p className="text-sm text-muted-foreground">AI is searching for schemes...</p>
-            </div>
-          ) : aiResults ? (
-            /* AI Search Results */
-            <section className="animate-fade-in">
-              {aiSummary && (
-                <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 mb-4">
-                  <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-foreground/80">{aiSummary}</p>
-                    {aiSource === "ai_enriched" && (
-                      <p className="text-[10px] text-primary mt-1 font-medium">✨ AI discovered new schemes for you</p>
-                    )}
-                  </div>
+        {/* AI search results (overlay when active) */}
+        {aiResults && (
+          <section className="container mx-auto px-4 md:px-6 mt-6 animate-fade-in">
+            {aiSummary && (
+              <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 mb-4">
+                <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs text-foreground/80">{aiSummary}</p>
+                  {aiSource === "ai_enriched" && <p className="text-[10px] text-primary mt-1 font-medium">✨ AI discovered new schemes for you</p>}
                 </div>
-              )}
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base md:text-lg font-bold">
-                  {aiResults.length} result{aiResults.length !== 1 ? 's' : ''} found
-                </h2>
-                <button onClick={clearSearch} className="text-xs text-primary font-medium hover:underline">
-                  Clear Search
-                </button>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                {aiResults.slice(0, 20).map((scheme: any) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} />
-                ))}
-              </div>
-              {aiResults.length === 0 && (
-                <div className="text-center py-12">
-                  <Search className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground text-sm">No schemes found. Try different keywords.</p>
-                </div>
-              )}
-            </section>
-          ) : activeCategory ? (
-            /* Category View */
-            <section className="animate-fade-in">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
-                  {CATEGORIES.find(c => c.key === activeCategory)?.label} Schemes
-                </h2>
-                <button
-                  onClick={() => setActiveCategory(null)}
-                  className="text-xs text-primary font-medium flex items-center gap-0.5 hover:underline"
-                >
-                  Clear Filter
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
-                {filteredSchemes.slice(0, 30).map((scheme) => (
-                  <div key={scheme.id} className="w-full">
-                    <SchemeCard scheme={scheme} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : (
-            /* Default: Category-wise horizontal scroll */
-            <>
-              {/* AI Students Tools - Full-width CTA (mobile only; desktop version sits next to category chips) */}
-              <Link
-                to="/ai-tools"
-                className="md:hidden block w-full mb-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-yellow-950 px-4 py-3.5 font-bold text-sm text-center shadow-lg shadow-yellow-400/40 hover:shadow-xl hover:shadow-yellow-400/50 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                AI Students Tools
-                <span className="text-[10px] bg-yellow-950/15 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
-              </Link>
-
-
-
-
-              {/* Category Sections */}
-              {CATEGORIES.map((cat) => {
-                const catSchemes = getSchemesByCategory(cat.key);
-                if (catSchemes.length === 0) return null;
-                const isPrivateJobs = cat.key === 'private_jobs';
-                return (
-                  <section key={cat.key} className={`animate-fade-in ${isPrivateJobs ? 'relative' : ''}`}>
-                    {isPrivateJobs && (
-                      <div className="absolute -inset-1 bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 rounded-2xl opacity-20 blur-sm -z-10" />
-                    )}
-                    <div className={`flex items-center justify-between mb-3 p-2 rounded-xl ${isPrivateJobs ? 'bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/20' : ''}`}>
-                      <h2 className={`text-base md:text-lg font-bold flex items-center gap-2 ${isPrivateJobs ? 'text-white' : ''}`}>
-                        <cat.icon className={`h-4 w-4 md:h-5 md:w-5 ${isPrivateJobs ? 'text-white' : 'text-muted-foreground'}`} />
-                        {cat.label}
-                      </h2>
-                      <button
-                        onClick={() => setActiveCategory(cat.key)}
-                        className={`text-xs md:text-sm font-medium flex items-center gap-0.5 hover:underline ${isPrivateJobs ? 'text-white/90 hover:text-white' : 'text-primary'}`}
-                      >
-                        See All <ChevronRight className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-                      {catSchemes.map((scheme) => (
-                        <div key={scheme.id} className="snap-start">
-                          <SchemeCard scheme={scheme} />
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                );
-              })}
-            </>
-          )}
-        </div>
-
-        {/* CTA Banner */}
-        {!user && (
-          <div className="container mx-auto px-3 md:px-4 mt-10">
-            <div className="rounded-2xl bg-gradient-primary p-6 md:p-10 text-center">
-              <h2 className="text-xl md:text-3xl font-extrabold text-primary-foreground mb-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                Unlock All Schemes for Just ₹1000
-              </h2>
-              <p className="text-primary-foreground/80 text-sm md:text-base mb-5 max-w-md mx-auto">
-                Get full access to eligibility details, required documents, and direct apply links for 2500+ schemes.
-              </p>
-              <Link to="/subscription">
-                <Button size="lg" className="rounded-xl bg-card text-foreground hover:bg-card/90 font-semibold gap-2 shadow-lg">
-                  Get Started Free <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+            )}
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-base md:text-lg font-bold">{aiResults.length} result{aiResults.length !== 1 ? "s" : ""} found</h2>
+              <button onClick={clearSearch} className="text-xs text-primary font-medium hover:underline">Clear Search</button>
             </div>
-          </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+              {aiResults.slice(0, 20).map((s) => (<SchemeCard key={s.id} scheme={s} />))}
+            </div>
+            {aiResults.length === 0 && (
+              <div className="text-center py-12">
+                <Search className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+                <p className="text-muted-foreground text-sm">No schemes found. Try different keywords.</p>
+              </div>
+            )}
+          </section>
         )}
 
-        {/* Featured Highlights Section */}
-        <div className="container mx-auto px-3 md:px-4 mt-10">
-          <div className="text-center mb-6">
-            <h2 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-              Everything You Need to <span className="text-primary">Build Your Career</span>
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">Powered by AI & Real Opportunities</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {/* Job Opportunities */}
-            <Link to="/career-program" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-primary/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">💼</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Explore Job Opportunities</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Discover curated jobs matching your skills and aspirations</p>
-                  </div>
+        {!aiResults && (
+          <>
+            {/* ======== 2. CATEGORIES (GRID + SLIDER) ======== */}
+            <section className="container mx-auto px-4 md:px-6 mt-8 md:mt-12">
+              <SectionHeading
+                eyebrow="Browse by category"
+                title="Government Scheme Categories"
+                action={<Link to="/#schemes-list" className="text-xs md:text-sm font-semibold text-primary flex items-center gap-0.5 hover:underline">View All <ChevronRight className="h-4 w-4" /></Link>}
+              />
+
+              {/* Desktop & tablet: grid */}
+              <div className="hidden sm:grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+                {CATEGORIES.map((cat) => (
+                  <a href={`#cat-${cat.key}`} key={cat.key}
+                    className="group relative overflow-hidden rounded-2xl bg-card border border-border/60 hover:border-primary/30 p-4 flex flex-col items-center text-center hover-lift">
+                    <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center shadow-lg mb-2 group-hover:scale-110 transition-transform`}>
+                      <cat.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="text-xs md:text-sm font-semibold text-foreground">{cat.label}</div>
+                    {cat.featured && <span className="absolute top-1.5 right-1.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-yellow-400 text-[#0c2340]">HOT</span>}
+                  </a>
+                ))}
+              </div>
+
+              {/* Mobile: horizontal slider */}
+              <div className="sm:hidden">
+                <HSlider>
+                  {CATEGORIES.map((cat) => (
+                    <a href={`#cat-${cat.key}`} key={cat.key}
+                      className="snap-start relative shrink-0 w-[110px] rounded-2xl bg-card border border-border/60 p-3 flex flex-col items-center text-center">
+                      <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center shadow-md mb-2`}>
+                        <cat.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="text-xs font-semibold">{cat.label}</div>
+                      {cat.featured && <span className="absolute top-1.5 right-1.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-yellow-400 text-[#0c2340]">HOT</span>}
+                    </a>
+                  ))}
+                </HSlider>
+              </div>
+            </section>
+
+            {/* ======== 3. AI TOOLS (SLIDER) ======== */}
+            <section className="container mx-auto px-4 md:px-6 mt-10 md:mt-14">
+              <SectionHeading
+                eyebrow="AI students tools"
+                title="Built with AI, for Your Career"
+                action={<Link to="/ai-tools" className="text-xs md:text-sm font-semibold text-primary flex items-center gap-0.5 hover:underline">All Tools <ChevronRight className="h-4 w-4" /></Link>}
+              />
+              <HSlider>
+                {AI_TOOLS.map((t) => (
+                  <Link key={t.to} to={t.to}
+                    className="snap-start shrink-0 w-[200px] md:w-[240px] group relative overflow-hidden rounded-2xl border border-border/60 bg-card hover:border-primary/30 hover-lift">
+                    <div className={`h-24 md:h-28 bg-gradient-to-br ${t.gradient} relative flex items-center justify-center`}>
+                      <t.icon className="h-10 w-10 text-white drop-shadow-md" />
+                      <span className="absolute top-2 right-2 text-[9px] font-bold px-2 py-0.5 rounded-full bg-white/90 text-[#0c2340]">{t.badge}</span>
+                    </div>
+                    <div className="p-3">
+                      <div className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">{t.title}</div>
+                      <div className="text-[11px] text-muted-foreground mt-0.5">{t.desc}</div>
+                    </div>
+                  </Link>
+                ))}
+              </HSlider>
+            </section>
+
+            {/* ======== 4. SCHEMES BY CATEGORY (CONTENT) ======== */}
+            <div id="schemes-list" className="container mx-auto px-4 md:px-6 mt-10 md:mt-14 space-y-10">
+              {loading ? (
+                <div className="flex justify-center py-20">
+                  <div className="h-8 w-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : (
+                CATEGORIES.map((cat) => {
+                  const catSchemes = getSchemesByCategory(cat.key);
+                  if (catSchemes.length === 0) return null;
+                  return (
+                    <section id={`cat-${cat.key}`} key={cat.key} className="animate-fade-in scroll-mt-20">
+                      <SectionHeading
+                        title={cat.label}
+                        action={<span className="text-xs md:text-sm font-semibold text-primary">{catSchemes.length}+ schemes</span>}
+                      />
+                      <HSlider>
+                        {catSchemes.map((s) => (<div key={s.id} className="snap-start"><SchemeCard scheme={s} /></div>))}
+                      </HSlider>
+                    </section>
+                  );
+                })
+              )}
+            </div>
+
+            {/* ======== 5. CTA ======== */}
+            {!user && (
+              <div className="container mx-auto px-4 md:px-6 mt-12">
+                <div className="relative overflow-hidden rounded-3xl animated-hero-bg p-7 md:p-12 text-center">
+                  <div className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full bg-yellow-400/30 blur-3xl" />
+                  <h2 className="relative text-2xl md:text-4xl font-extrabold text-white mb-3">
+                    Unlock All <span className="text-yellow-400">2500+ Schemes</span>
+                  </h2>
+                  <p className="relative text-white/80 text-sm md:text-base mb-6 max-w-md mx-auto">
+                    Get full access to eligibility, documents, and direct apply links.
+                  </p>
+                  <Link to="/subscription" className="relative inline-block">
+                    <Button size="lg" className="rounded-xl bg-yellow-400 hover:bg-yellow-300 text-[#0c2340] font-bold gap-2 shadow-xl shadow-yellow-400/40">
+                      Get Started Free <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
-            </Link>
+            )}
+          </>
+        )}
 
-            {/* Skill Development */}
-            <Link to="/career-program" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-secondary/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">🎓</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Skill Development Programs</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Upskill with industry-relevant courses & certifications</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
+        {/* Layout already renders Techrola Career banner + Footer below */}
 
-            {/* Government Schemes */}
-            <Link to="/#schemes" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-accent/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">🏛</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Government Scheme Updates</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 2500+ latest government welfare programs</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-          </div>
-        </div>
-
-
-
-
-
-        {/* Personalize Preferences Popup */}
         {user && (
-          <UserPreferences
-            open={prefsOpen}
-            onOpenChange={setPrefsOpen}
-            onPreferencesSaved={(state) => {
-              if (state !== "all") setSelectedState(state);
-            }}
-          />
+          <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen}
+            onPreferencesSaved={(state) => { if (state !== "all") setSelectedState(state); }} />
         )}
       </div>
     </Layout>
