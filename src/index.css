@@ -218,3 +218,30 @@
 .pause-ticker {
   animation-play-state: paused !important;
 }
+
+@keyframes hero-bg-pan {
+  0%,100% { background-position: 0% 50%; transform: scale(1.05); }
+  50% { background-position: 100% 50%; transform: scale(1.12); }
+}
+.animated-hero-bg {
+  background: linear-gradient(120deg, hsl(213 79% 14%) 0%, hsl(204 60% 27%) 35%, hsl(213 79% 14%) 70%, hsl(204 70% 22%) 100%);
+  background-size: 300% 300%;
+  animation: hero-bg-pan 14s ease infinite;
+}
+
+@keyframes float-y {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.float-y { animation: float-y 5s ease-in-out infinite; }
+
+@keyframes shine-sweep {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(220%) skewX(-20deg); }
+}
+.shine-sweep::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+  transform: translateX(-120%) skewX(-20deg);
+  animation: shine-sweep 3.5s ease-in-out infinite;
+}
