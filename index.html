@@ -59,27 +59,14 @@
 
   <body>
     <!-- Splash Screen -->
-    <div id="splash-screen" style="position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0c2340 0%,#1a4a6e 60%,#0c2340 100%);background-size:200% 200%;animation:splashBg 6s ease infinite;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s ease;font-family:'Space Grotesk',system-ui,sans-serif;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;">
-        <div style="position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,0.35) 0%,rgba(251,191,36,0) 70%);animation:splashGlow 2s ease-in-out infinite;"></div>
-        <div style="position:absolute;inset:-20px;border:2px solid rgba(251,191,36,0.4);border-radius:50%;animation:splashRing 2.2s ease-out infinite;"></div>
-        <div style="position:absolute;inset:-20px;border:2px solid rgba(251,191,36,0.25);border-radius:50%;animation:splashRing 2.2s ease-out infinite;animation-delay:.8s;"></div>
-        <img src="/techrola_logo.webp" alt="Techrola" style="max-width:220px;width:60%;position:relative;z-index:2;animation:splashPulse 1.6s ease-in-out infinite;filter:drop-shadow(0 8px 30px rgba(0,0,0,0.4));background:#fff;border-radius:24px;padding:14px 22px;" />
-      </div>
-      <div style="margin-top:32px;color:#fbbf24;font-weight:700;letter-spacing:.25em;font-size:11px;text-transform:uppercase;opacity:0;animation:splashFadeIn .9s ease .4s forwards;">Empowering Public &amp; Students</div>
-      <div style="margin-top:18px;display:flex;gap:6px;">
-        <span style="width:8px;height:8px;border-radius:50%;background:#fbbf24;animation:splashDot 1s ease-in-out infinite;"></span>
-        <span style="width:8px;height:8px;border-radius:50%;background:#fbbf24;animation:splashDot 1s ease-in-out .2s infinite;"></span>
-        <span style="width:8px;height:8px;border-radius:50%;background:#fbbf24;animation:splashDot 1s ease-in-out .4s infinite;"></span>
-      </div>
+    <div id="splash-screen" style="position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;transition:opacity 0.4s ease">
+      <img src="/techrola_logo.webp" alt="Techrola" style="max-width:260px;width:70%;animation:splashPulse 1.5s ease-in-out infinite" />
     </div>
     <style>
-      @keyframes splashPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
-      @keyframes splashBg { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
-      @keyframes splashGlow { 0%,100%{opacity:.5;transform:scale(1);} 50%{opacity:1;transform:scale(1.12);} }
-      @keyframes splashRing { 0%{transform:scale(.85);opacity:.9;} 100%{transform:scale(1.6);opacity:0;} }
-      @keyframes splashFadeIn { to{opacity:1;} }
-      @keyframes splashDot { 0%,100%{opacity:.3;transform:translateY(0);} 50%{opacity:1;transform:translateY(-4px);} }
+      @keyframes splashPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.85; transform: scale(1.03); }
+      }
     </style>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
