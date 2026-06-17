@@ -646,15 +646,6 @@ const Index = () => {
           ) : (
             /* Default: Category-wise horizontal scroll */
             <>
-              {/* AI Students Tools - Full-width CTA (mobile only; desktop version sits next to category chips) */}
-              <Link
-                to="/ai-tools"
-                className="md:hidden block w-full mb-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-yellow-950 px-4 py-3.5 font-bold text-sm text-center shadow-lg shadow-yellow-400/40 hover:shadow-xl hover:shadow-yellow-400/50 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                AI Students Tools
-                <span className="text-[10px] bg-yellow-950/15 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
-              </Link>
 
 
 
