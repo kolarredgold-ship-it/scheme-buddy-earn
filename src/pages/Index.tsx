@@ -11,6 +11,43 @@ import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { tools as aiStudentTools } from "@/pages/AITools";
+
+const ROTATING_SCHEME_LABELS = [
+  "Schemes for Students",
+  "Schemes for Farmers",
+  "Schemes for Women",
+  "Schemes for SC/ST",
+  "Schemes for Minorities",
+  "Schemes for Housing",
+  "Schemes for Health",
+  "and more...",
+];
+
+const RotatingSchemesButton = () => {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx((i) => (i + 1) % ROTATING_SCHEME_LABELS.length), 1800);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <Link
+      to="/#schemes"
+      onClick={() => {
+        setTimeout(() => {
+          document.getElementById("schemes")?.scrollIntoView({ behavior: "smooth" });
+        }, 50);
+      }}
+      className="group relative flex items-center justify-center gap-3 w-full md:w-auto md:min-w-[420px] mx-auto rounded-2xl bg-gradient-to-r from-primary via-emerald-500 to-primary bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite] text-primary-foreground px-6 py-4 font-extrabold text-base md:text-lg shadow-xl shadow-primary/30 hover:scale-[1.02] transition-transform"
+    >
+      <Sparkles className="h-5 w-5 animate-pulse" />
+      <span key={idx} className="animate-fade-in inline-block">
+        {ROTATING_SCHEME_LABELS[idx]}
+      </span>
+      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+    </Link>
+  );
+};
 
 const INDIAN_STATES = [
   { value: "all", label: "All India" },
