@@ -649,36 +649,72 @@ const Index = () => {
 
 
 
-              {/* AI Students Tools - Full grid on home */}
+              {/* AI Students Tools - App-style UI */}
               <section id="ai-tools" className="animate-fade-in">
-                <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-base md:text-xl font-extrabold flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                    <Sparkles className="h-5 w-5 text-yellow-500" />
-                    AI Students Tools
-                    <span className="text-[10px] md:text-xs bg-yellow-400/20 text-yellow-700 dark:text-yellow-300 px-2 py-0.5 rounded-full font-bold">20+ Tools</span>
-                  </h2>
-                  <Link to="/ai-tools" className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h2 className="text-lg md:text-2xl font-extrabold flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                      <Sparkles className="h-5 w-5 text-yellow-500" />
+                      AI Students Tools
+                    </h2>
+                    <p className="text-[11px] md:text-xs text-muted-foreground mt-0.5">Built for students. Powered by AI.</p>
+                  </div>
+                  <Link to="/ai-tools" className="text-xs md:text-sm text-primary font-semibold flex items-center gap-0.5 hover:underline">
                     See All <ChevronRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3">
-                  {aiStudentTools.map((t, i) => (
-                    <Link key={i} to={t.to} className="group">
-                      <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} p-3 md:p-4 transition-all duration-300 ${t.glow} h-full`}>
-                        <div className="flex items-start gap-2.5">
-                          <div className={`h-9 w-9 md:h-11 md:w-11 rounded-xl ${t.iconBg} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
-                            <span className="text-lg md:text-xl">{t.icon}</span>
+
+                {/* HERO: Internship Report Generator */}
+                {(() => {
+                  const hero = aiStudentTools[0];
+                  return (
+                    <Link to={hero.to} className="group block mb-4">
+                      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-5 md:p-7 shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 hover:scale-[1.01]">
+                        {/* Decorative blobs */}
+                        <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+                        <div className="absolute -bottom-12 -left-8 h-44 w-44 rounded-full bg-cyan-300/20 blur-3xl" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_60%)]" />
+
+                        <div className="relative flex items-center gap-4 md:gap-6">
+                          <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/30 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform shadow-lg">
+                            <span className="text-3xl md:text-4xl">📄</span>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-[12px] md:text-sm text-foreground leading-tight line-clamp-2 mb-1">{t.title}</h3>
-                            <p className="hidden md:block text-[11px] text-muted-foreground line-clamp-2">{t.desc}</p>
+                          <div className="flex-1 min-w-0 text-white">
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <span className="text-[10px] md:text-xs font-bold bg-yellow-400 text-yellow-950 px-2 py-0.5 rounded-full">🔥 MOST POPULAR</span>
+                              <span className="hidden md:inline text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full backdrop-blur-sm">DOCX</span>
+                            </div>
+                            <h3 className="font-extrabold text-base md:text-2xl leading-tight mb-1" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                              AI Internship Report Generator
+                            </h3>
+                            <p className="text-[11px] md:text-sm text-white/85 line-clamp-2 mb-2.5">
+                              Generate professional reports instantly. Download-ready DOCX in 60 seconds.
+                            </p>
+                            <div className="inline-flex items-center gap-1.5 bg-white text-blue-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl font-bold text-xs md:text-sm shadow-md group-hover:gap-2.5 transition-all">
+                              Generate Now <ArrowRight className="h-3.5 w-3.5 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </Link>
+                  );
+                })()}
+
+                {/* Tool grid - app icon style */}
+                <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3">
+                  {aiStudentTools.slice(1).map((t, i) => (
+                    <Link key={i} to={t.to} className="group flex flex-col items-center text-center">
+                      <div className={`relative h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} flex items-center justify-center mb-1.5 transition-all duration-300 group-hover:scale-110 group-active:scale-95 ${t.glow} shadow-sm`}>
+                        <span className="text-2xl md:text-3xl">{t.icon}</span>
+                      </div>
+                      <span className="text-[10px] md:text-[11px] font-semibold text-foreground leading-tight line-clamp-2 px-0.5">
+                        {t.title.replace(/^AI\s+/, '')}
+                      </span>
+                    </Link>
                   ))}
                 </div>
               </section>
+
 
 
 
