@@ -680,68 +680,8 @@ const Index = () => {
                 </div>
               </section>
 
-              {/* Category Sections */}
-              {CATEGORIES.map((cat) => {
-                const catSchemes = getSchemesByCategory(cat.key);
-                if (catSchemes.length === 0) return null;
-                const isPrivateJobs = cat.key === 'private_jobs';
-                return (
-                  <section key={cat.key} className={`animate-fade-in ${isPrivateJobs ? 'relative' : ''}`}>
-                    {isPrivateJobs && (
-                      <div className="absolute -inset-1 bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 rounded-2xl opacity-20 blur-sm -z-10" />
-                    )}
-                    <div className={`flex items-center justify-between mb-3 p-2 rounded-xl ${isPrivateJobs ? 'bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/20' : ''}`}>
-                      <h2 className={`text-base md:text-lg font-bold flex items-center gap-2 ${isPrivateJobs ? 'text-white' : ''}`}>
-                        <cat.icon className={`h-4 w-4 md:h-5 md:w-5 ${isPrivateJobs ? 'text-white' : 'text-muted-foreground'}`} />
-                        {cat.label}
-                      </h2>
-                      <button
-                        onClick={() => setActiveCategory(cat.key)}
-                        className={`text-xs md:text-sm font-medium flex items-center gap-0.5 hover:underline ${isPrivateJobs ? 'text-white/90 hover:text-white' : 'text-primary'}`}
-                      >
-                        See All <ChevronRight className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                    <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory">
-                      {catSchemes.map((scheme) => (
-                        <div key={scheme.id} className="snap-start">
-                          <SchemeCard scheme={scheme} />
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                );
-              })}
 
-              {/* Latest Jobs */}
-              {(() => {
-                const latestJobs = [
-                  ...getSchemesByCategory('private_jobs'),
-                  ...getSchemesByCategory('govt_jobs'),
-                ].slice(0, 12);
-                if (latestJobs.length === 0) return null;
-                return (
-                  <section className="animate-fade-in">
-                    <div className="flex items-center justify-between mb-3">
-                      <h2 className="text-base md:text-xl font-extrabold flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                        <span className="text-lg">💼</span> Latest Jobs
-                        <span className="text-[10px] md:text-xs bg-red-500/15 text-red-600 px-2 py-0.5 rounded-full font-bold animate-pulse">LIVE</span>
-                      </h2>
-                      <button
-                        onClick={() => setActiveCategory('private_jobs')}
-                        className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline"
-                      >
-                        See All <ChevronRight className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3">
-                      {latestJobs.map((scheme) => (
-                        <SchemeCard key={scheme.id} scheme={scheme} />
-                      ))}
-                    </div>
-                  </section>
-                );
-              })()}
+
 
               {/* Animated Rotating Schemes CTA */}
               <section className="flex justify-center pt-2">
