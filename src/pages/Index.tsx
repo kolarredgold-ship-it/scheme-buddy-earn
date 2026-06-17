@@ -11,6 +11,43 @@ import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { tools as aiStudentTools } from "@/pages/AITools";
+
+const ROTATING_SCHEME_LABELS = [
+  "Schemes for Students",
+  "Schemes for Farmers",
+  "Schemes for Women",
+  "Schemes for SC/ST",
+  "Schemes for Minorities",
+  "Schemes for Housing",
+  "Schemes for Health",
+  "and more...",
+];
+
+const RotatingSchemesButton = () => {
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx((i) => (i + 1) % ROTATING_SCHEME_LABELS.length), 1800);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <Link
+      to="/#schemes"
+      onClick={() => {
+        setTimeout(() => {
+          document.getElementById("schemes")?.scrollIntoView({ behavior: "smooth" });
+        }, 50);
+      }}
+      className="group relative flex items-center justify-center gap-3 w-full md:w-auto md:min-w-[420px] mx-auto rounded-2xl bg-gradient-to-r from-primary via-emerald-500 to-primary bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite] text-primary-foreground px-6 py-4 font-extrabold text-base md:text-lg shadow-xl shadow-primary/30 hover:scale-[1.02] transition-transform"
+    >
+      <Sparkles className="h-5 w-5 animate-pulse" />
+      <span key={idx} className="animate-fade-in inline-block">
+        {ROTATING_SCHEME_LABELS[idx]}
+      </span>
+      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+    </Link>
+  );
+};
 
 const INDIAN_STATES = [
   { value: "all", label: "All India" },
@@ -609,43 +646,37 @@ const Index = () => {
           ) : (
             /* Default: Category-wise horizontal scroll */
             <>
-              {/* AI Students Tools - Full-width CTA (mobile only; desktop version sits next to category chips) */}
-              <Link
-                to="/ai-tools"
-                className="md:hidden block w-full mb-4 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-yellow-950 px-4 py-3.5 font-bold text-sm text-center shadow-lg shadow-yellow-400/40 hover:shadow-xl hover:shadow-yellow-400/50 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
-              >
-                <Sparkles className="h-4 w-4" />
-                AI Students Tools
-                <span className="text-[10px] bg-yellow-950/15 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
-              </Link>
 
 
 
-              {/* Recent / Trending - Text ticker */}
-              <section>
-                <div className="mb-3">
-                  <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent" />
-                    Trending Schemes
+              {/* AI Students Tools - Full grid on home */}
+              <section id="ai-tools" className="animate-fade-in">
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-base md:text-xl font-extrabold flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                    <Sparkles className="h-5 w-5 text-yellow-500" />
+                    AI Students Tools
+                    <span className="text-[10px] md:text-xs bg-yellow-400/20 text-yellow-700 dark:text-yellow-300 px-2 py-0.5 rounded-full font-bold">20+ Tools</span>
                   </h2>
+                  <Link to="/ai-tools" className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline">
+                    See All <ChevronRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
-
-                <div className="overflow-hidden relative group/ticker [&:hover>div]:pause-ticker [&:active>div]:pause-ticker">
-                  <div className="flex animate-[ticker_30s_linear_infinite] gap-4 w-max">
-                    {[...recentSchemes, ...recentSchemes].map((scheme, idx) => (
-                      <Link
-                        key={`${scheme.id}-${idx}`}
-                        to={`/scheme/${scheme.slug}`}
-                        className="flex items-center gap-2 bg-card border border-border/50 rounded-xl px-4 py-2.5 hover:border-primary/30 hover:bg-primary/5 transition-all whitespace-nowrap shrink-0"
-                      >
-                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 font-medium border-border/60 shrink-0">
-                          {scheme.category}
-                        </Badge>
-                        <span className="text-xs md:text-sm font-medium truncate max-w-[220px]">{scheme.title}</span>
-                        <ChevronRight className="h-3 w-3 text-muted-foreground shrink-0" />
-                      </Link>
-                    ))}
-                  </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3">
+                  {aiStudentTools.map((t, i) => (
+                    <Link key={i} to={t.to} className="group">
+                      <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} p-3 md:p-4 transition-all duration-300 ${t.glow} h-full`}>
+                        <div className="flex items-start gap-2.5">
+                          <div className={`h-9 w-9 md:h-11 md:w-11 rounded-xl ${t.iconBg} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
+                            <span className="text-lg md:text-xl">{t.icon}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-[12px] md:text-sm text-foreground leading-tight line-clamp-2 mb-1">{t.title}</h3>
+                            <p className="hidden md:block text-[11px] text-muted-foreground line-clamp-2">{t.desc}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               </section>
 
@@ -681,6 +712,41 @@ const Index = () => {
                   </section>
                 );
               })}
+
+              {/* Latest Jobs */}
+              {(() => {
+                const latestJobs = [
+                  ...getSchemesByCategory('private_jobs'),
+                  ...getSchemesByCategory('govt_jobs'),
+                ].slice(0, 12);
+                if (latestJobs.length === 0) return null;
+                return (
+                  <section className="animate-fade-in">
+                    <div className="flex items-center justify-between mb-3">
+                      <h2 className="text-base md:text-xl font-extrabold flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
+                        <span className="text-lg">💼</span> Latest Jobs
+                        <span className="text-[10px] md:text-xs bg-red-500/15 text-red-600 px-2 py-0.5 rounded-full font-bold animate-pulse">LIVE</span>
+                      </h2>
+                      <button
+                        onClick={() => setActiveCategory('private_jobs')}
+                        className="text-xs md:text-sm text-primary font-medium flex items-center gap-0.5 hover:underline"
+                      >
+                        See All <ChevronRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3">
+                      {latestJobs.map((scheme) => (
+                        <SchemeCard key={scheme.id} scheme={scheme} />
+                      ))}
+                    </div>
+                  </section>
+                );
+              })()}
+
+              {/* Animated Rotating Schemes CTA */}
+              <section className="flex justify-center pt-2">
+                <RotatingSchemesButton />
+              </section>
             </>
           )}
         </div>

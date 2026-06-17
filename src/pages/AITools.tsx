@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Sparkles, ArrowRight } from "lucide-react";
 
-const tools = [
+export const tools = [
   {
     to: "/create-report",
     title: "AI Internship Report Generator",
