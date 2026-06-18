@@ -10,6 +10,8 @@ import { Check, Star, Zap, Shield, Loader2, Tag, MessageCircle, Clock } from "lu
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PaymentModal from "@/components/PaymentModal";
+import RazorpayCheckoutButton from "@/components/RazorpayCheckoutButton";
+
 
 const BENEFITS = [
   "Full access to all government scheme details",
@@ -242,11 +244,29 @@ const Subscription = () => {
 
         {user ? (
           <>
-            <Button size="lg" className="w-full text-lg py-6" onClick={handlePayNow}>
-              Pay ₹{price.toLocaleString()} via UPI
+            <RazorpayCheckoutButton
+              amount={price}
+              userId={user.id}
+              paymentType="subscription"
+              description="Techrola Premium (Lifetime)"
+              prefill={{
+                name: profile?.name || "",
+                email: profile?.email || user.email || "",
+                contact: (profile?.mobile || "").replace(/\D/g, "").slice(-10),
+              }}
+              className="w-full text-lg py-6 h-auto"
+              onSuccess={async () => {
+                await refreshProfile();
+                navigate("/dashboard");
+              }}
+            >
+              Pay ₹{price.toLocaleString()} with Razorpay
+            </RazorpayCheckoutButton>
+            <Button variant="outline" size="lg" className="w-full mt-2" onClick={handlePayNow}>
+              Pay via UPI / QR Screenshot
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               className="w-full mt-2"
               onClick={() => {
@@ -258,6 +278,7 @@ const Subscription = () => {
               Need help? Contact on WhatsApp
             </Button>
           </>
+
         ) : (
           <Link to="/signup?redirect=/subscription">
             <Button size="lg" className="w-full text-lg py-6">
