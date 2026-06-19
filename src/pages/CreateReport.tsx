@@ -685,32 +685,13 @@ const CreateReport = () => {
         </div>
       </div>
 
-      {/* Top-up Dialog */}
-      <Dialog open={showTopup} onOpenChange={setShowTopup}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-primary" /> Top-up Report Credits
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="bg-muted/50 rounded-xl p-4 text-center">
-              <p className="text-3xl font-bold text-primary">₹499</p>
-              <p className="text-sm text-muted-foreground mt-1">5 Report Credits</p>
-            </div>
-            <ul className="text-sm space-y-2">
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> 5 full internship reports</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> DOCX download included</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Resume interrupted reports</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Credits never expire</li>
-            </ul>
-            <p className="text-xs text-muted-foreground text-center">Contact admin to complete top-up payment</p>
-            <Button className="w-full" onClick={() => { toast.info('Contact admin at admin@techrola.in for top-up'); setShowTopup(false); }}>
-              Contact Admin for Top-up
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Top-up Dialog (Razorpay) */}
+      <TopupDialog
+        open={showTopup}
+        onOpenChange={setShowTopup}
+        onSuccess={() => { refreshProfile(); loadCreditsAndReports(); }}
+      />
+
 
       {/* History Dialog */}
       <Dialog open={showHistory} onOpenChange={setShowHistory}>
