@@ -156,16 +156,24 @@ const AIReportGenerator = () => {
           </div>
         </div>
 
-        {!isPro && (
-          <Card className="border-amber-200 bg-amber-50">
-            <CardContent className="p-4 flex items-center gap-2">
-              <Lock className="h-4 w-4 text-amber-600" />
-              <span className="text-sm text-amber-800">
-                Free: {Math.max(0, 1 - generationsUsed)} generation remaining. <Link to="/subscription" className="underline font-semibold">Upgrade to Pro</Link> for unlimited.
+        <Card className={canGenerate ? "border-primary/20 bg-primary/5" : "border-destructive/20 bg-destructive/5"}>
+          <CardContent className="p-4 flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-2 text-sm">
+              <CreditCard className="h-4 w-4 text-primary" />
+              <span>
+                {remainingFree > 0 && <strong>{remainingFree} free</strong>}
+                {remainingFree > 0 && aiCredits > 0 && <span> + </span>}
+                {aiCredits > 0 && <strong>{aiCredits} top-up</strong>}
+                {!canGenerate && <span className="text-destructive font-semibold">No credits left</span>}
+                <span className="text-muted-foreground"> · {isPro ? 'Pro: 3 free' : 'Free: 1 + '}<Link to="/subscription" className="underline">Pro ₹999</Link></span>
               </span>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+            <Button size="sm" variant="outline" className="gap-1" onClick={() => setShowTopup(true)}>
+              <CreditCard className="h-3 w-3" /> Top-up ₹499
+            </Button>
+          </CardContent>
+        </Card>
+
 
         <div className="grid lg:grid-cols-5 gap-6">
           {/* Input Form */}
@@ -194,15 +202,16 @@ const AIReportGenerator = () => {
                   <Label>Description (Optional)</Label>
                   <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description..." rows={4} />
                 </div>
-                <Button onClick={handleGenerate} disabled={generating || canGenerate === false} className="w-full gap-2" size="lg">
+                <Button onClick={handleGenerate} disabled={generating} className="w-full gap-2" size="lg">
                   {generating ? (
                     <><Loader2 className="h-4 w-4 animate-spin" /> Generating...</>
-                  ) : canGenerate === false ? (
-                    <><Lock className="h-4 w-4" /> Upgrade to Pro</>
+                  ) : !canGenerate ? (
+                    <><Lock className="h-4 w-4" /> Top-up ₹499 to Generate</>
                   ) : (
                     <><Sparkles className="h-4 w-4" /> Generate Report Content</>
                   )}
                 </Button>
+
               </CardContent>
             </Card>
           </div>
