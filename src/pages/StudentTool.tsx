@@ -321,6 +321,8 @@ const StudentTool = () => {
   const [form, setForm] = useState<Record<string, string>>({});
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showTopup, setShowTopup] = useState(false);
+  const credits = useToolCredits(`student:${slug}`);
 
   const missing = useMemo(() => {
     if (!tool) return [];
@@ -336,9 +338,18 @@ const StudentTool = () => {
       toast.error(`Please fill: ${missing.join(", ")}`);
       return;
     }
+    if (!credits.canGenerate) {
+      setShowTopup(true);
+      return;
+    }
     setLoading(true);
     setOutput("");
     try {
+      const consumed = await credits.consume({ tool: slug });
+      if (!consumed) {
+        setShowTopup(true);
+        return;
+      }
       const { data, error } = await supabase.functions.invoke("student-ai-tool", {
         body: { tool: tool.slug, data: form },
       });
@@ -352,6 +363,7 @@ const StudentTool = () => {
       setLoading(false);
     }
   };
+
 
   const buildDoc = () => {
     const lines = output.split(/\n/);
