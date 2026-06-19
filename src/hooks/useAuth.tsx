@@ -12,6 +12,8 @@ interface Profile {
   referred_by: string | null;
   subscription_status: "free" | "active" | "expired";
   wallet_balance: number;
+  report_credits?: number;
+  ai_credits?: number;
 }
 
 interface AuthContextType {
@@ -43,13 +45,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
-    if (data) setProfile(data as Profile);
+  // Retry — the profile row is created by a DB trigger right after signup,
+  // so a fresh session might race the trigger and see nothing on the first read.
+  const fetchProfile = async (userId: string, attempts = 4) => {
+    for (let i = 0; i < attempts; i++) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (data) {
+        setProfile(data as Profile);
+        return;
+      }
+      if (error && error.code !== "PGRST116") {
+        console.warn("fetchProfile error:", error.message);
+      }
+      // wait a bit for the new-user trigger to finish
+      await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+    }
   };
 
   const checkAdmin = async (userId: string) => {
@@ -68,13 +82,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          setTimeout(async () => {
-            await fetchProfile(session.user.id);
-            await checkAdmin(session.user.id);
+      (_event, newSession) => {
+        setSession(newSession);
+        setUser(newSession?.user ?? null);
+        if (newSession?.user) {
+          // Defer to avoid deadlock inside the auth callback
+          setTimeout(() => {
+            fetchProfile(newSession.user.id);
+            checkAdmin(newSession.user.id);
             setLoading(false);
           }, 0);
         } else {
@@ -85,18 +100,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-        await checkAdmin(session.user.id);
+    supabase.auth.getSession().then(async ({ data: { session: existing } }) => {
+      setSession(existing);
+      setUser(existing?.user ?? null);
+      if (existing?.user) {
+        await Promise.all([fetchProfile(existing.user.id), checkAdmin(existing.user.id)]);
       }
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
 
   const signOut = async () => {
     setProfile(null);

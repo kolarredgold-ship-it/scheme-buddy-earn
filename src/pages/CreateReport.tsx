@@ -14,6 +14,8 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Page
 import { saveAs } from 'file-saver';
 import Layout from '@/components/Layout';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import TopupDialog from '@/components/TopupDialog';
+
 
 interface FormData {
   studentName: string;
@@ -83,6 +85,7 @@ const CreateReport = () => {
 
   const isPro = profile?.subscription_status === 'active';
   const FREE_LIMIT = isPro ? 3 : 1;
+  const aiCredits = (profile as any)?.ai_credits ?? 0;
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -94,23 +97,22 @@ const CreateReport = () => {
     }
   }, [user, profile]);
 
+
   const loadCreditsAndReports = async () => {
-    // Get report count
     const { count } = await supabase
       .from('report_generations')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', user!.id);
+      .eq('user_id', user!.id)
+      .eq('report_type', 'full');
     setFreeUsed(count || 0);
 
-    // Get report credits from profile
     const { data: prof } = await supabase
       .from('profiles')
-      .select('report_credits')
+      .select('report_credits, ai_credits')
       .eq('user_id', user!.id)
       .single();
     setReportCredits((prof as any)?.report_credits || 0);
 
-    // Load previous reports
     const { data: reports } = await supabase
       .from('reports')
       .select('*')
@@ -120,11 +122,10 @@ const CreateReport = () => {
     if (reports) setPreviousReports(reports as any);
   };
 
-  const canGenerate = freeUsed < FREE_LIMIT || reportCredits > 0;
+  const canGenerate = freeUsed < FREE_LIMIT || reportCredits > 0 || aiCredits > 0;
 
   const consumeCredit = async () => {
     if (freeUsed < FREE_LIMIT) {
-      // Use free credit
       await supabase.from('report_generations').insert({
         user_id: user!.id,
         report_type: 'full',
@@ -132,7 +133,6 @@ const CreateReport = () => {
       });
       return true;
     } else if (reportCredits > 0) {
-      // Use paid credit
       await supabase
         .from('profiles')
         .update({ report_credits: reportCredits - 1 })
@@ -143,9 +143,23 @@ const CreateReport = () => {
         form_data: formData as any,
       });
       return true;
+    } else if (aiCredits > 0) {
+      // Deduct from global AI credits pool via edge function (DB trigger blocks client writes)
+      const { data, error } = await supabase.functions.invoke('consume-ai-credit', {
+        body: { tool_key: 'full' },
+      });
+      if (error || !(data as any)?.success) return false;
+      await refreshProfile();
+      await supabase.from('report_generations').insert({
+        user_id: user!.id,
+        report_type: 'full',
+        form_data: formData as any,
+      });
+      return true;
     }
     return false;
   };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -475,7 +489,8 @@ const CreateReport = () => {
   const hasAnyContent = completedChapters.length > 0;
   const hasAllContent = chapters.every(ch => chapterContent[ch.key]);
   const remainingFree = Math.max(0, FREE_LIMIT - freeUsed);
-  const totalCredits = remainingFree + reportCredits;
+  const totalCredits = remainingFree + reportCredits + aiCredits;
+
 
   if (authLoading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
 
@@ -505,19 +520,21 @@ const CreateReport = () => {
               <CreditCard className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm font-medium">
-                  {remainingFree > 0 && <span>{remainingFree} free report{remainingFree > 1 ? 's' : ''} remaining</span>}
-                  {remainingFree > 0 && reportCredits > 0 && <span> + </span>}
-                  {reportCredits > 0 && <span>{reportCredits} paid credit{reportCredits > 1 ? 's' : ''}</span>}
-                  {totalCredits === 0 && <span className="text-destructive">No report credits remaining</span>}
+                  {remainingFree > 0 && <span>{remainingFree} free report{remainingFree > 1 ? 's' : ''}</span>}
+                  {remainingFree > 0 && (reportCredits + aiCredits) > 0 && <span> + </span>}
+                  {(reportCredits + aiCredits) > 0 && <span>{reportCredits + aiCredits} top-up credit{(reportCredits + aiCredits) > 1 ? 's' : ''}</span>}
+                  {totalCredits === 0 && <span className="text-destructive">No credits remaining</span>}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {isPro ? 'Pro members get 3 free reports' : 'Free users get 1 report. Upgrade to Pro for 3 free!'}
+                  {isPro ? 'Pro members get 3 free reports.' : 'Free users get 1 report. Upgrade to Pro for 3 free!'}
+                  {' '}Top-up credits work across all AI tools.
                 </p>
               </div>
             </div>
             <Button size="sm" variant="outline" className="gap-2" onClick={() => setShowTopup(true)}>
-              <CreditCard className="h-4 w-4" /> Top-up ₹499 for 5 Reports
+              <CreditCard className="h-4 w-4" /> Top-up ₹499 (+3 AI)
             </Button>
+
           </CardContent>
         </Card>
 
@@ -668,32 +685,13 @@ const CreateReport = () => {
         </div>
       </div>
 
-      {/* Top-up Dialog */}
-      <Dialog open={showTopup} onOpenChange={setShowTopup}>
-        <DialogContent className="max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-primary" /> Top-up Report Credits
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="bg-muted/50 rounded-xl p-4 text-center">
-              <p className="text-3xl font-bold text-primary">₹499</p>
-              <p className="text-sm text-muted-foreground mt-1">5 Report Credits</p>
-            </div>
-            <ul className="text-sm space-y-2">
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> 5 full internship reports</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> DOCX download included</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Resume interrupted reports</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Credits never expire</li>
-            </ul>
-            <p className="text-xs text-muted-foreground text-center">Contact admin to complete top-up payment</p>
-            <Button className="w-full" onClick={() => { toast.info('Contact admin at admin@techrola.in for top-up'); setShowTopup(false); }}>
-              Contact Admin for Top-up
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* Top-up Dialog (Razorpay) */}
+      <TopupDialog
+        open={showTopup}
+        onOpenChange={setShowTopup}
+        onSuccess={() => { refreshProfile(); loadCreditsAndReports(); }}
+      />
+
 
       {/* History Dialog */}
       <Dialog open={showHistory} onOpenChange={setShowHistory}>

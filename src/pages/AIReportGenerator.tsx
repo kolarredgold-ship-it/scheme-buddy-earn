@@ -12,6 +12,9 @@ import { toast } from 'sonner';
 import { FileText, ArrowLeft, Loader2, Copy, Download, Sparkles, Lock } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Layout from '@/components/Layout';
+import TopupDialog from '@/components/TopupDialog';
+import { CreditCard } from 'lucide-react';
+
 
 const courses = ['BCom', 'BBA', 'BCA', 'MCA', 'BE/BTech', 'MBA', 'ME/MTech', 'BSc', 'MSc', 'Other'];
 
@@ -24,7 +27,7 @@ const sections = [
 ];
 
 const AIReportGenerator = () => {
-  const { user, loading: authLoading, profile } = useAuth();
+  const { user, loading: authLoading, profile, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const [course, setCourse] = useState('');
   const [topic, setTopic] = useState('');
@@ -33,10 +36,14 @@ const AIReportGenerator = () => {
   const [generatedContent, setGeneratedContent] = useState<Record<string, string>>({});
   const [editedContent, setEditedContent] = useState<Record<string, string>>({});
   const [activeSection, setActiveSection] = useState('abstract');
-  const [canGenerate, setCanGenerate] = useState<boolean | null>(null);
   const [generationsUsed, setGenerationsUsed] = useState(0);
+  const [showTopup, setShowTopup] = useState(false);
 
   const isPro = profile?.subscription_status === 'active';
+  const FREE_LIMIT = isPro ? 3 : 1;
+  const aiCredits = (profile as any)?.ai_credits ?? 0;
+  const remainingFree = Math.max(0, FREE_LIMIT - generationsUsed);
+  const canGenerate = remainingFree > 0 || aiCredits > 0;
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -44,16 +51,15 @@ const AIReportGenerator = () => {
 
   useEffect(() => {
     if (user) checkLimit();
-  }, [user]);
+  }, [user, profile]);
 
   const checkLimit = async () => {
     const { count } = await supabase
       .from('report_generations')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', user!.id);
-    const used = count || 0;
-    setGenerationsUsed(used);
-    setCanGenerate(isPro || used < 1);
+      .eq('user_id', user!.id)
+      .eq('report_type', 'quick');
+    setGenerationsUsed(count || 0);
   };
 
   const handleGenerate = async () => {
@@ -62,8 +68,7 @@ const AIReportGenerator = () => {
       return;
     }
     if (!canGenerate) {
-      toast.error('Upgrade to Pro for unlimited generations');
-      navigate('/subscription');
+      setShowTopup(true);
       return;
     }
 
@@ -72,12 +77,18 @@ const AIReportGenerator = () => {
     setEditedContent({});
 
     try {
-      // Track generation
+      // Record usage
       await supabase.from('report_generations').insert({
         user_id: user!.id,
         report_type: 'quick',
         form_data: { course, topic, description } as any,
       });
+
+      // If using ai_credits pool, decrement via edge function
+      if (remainingFree === 0 && aiCredits > 0) {
+        await supabase.functions.invoke('consume-ai-credit', { body: { tool_key: 'quick' } });
+        await refreshProfile();
+      }
 
       const { data, error } = await supabase.functions.invoke('generate-report-content', {
         body: { mode: 'quick', course, topic, description },
@@ -98,6 +109,7 @@ const AIReportGenerator = () => {
       checkLimit();
     }
   };
+
 
   const handleCopy = (section: string) => {
     const text = editedContent[section] || generatedContent[section] || '';
@@ -144,16 +156,24 @@ const AIReportGenerator = () => {
           </div>
         </div>
 
-        {!isPro && (
-          <Card className="border-amber-200 bg-amber-50">
-            <CardContent className="p-4 flex items-center gap-2">
-              <Lock className="h-4 w-4 text-amber-600" />
-              <span className="text-sm text-amber-800">
-                Free: {Math.max(0, 1 - generationsUsed)} generation remaining. <Link to="/subscription" className="underline font-semibold">Upgrade to Pro</Link> for unlimited.
+        <Card className={canGenerate ? "border-primary/20 bg-primary/5" : "border-destructive/20 bg-destructive/5"}>
+          <CardContent className="p-4 flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-2 text-sm">
+              <CreditCard className="h-4 w-4 text-primary" />
+              <span>
+                {remainingFree > 0 && <strong>{remainingFree} free</strong>}
+                {remainingFree > 0 && aiCredits > 0 && <span> + </span>}
+                {aiCredits > 0 && <strong>{aiCredits} top-up</strong>}
+                {!canGenerate && <span className="text-destructive font-semibold">No credits left</span>}
+                <span className="text-muted-foreground"> · {isPro ? 'Pro: 3 free' : 'Free: 1 + '}<Link to="/subscription" className="underline">Pro ₹999</Link></span>
               </span>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+            <Button size="sm" variant="outline" className="gap-1" onClick={() => setShowTopup(true)}>
+              <CreditCard className="h-3 w-3" /> Top-up ₹499
+            </Button>
+          </CardContent>
+        </Card>
+
 
         <div className="grid lg:grid-cols-5 gap-6">
           {/* Input Form */}
@@ -182,15 +202,16 @@ const AIReportGenerator = () => {
                   <Label>Description (Optional)</Label>
                   <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Brief description..." rows={4} />
                 </div>
-                <Button onClick={handleGenerate} disabled={generating || canGenerate === false} className="w-full gap-2" size="lg">
+                <Button onClick={handleGenerate} disabled={generating} className="w-full gap-2" size="lg">
                   {generating ? (
                     <><Loader2 className="h-4 w-4 animate-spin" /> Generating...</>
-                  ) : canGenerate === false ? (
-                    <><Lock className="h-4 w-4" /> Upgrade to Pro</>
+                  ) : !canGenerate ? (
+                    <><Lock className="h-4 w-4" /> Top-up ₹499 to Generate</>
                   ) : (
                     <><Sparkles className="h-4 w-4" /> Generate Report Content</>
                   )}
                 </Button>
+
               </CardContent>
             </Card>
           </div>
@@ -243,7 +264,9 @@ const AIReportGenerator = () => {
           </div>
         </div>
       </div>
+      <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => { refreshProfile(); checkLimit(); }} />
     </Layout>
+
   );
 };
 

@@ -33,10 +33,16 @@ interface Verdict {
 
 const TOTAL_QUESTIONS = 25;
 
+import { useToolCredits } from "@/hooks/useToolCredits";
+import TopupDialog from "@/components/TopupDialog";
+import { CreditCard } from "lucide-react";
+
 const LiveHRInterview = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const credits = useToolCredits("live-hr-interview");
+  const [showTopup, setShowTopup] = useState(false);
 
   const [phase, setPhase] = useState<Phase>("setup");
   const [role, setRole] = useState("");
@@ -50,6 +56,7 @@ const LiveHRInterview = () => {
   const [loading, setLoading] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [voiceReady, setVoiceReady] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState(0);
 
   const ANSWER_SECONDS = 60;
@@ -188,9 +195,16 @@ const LiveHRInterview = () => {
       toast({ title: "Please select a role", variant: "destructive" });
       return;
     }
+    if (!credits.canGenerate) {
+      setShowTopup(true);
+      return;
+    }
     setLoading(true);
     try {
+      const consumed = await credits.consume({ role });
+      if (!consumed) { setShowTopup(true); setLoading(false); return; }
       const { data, error } = await supabase.functions.invoke("live-hr-interview", {
+
         body: { action: "generate_questions", role, questionCount: TOTAL_QUESTIONS },
       });
       if (error) throw error;
@@ -373,13 +387,25 @@ const LiveHRInterview = () => {
                 ))}
               </div>
 
+              <div className="flex items-center justify-between text-xs mb-2 px-1">
+                <span className="text-muted-foreground">
+                  {credits.remainingFree > 0 && <strong>{credits.remainingFree} free</strong>}
+                  {credits.remainingFree > 0 && credits.aiCredits > 0 && " + "}
+                  {credits.aiCredits > 0 && <strong>{credits.aiCredits} top-up</strong>}
+                  {!credits.canGenerate && <span className="text-destructive font-semibold">No credits left</span>}
+                </span>
+                <button onClick={() => setShowTopup(true)} className="text-primary font-semibold hover:underline flex items-center gap-1">
+                  <CreditCard className="h-3 w-3" /> Top-up ₹499
+                </button>
+              </div>
               <Button onClick={startInterview} disabled={loading || !role || !voiceReady} className="w-full" size="lg">
                 {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Mic className="h-4 w-4 mr-2" />}
-                {loading ? "Priya is preparing..." : "Start Live Interview"}
+                {loading ? "Priya is preparing..." : !credits.canGenerate ? "Top-up ₹499 to Start" : "Start Live Interview"}
               </Button>
               {!voiceReady && (
                 <p className="text-xs text-muted-foreground text-center mt-2">Loading voice...</p>
               )}
+
             </CardContent>
           </Card>
         )}
@@ -559,7 +585,9 @@ const LiveHRInterview = () => {
           </Card>
         )}
       </div>
+      <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
     </Layout>
+
   );
 };
 

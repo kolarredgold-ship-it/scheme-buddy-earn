@@ -208,6 +208,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          ai_credits: number
           bank_account_holder: string | null
           bank_account_number: string | null
           bank_ifsc_code: string | null
@@ -227,6 +228,7 @@ export type Database = {
           wallet_balance: number
         }
         Insert: {
+          ai_credits?: number
           bank_account_holder?: string | null
           bank_account_number?: string | null
           bank_ifsc_code?: string | null
@@ -246,6 +248,7 @@ export type Database = {
           wallet_balance?: number
         }
         Update: {
+          ai_credits?: number
           bank_account_holder?: string | null
           bank_account_number?: string | null
           bank_ifsc_code?: string | null
