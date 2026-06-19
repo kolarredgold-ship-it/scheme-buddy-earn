@@ -585,7 +585,9 @@ const LiveHRInterview = () => {
           </Card>
         )}
       </div>
+      <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
     </Layout>
+
   );
 };
 
