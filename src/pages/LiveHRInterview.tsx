@@ -33,10 +33,16 @@ interface Verdict {
 
 const TOTAL_QUESTIONS = 25;
 
+import { useToolCredits } from "@/hooks/useToolCredits";
+import TopupDialog from "@/components/TopupDialog";
+import { CreditCard } from "lucide-react";
+
 const LiveHRInterview = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const credits = useToolCredits("live-hr-interview");
+  const [showTopup, setShowTopup] = useState(false);
 
   const [phase, setPhase] = useState<Phase>("setup");
   const [role, setRole] = useState("");
@@ -50,6 +56,7 @@ const LiveHRInterview = () => {
   const [loading, setLoading] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
   const [voiceReady, setVoiceReady] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState(0);
 
   const ANSWER_SECONDS = 60;
@@ -188,9 +195,16 @@ const LiveHRInterview = () => {
       toast({ title: "Please select a role", variant: "destructive" });
       return;
     }
+    if (!credits.canGenerate) {
+      setShowTopup(true);
+      return;
+    }
     setLoading(true);
     try {
+      const consumed = await credits.consume({ role });
+      if (!consumed) { setShowTopup(true); setLoading(false); return; }
       const { data, error } = await supabase.functions.invoke("live-hr-interview", {
+
         body: { action: "generate_questions", role, questionCount: TOTAL_QUESTIONS },
       });
       if (error) throw error;
