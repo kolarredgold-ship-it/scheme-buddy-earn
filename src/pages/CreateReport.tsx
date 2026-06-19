@@ -14,6 +14,8 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, Page
 import { saveAs } from 'file-saver';
 import Layout from '@/components/Layout';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import TopupDialog from '@/components/TopupDialog';
+
 
 interface FormData {
   studentName: string;
@@ -83,6 +85,7 @@ const CreateReport = () => {
 
   const isPro = profile?.subscription_status === 'active';
   const FREE_LIMIT = isPro ? 3 : 1;
+  const aiCredits = (profile as any)?.ai_credits ?? 0;
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/login');
@@ -94,23 +97,22 @@ const CreateReport = () => {
     }
   }, [user, profile]);
 
+
   const loadCreditsAndReports = async () => {
-    // Get report count
     const { count } = await supabase
       .from('report_generations')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', user!.id);
+      .eq('user_id', user!.id)
+      .eq('report_type', 'full');
     setFreeUsed(count || 0);
 
-    // Get report credits from profile
     const { data: prof } = await supabase
       .from('profiles')
-      .select('report_credits')
+      .select('report_credits, ai_credits')
       .eq('user_id', user!.id)
       .single();
     setReportCredits((prof as any)?.report_credits || 0);
 
-    // Load previous reports
     const { data: reports } = await supabase
       .from('reports')
       .select('*')
@@ -120,11 +122,10 @@ const CreateReport = () => {
     if (reports) setPreviousReports(reports as any);
   };
 
-  const canGenerate = freeUsed < FREE_LIMIT || reportCredits > 0;
+  const canGenerate = freeUsed < FREE_LIMIT || reportCredits > 0 || aiCredits > 0;
 
   const consumeCredit = async () => {
     if (freeUsed < FREE_LIMIT) {
-      // Use free credit
       await supabase.from('report_generations').insert({
         user_id: user!.id,
         report_type: 'full',
@@ -132,7 +133,6 @@ const CreateReport = () => {
       });
       return true;
     } else if (reportCredits > 0) {
-      // Use paid credit
       await supabase
         .from('profiles')
         .update({ report_credits: reportCredits - 1 })
@@ -143,9 +143,23 @@ const CreateReport = () => {
         form_data: formData as any,
       });
       return true;
+    } else if (aiCredits > 0) {
+      // Deduct from global AI credits pool via edge function (DB trigger blocks client writes)
+      const { data, error } = await supabase.functions.invoke('consume-ai-credit', {
+        body: { tool_key: 'full' },
+      });
+      if (error || !(data as any)?.success) return false;
+      await refreshProfile();
+      await supabase.from('report_generations').insert({
+        user_id: user!.id,
+        report_type: 'full',
+        form_data: formData as any,
+      });
+      return true;
     }
     return false;
   };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
