@@ -264,7 +264,9 @@ const AIReportGenerator = () => {
           </div>
         </div>
       </div>
+      <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => { refreshProfile(); checkLimit(); }} />
     </Layout>
+
   );
 };
 
