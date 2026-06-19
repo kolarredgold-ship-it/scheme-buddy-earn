@@ -489,7 +489,8 @@ const CreateReport = () => {
   const hasAnyContent = completedChapters.length > 0;
   const hasAllContent = chapters.every(ch => chapterContent[ch.key]);
   const remainingFree = Math.max(0, FREE_LIMIT - freeUsed);
-  const totalCredits = remainingFree + reportCredits;
+  const totalCredits = remainingFree + reportCredits + aiCredits;
+
 
   if (authLoading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
 
@@ -519,19 +520,21 @@ const CreateReport = () => {
               <CreditCard className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-sm font-medium">
-                  {remainingFree > 0 && <span>{remainingFree} free report{remainingFree > 1 ? 's' : ''} remaining</span>}
-                  {remainingFree > 0 && reportCredits > 0 && <span> + </span>}
-                  {reportCredits > 0 && <span>{reportCredits} paid credit{reportCredits > 1 ? 's' : ''}</span>}
-                  {totalCredits === 0 && <span className="text-destructive">No report credits remaining</span>}
+                  {remainingFree > 0 && <span>{remainingFree} free report{remainingFree > 1 ? 's' : ''}</span>}
+                  {remainingFree > 0 && (reportCredits + aiCredits) > 0 && <span> + </span>}
+                  {(reportCredits + aiCredits) > 0 && <span>{reportCredits + aiCredits} top-up credit{(reportCredits + aiCredits) > 1 ? 's' : ''}</span>}
+                  {totalCredits === 0 && <span className="text-destructive">No credits remaining</span>}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {isPro ? 'Pro members get 3 free reports' : 'Free users get 1 report. Upgrade to Pro for 3 free!'}
+                  {isPro ? 'Pro members get 3 free reports.' : 'Free users get 1 report. Upgrade to Pro for 3 free!'}
+                  {' '}Top-up credits work across all AI tools.
                 </p>
               </div>
             </div>
             <Button size="sm" variant="outline" className="gap-2" onClick={() => setShowTopup(true)}>
-              <CreditCard className="h-4 w-4" /> Top-up ₹499 for 5 Reports
+              <CreditCard className="h-4 w-4" /> Top-up ₹499 (+3 AI)
             </Button>
+
           </CardContent>
         </Card>
 
