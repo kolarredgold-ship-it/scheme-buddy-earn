@@ -709,52 +709,37 @@ const StudentTool = () => {
             </div>
           ))}
 
-          {isPro ? (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-xs px-1">
+              <span className="text-muted-foreground">
+                {credits.remainingFree > 0 && <strong className="text-foreground">{credits.remainingFree} free</strong>}
+                {credits.remainingFree > 0 && credits.aiCredits > 0 && " + "}
+                {credits.aiCredits > 0 && <strong className="text-foreground">{credits.aiCredits} top-up</strong>}
+                {!credits.canGenerate && <span className="text-destructive font-semibold">No credits left</span>}
+                {" · "}{isPro ? "Pro: 3 free per tool" : "Free: 1 per tool"}
+              </span>
+              <button onClick={() => setShowTopup(true)} className="text-primary font-semibold hover:underline">
+                Top-up ₹499 (+3)
+              </button>
+            </div>
             <Button onClick={generate} disabled={loading} className="w-full" size="lg">
               {loading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generating with AI...
-                </>
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generating with AI...</>
+              ) : !credits.canGenerate ? (
+                <><Lock className="h-4 w-4 mr-2" /> Top-up ₹499 to Generate</>
               ) : (
-                <>
-                  <Sparkles className="h-4 w-4 mr-2" /> Generate with AI
-                </>
+                <><Sparkles className="h-4 w-4 mr-2" /> Generate with AI</>
               )}
             </Button>
-          ) : (
-            <div className="relative overflow-hidden rounded-2xl border-2 border-yellow-400/60 bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 dark:from-yellow-950/30 dark:via-amber-950/30 dark:to-orange-950/30 p-5 md:p-6 shadow-[0_0_30px_rgba(234,179,8,0.25)]">
-              <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-yellow-400/20 blur-3xl" />
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="h-9 w-9 rounded-xl bg-yellow-400 flex items-center justify-center">
-                    <Crown className="h-5 w-5 text-yellow-900" />
-                  </div>
-                  <span className="inline-flex items-center gap-1 bg-yellow-400 text-yellow-950 rounded-full px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider">
-                    Pro Only
-                  </span>
-                </div>
-                <h3 className="text-lg md:text-xl font-extrabold text-foreground mb-1">
-                  Pay for Subscription & Get ALL AI Tools FREE 🎁
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Unlock unlimited use of <b>20+ Students AI Tools</b> — Resume, SOP, Cover Letter, Study Notes, PPTs, Career Roadmap and more — with one Techrola Pro subscription.
-                </p>
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold shadow-lg"
-                >
-                  <Link to="/subscription">
-                    <Crown className="h-4 w-4 mr-2" /> Upgrade to Pro & Unlock
-                  </Link>
-                </Button>
-                <Button disabled variant="outline" className="w-full mt-2 opacity-60" size="sm">
-                  <Lock className="h-3.5 w-3.5 mr-2" /> Generate with AI (locked)
-                </Button>
-              </div>
-            </div>
-          )}
+            {!isPro && (
+              <Link to="/subscription" className="block text-center text-xs text-muted-foreground hover:text-primary">
+                <Crown className="h-3 w-3 inline mr-1" /> Upgrade to Pro ₹999 — 3 free generations in every tool
+              </Link>
+            )}
+          </div>
         </Card>
+        <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
+
 
 
 
