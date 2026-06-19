@@ -38,10 +38,17 @@ interface InterviewResult {
   suggestions: string;
 }
 
+import { useToolCredits } from '@/hooks/useToolCredits';
+import TopupDialog from '@/components/TopupDialog';
+import { CreditCard } from 'lucide-react';
+
 const MockInterview = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const credits = useToolCredits('mock-interview');
+  const [showTopup, setShowTopup] = useState(false);
+
 
   const [view, setView] = useState<ViewState>('select-mode');
   const [mode, setMode] = useState<TrainingMode>(null);
@@ -195,12 +202,19 @@ const MockInterview = () => {
   };
 
   const startMockInterview = async () => {
+    if (!credits.canGenerate) {
+      setShowTopup(true);
+      return;
+    }
+    const consumed = await credits.consume({ topic: selectedOption });
+    if (!consumed) { setShowTopup(true); return; }
     setView('mock-interview');
     setInterviewRound(0);
     setResult(null);
     setUserAnswer('');
     await fetchNextQuestion();
   };
+
 
   const fetchNextQuestion = async () => {
     setLoadingQuestion(true);
