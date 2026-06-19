@@ -733,7 +733,9 @@ const MockInterview = () => {
           </div>
         )}
       </div>
+      <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
     </Layout>
+
   );
 };
 
