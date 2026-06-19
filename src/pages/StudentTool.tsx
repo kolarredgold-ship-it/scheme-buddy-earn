@@ -10,6 +10,9 @@ import { ArrowLeft, Download, Sparkles, Loader2, Copy, Crown, Lock } from "lucid
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { useToolCredits } from "@/hooks/useToolCredits";
+import TopupDialog from "@/components/TopupDialog";
+
 import {
   Document,
   Packer,
