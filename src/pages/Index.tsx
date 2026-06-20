@@ -130,6 +130,33 @@ const Index = () => {
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
+  // College finder
+  const [cfLocation, setCfLocation] = useState("");
+  const [cfType, setCfType] = useState<"both" | "college" | "school">("both");
+  const [cfLoading, setCfLoading] = useState(false);
+  const [cfItems, setCfItems] = useState<Array<{ name: string; type: string; city?: string; state?: string; category?: string; website?: string }> | null>(null);
+  const [cfError, setCfError] = useState("");
+
+  const handleCollegeFinder = async () => {
+    const loc = cfLocation.trim();
+    if (loc.length < 2) return;
+    setCfLoading(true);
+    setCfError("");
+    setCfItems(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("college-finder", {
+        body: { location: loc, type: cfType },
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || "Search failed");
+      setCfItems(data.items || []);
+    } catch (e: any) {
+      setCfError(e?.message || "Could not load results. Please try again.");
+    } finally {
+      setCfLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!user) return;
     supabase
