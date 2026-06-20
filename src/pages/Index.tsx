@@ -1,59 +1,18 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, GraduationCap, Tractor, Tags, Moon, Home as HomeIcon, Heart, BookOpen, ChevronRight, Search, Sparkles, MapPin, Building2, Landmark, FileText, ExternalLink, Brain, Download, X, Loader2, Settings2, Users } from "lucide-react";
+import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronRight, MapPin, Filter } from "lucide-react";
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { tools as aiStudentTools } from "@/pages/AITools";
 
-const ROTATING_SCHEME_LABELS = [
-  "Schemes for Students",
-  "Schemes for Farmers",
-  "Schemes for Women",
-  "Schemes for SC/ST",
-  "Schemes for Minorities",
-  "Schemes for Housing",
-  "Schemes for Health",
-  "and more...",
-];
-
-const RotatingSchemesButton = () => {
-  const [idx, setIdx] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setIdx((i) => (i + 1) % ROTATING_SCHEME_LABELS.length), 1800);
-    return () => clearInterval(t);
-  }, []);
-  return (
-    <Link
-      to="/#schemes"
-      onClick={() => {
-        setTimeout(() => {
-          document.getElementById("schemes")?.scrollIntoView({ behavior: "smooth" });
-        }, 50);
-      }}
-      className="group relative flex items-center justify-center gap-3 w-full md:w-auto md:min-w-[420px] mx-auto rounded-2xl bg-gradient-to-r from-primary via-emerald-500 to-primary bg-[length:200%_100%] animate-[shimmer_3s_linear_infinite] text-primary-foreground px-6 py-4 font-extrabold text-base md:text-lg shadow-xl shadow-primary/30 hover:scale-[1.02] transition-transform"
-    >
-      <Sparkles className="h-5 w-5 animate-pulse" />
-      <span key={idx} className="animate-fade-in inline-block">
-        {ROTATING_SCHEME_LABELS[idx]}
-      </span>
-      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-    </Link>
-  );
-};
-
 const INDIAN_STATES = [
-  { value: "all", label: "All India" },
+  { value: "all", label: "All states & central" },
   { value: "central", label: "Central Govt" },
   { value: "andhra_pradesh", label: "Andhra Pradesh" },
-  { value: "arunachal_pradesh", label: "Arunachal Pradesh" },
   { value: "assam", label: "Assam" },
   { value: "bihar", label: "Bihar" },
   { value: "chhattisgarh", label: "Chhattisgarh" },
@@ -66,82 +25,44 @@ const INDIAN_STATES = [
   { value: "jharkhand", label: "Jharkhand" },
   { value: "karnataka", label: "Karnataka" },
   { value: "kerala", label: "Kerala" },
-  { value: "ladakh", label: "Ladakh" },
   { value: "madhya_pradesh", label: "Madhya Pradesh" },
   { value: "maharashtra", label: "Maharashtra" },
-  { value: "manipur", label: "Manipur" },
-  { value: "meghalaya", label: "Meghalaya" },
-  { value: "mizoram", label: "Mizoram" },
-  { value: "nagaland", label: "Nagaland" },
   { value: "odisha", label: "Odisha" },
   { value: "punjab", label: "Punjab" },
   { value: "rajasthan", label: "Rajasthan" },
-  { value: "sikkim", label: "Sikkim" },
   { value: "tamil_nadu", label: "Tamil Nadu" },
   { value: "telangana", label: "Telangana" },
-  { value: "tripura", label: "Tripura" },
   { value: "uttar_pradesh", label: "Uttar Pradesh" },
   { value: "uttarakhand", label: "Uttarakhand" },
   { value: "west_bengal", label: "West Bengal" },
-  { value: "chandigarh", label: "Chandigarh" },
-  { value: "puducherry", label: "Puducherry" },
-  { value: "andaman_nicobar", label: "Andaman & Nicobar" },
-  { value: "dadra_nagar_haveli", label: "Dadra & Nagar Haveli" },
-  { value: "lakshadweep", label: "Lakshadweep" },
-];
-import hero1 from "@/assets/hero-1.webp";
-import hero2 from "@/assets/hero-2.webp";
-import hero3 from "@/assets/hero-3.webp";
-import heroJobs from "@/assets/hero-jobs.webp";
-import heroSkills from "@/assets/hero-skills.webp";
-import heroGovt from "@/assets/hero-govt.webp";
-import heroAiInterview from "@/assets/hero-ai-interview.webp";
-import heroReport from "@/assets/hero-report.webp";
-import heroHrTraining from "@/assets/hero-hr-training.webp";
-
-const HERO_SLIDES = [
-  {
-    image: heroGovt,
-    title: "Discover Government Schemes",
-    subtitle: "Access 2500+ scholarships, subsidies & welfare programs across India",
-    cta: "Explore Now",
-    ctaLink: "/subscription",
-    badge: "🏛 Government",
-    stat: "2500+ Schemes",
-  },
-  {
-    image: heroJobs,
-    title: "Explore Job Opportunities",
-    subtitle: "Discover curated jobs matching your skills and career aspirations",
-    cta: "Find Jobs",
-    ctaLink: "/career-program",
-    badge: "💼 Jobs",
-    stat: "New Openings",
-  },
-  {
-    image: heroSkills,
-    title: "Skill Development Programs",
-    subtitle: "Upskill with industry-relevant courses & get certified",
-    cta: "Start Learning",
-    ctaLink: "/career-program",
-    badge: "🎓 Upskill",
-    stat: "Free Courses",
-  },
 ];
 
-const CATEGORIES = [
-  { key: "scholarships", label: "Scholarships", icon: GraduationCap, color: "bg-primary/10 text-primary" },
-  { key: "farmers", label: "Farmers", icon: Tractor, color: "bg-secondary/10 text-secondary" },
-  { key: "sc_st", label: "SC/ST", icon: Tags, color: "bg-accent/10 text-accent-foreground" },
-  { key: "private_jobs", label: "🔥 Private Jobs", icon: ExternalLink, color: "bg-gradient-to-r from-sky-400 via-blue-400 to-indigo-400 text-white shadow-lg shadow-blue-400/30 animate-pulse-slow", featured: true },
-  { key: "minority", label: "Minority", icon: Moon, color: "bg-purple-100 text-purple-700" },
-  { key: "women_empowerment", label: "Women", icon: Users, color: "bg-pink-100 text-pink-700" },
-  { key: "housing", label: "Housing", icon: HomeIcon, color: "bg-orange-100 text-orange-700" },
-  { key: "health", label: "Health", icon: Heart, color: "bg-red-100 text-red-700" },
-  { key: "education", label: "Education", icon: BookOpen, color: "bg-cyan-100 text-cyan-700" },
-  { key: "business", label: "Business", icon: Building2, color: "bg-amber-100 text-amber-700" },
-  { key: "govt_jobs", label: "Govt Jobs", icon: Landmark, color: "bg-indigo-100 text-indigo-700" },
+const CATEGORY_CHIPS = [
+  { key: "all", label: "All" },
+  { key: "scholarships", label: "Scholarships" },
+  { key: "women_empowerment", label: "Women" },
+  { key: "farmers", label: "Farmers" },
+  { key: "employment", label: "Employment" },
+  { key: "housing", label: "Housing" },
+  { key: "health", label: "Healthcare" },
 ];
+
+const TAG_COLORS: Record<string, string> = {
+  scholarships: "bg-blue-100 text-blue-700",
+  women_empowerment: "bg-pink-100 text-pink-700",
+  farmers: "bg-amber-100 text-amber-800",
+  employment: "bg-emerald-100 text-emerald-700",
+  housing: "bg-orange-100 text-orange-700",
+  health: "bg-rose-100 text-rose-700",
+  business: "bg-violet-100 text-violet-700",
+  education: "bg-cyan-100 text-cyan-700",
+  sc_st: "bg-purple-100 text-purple-700",
+  minority: "bg-fuchsia-100 text-fuchsia-700",
+  govt_jobs: "bg-indigo-100 text-indigo-700",
+};
+
+const STATE_TAG = "bg-amber-100 text-amber-800";
+const CENTRAL_TAG = "bg-slate-100 text-slate-700";
 
 interface Scheme {
   id: string;
@@ -154,288 +75,90 @@ interface Scheme {
   slug: string;
 }
 
-// Hero Banner with auto-scroll
-const HeroBanner = ({ searchQuery, onSearchChange, onSearchKeyDown, onClearSearch, selectedState, onStateChange, onSearch, searching }: {
-  searchQuery: string;
-  onSearchChange: (val: string) => void;
-  onSearchKeyDown: (e: React.KeyboardEvent) => void;
-  onClearSearch: () => void;
-  selectedState: string;
-  onStateChange: (val: string) => void;
-  onSearch: () => void;
-  searching: boolean;
-}) => {
-  const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+const prettyState = (s: string | null) => {
+  if (!s) return "";
+  if (s === "central") return "Central";
+  return s
+    .split("_")
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(" ");
+};
 
-  const startTimer = useCallback(() => {
-    timerRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 4500);
-  }, []);
-
-  useEffect(() => {
-    startTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [startTimer]);
-
-  const goTo = (i: number) => {
-    setCurrent(i);
-    if (timerRef.current) clearInterval(timerRef.current);
-    startTimer();
+const prettyCategory = (c: string) => {
+  const map: Record<string, string> = {
+    scholarships: "Students",
+    women_empowerment: "Women",
+    farmers: "Farmers",
+    employment: "Employment",
+    housing: "Housing",
+    health: "Healthcare",
+    business: "Entrepreneurs",
+    education: "Education",
+    sc_st: "SC/ST",
+    minority: "Minority",
+    govt_jobs: "Govt Jobs",
+    finance: "Finance",
   };
-
-  const slide = HERO_SLIDES[current];
-
-  return (
-    <section className="relative w-full overflow-hidden aspect-[5/4] md:aspect-[16/7]">
-      {HERO_SLIDES.map((s, i) => (
-        <div
-          key={i}
-          className={`absolute inset-0 transition-all duration-1000 ease-out ${
-            i === current ? "opacity-100 scale-100" : "opacity-0 scale-110"
-          }`}
-        >
-          <img
-            src={s.image}
-            alt={s.title}
-            className={`w-full h-full object-cover ${i === current ? "animate-[ken-burns_4.5s_ease-out_forwards]" : ""}`}
-            width={1280}
-            height={512}
-            loading={i === 0 ? "eager" : "lazy"}
-            decoding="async"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        </div>
-      ))}
-
-      {/* Content overlay */}
-      <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-10 md:justify-center z-10">
-        <div className="max-w-lg">
-          <div
-            key={`badge-${current}`}
-            className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-3 py-1 mb-3 text-[10px] md:text-xs font-semibold text-white border animate-fade-in ${
-              (slide as any).glow
-                ? "bg-orange-500/30 border-orange-400/40 shadow-[0_0_15px_rgba(249,115,22,0.4)]"
-                : "bg-white/15 border-white/20"
-            }`}
-          >
-            {slide.badge}
-          </div>
-
-          <h1
-            key={current}
-            className="text-2xl md:text-5xl font-extrabold text-white mb-2 md:mb-3 leading-tight animate-fade-in"
-            style={{ fontFamily: 'Plus Jakarta Sans' }}
-          >
-            {slide.title}
-          </h1>
-          <p
-            key={`sub-${current}`}
-            className="text-sm md:text-lg text-white/80 mb-4 md:mb-6 animate-fade-in max-w-md leading-relaxed"
-            style={{ animationDelay: '0.1s' }}
-          >
-            {slide.subtitle}
-          </p>
-
-          <div className="flex items-center gap-3 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Link to={slide.ctaLink}>
-              <Button
-                size="sm"
-                className={`rounded-lg font-semibold gap-1 text-[11px] md:text-sm px-2.5 md:px-5 py-1 md:py-1.5 h-auto ${
-                  (slide as any).glow
-                    ? "bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 shadow-[0_0_20px_rgba(249,115,22,0.4)]"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/30"
-                }`}
-              >
-                {slide.cta} <ArrowRight className="h-3 w-3 md:h-3.5 md:w-3.5" />
-              </Button>
-            </Link>
-            <div className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2.5 border border-white/10">
-              <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-white text-sm font-semibold">{slide.stat}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Search + Location on top of banner */}
-      <div className="absolute top-3 left-0 right-0 z-20 px-3 md:px-10">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Sparkles className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
-            <input
-              type="text"
-              aria-label="Search government schemes"
-              placeholder="AI Search: 'free laptop Tamil Nadu'"
-              value={searchQuery}
-              onChange={(e) => {
-                onSearchChange(e.target.value);
-              }}
-              onKeyDown={onSearchKeyDown}
-              className="w-full h-10 md:h-11 pl-9 pr-9 rounded-xl bg-white/90 backdrop-blur-md border border-white/40 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all placeholder:text-muted-foreground/60 shadow-lg"
-            />
-            {searchQuery && (
-              <button aria-label="Clear search" onClick={onClearSearch} className="absolute right-10 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                <X className="h-4 w-4" />
-              </button>
-            )}
-            <button
-              aria-label="Search schemes"
-              onClick={onSearch}
-              disabled={searching || searchQuery.trim().length < 3}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground disabled:opacity-40 transition-opacity"
-            >
-              {searching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Search className="h-3.5 w-3.5" />}
-            </button>
-          </div>
-          <Select value={selectedState} onValueChange={onStateChange}>
-            <SelectTrigger className="w-[100px] md:w-[150px] h-10 md:h-11 rounded-xl bg-white/90 backdrop-blur-md border-white/40 text-sm gap-1 shrink-0 shadow-lg">
-              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <SelectValue placeholder="State" />
-            </SelectTrigger>
-            <SelectContent className="max-h-[300px]">
-              {INDIAN_STATES.map((state) => (
-                <SelectItem key={state.value} value={state.value} className="text-sm">
-                  {state.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 flex gap-1 px-3 pb-3 md:px-10 md:pb-4">
-        {HERO_SLIDES.map((_, i) => (
-          <button
-            key={i}
-            aria-label={`Go to slide ${i + 1}`}
-            onClick={() => goTo(i)}
-            className="flex-1 h-1 rounded-full bg-white/20 overflow-hidden"
-          >
-            <div
-              className={`h-full rounded-full transition-all duration-300 ${
-                i === current
-                  ? "bg-white w-full animate-[hero-progress_4.5s_linear]"
-                  : i < current
-                    ? "bg-white/60 w-full"
-                    : "bg-transparent w-0"
-              }`}
-            />
-          </button>
-        ))}
-      </div>
-    </section>
-  );
+  return map[c] || c.replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 };
 
-// Scheme Card
-const SchemeCard = ({ scheme }: { scheme: Scheme }) => (
-  <Link to={`/scheme/${scheme.slug}`} className="block">
-    <Card className="group min-w-[180px] md:min-w-[260px] overflow-hidden hover-lift border-border/40 hover:border-primary/20 bg-card">
-      <CardContent className="p-3 md:p-4">
-        <Badge variant="outline" className="mb-1.5 text-[10px] px-2 py-0 font-medium border-border/60">
-          {scheme.category}
-        </Badge>
-        <h3 className="font-semibold text-xs md:text-sm mb-1 group-hover:text-primary transition-colors leading-tight line-clamp-2">
-          {scheme.title}
-        </h3>
-        <p className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 mt-1">{scheme.description}</p>
-        <div className="mt-2 flex items-center text-[10px] md:text-xs text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-          View Details <ChevronRight className="h-3 w-3 ml-0.5" />
-        </div>
-      </CardContent>
-    </Card>
-  </Link>
-);
-
-// Category Chip
-const CategoryChip = ({ cat, isActive, onClick }: { cat: typeof CATEGORIES[0]; isActive: boolean; onClick: () => void }) => {
-  if ('link' in cat && cat.link) {
-    return (
-      <a
-        href={cat.link as string}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${cat.color} hover:scale-105`}
-      >
-        <cat.icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
-        {cat.label}
-      </a>
-    );
-  }
-  const isFeatured = 'featured' in cat && cat.featured;
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-        isActive
-          ? "bg-primary text-primary-foreground shadow-glow"
-          : isFeatured
-            ? `${cat.color} hover:shadow-lg hover:scale-105 ring-1 ring-emerald-400/30`
-            : `${cat.color} hover:scale-105`
-      }`}
-    >
-      <cat.icon className={`h-3.5 w-3.5 md:h-4 md:w-4 ${isFeatured && !isActive ? 'animate-pulse' : ''}`} />
-      {cat.label}
-    </button>
-  );
-};
+const TOOL_TINTS = [
+  "bg-violet-50 border-violet-200",
+  "bg-rose-50 border-rose-200",
+  "bg-amber-50 border-amber-200",
+  "bg-emerald-50 border-emerald-200",
+  "bg-sky-50 border-sky-200",
+  "bg-orange-50 border-orange-200",
+  "bg-pink-50 border-pink-200",
+  "bg-lime-50 border-lime-200",
+  "bg-cyan-50 border-cyan-200",
+  "bg-fuchsia-50 border-fuchsia-200",
+  "bg-teal-50 border-teal-200",
+  "bg-indigo-50 border-indigo-200",
+];
 
 const Index = () => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
   const [aiSummary, setAiSummary] = useState("");
-  const [aiSource, setAiSource] = useState("");
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
 
-  // Load user preferences to set default state filter
   useEffect(() => {
     if (!user) return;
-    const loadPrefs = async () => {
-      const { data } = await supabase
-        .from("user_preferences")
-        .select("preferred_state, preferred_categories")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (data) {
-        if (data.preferred_state && data.preferred_state !== "all") {
+    supabase
+      .from("user_preferences")
+      .select("preferred_state")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.preferred_state && data.preferred_state !== "all") {
           setSelectedState(data.preferred_state);
+        } else if (!data) {
+          setPrefsOpen(true);
         }
-      } else {
-        // No preferences yet — show popup for new users
-        setPrefsOpen(true);
-      }
-    };
-    loadPrefs();
+      });
   }, [user]);
 
   useEffect(() => {
-    const fetchSchemes = async () => {
-      const { data } = await supabase.from("schemes").select("id, title, category, description, image_url, created_at, state, slug").order("created_at", { ascending: false });
-      if (data) setSchemes(data as unknown as Scheme[]);
-      setLoading(false);
-    };
-    fetchSchemes();
+    supabase
+      .from("schemes")
+      .select("id, title, category, description, image_url, created_at, state, slug")
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (data) setSchemes(data as unknown as Scheme[]);
+        setLoading(false);
+      });
   }, []);
 
-  // Unified search: local first, then AI if needed
   const handleSearch = async () => {
     const q = searchQuery.trim();
-    if (q.length < 3) {
-      setAiResults(null);
-      setAiSummary("");
-      return;
-    }
-
+    if (q.length < 3) return;
     setSearching(true);
     try {
       const { data, error } = await supabase.functions.invoke("ai-scheme-search", {
@@ -444,23 +167,17 @@ const Index = () => {
       if (error) throw error;
       setAiResults(data.schemes || []);
       setAiSummary(data.ai_summary || "");
-      setAiSource(data.source || "database");
-    } catch (err) {
-      console.error("Search error:", err);
-      const local = schemes.filter((s) =>
-        s.title.toLowerCase().includes(q.toLowerCase()) ||
-        s.description?.toLowerCase().includes(q.toLowerCase())
+    } catch {
+      const local = schemes.filter(
+        (s) =>
+          s.title.toLowerCase().includes(q.toLowerCase()) ||
+          s.description?.toLowerCase().includes(q.toLowerCase())
       );
       setAiResults(local);
       setAiSummary("");
-      setAiSource("local");
     } finally {
       setSearching(false);
     }
-  };
-
-  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSearch();
   };
 
   const clearSearch = () => {
@@ -469,353 +186,380 @@ const Index = () => {
     setAiSummary("");
   };
 
-  // State-filtered base
-  // Central govt schemes are always visible across all state filters
-  const stateFiltered = selectedState === "all"
-    ? schemes
-    : schemes.filter((s) => s.state === selectedState || s.state === "central");
+  const stateFiltered =
+    selectedState === "all"
+      ? schemes
+      : schemes.filter((s) => s.state === selectedState || s.state === "central");
 
-  const getSchemesByCategory = (cat: string) => {
-    return stateFiltered.filter((s) => s.category.toLowerCase() === cat).slice(0, 15);
-  };
-
-  const filteredSchemes = activeCategory
-    ? stateFiltered.filter((s) => s.category === activeCategory)
-    : stateFiltered;
-
-  const recentSchemes = stateFiltered.slice(0, 12);
+  const visible = aiResults
+    ? aiResults
+    : activeCategory === "all"
+      ? stateFiltered
+      : stateFiltered.filter((s) => s.category === activeCategory);
 
   return (
     <Layout>
-      <div className="pb-24 md:pb-8">
-        {/* Hero Banner with Search */}
-        <HeroBanner
-          searchQuery={searchQuery}
-          onSearchChange={(val) => {
-            setSearchQuery(val);
-            if (val.trim().length < 3) {
-              setAiResults(null);
-              setAiSummary("");
-            }
-          }}
-          onSearchKeyDown={handleSearchKeyDown}
-          onClearSearch={clearSearch}
-          selectedState={selectedState}
-          onStateChange={setSelectedState}
-          onSearch={handleSearch}
-          searching={searching}
-        />
-
-
-        {/* Category Chips + AI Tools CTA */}
-        <div id="schemes" className="container mx-auto px-3 md:px-4 mt-4">
-          <div className="flex flex-col md:flex-row md:items-stretch md:gap-3">
-            <div className="md:basis-[65%] md:flex-shrink-0 min-w-0">
-              <div
-                className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 snap-x-mandatory cursor-grab active:cursor-grabbing select-none"
-                onWheel={(e) => {
-                  if (e.deltaY === 0) return;
-                  e.currentTarget.scrollLeft += e.deltaY;
-                }}
-                onMouseDown={(e) => {
-                  const el = e.currentTarget;
-                  const startX = e.pageX - el.offsetLeft;
-                  const startScroll = el.scrollLeft;
-                  let dragged = false;
-                  const onMove = (ev: MouseEvent) => {
-                    const x = ev.pageX - el.offsetLeft;
-                    const dx = x - startX;
-                    if (Math.abs(dx) > 3) dragged = true;
-                    el.scrollLeft = startScroll - dx;
-                  };
-                  const onUp = (ev: MouseEvent) => {
-                    window.removeEventListener("mousemove", onMove);
-                    window.removeEventListener("mouseup", onUp);
-                    if (dragged) {
-                      const stop = (e2: Event) => {
-                        e2.stopPropagation();
-                        e2.preventDefault();
-                        window.removeEventListener("click", stop, true);
-                      };
-                      window.addEventListener("click", stop, true);
-                    }
-                  };
-                  window.addEventListener("mousemove", onMove);
-                  window.addEventListener("mouseup", onUp);
-                }}
-              >
-                <button
-                  onClick={() => setActiveCategory(null)}
-                  className={`flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 rounded-xl text-xs md:text-sm font-medium whitespace-nowrap transition-all duration-200 snap-start ${
-                    !activeCategory
-                      ? "bg-primary text-primary-foreground shadow-glow"
-                      : "bg-muted text-muted-foreground hover:scale-105"
-                  }`}
-                >
-                  All
-                </button>
-                {CATEGORIES.map((cat) => (
-                  <CategoryChip
-                    key={cat.key}
-                    cat={cat}
-                    isActive={activeCategory === cat.key}
-                    onClick={() => setActiveCategory(activeCategory === cat.key ? null : cat.key)}
-                  />
-                ))}
-              </div>
+      <div className="pb-24 md:pb-12 bg-background">
+        {/* HERO */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50 via-teal-50/60 to-background">
+          <div className="container mx-auto px-4 py-12 md:py-20 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100/80 border border-emerald-200 px-4 py-1.5 text-xs md:text-sm font-semibold text-emerald-800 mb-6">
+              <Sparkles className="h-3.5 w-3.5" />
+              AI powered career platform for India
             </div>
-            <Link
-              to="/ai-tools"
-              className="hidden md:flex md:basis-[35%] md:flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 text-yellow-950 px-4 py-2.5 font-bold text-sm shadow-lg shadow-yellow-400/40 hover:shadow-xl hover:shadow-yellow-400/50 hover:scale-[1.01] transition-all"
+
+            <h1
+              className="text-3xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1] max-w-4xl mx-auto"
+              style={{ fontFamily: "Plus Jakarta Sans" }}
             >
-              <Sparkles className="h-5 w-5" />
-              AI Students Tools
-              <span className="text-xs bg-yellow-950/15 px-2 py-0.5 rounded-full font-semibold ml-1">20+ Tools</span>
+              Your AI co-pilot for{" "}
+              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                college, career
+              </span>{" "}
+              <br className="hidden md:block" />& beyond.
+            </h1>
+
+            <p className="mt-5 text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Techrola brings together AI tools, college discovery, internships, interview prep,
+              and jobs — so every student can build a future they're proud of.
+            </p>
+
+            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/ai-tools">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="rounded-xl border-foreground/15 bg-background hover:bg-muted font-semibold gap-2 px-6"
+                >
+                  <Sparkles className="h-4 w-4" /> Try AI tools free
+                </Button>
+              </Link>
+              <a href="#schemes">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="rounded-xl border-foreground/15 bg-background hover:bg-muted font-semibold gap-2 px-6 w-full sm:w-auto"
+                >
+                  <Search className="h-4 w-4" /> Browse schemes
+                </Button>
+              </a>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+              {[
+                { v: "2,500+", l: "Government schemes" },
+                { v: "19+", l: "AI career tools" },
+                { v: "₹999", l: "Annual Pro plan" },
+                { v: "28", l: "States covered" },
+              ].map((s) => (
+                <div key={s.l}>
+                  <div className="text-xl md:text-3xl font-extrabold text-emerald-700">{s.v}</div>
+                  <div className="text-[11px] md:text-xs text-muted-foreground mt-0.5">{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* AI TOOLS */}
+        <section className="container mx-auto px-4 py-10 md:py-14">
+          <div className="mb-5">
+            <h2
+              className="text-xl md:text-3xl font-extrabold text-foreground"
+              style={{ fontFamily: "Plus Jakarta Sans" }}
+            >
+              AI tools built for your career
+            </h2>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">
+              19+ tools to write, prepare, and grow — unlock all with Pro
+            </p>
+          </div>
+
+          {/* Featured hero tool */}
+          {aiStudentTools[0] && (
+            <Link to={aiStudentTools[0].to} className="block group mb-8">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+                <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
+                <div className="relative flex items-start md:items-center gap-4 md:gap-6">
+                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
+                    📄
+                  </div>
+                  <div className="flex-1 min-w-0 text-white">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="text-[10px] md:text-xs font-bold bg-orange-400 text-orange-950 px-2 py-0.5 rounded-full">
+                        Most popular
+                      </span>
+                      <span className="text-[10px] md:text-xs font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
+                        DOCX
+                      </span>
+                    </div>
+                    <h3
+                      className="font-extrabold text-lg md:text-2xl leading-tight mb-1"
+                      style={{ fontFamily: "Plus Jakarta Sans" }}
+                    >
+                      AI Internship Report Generator
+                    </h3>
+                    <p className="text-[12px] md:text-sm text-white/85 mb-3 max-w-xl">
+                      Generate professional reports instantly. Download-ready DOCX in 60 seconds.
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 bg-white text-indigo-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
+                      Generate now <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Tool icons grid */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 md:gap-5">
+            {aiStudentTools.slice(1).map((t, i) => (
+              <Link key={t.to} to={t.to} className="group flex flex-col items-center text-center">
+                <div
+                  className={`h-16 w-16 md:h-20 md:w-20 rounded-full border ${TOOL_TINTS[i % TOOL_TINTS.length]} flex items-center justify-center mb-2 transition-all group-hover:scale-105 group-hover:shadow-md`}
+                >
+                  <span className="text-2xl md:text-3xl">{t.icon}</span>
+                </div>
+                <span className="text-[11px] md:text-xs font-semibold text-foreground/80 leading-tight line-clamp-2 px-1">
+                  {t.title.replace(/^AI\s+/, "")}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex justify-center mt-8">
+            <Link to="/ai-tools">
+              <Button
+                variant="outline"
+                className="rounded-xl border-foreground/15 font-semibold gap-2 px-5"
+              >
+                <Sparkles className="h-4 w-4" /> View all AI tools on Techrola
+              </Button>
             </Link>
           </div>
-        </div>
+        </section>
 
+        {/* SCHEMES */}
+        <section id="schemes" className="bg-stone-50/70 border-y border-border/40">
+          <div className="container mx-auto px-4 py-10 md:py-14">
+            <div className="mb-5">
+              <h2
+                className="text-xl md:text-3xl font-extrabold text-foreground"
+                style={{ fontFamily: "Plus Jakarta Sans" }}
+              >
+                Explore government schemes
+              </h2>
+              <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                2,500+ free to browse — no sign-up needed
+              </p>
+            </div>
 
-        {/* Content */}
-        <div className="container mx-auto px-3 md:px-4 mt-4 md:mt-6 space-y-8">
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="h-8 w-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : searching ? (
-            <div className="flex flex-col items-center py-16 gap-3 animate-fade-in">
-              <Loader2 className="h-8 w-8 text-primary animate-spin" />
-              <p className="text-sm text-muted-foreground">AI is searching for schemes...</p>
-            </div>
-          ) : aiResults ? (
-            /* AI Search Results */
-            <section className="animate-fade-in">
-              {aiSummary && (
-                <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/5 border border-primary/10 mb-4">
-                  <Sparkles className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs text-foreground/80">{aiSummary}</p>
-                    {aiSource === "ai_enriched" && (
-                      <p className="text-[10px] text-primary mt-1 font-medium">✨ AI discovered new schemes for you</p>
-                    )}
-                  </div>
-                </div>
-              )}
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base md:text-lg font-bold">
-                  {aiResults.length} result{aiResults.length !== 1 ? 's' : ''} found
-                </h2>
-                <button onClick={clearSearch} className="text-xs text-primary font-medium hover:underline">
-                  Clear Search
-                </button>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
-                {aiResults.slice(0, 20).map((scheme: any) => (
-                  <SchemeCard key={scheme.id} scheme={scheme} />
-                ))}
-              </div>
-              {aiResults.length === 0 && (
-                <div className="text-center py-12">
-                  <Search className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground text-sm">No schemes found. Try different keywords.</p>
-                </div>
-              )}
-            </section>
-          ) : activeCategory ? (
-            /* Category View */
-            <section className="animate-fade-in">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base md:text-lg font-bold flex items-center gap-2">
-                  {CATEGORIES.find(c => c.key === activeCategory)?.label} Schemes
-                </h2>
+            {/* Search */}
+            <div className="flex flex-col sm:flex-row gap-2 mb-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="AI Search: 'free laptop Tamil Nadu'"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (e.target.value.trim().length < 3) {
+                      setAiResults(null);
+                      setAiSummary("");
+                    }
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  className="w-full h-11 pl-9 pr-20 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-12 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
                 <button
-                  onClick={() => setActiveCategory(null)}
-                  className="text-xs text-primary font-medium flex items-center gap-0.5 hover:underline"
+                  onClick={handleSearch}
+                  disabled={searching || searchQuery.trim().length < 3}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1 disabled:opacity-40"
                 >
-                  Clear Filter
+                  {searching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Search"}
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4 lg:grid-cols-4 xl:grid-cols-5">
-                {filteredSchemes.slice(0, 30).map((scheme) => (
-                  <div key={scheme.id} className="w-full">
-                    <SchemeCard scheme={scheme} />
-                  </div>
-                ))}
+            </div>
+
+            {/* Filter by state */}
+            <div className="mb-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1.5">
+                <Filter className="h-3.5 w-3.5" /> Filter by state
               </div>
-            </section>
-          ) : (
-            /* Default: Category-wise horizontal scroll */
-            <>
+              <Select value={selectedState} onValueChange={setSelectedState}>
+                <SelectTrigger className="w-full sm:w-[320px] h-11 rounded-xl bg-background">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-[320px]">
+                  {INDIAN_STATES.map((s) => (
+                    <SelectItem key={s.value} value={s.value}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
+            {/* Category chips */}
+            <div className="flex flex-wrap gap-2 mb-5">
+              {CATEGORY_CHIPS.map((c) => (
+                <button
+                  key={c.key}
+                  onClick={() => setActiveCategory(c.key)}
+                  className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium border transition-all ${
+                    activeCategory === c.key
+                      ? "bg-emerald-600 text-white border-emerald-600"
+                      : "bg-background text-foreground/70 border-border hover:border-emerald-400"
+                  }`}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
 
-
-              {/* AI Students Tools - App-style UI */}
-              <section id="ai-tools" className="animate-fade-in">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-lg md:text-2xl font-extrabold flex items-center gap-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                      <Sparkles className="h-5 w-5 text-yellow-500" />
-                      AI Students Tools
-                    </h2>
-                    <p className="text-[11px] md:text-xs text-muted-foreground mt-0.5">Built for students. Powered by AI.</p>
+            {/* Scheme list */}
+            {loading ? (
+              <div className="flex justify-center py-16">
+                <Loader2 className="h-7 w-7 text-emerald-600 animate-spin" />
+              </div>
+            ) : (
+              <>
+                {aiSummary && (
+                  <div className="flex items-start gap-2 p-3 rounded-xl bg-emerald-50 border border-emerald-200 mb-4">
+                    <Sparkles className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <p className="text-xs text-foreground/80">{aiSummary}</p>
                   </div>
-                  <Link to="/ai-tools" className="text-xs md:text-sm text-primary font-semibold flex items-center gap-0.5 hover:underline">
-                    See All <ChevronRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-
-                {/* HERO: Internship Report Generator */}
-                {(() => {
-                  const hero = aiStudentTools[0];
-                  return (
-                    <Link to={hero.to} className="group block mb-4">
-                      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-5 md:p-7 shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 hover:scale-[1.01]">
-                        {/* Decorative blobs */}
-                        <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
-                        <div className="absolute -bottom-12 -left-8 h-44 w-44 rounded-full bg-cyan-300/20 blur-3xl" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_60%)]" />
-
-                        <div className="relative flex items-center gap-4 md:gap-6">
-                          <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/30 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform shadow-lg">
-                            <span className="text-3xl md:text-4xl">📄</span>
-                          </div>
-                          <div className="flex-1 min-w-0 text-white">
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <span className="text-[10px] md:text-xs font-bold bg-yellow-400 text-yellow-950 px-2 py-0.5 rounded-full">🔥 MOST POPULAR</span>
-                              <span className="hidden md:inline text-[10px] font-bold bg-white/20 text-white px-2 py-0.5 rounded-full backdrop-blur-sm">DOCX</span>
-                            </div>
-                            <h3 className="font-extrabold text-base md:text-2xl leading-tight mb-1" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                              AI Internship Report Generator
-                            </h3>
-                            <p className="text-[11px] md:text-sm text-white/85 line-clamp-2 mb-2.5">
-                              Generate professional reports instantly. Download-ready DOCX in 60 seconds.
-                            </p>
-                            <div className="inline-flex items-center gap-1.5 bg-white text-blue-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl font-bold text-xs md:text-sm shadow-md group-hover:gap-2.5 transition-all">
-                              Generate Now <ArrowRight className="h-3.5 w-3.5 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })()}
-
-                {/* Tool grid - app icon style */}
-                <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-6 gap-2.5 md:gap-3">
-                  {aiStudentTools.slice(1).map((t, i) => (
-                    <Link key={i} to={t.to} className="group flex flex-col items-center text-center">
-                      <div className={`relative h-14 w-14 md:h-16 md:w-16 rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} flex items-center justify-center mb-1.5 transition-all duration-300 group-hover:scale-110 group-active:scale-95 ${t.glow} shadow-sm`}>
-                        <span className="text-2xl md:text-3xl">{t.icon}</span>
-                      </div>
-                      <span className="text-[10px] md:text-[11px] font-semibold text-foreground leading-tight line-clamp-2 px-0.5">
-                        {t.title.replace(/^AI\s+/, '')}
+                )}
+                <div className="bg-background rounded-2xl border border-border/60 divide-y divide-border/60 overflow-hidden">
+                  {visible.slice(0, 15).map((s) => (
+                    <Link
+                      key={s.id}
+                      to={`/scheme/${s.slug}`}
+                      className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted/40 transition-colors group"
+                    >
+                      <span className="h-2 w-2 rounded-full bg-orange-400 shrink-0" />
+                      <span className="font-semibold text-sm md:text-base text-foreground group-hover:text-emerald-700 truncate">
+                        {s.title}
+                      </span>
+                      <span className="flex items-center gap-1.5 flex-wrap ml-auto shrink-0">
+                        <span
+                          className={`text-[10px] md:text-xs px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}
+                        >
+                          {prettyCategory(s.category)}
+                        </span>
+                        <span
+                          className={`text-[10px] md:text-xs px-2 py-0.5 rounded-md font-medium ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}
+                        >
+                          {prettyState(s.state) || "Central"}
+                        </span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all hidden md:block" />
                       </span>
                     </Link>
                   ))}
+                  {visible.length === 0 && (
+                    <div className="py-12 text-center text-sm text-muted-foreground">
+                      No schemes match your filters.
+                    </div>
+                  )}
                 </div>
-              </section>
+              </>
+            )}
+          </div>
+        </section>
 
+        {/* PRICING */}
+        <section className="container mx-auto px-4 py-10 md:py-14">
+          <div className="mb-6">
+            <h2
+              className="text-xl md:text-3xl font-extrabold text-foreground"
+              style={{ fontFamily: "Plus Jakarta Sans" }}
+            >
+              Simple, honest pricing
+            </h2>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">
+              Start free, unlock everything for less than ₹83/month
+            </p>
+          </div>
 
+          <div className="grid md:grid-cols-2 gap-4 md:gap-5 max-w-4xl">
+            {/* Free */}
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                Free
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-4xl font-extrabold">₹0</span>
+                <span className="text-sm text-muted-foreground">forever</span>
+              </div>
+              <ul className="mt-5 space-y-2.5 text-sm">
+                {[
+                  "Browse 2,500+ schemes",
+                  "No apply links",
+                  "Try 1 AI tool",
+                  "Downloaded reports",
+                  "Full AI tools access",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-foreground/80">
+                    <Check className="h-4 w-4 text-muted-foreground" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/signup" className="block mt-6">
+                <Button variant="outline" className="w-full rounded-xl font-semibold">
+                  Get started free
+                </Button>
+              </Link>
+            </div>
 
-
-
-              {/* Animated Rotating Schemes CTA */}
-              <section className="flex justify-center pt-2">
-                <RotatingSchemesButton />
-              </section>
-            </>
-          )}
-        </div>
-
-        {/* CTA Banner */}
-        {!user && (
-          <div className="container mx-auto px-3 md:px-4 mt-10">
-            <div className="rounded-2xl bg-gradient-primary p-6 md:p-10 text-center">
-              <h2 className="text-xl md:text-3xl font-extrabold text-primary-foreground mb-2" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-                Unlock All Schemes for Just ₹1000
-              </h2>
-              <p className="text-primary-foreground/80 text-sm md:text-base mb-5 max-w-md mx-auto">
-                Get full access to eligibility details, required documents, and direct apply links for 2500+ schemes.
-              </p>
-              <Link to="/subscription">
-                <Button size="lg" className="rounded-xl bg-card text-foreground hover:bg-card/90 font-semibold gap-2 shadow-lg">
-                  Get Started Free <ArrowRight className="h-4 w-4" />
+            {/* Pro */}
+            <div className="relative rounded-2xl border-2 border-emerald-500 bg-card p-6 shadow-lg shadow-emerald-500/10">
+              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-emerald-600 text-white px-2.5 py-1 rounded-full">
+                Most popular
+              </span>
+              <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">
+                Pro
+              </div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-4xl font-extrabold">₹999</span>
+                <span className="text-sm text-muted-foreground">/ year</span>
+              </div>
+              <div className="text-xs text-emerald-700 font-semibold mt-1">Just ₹83/month</div>
+              <ul className="mt-5 space-y-2.5 text-sm">
+                {[
+                  "Browse 2,500+ schemes",
+                  "All 19+ AI tools",
+                  "3 generations per tool",
+                  "Download DOCX reports",
+                  "Priority support",
+                ].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-foreground">
+                    <Check className="h-4 w-4 text-emerald-600" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/subscription" className="block mt-6">
+                <Button className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+                  Get Pro — ₹999/year
                 </Button>
               </Link>
             </div>
           </div>
-        )}
+        </section>
 
-        {/* Featured Highlights Section */}
-        <div className="container mx-auto px-3 md:px-4 mt-10">
-          <div className="text-center mb-6">
-            <h2 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: 'Plus Jakarta Sans' }}>
-              Everything You Need to <span className="text-primary">Build Your Career</span>
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">Powered by AI & Real Opportunities</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-            {/* Job Opportunities */}
-            <Link to="/career-program" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-primary/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">💼</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Explore Job Opportunities</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Discover curated jobs matching your skills and aspirations</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Skill Development */}
-            <Link to="/career-program" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-secondary/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">🎓</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Skill Development Programs</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Upskill with industry-relevant courses & certifications</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Government Schemes */}
-            <Link to="/#schemes" className="group">
-              <div className="relative overflow-hidden rounded-2xl bg-card border border-border/60 p-5 hover:border-accent/30 transition-all duration-300 hover:shadow-md">
-                <div className="flex items-start gap-3">
-                  <div className="h-11 w-11 rounded-xl bg-accent/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="text-xl">🏛</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-sm md:text-base text-foreground mb-1">Government Scheme Updates</h3>
-                    <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed">Stay updated with 2500+ latest government welfare programs</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-          </div>
-        </div>
-
-
-
-
-
-        {/* Personalize Preferences Popup */}
-        {user && (
-          <UserPreferences
-            open={prefsOpen}
-            onOpenChange={setPrefsOpen}
-            onPreferencesSaved={(state) => {
-              if (state !== "all") setSelectedState(state);
-            }}
-          />
+        {prefsOpen && (
+          <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
         )}
       </div>
     </Layout>
