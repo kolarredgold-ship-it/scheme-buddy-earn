@@ -11,7 +11,7 @@ const Footer = () => (
             <img src={techrolaLogo} alt="Techrola Logo" className="h-8 w-auto mb-3" />
           </Link>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Empowering citizens with easy access to 2500+ government schemes, scholarships & welfare programs.
+            India's platform for AI-powered career education Tools and discover government scheme for your family. Free to explore, powerful with Pro.
           </p>
         </div>
 
