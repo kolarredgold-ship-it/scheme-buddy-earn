@@ -586,6 +586,109 @@ const Index = () => {
           </div>
         </section>
 
+        {/* COLLEGE & SCHOOL FINDER */}
+        <section className="container mx-auto px-4 py-10 md:py-14">
+          <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 p-5 md:p-8">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-full">
+                <GraduationCap className="h-3.5 w-3.5" /> College & School Finder
+              </span>
+            </div>
+            <h2 className="text-xl md:text-3xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
+              Find colleges and schools near you
+            </h2>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">
+              Search by city, district or state — powered by AI. Results are listed as a directory, not ranked.
+            </p>
+
+            <div className="mt-5 flex flex-col md:flex-row gap-2">
+              <div className="relative flex-1">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={cfLocation}
+                  onChange={(e) => setCfLocation(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleCollegeFinder()}
+                  placeholder="Enter city, district, or state (e.g. Hyderabad, Pune)"
+                  className="pl-9 h-11 bg-white"
+                />
+              </div>
+              <Select value={cfType} onValueChange={(v: any) => setCfType(v)}>
+                <SelectTrigger className="md:w-44 h-11 bg-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="both">Colleges & Schools</SelectItem>
+                  <SelectItem value="college">Colleges only</SelectItem>
+                  <SelectItem value="school">Schools only</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button
+                onClick={handleCollegeFinder}
+                disabled={cfLoading || cfLocation.trim().length < 2}
+                className="h-11 px-5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+              >
+                {cfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4 mr-1.5" /> Search</>}
+              </Button>
+            </div>
+
+            {cfError && (
+              <p className="mt-4 text-sm text-rose-600">{cfError}</p>
+            )}
+
+            {cfItems && cfItems.length === 0 && !cfLoading && (
+              <p className="mt-4 text-sm text-muted-foreground">No results found for this location.</p>
+            )}
+
+            {cfItems && cfItems.length > 0 && (
+              <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
+                {cfItems.map((it, i) => {
+                  const isSchool = it.type === "school";
+                  return (
+                    <div key={i} className="rounded-xl bg-white border border-border/60 p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-start gap-3">
+                        <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${isSchool ? "bg-amber-100 text-amber-700" : "bg-indigo-100 text-indigo-700"}`}>
+                          {isSchool ? <School className="h-5 w-5" /> : <GraduationCap className="h-5 w-5" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${isSchool ? "bg-amber-100 text-amber-800" : "bg-indigo-100 text-indigo-800"}`}>
+                              {isSchool ? "School" : "College"}
+                            </span>
+                            {it.category && (
+                              <span className="text-[10px] font-medium text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                                {it.category}
+                              </span>
+                            )}
+                          </div>
+                          <h3 className="font-semibold text-sm text-foreground leading-snug">{it.name}</h3>
+                          {(it.city || it.state) && (
+                            <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                              <MapPin className="h-3 w-3" />
+                              {[it.city, it.state].filter(Boolean).join(", ")}
+                            </p>
+                          )}
+                          {it.website && (
+                            <a
+                              href={it.website}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 mt-2 font-medium"
+                            >
+                              Visit website <ExternalLink className="h-3 w-3" />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+
+
+
         {prefsOpen && (
           <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
         )}
