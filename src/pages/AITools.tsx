@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { aiToolLandings } from "@/data/aiToolLandings";
+
+// Map tool's actual path -> landing slug (when a landing exists)
+const TOOL_TO_LANDING: Record<string, string> = aiToolLandings.reduce(
+  (acc, l) => ({ ...acc, [l.toolPath]: l.slug }),
+  {} as Record<string, string>,
+);
 
 export const tools = [
   {
@@ -264,8 +271,11 @@ const AITools = () => {
 
         {/* Tools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-          {tools.map((t, i) => (
-            <Link key={i} to={t.to} className="group">
+          {tools.map((t, i) => {
+            const landingSlug = TOOL_TO_LANDING[t.to];
+            const href = landingSlug ? `/ai/${landingSlug}` : t.to;
+            return (
+            <Link key={i} to={href} className="group">
               <div
                 className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} p-4 md:p-5 transition-all duration-300 ${t.glow} h-full`}
               >
@@ -296,7 +306,8 @@ const AITools = () => {
                 </div>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
 
         {/* Footer note */}
