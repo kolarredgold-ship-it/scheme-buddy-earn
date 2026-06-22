@@ -39,13 +39,14 @@ const INDIAN_STATES = [
 ];
 
 const CATEGORY_CHIPS = [
-  { key: "all", label: "All" },
-  { key: "scholarships", label: "Scholarships" },
-  { key: "women_empowerment", label: "Women" },
-  { key: "farmers", label: "Farmers" },
-  { key: "employment", label: "Employment" },
-  { key: "housing", label: "Housing" },
-  { key: "health", label: "Healthcare" },
+  { key: "all", label: "All", icon: "🌐", color: "from-slate-500 to-slate-600", bg: "bg-slate-50 border-slate-200 hover:border-slate-400" },
+  { key: "scholarships", label: "Scholarships", icon: "🎓", color: "from-blue-500 to-blue-600", bg: "bg-blue-50 border-blue-200 hover:border-blue-400" },
+  { key: "women_empowerment", label: "Women", icon: "👩", color: "from-pink-500 to-pink-600", bg: "bg-pink-50 border-pink-200 hover:border-pink-400" },
+  { key: "farmers", label: "Farmers", icon: "🌾", color: "from-amber-500 to-amber-600", bg: "bg-amber-50 border-amber-200 hover:border-amber-400" },
+  { key: "employment", label: "Employment", icon: "💼", color: "from-emerald-500 to-emerald-600", bg: "bg-emerald-50 border-emerald-200 hover:border-emerald-400" },
+  { key: "housing", label: "Housing", icon: "🏠", color: "from-orange-500 to-orange-600", bg: "bg-orange-50 border-orange-200 hover:border-orange-400" },
+  { key: "health", label: "Healthcare", icon: "🏥", color: "from-rose-500 to-rose-600", bg: "bg-rose-50 border-rose-200 hover:border-rose-400" },
+  { key: "business", label: "Entrepreneurs", icon: "🚀", color: "from-violet-500 to-violet-600", bg: "bg-violet-50 border-violet-200 hover:border-violet-400" },
 ];
 
 const TAG_COLORS: Record<string, string> = {
