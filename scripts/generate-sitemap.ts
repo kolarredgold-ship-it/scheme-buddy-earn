@@ -30,6 +30,17 @@ const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = 
   { path: "/refund-policy", priority: "0.3", changefreq: "yearly" },
 ];
 
+const AI_TOOL_LANDING_SLUGS = [
+  "internship-report-generator","mock-interview","live-hr-interview","resume-builder",
+  "cover-letter-generator","sop-generator","study-notes-maker","career-roadmap",
+  "leave-letter","letter-of-recommendation","project-report","professional-email-writer",
+  "viva-questions","ppt-outline","scholarship-essay","linkedin-bio","business-plan",
+  "assignment-helper","essay-writer","speech-writer",
+];
+for (const slug of AI_TOOL_LANDING_SLUGS) {
+  STATIC_ROUTES.push({ path: `/ai/${slug}`, priority: "0.8", changefreq: "monthly" });
+}
+
 const escapeXml = (s: string) =>
   s
     .replace(/&/g, "&amp;")
