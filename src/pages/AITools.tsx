@@ -271,9 +271,11 @@ const AITools = () => {
 
         {/* Tools Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-          {tools.map((t, i) => (
-            <Link key={i} to={t.to} className="group">
-              <div
+          {tools.map((t, i) => {
+            const landingSlug = TOOL_TO_LANDING[t.to];
+            const href = landingSlug ? `/ai/${landingSlug}` : t.to;
+            return (
+            <Link key={i} to={href} className="group">
                 className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} p-4 md:p-5 transition-all duration-300 ${t.glow} h-full`}
               >
                 <div className="flex items-start gap-3">
