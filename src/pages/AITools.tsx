@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { aiToolLandings } from "@/data/aiToolLandings";
+
+// Map tool's actual path -> landing slug (when a landing exists)
+const TOOL_TO_LANDING: Record<string, string> = aiToolLandings.reduce(
+  (acc, l) => ({ ...acc, [l.toolPath]: l.slug }),
+  {} as Record<string, string>,
+);
 
 export const tools = [
   {
