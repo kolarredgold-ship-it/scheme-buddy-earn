@@ -470,7 +470,53 @@ const Index = () => {
                     <p className="text-xs text-foreground/80">{aiSummary}</p>
                   </div>
                 )}
-                <div className="bg-background rounded-2xl border border-border/60 divide-y divide-border/60 overflow-hidden">
+                {/* Desktop: colorful grid cards */}
+                <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
+                  {visible.slice(0, 12).map((s, i) => {
+                    const palettes = [
+                      { bg: "bg-rose-50", border: "border-rose-200", dot: "bg-rose-500", hover: "hover:border-rose-400" },
+                      { bg: "bg-amber-50", border: "border-amber-200", dot: "bg-amber-500", hover: "hover:border-amber-400" },
+                      { bg: "bg-emerald-50", border: "border-emerald-200", dot: "bg-emerald-500", hover: "hover:border-emerald-400" },
+                      { bg: "bg-sky-50", border: "border-sky-200", dot: "bg-sky-500", hover: "hover:border-sky-400" },
+                      { bg: "bg-violet-50", border: "border-violet-200", dot: "bg-violet-500", hover: "hover:border-violet-400" },
+                      { bg: "bg-fuchsia-50", border: "border-fuchsia-200", dot: "bg-fuchsia-500", hover: "hover:border-fuchsia-400" },
+                      { bg: "bg-teal-50", border: "border-teal-200", dot: "bg-teal-500", hover: "hover:border-teal-400" },
+                      { bg: "bg-orange-50", border: "border-orange-200", dot: "bg-orange-500", hover: "hover:border-orange-400" },
+                    ];
+                    const p = palettes[i % palettes.length];
+                    return (
+                      <Link
+                        key={s.id}
+                        to={`/scheme/${s.slug}`}
+                        className={`group relative rounded-2xl border ${p.bg} ${p.border} ${p.hover} p-4 transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3 min-h-[130px]`}
+                      >
+                        <div className="flex items-start gap-2">
+                          <span className={`h-2.5 w-2.5 rounded-full ${p.dot} shrink-0 mt-1.5`} />
+                          <h3 className="font-bold text-sm text-foreground line-clamp-2 group-hover:text-emerald-700">
+                            {s.title}
+                          </h3>
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-wrap mt-auto">
+                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
+                            {prettyCategory(s.category)}
+                          </span>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
+                            {prettyState(s.state) || "Central"}
+                          </span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all ml-auto" />
+                        </div>
+                      </Link>
+                    );
+                  })}
+                  {visible.length === 0 && (
+                    <div className="col-span-full py-12 text-center text-sm text-muted-foreground">
+                      No schemes match your filters.
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile: compact list */}
+                <div className="md:hidden bg-background rounded-2xl border border-border/60 divide-y divide-border/60 overflow-hidden">
                   {visible.slice(0, 15).map((s) => (
                     <Link
                       key={s.id}
@@ -478,21 +524,13 @@ const Index = () => {
                       className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted/40 transition-colors group"
                     >
                       <span className="h-2 w-2 rounded-full bg-orange-400 shrink-0" />
-                      <span className="font-semibold text-sm md:text-base text-foreground group-hover:text-emerald-700 truncate">
+                      <span className="font-semibold text-sm text-foreground group-hover:text-emerald-700 truncate">
                         {s.title}
                       </span>
                       <span className="flex items-center gap-1.5 flex-wrap ml-auto shrink-0">
-                        <span
-                          className={`text-[10px] md:text-xs px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}
-                        >
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
                           {prettyCategory(s.category)}
                         </span>
-                        <span
-                          className={`text-[10px] md:text-xs px-2 py-0.5 rounded-md font-medium ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}
-                        >
-                          {prettyState(s.state) || "Central"}
-                        </span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all hidden md:block" />
                       </span>
                     </Link>
                   ))}
