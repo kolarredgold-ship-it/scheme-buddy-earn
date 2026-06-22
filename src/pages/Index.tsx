@@ -441,22 +441,29 @@ const Index = () => {
               </Select>
             </div>
 
-            {/* Category chips */}
-            <div className="flex flex-wrap gap-2 mb-5">
-              {CATEGORY_CHIPS.map((c) => (
-                <button
-                  key={c.key}
-                  onClick={() => setActiveCategory(c.key)}
-                  className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium border transition-all ${
-                    activeCategory === c.key
-                      ? "bg-emerald-600 text-white border-emerald-600"
-                      : "bg-background text-foreground/70 border-border hover:border-emerald-400"
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
+            {/* Category cards grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2.5 md:gap-3 mb-6">
+              {CATEGORY_CHIPS.map((c) => {
+                const active = activeCategory === c.key;
+                return (
+                  <button
+                    key={c.key}
+                    onClick={() => setActiveCategory(c.key)}
+                    className={`relative flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 rounded-2xl border-2 transition-all ${
+                      active
+                        ? `bg-gradient-to-br ${c.color} text-white border-transparent shadow-lg scale-[1.03]`
+                        : `${c.bg} text-foreground/80`
+                    }`}
+                  >
+                    <span className="text-2xl md:text-3xl leading-none">{c.icon}</span>
+                    <span className={`text-[11px] md:text-xs font-semibold text-center leading-tight ${active ? "text-white" : ""}`}>
+                      {c.label}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
+
 
             {/* Scheme list */}
             {loading ? (
