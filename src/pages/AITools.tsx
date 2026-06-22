@@ -276,6 +276,7 @@ const AITools = () => {
             const href = landingSlug ? `/ai/${landingSlug}` : t.to;
             return (
             <Link key={i} to={href} className="group">
+              <div
                 className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${t.gradient} border ${t.border} p-4 md:p-5 transition-all duration-300 ${t.glow} h-full`}
               >
                 <div className="flex items-start gap-3">
@@ -305,7 +306,8 @@ const AITools = () => {
                 </div>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
 
         {/* Footer note */}
