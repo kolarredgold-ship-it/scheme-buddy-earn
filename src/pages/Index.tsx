@@ -39,13 +39,14 @@ const INDIAN_STATES = [
 ];
 
 const CATEGORY_CHIPS = [
-  { key: "all", label: "All" },
-  { key: "scholarships", label: "Scholarships" },
-  { key: "women_empowerment", label: "Women" },
-  { key: "farmers", label: "Farmers" },
-  { key: "employment", label: "Employment" },
-  { key: "housing", label: "Housing" },
-  { key: "health", label: "Healthcare" },
+  { key: "all", label: "All", icon: "🌐", color: "from-slate-500 to-slate-600", bg: "bg-slate-50 border-slate-200 hover:border-slate-400" },
+  { key: "scholarships", label: "Scholarships", icon: "🎓", color: "from-blue-500 to-blue-600", bg: "bg-blue-50 border-blue-200 hover:border-blue-400" },
+  { key: "women_empowerment", label: "Women", icon: "👩", color: "from-pink-500 to-pink-600", bg: "bg-pink-50 border-pink-200 hover:border-pink-400" },
+  { key: "farmers", label: "Farmers", icon: "🌾", color: "from-amber-500 to-amber-600", bg: "bg-amber-50 border-amber-200 hover:border-amber-400" },
+  { key: "employment", label: "Employment", icon: "💼", color: "from-emerald-500 to-emerald-600", bg: "bg-emerald-50 border-emerald-200 hover:border-emerald-400" },
+  { key: "housing", label: "Housing", icon: "🏠", color: "from-orange-500 to-orange-600", bg: "bg-orange-50 border-orange-200 hover:border-orange-400" },
+  { key: "health", label: "Healthcare", icon: "🏥", color: "from-rose-500 to-rose-600", bg: "bg-rose-50 border-rose-200 hover:border-rose-400" },
+  { key: "business", label: "Entrepreneurs", icon: "🚀", color: "from-violet-500 to-violet-600", bg: "bg-violet-50 border-violet-200 hover:border-violet-400" },
 ];
 
 const TAG_COLORS: Record<string, string> = {
@@ -440,22 +441,29 @@ const Index = () => {
               </Select>
             </div>
 
-            {/* Category chips */}
-            <div className="flex flex-wrap gap-2 mb-5">
-              {CATEGORY_CHIPS.map((c) => (
-                <button
-                  key={c.key}
-                  onClick={() => setActiveCategory(c.key)}
-                  className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium border transition-all ${
-                    activeCategory === c.key
-                      ? "bg-emerald-600 text-white border-emerald-600"
-                      : "bg-background text-foreground/70 border-border hover:border-emerald-400"
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
+            {/* Category cards grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2.5 md:gap-3 mb-6">
+              {CATEGORY_CHIPS.map((c) => {
+                const active = activeCategory === c.key;
+                return (
+                  <button
+                    key={c.key}
+                    onClick={() => setActiveCategory(c.key)}
+                    className={`relative flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 rounded-2xl border-2 transition-all ${
+                      active
+                        ? `bg-gradient-to-br ${c.color} text-white border-transparent shadow-lg scale-[1.03]`
+                        : `${c.bg} text-foreground/80`
+                    }`}
+                  >
+                    <span className="text-2xl md:text-3xl leading-none">{c.icon}</span>
+                    <span className={`text-[11px] md:text-xs font-semibold text-center leading-tight ${active ? "text-white" : ""}`}>
+                      {c.label}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
+
 
             {/* Scheme list */}
             {loading ? (
