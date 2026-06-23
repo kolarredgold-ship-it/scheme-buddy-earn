@@ -5,13 +5,10 @@ import { useAuth } from "@/hooks/useAuth";
 /**
  * Unified AI tool credit logic for Techrola.
  *
- * - Free user: 1 generation per tool (one-time)
- * - Pro user: 3 generations per tool (one-time)
- * - Topup ₹499: adds +3 generations to a global pool (ai_credits)
- *   that can be used in any tool after free limits are exhausted.
- *
- * Per-tool usage is counted from public.report_generations
- * (existing table) using `report_type` as the tool key.
+ * - Free user: 1 generation per tool (one-time, counted from report_generations).
+ * - Pro subscriber: 3 generations TOTAL across all tools (shared pool via ai_credits;
+ *   seeded to 3 when subscription is verified by handle_payment_verified trigger).
+ * - Each ₹499 top-up adds +5 generations to the same shared ai_credits pool.
  */
 export function useToolCredits(toolKey: string) {
   const { user, profile, refreshProfile } = useAuth();
@@ -19,7 +16,7 @@ export function useToolCredits(toolKey: string) {
   const [loading, setLoading] = useState(true);
 
   const isPro = profile?.subscription_status === "active";
-  const freeLimit = isPro ? 3 : 1;
+  const freeLimit = isPro ? 0 : 1; // Pro users use ai_credits only
   const aiCredits = profile?.ai_credits ?? 0;
   const remainingFree = Math.max(0, freeLimit - used);
   const canGenerate = remainingFree > 0 || aiCredits > 0;
@@ -40,25 +37,16 @@ export function useToolCredits(toolKey: string) {
     refresh();
   }, [refresh, profile?.subscription_status, profile?.ai_credits]);
 
-  /**
-   * Returns true if the generation should proceed.
-   * Records the usage and decrements ai_credits if free was exhausted.
-   * The DB trigger blocks ai_credits writes by non-admins for free users,
-   * so we call an edge function for the decrement.
-   */
   const consume = async (meta: Record<string, any> = {}): Promise<boolean> => {
     if (!user) return false;
     if (!canGenerate) return false;
 
-    // Record the generation (free OR paid).
     await supabase.from("report_generations").insert({
       user_id: user.id,
       report_type: toolKey,
       form_data: meta as any,
     });
 
-    // If the user was beyond free limit, debit one ai_credit via edge function
-    // (DB trigger forbids client-side writes to ai_credits).
     if (remainingFree === 0 && aiCredits > 0) {
       await supabase.functions.invoke("consume-ai-credit", {
         body: { user_id: user.id, tool_key: toolKey },
@@ -70,11 +58,14 @@ export function useToolCredits(toolKey: string) {
     return true;
   };
 
+  const remainingTotal = remainingFree + aiCredits;
+
   return {
     used,
     freeLimit,
     remainingFree,
     aiCredits,
+    remainingTotal,
     canGenerate,
     isPro,
     loading,
