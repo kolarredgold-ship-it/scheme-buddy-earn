@@ -40,9 +40,12 @@ const AIReportGenerator = () => {
   const [showTopup, setShowTopup] = useState(false);
 
   const isPro = profile?.subscription_status === 'active';
-  const FREE_LIMIT = isPro ? 3 : 1;
+  // New rule: Pro subscribers get 3 generations TOTAL via ai_credits (shared pool),
+  // free users get 1 per tool. Top-up adds +5 to shared ai_credits.
+  const FREE_LIMIT = isPro ? 0 : 1;
   const aiCredits = (profile as any)?.ai_credits ?? 0;
   const remainingFree = Math.max(0, FREE_LIMIT - generationsUsed);
+  const remainingTotal = remainingFree + aiCredits;
   const canGenerate = remainingFree > 0 || aiCredits > 0;
 
   useEffect(() => {
@@ -103,7 +106,10 @@ const AIReportGenerator = () => {
       }
     } catch (error: any) {
       console.error('Generation error:', error);
-      toast.error('Failed to generate content');
+      const msg = error?.message?.includes('Failed to fetch')
+        ? "Couldn't reach the AI service. Please check your internet and try again."
+        : error?.message || 'Failed to generate content. Please try again in a moment.';
+      toast.error(msg);
     } finally {
       setGenerating(false);
       checkLimit();
@@ -141,7 +147,18 @@ const AIReportGenerator = () => {
 
   const hasContent = Object.keys(generatedContent).length > 0;
 
-  if (authLoading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
+  if (authLoading) return (
+    <Layout>
+      <div className="container mx-auto px-4 py-6 max-w-5xl space-y-6">
+        <div className="h-10 w-64 rounded-lg bg-muted animate-pulse" />
+        <div className="h-16 rounded-xl bg-muted animate-pulse" />
+        <div className="grid lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-2 h-80 rounded-xl bg-muted animate-pulse" />
+          <div className="lg:col-span-3 h-80 rounded-xl bg-muted animate-pulse" />
+        </div>
+      </div>
+    </Layout>
+  );
 
   return (
     <Layout>
@@ -158,14 +175,15 @@ const AIReportGenerator = () => {
 
         <Card className={canGenerate ? "border-primary/20 bg-primary/5" : "border-destructive/20 bg-destructive/5"}>
           <CardContent className="p-4 flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm flex-wrap">
               <CreditCard className="h-4 w-4 text-primary" />
               <span>
-                {remainingFree > 0 && <strong>{remainingFree} free</strong>}
-                {remainingFree > 0 && aiCredits > 0 && <span> + </span>}
-                {aiCredits > 0 && <strong>{aiCredits} top-up</strong>}
-                {!canGenerate && <span className="text-destructive font-semibold">No credits left</span>}
-                <span className="text-muted-foreground"> · {isPro ? 'Pro: 3 free' : 'Free: 1 + '}<Link to="/subscription" className="underline">Pro ₹999</Link></span>
+                <strong className="text-primary">{remainingTotal} generation{remainingTotal === 1 ? '' : 's'} left</strong>
+                {remainingFree > 0 && <span className="text-muted-foreground"> ({remainingFree} free{aiCredits > 0 ? ` + ${aiCredits} top-up` : ''})</span>}
+                {remainingFree === 0 && aiCredits > 0 && <span className="text-muted-foreground"> (top-up pool)</span>}
+                {!canGenerate && <span className="text-destructive font-semibold ml-1">No credits left</span>}
+                <span className="text-muted-foreground"> · {isPro ? 'Pro: 3 shared' : 'Free: 1 per tool'} · </span>
+                <Link to="/subscription" className="underline">Pro ₹999</Link>
               </span>
             </div>
             <Button size="sm" variant="outline" className="gap-1" onClick={() => setShowTopup(true)}>
