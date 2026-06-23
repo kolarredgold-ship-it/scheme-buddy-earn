@@ -5,7 +5,17 @@ import { createHmac } from 'node:crypto';
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
+  const admin = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+  );
+
+  const log = async (row: Record<string, unknown>) => {
+    try { await admin.from('payment_logs').insert(row); } catch (_) { /* swallow */ }
+  };
+
   try {
+    const body = await req.json();
     const {
       razorpay_order_id,
       razorpay_payment_id,
@@ -16,10 +26,15 @@ Deno.serve(async (req) => {
       payer_name,
       payer_email,
       payer_mobile,
-    } = await req.json();
+    } = body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      return new Response(JSON.stringify({ error: 'Missing fields' }), {
+      await log({
+        event: 'verify.missing_fields', status: 'failed',
+        razorpay_order_id, razorpay_payment_id, user_id, amount, payment_type,
+        error_message: 'Missing fields', raw_payload: body,
+      });
+      return new Response(JSON.stringify({ success: false, error: 'Missing fields' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -30,19 +45,18 @@ Deno.serve(async (req) => {
       .digest('hex');
 
     if (expected !== razorpay_signature) {
+      await log({
+        event: 'verify.invalid_signature', status: 'failed',
+        razorpay_order_id, razorpay_payment_id, razorpay_signature,
+        user_id, amount, payment_type,
+        error_message: 'Signature mismatch', raw_payload: body,
+      });
       return new Response(JSON.stringify({ success: false, error: 'Invalid signature' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Signature valid — record verified payment so DB trigger activates subscription.
     if (user_id) {
-      const admin = createClient(
-        Deno.env.get('SUPABASE_URL')!,
-        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-      );
-
-      // Insert as pending, then update to verified so trg_payments_verified fires.
       const { data: inserted, error: insErr } = await admin
         .from('payments')
         .insert({
@@ -61,12 +75,14 @@ Deno.serve(async (req) => {
         .single();
 
       if (insErr) {
-        return new Response(JSON.stringify({
-          success: false,
-          error: `Payment record failed: ${insErr.message}`,
-        }), {
-          status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        await log({
+          event: 'verify.insert_failed', status: 'failed',
+          razorpay_order_id, razorpay_payment_id, user_id, amount, payment_type,
+          error_message: insErr.message, raw_payload: body,
         });
+        return new Response(JSON.stringify({
+          success: false, error: `Payment record failed: ${insErr.message}`,
+        }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
 
       const { error: updErr } = await admin
@@ -75,20 +91,29 @@ Deno.serve(async (req) => {
         .eq('id', inserted.id);
 
       if (updErr) {
-        return new Response(JSON.stringify({
-          success: false,
-          error: `Activation failed: ${updErr.message}`,
-        }), {
-          status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        await log({
+          event: 'verify.activation_failed', status: 'failed',
+          razorpay_order_id, razorpay_payment_id, user_id, amount, payment_type,
+          error_message: updErr.message, raw_payload: body,
         });
+        return new Response(JSON.stringify({
+          success: false, error: `Activation failed: ${updErr.message}`,
+        }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
     }
+
+    await log({
+      event: 'verify.success', status: 'success',
+      razorpay_order_id, razorpay_payment_id, user_id, amount, payment_type,
+    });
 
     return new Response(JSON.stringify({
       success: true, razorpay_payment_id, razorpay_order_id,
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
-    return new Response(JSON.stringify({ error: (e as Error).message }), {
+    const msg = (e as Error).message;
+    await log({ event: 'verify.exception', status: 'failed', error_message: msg });
+    return new Response(JSON.stringify({ success: false, error: msg }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
