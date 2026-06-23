@@ -125,6 +125,51 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_logs: {
+        Row: {
+          amount: number | null
+          created_at: string
+          error_message: string | null
+          event: string
+          id: string
+          payment_type: string | null
+          raw_payload: Json | null
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
+          razorpay_signature: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          error_message?: string | null
+          event: string
+          id?: string
+          payment_type?: string | null
+          raw_payload?: Json | null
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          status: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          error_message?: string | null
+          event?: string
+          id?: string
+          payment_type?: string | null
+          raw_payload?: Json | null
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           admin_note: string | null
@@ -436,6 +481,36 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      tool_clicks: {
+        Row: {
+          created_at: string
+          id: string
+          path: string | null
+          source: string | null
+          tool_key: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          path?: string | null
+          source?: string | null
+          tool_key: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          path?: string | null
+          source?: string | null
+          tool_key?: string
+          user_agent?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
