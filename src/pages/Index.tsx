@@ -9,6 +9,7 @@ import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronRight, MapPin, 
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
+import { trackToolClick } from "@/lib/analytics";
 
 const INDIAN_STATES = [
   { value: "all", label: "All states & central" },
@@ -305,9 +306,13 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Featured hero tool */}
+          {/* Featured hero tool — Internship Report Generator */}
           {aiStudentTools[0] && (
-            <Link to={aiStudentTools[0].to} className="block group mb-8">
+            <Link
+              to={aiStudentTools[0].to}
+              onClick={() => trackToolClick("internship-report-generator", "home-hero")}
+              className="block group mb-8 active:scale-[0.99] transition-transform"
+            >
               <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
                 <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
                 <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
@@ -342,24 +347,33 @@ const Index = () => {
             </Link>
           )}
 
-          {/* Tool icons grid */}
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 md:gap-5">
+          {/* Tool cards grid — improved spacing, hover/press states, descriptions */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
             {aiStudentTools.slice(1).map((t, i) => (
-              <Link key={t.to} to={t.to} className="group flex flex-col items-center text-center">
-                <div
-                  className={`h-16 w-16 md:h-20 md:w-20 rounded-full border ${TOOL_TINTS[i % TOOL_TINTS.length]} flex items-center justify-center mb-2 transition-all group-hover:scale-105 group-hover:shadow-md`}
-                >
-                  <span className="text-2xl md:text-3xl">{t.icon}</span>
+              <Link
+                key={t.to}
+                to={t.to}
+                onClick={() => trackToolClick(t.to, "home-grid")}
+                className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+              >
+                <div className="h-11 w-11 md:h-12 md:w-12 rounded-xl bg-white/70 dark:bg-white/10 border border-white/50 flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 transition-transform">
+                  {t.icon}
                 </div>
-                <span className="text-[11px] md:text-xs font-semibold text-foreground/80 leading-tight line-clamp-2 px-1">
+                <h3 className="text-[13px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
                   {t.title.replace(/^AI\s+/, "")}
+                </h3>
+                <p className="text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
+                  {t.desc}
+                </p>
+                <span className="mt-auto inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  Open <ArrowRight className="h-3 w-3" />
                 </span>
               </Link>
             ))}
           </div>
 
           <div className="flex justify-center mt-8">
-            <Link to="/ai-tools">
+            <Link to="/ai-tools" onClick={() => trackToolClick("view-all", "home")}>
               <Button
                 variant="outline"
                 className="rounded-xl border-foreground/15 font-semibold gap-2 px-5"
@@ -369,6 +383,7 @@ const Index = () => {
             </Link>
           </div>
         </section>
+
 
         {/* SCHEMES */}
         <section id="schemes" className="bg-stone-50/70 border-y border-border/40">
@@ -614,7 +629,8 @@ const Index = () => {
                 {[
                   "Browse 2,500+ schemes",
                   "All 19+ AI tools",
-                  "3 generations per tool",
+                  "3 free AI generations (shared)",
+                  "+5 generations per ₹499 top-up",
                   "Download DOCX reports",
                   "Priority support",
                 ].map((f) => (
