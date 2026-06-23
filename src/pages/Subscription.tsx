@@ -18,12 +18,13 @@ const BENEFITS = [
   "Direct apply links for all schemes",
   "Eligibility criteria & required documents",
   "Priority notifications for new schemes",
+  "3 free AI generations (shared across all tools)",
+  "Top-up ₹499 to add +5 more generations anytime",
   "Refer & earn up to ₹400 per referral",
   "3-level referral earning system",
-  "Get AI Internship Report Generator",
-  "Get AI Interview Training App Access",
-  "Get AI HR Mock Interview Training Access",
-  "Get AI Based Interview Q&A - Flash Cards",
+  "AI Internship Report Generator (DOCX)",
+  "AI Mock Interview & Live HR Interview",
+  "All 19+ AI career tools",
 ];
 
 const Subscription = () => {
