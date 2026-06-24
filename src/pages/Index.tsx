@@ -290,6 +290,29 @@ const Index = () => {
               ))}
             </div>
           </div>
+
+          {/* Sliding tools strip — auto-marquee banner */}
+          <div className="relative mt-4 overflow-hidden border-y border-emerald-100/80 bg-white/60 backdrop-blur-sm">
+            <div
+              className="flex gap-3 py-3 w-max"
+              style={{ animation: "ticker 40s linear infinite" }}
+            >
+              {[...aiStudentTools, ...aiStudentTools].map((t, i) => (
+                <Link
+                  key={`${t.to}-${i}`}
+                  to={t.to}
+                  className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-emerald-200/70 px-3.5 py-1.5 hover:border-emerald-400 hover:shadow-sm transition-all"
+                >
+                  <span className="text-base leading-none">{t.icon}</span>
+                  <span className="text-xs font-semibold text-foreground whitespace-nowrap">
+                    {t.title.replace(/^AI\s+/, "")}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-emerald-50 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
+          </div>
         </section>
 
         {/* AI TOOLS */}
