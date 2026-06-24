@@ -230,54 +230,26 @@ const Index = () => {
   return (
     <Layout>
       <div className="pb-24 md:pb-12 bg-background">
-        {/* GOV PORTAL TOP UTILITY STRIP */}
-        <div className="bg-[#1a1a4e] text-white text-[11px] md:text-xs">
-          <div className="container mx-auto px-4 h-8 flex items-center justify-between">
-            <span className="opacity-90 truncate">भारत सरकार | Government of India initiatives aggregator</span>
-            <div className="hidden md:flex items-center gap-3 opacity-90">
-              <a href="#schemes" className="hover:underline">Skip to main</a>
-              <span className="opacity-60">|</span>
-              <span>A- A A+</span>
-              <span className="opacity-60">|</span>
-              <span>EN</span>
-            </div>
-          </div>
-        </div>
-
-        {/* GOV PORTAL HEADER BAND */}
-        <div className="bg-white border-b-4 border-[#FF9933]">
-          <div className="container mx-auto px-4 py-3 flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#FF9933] via-white to-[#138808] border border-[#1a1a4e]/20 shadow-sm flex items-center justify-center">
-              <span className="text-[#1a1a4e] font-extrabold text-lg" style={{ fontFamily: "Plus Jakarta Sans" }}>T</span>
-            </div>
-            <div className="min-w-0">
-              <div className="text-[10px] uppercase tracking-wider text-[#1a1a4e]/70 font-semibold">Techrola — Career & Schemes Portal</div>
-              <div className="text-sm md:text-base font-extrabold text-[#1a1a4e] leading-tight truncate" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                AI tools • Govt schemes • Internships • Interviews
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* HERO — govt portal style */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#eef1fb] via-[#f5f7fc] to-background">
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#FF9933] via-white to-[#138808]" />
-          <div className="container mx-auto px-4 py-10 md:py-16 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#1a1a4e]/15 px-3.5 py-1.5 text-[11px] md:text-xs font-semibold text-[#1a1a4e] mb-5 shadow-sm">
-              <Sparkles className="h-3.5 w-3.5 text-[#FF9933]" />
+        {/* HERO */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50 via-teal-50/60 to-background">
+          <div className="container mx-auto px-4 py-12 md:py-20 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100/80 border border-emerald-200 px-4 py-1.5 text-xs md:text-sm font-semibold text-emerald-800 mb-6">
+              <Sparkles className="h-3.5 w-3.5" />
               AI powered career platform for India
             </div>
 
             <h1
-              className="text-3xl md:text-6xl font-extrabold tracking-tight text-[#0f1b4d] leading-[1.1] max-w-4xl mx-auto"
+              className="text-3xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1] max-w-4xl mx-auto"
               style={{ fontFamily: "Plus Jakarta Sans" }}
             >
               Your AI co-pilot for{" "}
-              <span className="text-[#FF9933]">college, career</span>{" "}
+              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                college, career
+              </span>{" "}
               <br className="hidden md:block" />& beyond.
             </h1>
 
-            <p className="mt-5 text-sm md:text-lg text-[#1a1a4e]/70 max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-5 text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
               Techrola brings together AI tools, college discovery, internships, interview prep,
               and jobs — so every student can build a future they're proud of.
             </p>
@@ -285,17 +257,18 @@ const Index = () => {
             <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/ai-tools">
                 <Button
+                  variant="outline"
                   size="lg"
-                  className="rounded-md bg-[#1a1a4e] hover:bg-[#0f1b4d] text-white font-semibold gap-2 px-6"
+                  className="rounded-xl border-foreground/15 bg-background hover:bg-muted font-semibold gap-2 px-6"
                 >
                   <Sparkles className="h-4 w-4" /> Try AI tools free
                 </Button>
               </Link>
               <a href="#schemes">
                 <Button
-                  size="lg"
                   variant="outline"
-                  className="rounded-md border-[#1a1a4e]/30 text-[#1a1a4e] hover:bg-[#1a1a4e]/5 font-semibold gap-2 px-6 w-full sm:w-auto"
+                  size="lg"
+                  className="rounded-xl border-foreground/15 bg-background hover:bg-muted font-semibold gap-2 px-6 w-full sm:w-auto"
                 >
                   <Search className="h-4 w-4" /> Browse schemes
                 </Button>
@@ -303,82 +276,42 @@ const Index = () => {
             </div>
 
             {/* Stats */}
-            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
               {[
                 { v: "2,500+", l: "Government schemes" },
                 { v: "19+", l: "AI career tools" },
                 { v: "₹999", l: "Annual Pro plan" },
                 { v: "28", l: "States covered" },
               ].map((s) => (
-                <div key={s.l} className="rounded-lg bg-white border border-[#1a1a4e]/10 py-3 px-2 shadow-sm">
-                  <div className="text-lg md:text-2xl font-extrabold text-[#1a1a4e]">{s.v}</div>
-                  <div className="text-[10px] md:text-xs text-[#1a1a4e]/60 mt-0.5">{s.l}</div>
+                <div key={s.l}>
+                  <div className="text-xl md:text-3xl font-extrabold text-emerald-700">{s.v}</div>
+                  <div className="text-[11px] md:text-xs text-muted-foreground mt-0.5">{s.l}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Sliding tools strip — auto-marquee banner */}
-          <div className="relative overflow-hidden border-y border-[#1a1a4e]/15 bg-white">
-            <div className="container mx-auto px-4 flex items-center">
-              <span className="hidden md:inline-flex shrink-0 mr-3 text-[10px] font-bold uppercase tracking-wider text-white bg-[#1a1a4e] px-2.5 py-1 rounded">
-                AI Tools
-              </span>
-              <div className="flex-1 overflow-hidden relative">
-                <div
-                  className="flex gap-3 py-3 w-max"
-                  style={{ animation: "ticker 40s linear infinite" }}
+          <div className="relative mt-4 overflow-hidden border-y border-emerald-100/80 bg-white/60 backdrop-blur-sm">
+            <div
+              className="flex gap-3 py-3 w-max"
+              style={{ animation: "ticker 40s linear infinite" }}
+            >
+              {[...aiStudentTools, ...aiStudentTools].map((t, i) => (
+                <Link
+                  key={`${t.to}-${i}`}
+                  to={t.to}
+                  className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-emerald-200/70 px-3.5 py-1.5 hover:border-emerald-400 hover:shadow-sm transition-all"
                 >
-                  {[...aiStudentTools, ...aiStudentTools].map((t, i) => (
-                    <Link
-                      key={`${t.to}-${i}`}
-                      to={t.to}
-                      className="flex items-center gap-2 shrink-0 rounded-md bg-[#f5f7fc] border border-[#1a1a4e]/15 px-3.5 py-1.5 hover:border-[#FF9933] hover:bg-white hover:shadow-sm transition-all"
-                    >
-                      <span className="text-base leading-none">{t.icon}</span>
-                      <span className="text-xs font-semibold text-[#1a1a4e] whitespace-nowrap">
-                        {t.title.replace(/^AI\s+/, "")}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent" />
-              </div>
+                  <span className="text-base leading-none">{t.icon}</span>
+                  <span className="text-xs font-semibold text-foreground whitespace-nowrap">
+                    {t.title.replace(/^AI\s+/, "")}
+                  </span>
+                </Link>
+              ))}
             </div>
-          </div>
-
-          {/* Notice / announcements scrolling ticker */}
-          <div className="bg-[#fff8e8] border-b border-[#FF9933]/30 overflow-hidden">
-            <div className="container mx-auto px-4 flex items-center gap-3">
-              <span className="shrink-0 inline-flex items-center gap-1 text-[10px] md:text-xs font-extrabold uppercase tracking-wider text-white bg-[#FF9933] px-2.5 py-1 my-2 rounded">
-                <Sparkles className="h-3 w-3" /> Notice
-              </span>
-              <div className="flex-1 overflow-hidden">
-                <div
-                  className="flex gap-10 py-2 w-max text-[12px] md:text-sm font-medium text-[#1a1a4e] whitespace-nowrap"
-                  style={{ animation: "ticker 50s linear infinite" }}
-                >
-                  {[
-                    "New: AI Internship Report Generator now supports 50+ company templates.",
-                    "PM Vishwakarma Yojana applications open — check eligibility in Schemes.",
-                    "Pro plan ₹999/year — unlock all 19+ AI tools and DOCX downloads.",
-                    "Earn up to ₹400 per referral through the Techrola wallet.",
-                    "Daily scheme updates from Central & State government portals.",
-                  ].concat([
-                    "New: AI Internship Report Generator now supports 50+ company templates.",
-                    "PM Vishwakarma Yojana applications open — check eligibility in Schemes.",
-                    "Pro plan ₹999/year — unlock all 19+ AI tools and DOCX downloads.",
-                    "Earn up to ₹400 per referral through the Techrola wallet.",
-                    "Daily scheme updates from Central & State government portals.",
-                  ]).map((n, i) => (
-                    <span key={i} className="inline-flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#138808]" /> {n}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-emerald-50 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
           </div>
         </section>
 
