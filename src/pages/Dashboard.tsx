@@ -59,7 +59,7 @@ const Dashboard = () => {
     <Layout>
       <div className="container mx-auto px-4 py-6 pb-20 md:pb-8 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">Hey, {profile?.name || "there"}! 👋</h1>
+          <h1 className="text-2xl font-bold">Hey, {profile?.name || (user?.user_metadata as any)?.name || user?.email?.split("@")[0] || "there"}! 👋</h1>
           <p className="text-muted-foreground">Here's your account overview</p>
         </div>
 

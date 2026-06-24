@@ -290,6 +290,29 @@ const Index = () => {
               ))}
             </div>
           </div>
+
+          {/* Sliding tools strip — auto-marquee banner */}
+          <div className="relative mt-4 overflow-hidden border-y border-emerald-100/80 bg-white/60 backdrop-blur-sm">
+            <div
+              className="flex gap-3 py-3 w-max"
+              style={{ animation: "ticker 40s linear infinite" }}
+            >
+              {[...aiStudentTools, ...aiStudentTools].map((t, i) => (
+                <Link
+                  key={`${t.to}-${i}`}
+                  to={t.to}
+                  className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-emerald-200/70 px-3.5 py-1.5 hover:border-emerald-400 hover:shadow-sm transition-all"
+                >
+                  <span className="text-base leading-none">{t.icon}</span>
+                  <span className="text-xs font-semibold text-foreground whitespace-nowrap">
+                    {t.title.replace(/^AI\s+/, "")}
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-emerald-50 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
+          </div>
         </section>
 
         {/* AI TOOLS */}
@@ -399,6 +422,41 @@ const Index = () => {
                 2,500+ free to browse — no sign-up needed
               </p>
             </div>
+
+            {/* Featured schemes sliding strip */}
+            {schemes.length > 0 && (
+              <div className="relative -mx-4 mb-6 overflow-hidden group">
+                <div
+                  className="flex gap-3 py-2 px-4 w-max group-hover:[animation-play-state:paused]"
+                  style={{ animation: "ticker 60s linear infinite" }}
+                >
+                  {[...schemes.slice(0, 12), ...schemes.slice(0, 12)].map((s, i) => (
+                    <Link
+                      key={`${s.id}-${i}`}
+                      to={`/scheme/${s.slug}`}
+                      className="shrink-0 w-[260px] rounded-2xl border border-emerald-200/70 bg-white p-4 hover:shadow-md hover:border-emerald-400 transition-all flex flex-col gap-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
+                          {prettyCategory(s.category)}
+                        </span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
+                          {prettyState(s.state) || "Central"}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-foreground line-clamp-2 leading-snug">
+                        {s.title}
+                      </h3>
+                      <span className="mt-auto text-[11px] font-semibold text-emerald-700 inline-flex items-center gap-1">
+                        View details <ChevronRight className="h-3 w-3" />
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-stone-50/90 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-stone-50/90 to-transparent" />
+              </div>
+            )}
 
             {/* Search */}
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
