@@ -275,6 +275,30 @@ const Index = () => {
               </a>
             </div>
 
+            {/* Quick feature pills */}
+            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 max-w-4xl mx-auto">
+              {[
+                { icon: "📝", title: "Student Registration", desc: "Create your free Techrola account", to: "/signup" },
+                { icon: "🏫", title: "Search Colleges", desc: "Find the right college from 10,000+", to: "#colleges" },
+                { icon: "💼", title: "Find Internships", desc: "Verified internships from top companies", to: "/ai-tools" },
+                { icon: "🤖", title: "AI Career Tools", desc: "20+ AI tools to boost your career", to: "/ai-tools" },
+              ].map((f) => (
+                <a
+                  key={f.title}
+                  href={f.to}
+                  className="flex items-center gap-2.5 rounded-xl bg-white border border-emerald-100 px-3 py-2.5 text-left hover:border-emerald-400 hover:shadow-md transition-all"
+                >
+                  <div className="h-9 w-9 shrink-0 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-200 flex items-center justify-center text-base">
+                    {f.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[11px] md:text-xs font-bold text-foreground leading-tight truncate">{f.title}</div>
+                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-1">{f.desc}</div>
+                  </div>
+                </a>
+              ))}
+            </div>
+
             {/* Stats */}
             <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
               {[
@@ -379,7 +403,7 @@ const Index = () => {
                 onClick={() => trackToolClick(t.to, "home-grid")}
                 className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
               >
-                <div className="h-11 w-11 md:h-12 md:w-12 rounded-xl bg-white/70 dark:bg-white/10 border border-white/50 flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 transition-transform">
+                <div className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-white dark:bg-white/10 border-2 border-white/80 flex items-center justify-center text-2xl shadow-md ring-1 ring-foreground/5 group-hover:scale-110 group-hover:ring-emerald-300 transition-all">
                   {t.icon}
                 </div>
                 <h3 className="text-[13px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
