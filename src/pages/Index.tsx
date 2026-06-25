@@ -10,6 +10,8 @@ import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
+import heroStudents from "@/assets/hero-students.png";
+import { Landmark, IdCard, BookOpen, Briefcase, GraduationCap as GradCapIcon } from "lucide-react";
 
 const INDIAN_STATES = [
   { value: "all", label: "All states & central" },
