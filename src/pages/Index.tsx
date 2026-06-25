@@ -275,6 +275,30 @@ const Index = () => {
               </a>
             </div>
 
+            {/* Quick feature pills */}
+            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 max-w-4xl mx-auto">
+              {[
+                { icon: "📝", title: "Student Registration", desc: "Create your free Techrola account", to: "/signup" },
+                { icon: "🏫", title: "Search Colleges", desc: "Find the right college from 10,000+", to: "#colleges" },
+                { icon: "💼", title: "Find Internships", desc: "Verified internships from top companies", to: "/ai-tools" },
+                { icon: "🤖", title: "AI Career Tools", desc: "20+ AI tools to boost your career", to: "/ai-tools" },
+              ].map((f) => (
+                <a
+                  key={f.title}
+                  href={f.to}
+                  className="flex items-center gap-2.5 rounded-xl bg-white border border-emerald-100 px-3 py-2.5 text-left hover:border-emerald-400 hover:shadow-md transition-all"
+                >
+                  <div className="h-9 w-9 shrink-0 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-200 flex items-center justify-center text-base">
+                    {f.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[11px] md:text-xs font-bold text-foreground leading-tight truncate">{f.title}</div>
+                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-1">{f.desc}</div>
+                  </div>
+                </a>
+              ))}
+            </div>
+
             {/* Stats */}
             <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
               {[
