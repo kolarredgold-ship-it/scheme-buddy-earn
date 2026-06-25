@@ -10,6 +10,8 @@ import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
+import heroStudents from "@/assets/hero-students.png";
+import { Landmark, IdCard, BookOpen, Briefcase } from "lucide-react";
 
 const INDIAN_STATES = [
   { value: "all", label: "All states & central" },
@@ -230,114 +232,150 @@ const Index = () => {
   return (
     <Layout>
       <div className="pb-24 md:pb-12 bg-background">
-        {/* HERO */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50 via-teal-50/60 to-background">
-          <div className="container mx-auto px-4 py-12 md:py-20 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100/80 border border-emerald-200 px-4 py-1.5 text-xs md:text-sm font-semibold text-emerald-800 mb-6">
-              <Sparkles className="h-3.5 w-3.5" />
-              AI powered career platform for India
-            </div>
+        {/* HERO — ABC.gov.in inspired */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#1a1450] via-[#3b1d8a] to-[#6b2fb3]">
+          {/* Orange top accent */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
 
-            <h1
-              className="text-3xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1] max-w-4xl mx-auto"
-              style={{ fontFamily: "Plus Jakarta Sans" }}
-            >
-              Your AI co-pilot for{" "}
-              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                college, career
-              </span>{" "}
-              <br className="hidden md:block" />& beyond.
-            </h1>
-
-            <p className="mt-5 text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Techrola brings together AI tools, college discovery, internships, interview prep,
-              and jobs — so every student can build a future they're proud of.
-            </p>
-
-            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/ai-tools">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="rounded-xl border-foreground/15 bg-background hover:bg-muted font-semibold gap-2 px-6"
+          <div className="container mx-auto px-4 py-10 md:py-16 lg:py-20 relative">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-6 items-center">
+              {/* Left: copy */}
+              <div className="text-white relative z-10">
+                <h1
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
+                  style={{ fontFamily: "Plus Jakarta Sans" }}
                 >
-                  <Sparkles className="h-4 w-4" /> Try AI tools free
-                </Button>
-              </Link>
-              <a href="#schemes">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="rounded-xl border-foreground/15 bg-background hover:bg-muted font-semibold gap-2 px-6 w-full sm:w-auto"
-                >
-                  <Search className="h-4 w-4" /> Browse schemes
-                </Button>
-              </a>
-            </div>
+                  <span className="text-amber-400">Empowering</span>{" "}
+                  <span className="text-white">All Learners:</span>
+                  <br />
+                  <span className="text-white">Academic and Beyond</span>
+                </h1>
 
-            {/* Quick feature pills */}
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3 max-w-4xl mx-auto">
+                <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
+                  Techrola brings together AI tools, college discovery, internships, interview
+                  prep, and jobs — so every student can build a future they're proud of.
+                </p>
+
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <Link to={user ? "/dashboard" : "/signup"}>
+                    <Button
+                      size="lg"
+                      className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                  <a href="#tools">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="rounded-md bg-white/10 hover:bg-white/20 text-white border-white/30 font-semibold backdrop-blur-sm"
+                    >
+                      <Sparkles className="h-4 w-4 mr-1.5" /> Explore AI Tools
+                    </Button>
+                  </a>
+                </div>
+
+                {/* Prev/Next dots */}
+                <div className="mt-6 flex items-center gap-2 text-white/70 text-xs">
+                  <button className="h-7 w-7 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center" aria-label="Previous">
+                    <ChevronRight className="h-3.5 w-3.5 rotate-180" />
+                  </button>
+                  <span>Pre</span>
+                  <span className="mx-1">·</span>
+                  <span>Next</span>
+                  <button className="h-7 w-7 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center" aria-label="Next">
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Right: students with orbiting icons */}
+              <div className="relative h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px]">
+                {/* Dashed orbit circles */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="h-[280px] w-[280px] sm:h-[360px] sm:w-[360px] md:h-[440px] md:w-[440px] lg:h-[500px] lg:w-[500px] rounded-full border border-dashed border-white/25" />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="h-[220px] w-[220px] sm:h-[290px] sm:w-[290px] md:h-[360px] md:w-[360px] lg:h-[420px] lg:w-[420px] rounded-full border border-dashed border-white/15" />
+                </div>
+
+                {/* Students image */}
+                <img
+                  src={heroStudents}
+                  alt="Indian students with laptop using Techrola AI career platform"
+                  width={1024}
+                  height={1024}
+                  className="absolute inset-0 m-auto h-full w-auto object-contain drop-shadow-2xl"
+                />
+
+                {/* Floating orbit badges */}
+                <div className="absolute top-2 right-6 md:top-4 md:right-10 h-12 w-12 md:h-16 md:w-16 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <Landmark className="h-5 w-5 md:h-7 md:w-7 text-violet-700" />
+                </div>
+                <div className="absolute top-1/3 left-2 md:left-0 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <IdCard className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+                </div>
+                <div className="absolute bottom-1/3 right-0 md:right-2 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <BookOpen className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+                </div>
+                <div className="absolute bottom-6 left-8 md:bottom-10 md:left-16 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <Briefcase className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating 4 feature pills bar at bottom of hero */}
+          <div className="relative container mx-auto px-4 pb-8 md:pb-0 md:-mb-10 md:translate-y-1/2 z-20">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-4 bg-white rounded-2xl shadow-2xl border border-white/60 p-3 md:p-5">
               {[
-                { icon: "📝", title: "Student Registration", desc: "Create your free Techrola account", to: "/signup" },
-                { icon: "🏫", title: "Search Colleges", desc: "Find the right college from 10,000+", to: "#colleges" },
-                { icon: "💼", title: "Find Internships", desc: "Verified internships from top companies", to: "/ai-tools" },
-                { icon: "🤖", title: "AI Career Tools", desc: "20+ AI tools to boost your career", to: "/ai-tools" },
+                { icon: "📝", title: "Student Registration", desc: "Create your free Techrola account", to: "/signup", color: "bg-orange-100 text-orange-700" },
+                { icon: "🏫", title: "Search Colleges", desc: "Find the right college from 10,000+", to: "#colleges", color: "bg-blue-100 text-blue-700" },
+                { icon: "💼", title: "Find Internships", desc: "Verified internships from top companies", to: "/ai-tools", color: "bg-emerald-100 text-emerald-700" },
+                { icon: "🤖", title: "AI Career Tools", desc: "20+ AI tools to boost your career", to: "/ai-tools", color: "bg-violet-100 text-violet-700" },
               ].map((f) => (
                 <a
                   key={f.title}
                   href={f.to}
-                  className="flex items-center gap-2.5 rounded-xl bg-white border border-emerald-100 px-3 py-2.5 text-left hover:border-emerald-400 hover:shadow-md transition-all"
+                  className="flex items-center gap-3 rounded-xl px-2.5 py-2 hover:bg-muted/60 transition-colors"
                 >
-                  <div className="h-9 w-9 shrink-0 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-200 flex items-center justify-center text-base">
+                  <div className={`h-10 w-10 md:h-11 md:w-11 shrink-0 rounded-full ${f.color} flex items-center justify-center text-lg`}>
                     {f.icon}
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[11px] md:text-xs font-bold text-foreground leading-tight truncate">{f.title}</div>
-                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-1">{f.desc}</div>
+                    <div className="text-[12px] md:text-[13px] font-bold text-foreground leading-tight">{f.title}</div>
+                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-2">{f.desc}</div>
                   </div>
                 </a>
               ))}
             </div>
-
-            {/* Stats */}
-            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-              {[
-                { v: "2,500+", l: "Government schemes" },
-                { v: "19+", l: "AI career tools" },
-                { v: "₹999", l: "Annual Pro plan" },
-                { v: "28", l: "States covered" },
-              ].map((s) => (
-                <div key={s.l}>
-                  <div className="text-xl md:text-3xl font-extrabold text-emerald-700">{s.v}</div>
-                  <div className="text-[11px] md:text-xs text-muted-foreground mt-0.5">{s.l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Sliding tools strip — auto-marquee banner */}
-          <div className="relative mt-4 overflow-hidden border-y border-emerald-100/80 bg-white/60 backdrop-blur-sm">
-            <div
-              className="flex gap-3 py-3 w-max"
-              style={{ animation: "ticker 40s linear infinite" }}
-            >
-              {[...aiStudentTools, ...aiStudentTools].map((t, i) => (
-                <Link
-                  key={`${t.to}-${i}`}
-                  to={t.to}
-                  className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-emerald-200/70 px-3.5 py-1.5 hover:border-emerald-400 hover:shadow-sm transition-all"
-                >
-                  <span className="text-base leading-none">{t.icon}</span>
-                  <span className="text-xs font-semibold text-foreground whitespace-nowrap">
-                    {t.title.replace(/^AI\s+/, "")}
-                  </span>
-                </Link>
-              ))}
-            </div>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-emerald-50 to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
           </div>
         </section>
+
+        {/* Sliding tools strip — auto-marquee banner */}
+        <div className="relative mt-16 md:mt-20 overflow-hidden border-y border-emerald-100/80 bg-emerald-50/50 backdrop-blur-sm">
+          <div
+            className="flex gap-3 py-3 w-max"
+            style={{ animation: "ticker 40s linear infinite" }}
+          >
+            {[...aiStudentTools, ...aiStudentTools].map((t, i) => (
+              <Link
+                key={`${t.to}-${i}`}
+                to={t.to}
+                className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-emerald-200/70 px-3.5 py-1.5 hover:border-emerald-400 hover:shadow-sm transition-all"
+              >
+                <span className="text-base leading-none">{t.icon}</span>
+                <span className="text-xs font-semibold text-foreground whitespace-nowrap">
+                  {t.title.replace(/^AI\s+/, "")}
+                </span>
+              </Link>
+            ))}
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-emerald-50 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
+        </div>
+
 
         {/* AI TOOLS */}
         <section className="container mx-auto px-4 py-10 md:py-14">
