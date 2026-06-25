@@ -688,8 +688,214 @@ const Index = () => {
           </div>
         </section>
 
+        {/* STATS BAR — dark blue band */}
+        <section className="bg-gradient-to-r from-[#0c1a4d] via-[#142166] to-[#1a2a7a] text-white">
+          <div className="container mx-auto px-4 py-10 md:py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+              {[
+                { v: "50,000+", l: "STUDENTS REGISTERED" },
+                { v: "10,000+", l: "COLLEGES LISTED" },
+                { v: "1,200+", l: "HIRING PARTNERS" },
+                { v: "20+", l: "AI TOOLS AVAILABLE" },
+              ].map((s) => (
+                <div key={s.l}>
+                  <div className="text-2xl md:text-4xl font-extrabold text-amber-400" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                    {s.v}
+                  </div>
+                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/80 mt-1">
+                    {s.l}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* INTRODUCING TECHROLA — One Nation, One APP */}
+        <section className="bg-gradient-to-br from-amber-50 via-orange-50/40 to-background">
+          <div className="container mx-auto px-4 py-12 md:py-16">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2
+                  className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
+                  style={{ fontFamily: "Plus Jakarta Sans" }}
+                >
+                  Introducing <span className="text-violet-700">TECHROLA</span> —<br />
+                  One Nation, One APP
+                </h2>
+                <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
+                  The TECHROLA app is a one-of-a-kind identifier that simplifies the way you
+                  track and manage your academic and skill-based achievements. It consolidates
+                  all your educational records in one place, making it easy to accumulate,
+                  transfer, and access your job profile across different learning pathways.
+                </p>
+                <Link to="/about-us" className="inline-block mt-6">
+                  <Button className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-6 border border-amber-400 shadow-md">
+                    Know More
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="relative">
+                <div className="rounded-3xl bg-gradient-to-br from-violet-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
+                  <div className="flex items-center gap-4">
+                    <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl">
+                      👩‍🎓
+                    </div>
+                    <div>
+                      <div className="text-base md:text-lg font-extrabold text-foreground">
+                        Tanvi Sharma
+                      </div>
+                      <div className="text-xs md:text-sm text-muted-foreground">
+                        I am a registered TECHROLA ID holder.
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+                    {["📚", "🏆", "💼"].map((e, i) => (
+                      <div key={i} className="rounded-xl bg-white/70 py-3 text-2xl">
+                        {e}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 md:mt-16 text-center">
+              <h3
+                className="text-xl md:text-3xl font-extrabold text-foreground"
+                style={{ fontFamily: "Plus Jakarta Sans" }}
+              >
+                Get Started with <span className="text-violet-700">TECHROLA</span> — Create Yours Today!
+              </h3>
+              <div className="mt-5 inline-flex flex-wrap justify-center gap-2 p-1.5 rounded-full bg-white border border-border shadow-sm">
+                {[
+                  { l: "Job Seekers", active: true },
+                  { l: "Higher / Skill Education Learners", active: false },
+                  { l: "Other Learners", active: false },
+                ].map((t) => (
+                  <button
+                    key={t.l}
+                    className={`px-4 py-2 rounded-full text-xs md:text-sm font-semibold transition-all ${
+                      t.active
+                        ? "bg-amber-500 text-amber-950 shadow"
+                        : "text-muted-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {t.l}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 6 EASY STEPS TO A BETTER CAREER */}
+        <section className="bg-gradient-to-b from-violet-50 to-background">
+          <div className="container mx-auto px-4 py-12 md:py-16">
+            <h2
+              className="text-center text-xl md:text-3xl font-extrabold text-violet-900 tracking-wide"
+              style={{ fontFamily: "Plus Jakarta Sans" }}
+            >
+              6 EASY STEPS TO A BETTER CAREER
+            </h2>
+
+            <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-4">
+              {[
+                { n: 1, t: "REGISTER", d: "Create your account in just a few seconds", icon: "👤" },
+                { n: 2, t: "SUBSCRIBE", d: "Activate your subscription and unlock premium features", icon: "👑" },
+                { n: 3, t: "GET EMP CODE", d: "Receive your unique EMP Code", icon: "⭐" },
+                { n: 4, t: "PROMOTE", d: "Share Techrola with your friends and network", icon: "📣" },
+                { n: 5, t: "BUILD STREAK", d: "Stay active, complete tasks and build your activity streak", icon: "🔥" },
+                { n: 6, t: "GET HIRED", d: "Unlock internship & job opportunities and build your career", icon: "💼" },
+              ].map((s) => (
+                <div key={s.n} className="flex flex-col items-center text-center">
+                  <div className="relative">
+                    <div className="absolute -top-2 -left-2 h-7 w-7 rounded-full bg-amber-500 text-amber-950 text-xs font-extrabold flex items-center justify-center shadow-md z-10 border-2 border-white">
+                      {s.n}
+                    </div>
+                    <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center text-3xl md:text-4xl shadow-lg ring-4 ring-violet-100">
+                      {s.icon}
+                    </div>
+                  </div>
+                  <div className="mt-3 text-sm md:text-base font-extrabold text-violet-900">
+                    {s.t}
+                  </div>
+                  <div className="mt-1 text-[11px] md:text-xs text-muted-foreground leading-snug max-w-[160px]">
+                    {s.d}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ABOUT TECHROLA */}
+        <section className="bg-background">
+          <div className="container mx-auto px-4 py-12 md:py-16">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+              <div>
+                <div className="text-xs md:text-sm font-bold text-violet-700 tracking-widest uppercase mb-3">
+                  About Techrola
+                </div>
+                <h2
+                  className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
+                  style={{ fontFamily: "Plus Jakarta Sans" }}
+                >
+                  A trusted career companion for every student
+                </h2>
+                <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
+                  Techrola AI is a student-first platform that brings opportunities, guidance and
+                  AI-powered tools under one trusted portal — helping learners across India go
+                  from classroom to career with confidence.
+                </p>
+                <ul className="mt-5 space-y-2.5">
+                  {[
+                    "Verified colleges, internships and jobs",
+                    "AI tools trained for Indian education context",
+                    "Free for every registered student",
+                    "Trusted by 50,000+ students nationwide",
+                    "Government Schemes direct apply link",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm md:text-base text-foreground">
+                      <Check className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                {[
+                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-emerald-50 to-emerald-100 border-emerald-200" },
+                  { icon: "🏆", k: "RECOGNITION", v: "Top Ed-Tech 2025", color: "from-amber-50 to-amber-100 border-amber-200" },
+                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-violet-50 to-violet-100 border-violet-200" },
+                  { icon: "🎓", k: "COLLEGES LISTED", v: "10,000+ institutes", color: "from-sky-50 to-sky-100 border-sky-200" },
+                ].map((c) => (
+                  <div
+                    key={c.k}
+                    className={`rounded-2xl border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
+                  >
+                    <div className="h-10 w-10 rounded-full bg-white shadow flex items-center justify-center text-xl mb-3">
+                      {c.icon}
+                    </div>
+                    <div className="text-[10px] md:text-xs font-bold tracking-wider text-muted-foreground">
+                      {c.k}
+                    </div>
+                    <div className="text-sm md:text-base font-extrabold text-foreground mt-0.5">
+                      {c.v}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* PRICING */}
         <section className="container mx-auto px-4 py-10 md:py-14">
+
           <div className="mb-6">
             <h2
               className="text-xl md:text-3xl font-extrabold text-foreground"
