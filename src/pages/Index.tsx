@@ -297,20 +297,21 @@ const Index = () => {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-6 items-center">
               {/* Left: copy */}
               <div className="text-white relative z-10">
-                <h1
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
-                  style={{ fontFamily: "Plus Jakarta Sans" }}
-                >
-                  <span className="text-amber-400">Empowering</span>{" "}
-                  <span className="text-white">All Learners:</span>
-                  <br />
-                  <span className="text-white">Academic and Beyond</span>
-                </h1>
+                <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <h1
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
+                    style={{ fontFamily: "Plus Jakarta Sans" }}
+                  >
+                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].accent}</span>{" "}
+                    <span className="text-white">{HERO_SLIDES[heroSlide].title}</span>
+                    <br />
+                    <span className="text-white">{HERO_SLIDES[heroSlide].line2}</span>
+                  </h1>
 
-                <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
-                  Techrola brings together AI tools, college discovery, internships, interview
-                  prep, and jobs — so every student can build a future they're proud of.
-                </p>
+                  <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
+                    {HERO_SLIDES[heroSlide].desc}
+                  </p>
+                </div>
 
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link to={user ? "/dashboard" : "/signup"}>
@@ -332,19 +333,27 @@ const Index = () => {
                   </a>
                 </div>
 
-                {/* Prev/Next dots */}
-                <div className="mt-6 flex items-center gap-2 text-white/70 text-xs">
-                  <button className="h-7 w-7 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center" aria-label="Previous">
-                    <ChevronRight className="h-3.5 w-3.5 rotate-180" />
+                {/* Prev/Next + dots */}
+                <div className="mt-6 flex items-center gap-3 text-white/80 text-xs">
+                  <button onClick={prevSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Previous">
+                    <ChevronRight className="h-4 w-4 rotate-180" />
                   </button>
-                  <span>Pre</span>
-                  <span className="mx-1">·</span>
-                  <span>Next</span>
-                  <button className="h-7 w-7 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center" aria-label="Next">
-                    <ChevronRight className="h-3.5 w-3.5" />
+                  <div className="flex items-center gap-1.5">
+                    {HERO_SLIDES.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setHeroSlide(i)}
+                        aria-label={`Slide ${i + 1}`}
+                        className={`h-1.5 rounded-full transition-all ${i === heroSlide ? "w-6 bg-amber-400" : "w-1.5 bg-white/40 hover:bg-white/60"}`}
+                      />
+                    ))}
+                  </div>
+                  <button onClick={nextSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Next">
+                    <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
+
 
               {/* Right: students with orbiting icons */}
               <div className="relative h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px]">
