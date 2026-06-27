@@ -122,6 +122,51 @@ const TOOL_TINTS = [
   "bg-indigo-50 border-indigo-200",
 ];
 
+const HERO_SLIDES = [
+  {
+    accent: "Empowering",
+    title: "All Learners:",
+    line2: "Academic and Beyond",
+    desc: "Techrola brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
+  },
+  {
+    accent: "Discover",
+    title: "2,500+ Schemes",
+    line2: "Built for Bharat",
+    desc: "Find central & state government scholarships, jobs and welfare programs — with direct apply links and AI-powered search.",
+  },
+  {
+    accent: "Get Hired",
+    title: "with AI Mock",
+    line2: "Interviews & Reports",
+    desc: "Practice with live HR mock interviews, generate professional internship reports in minutes and stand out to recruiters.",
+  },
+];
+
+const TECHROLA_TABS = [
+  {
+    key: "job",
+    label: "Job Seekers",
+    title: "Land your first job, faster",
+    desc: "AI resume builder, mock HR interviews, verified internships and direct apply links to top employers.",
+    bullets: ["AI Resume & Cover Letter", "Live HR Mock Interviews", "Verified internship board"],
+  },
+  {
+    key: "higher",
+    label: "Higher / Skill Education Learners",
+    title: "Plan your higher education",
+    desc: "Compare 10,000+ colleges, discover scholarships and build a skill roadmap that fits your goal.",
+    bullets: ["College & course finder", "Scholarship matcher", "AI study planner"],
+  },
+  {
+    key: "other",
+    label: "Other Learners",
+    title: "Learn at your own pace",
+    desc: "Free government scheme discovery, career guidance and AI tools open to every learner across India.",
+    bullets: ["2,500+ govt schemes", "AI career counsellor", "Skill-based content library"],
+  },
+];
+
 const Index = () => {
   const { user } = useAuth();
   const [schemes, setSchemes] = useState<Scheme[]>([]);
@@ -133,6 +178,17 @@ const Index = () => {
   const [aiSummary, setAiSummary] = useState("");
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [heroSlide, setHeroSlide] = useState(0);
+  const [techTab, setTechTab] = useState(0);
+
+  // Auto-advance hero slider
+  useEffect(() => {
+    const id = setInterval(() => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  const prevSlide = () => setHeroSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  const nextSlide = () => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length);
 
   // College finder
   const [cfLocation, setCfLocation] = useState("");
