@@ -81,12 +81,21 @@ const CareerProgram = () => {
     }
   }, [profile]);
 
-  const currentStep = !user ? 1 : !progress?.registered ? 1 : 
-    profile?.subscription_status !== "active" ? 2 :
-    !profile?.referral_code?.startsWith("EMP") ? 3 :
-    progress.current_step;
+  const isSubscribed = profile?.subscription_status === "active";
+  // Hide step 1 once signed in; hide step 2 once subscribed
+  const visibleSteps = STEPS.filter(s => {
+    if (s.num === 1 && user) return false;
+    if (s.num === 2 && isSubscribed) return false;
+    return true;
+  });
 
-  const progressPercent = Math.round(((Math.min(currentStep, 6)) / 6) * 100);
+  const currentStep = !user ? 1 :
+    !isSubscribed ? 2 :
+    !profile?.referral_code?.startsWith("EMP") ? 3 :
+    (progress?.current_step ?? 3);
+
+  const completedCount = visibleSteps.filter(s => s.num < currentStep).length;
+  const progressPercent = Math.round((completedCount / visibleSteps.length) * 100);
 
   // Check if today's promotions need reset
   const todayStr = new Date().toISOString().split("T")[0];
