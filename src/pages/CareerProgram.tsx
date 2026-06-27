@@ -518,7 +518,7 @@ const CareerProgram = () => {
 
         {/* Steps */}
         <div className="space-y-4">
-          {STEPS.map((step) => {
+          {visibleSteps.map((step) => {
             const isActive = step.num === currentStep;
             const isCompleted = step.num < currentStep;
             const isLocked = step.num > currentStep;
