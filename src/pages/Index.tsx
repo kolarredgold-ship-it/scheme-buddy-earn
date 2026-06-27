@@ -834,25 +834,44 @@ const Index = () => {
               >
                 Get Started with <span className="text-violet-700">TECHROLA</span> — Create Yours Today!
               </h3>
-              <div className="mt-5 inline-flex flex-wrap justify-center gap-2 p-1.5 rounded-full bg-white border border-border shadow-sm">
-                {[
-                  { l: "Job Seekers", active: true },
-                  { l: "Higher / Skill Education Learners", active: false },
-                  { l: "Other Learners", active: false },
-                ].map((t) => (
+              <div className="mt-5 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white border border-border shadow-sm max-w-full overflow-x-auto">
+                {TECHROLA_TABS.map((t, i) => (
                   <button
-                    key={t.l}
-                    className={`px-4 py-2 rounded-full text-xs md:text-sm font-semibold transition-all ${
-                      t.active
+                    key={t.key}
+                    onClick={() => setTechTab(i)}
+                    className={`px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-300 ${
+                      techTab === i
                         ? "bg-amber-500 text-amber-950 shadow"
                         : "text-muted-foreground hover:bg-muted"
                     }`}
                   >
-                    {t.l}
+                    {t.label}
                   </button>
                 ))}
               </div>
+
+              <div className="mt-6 max-w-2xl mx-auto">
+                <div
+                  key={techTab}
+                  className="rounded-2xl border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
+                >
+                  <h4 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                    {TECHROLA_TABS[techTab].title}
+                  </h4>
+                  <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                    {TECHROLA_TABS[techTab].desc}
+                  </p>
+                  <ul className="mt-4 grid sm:grid-cols-3 gap-2">
+                    {TECHROLA_TABS[techTab].bullets.map((b) => (
+                      <li key={b} className="flex items-center gap-2 text-xs md:text-sm font-medium text-foreground/80 bg-violet-50 border border-violet-100 rounded-lg px-3 py-2">
+                        <Check className="h-4 w-4 text-violet-600 shrink-0" /> {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
+
           </div>
         </section>
 
