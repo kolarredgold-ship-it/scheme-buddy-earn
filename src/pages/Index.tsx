@@ -122,6 +122,51 @@ const TOOL_TINTS = [
   "bg-indigo-50 border-indigo-200",
 ];
 
+const HERO_SLIDES = [
+  {
+    accent: "Empowering",
+    title: "All Learners:",
+    line2: "Academic and Beyond",
+    desc: "Techrola brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
+  },
+  {
+    accent: "Discover",
+    title: "2,500+ Schemes",
+    line2: "Built for Bharat",
+    desc: "Find central & state government scholarships, jobs and welfare programs — with direct apply links and AI-powered search.",
+  },
+  {
+    accent: "Get Hired",
+    title: "with AI Mock",
+    line2: "Interviews & Reports",
+    desc: "Practice with live HR mock interviews, generate professional internship reports in minutes and stand out to recruiters.",
+  },
+];
+
+const TECHROLA_TABS = [
+  {
+    key: "job",
+    label: "Job Seekers",
+    title: "Land your first job, faster",
+    desc: "AI resume builder, mock HR interviews, verified internships and direct apply links to top employers.",
+    bullets: ["AI Resume & Cover Letter", "Live HR Mock Interviews", "Verified internship board"],
+  },
+  {
+    key: "higher",
+    label: "Higher / Skill Education Learners",
+    title: "Plan your higher education",
+    desc: "Compare 10,000+ colleges, discover scholarships and build a skill roadmap that fits your goal.",
+    bullets: ["College & course finder", "Scholarship matcher", "AI study planner"],
+  },
+  {
+    key: "other",
+    label: "Other Learners",
+    title: "Learn at your own pace",
+    desc: "Free government scheme discovery, career guidance and AI tools open to every learner across India.",
+    bullets: ["2,500+ govt schemes", "AI career counsellor", "Skill-based content library"],
+  },
+];
+
 const Index = () => {
   const { user } = useAuth();
   const [schemes, setSchemes] = useState<Scheme[]>([]);
@@ -133,6 +178,17 @@ const Index = () => {
   const [aiSummary, setAiSummary] = useState("");
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
+  const [heroSlide, setHeroSlide] = useState(0);
+  const [techTab, setTechTab] = useState(0);
+
+  // Auto-advance hero slider
+  useEffect(() => {
+    const id = setInterval(() => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  const prevSlide = () => setHeroSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  const nextSlide = () => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length);
 
   // College finder
   const [cfLocation, setCfLocation] = useState("");
@@ -241,20 +297,21 @@ const Index = () => {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-6 items-center">
               {/* Left: copy */}
               <div className="text-white relative z-10">
-                <h1
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
-                  style={{ fontFamily: "Plus Jakarta Sans" }}
-                >
-                  <span className="text-amber-400">Empowering</span>{" "}
-                  <span className="text-white">All Learners:</span>
-                  <br />
-                  <span className="text-white">Academic and Beyond</span>
-                </h1>
+                <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <h1
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
+                    style={{ fontFamily: "Plus Jakarta Sans" }}
+                  >
+                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].accent}</span>{" "}
+                    <span className="text-white">{HERO_SLIDES[heroSlide].title}</span>
+                    <br />
+                    <span className="text-white">{HERO_SLIDES[heroSlide].line2}</span>
+                  </h1>
 
-                <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
-                  Techrola brings together AI tools, college discovery, internships, interview
-                  prep, and jobs — so every student can build a future they're proud of.
-                </p>
+                  <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
+                    {HERO_SLIDES[heroSlide].desc}
+                  </p>
+                </div>
 
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link to={user ? "/dashboard" : "/signup"}>
@@ -276,19 +333,27 @@ const Index = () => {
                   </a>
                 </div>
 
-                {/* Prev/Next dots */}
-                <div className="mt-6 flex items-center gap-2 text-white/70 text-xs">
-                  <button className="h-7 w-7 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center" aria-label="Previous">
-                    <ChevronRight className="h-3.5 w-3.5 rotate-180" />
+                {/* Prev/Next + dots */}
+                <div className="mt-6 flex items-center gap-3 text-white/80 text-xs">
+                  <button onClick={prevSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Previous">
+                    <ChevronRight className="h-4 w-4 rotate-180" />
                   </button>
-                  <span>Pre</span>
-                  <span className="mx-1">·</span>
-                  <span>Next</span>
-                  <button className="h-7 w-7 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center" aria-label="Next">
-                    <ChevronRight className="h-3.5 w-3.5" />
+                  <div className="flex items-center gap-1.5">
+                    {HERO_SLIDES.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setHeroSlide(i)}
+                        aria-label={`Slide ${i + 1}`}
+                        className={`h-1.5 rounded-full transition-all ${i === heroSlide ? "w-6 bg-amber-400" : "w-1.5 bg-white/40 hover:bg-white/60"}`}
+                      />
+                    ))}
+                  </div>
+                  <button onClick={nextSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Next">
+                    <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>
+
 
               {/* Right: students with orbiting icons */}
               <div className="relative h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px]">
@@ -769,25 +834,44 @@ const Index = () => {
               >
                 Get Started with <span className="text-violet-700">TECHROLA</span> — Create Yours Today!
               </h3>
-              <div className="mt-5 inline-flex flex-wrap justify-center gap-2 p-1.5 rounded-full bg-white border border-border shadow-sm">
-                {[
-                  { l: "Job Seekers", active: true },
-                  { l: "Higher / Skill Education Learners", active: false },
-                  { l: "Other Learners", active: false },
-                ].map((t) => (
+              <div className="mt-5 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white border border-border shadow-sm max-w-full overflow-x-auto">
+                {TECHROLA_TABS.map((t, i) => (
                   <button
-                    key={t.l}
-                    className={`px-4 py-2 rounded-full text-xs md:text-sm font-semibold transition-all ${
-                      t.active
+                    key={t.key}
+                    onClick={() => setTechTab(i)}
+                    className={`px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-300 ${
+                      techTab === i
                         ? "bg-amber-500 text-amber-950 shadow"
                         : "text-muted-foreground hover:bg-muted"
                     }`}
                   >
-                    {t.l}
+                    {t.label}
                   </button>
                 ))}
               </div>
+
+              <div className="mt-6 max-w-2xl mx-auto">
+                <div
+                  key={techTab}
+                  className="rounded-2xl border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
+                >
+                  <h4 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                    {TECHROLA_TABS[techTab].title}
+                  </h4>
+                  <p className="mt-2 text-sm md:text-base text-muted-foreground">
+                    {TECHROLA_TABS[techTab].desc}
+                  </p>
+                  <ul className="mt-4 grid sm:grid-cols-3 gap-2">
+                    {TECHROLA_TABS[techTab].bullets.map((b) => (
+                      <li key={b} className="flex items-center gap-2 text-xs md:text-sm font-medium text-foreground/80 bg-violet-50 border border-violet-100 rounded-lg px-3 py-2">
+                        <Check className="h-4 w-4 text-violet-600 shrink-0" /> {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
+
           </div>
         </section>
 
