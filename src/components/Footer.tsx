@@ -58,9 +58,10 @@ const Footer = () => (
             © {new Date().getFullYear()} Techrola. All rights reserved.
           </p>
           <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-            <span>Secured payments by</span>
-            <span className="font-semibold text-foreground">Airpay</span>
+            <span>🔒 Secured payments by</span>
+            <span className="font-bold text-[#072654] bg-white border border-border/60 px-2 py-0.5 rounded">Razorpay</span>
           </div>
+
         </div>
       </div>
     </div>
