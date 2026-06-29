@@ -122,26 +122,36 @@ const TOOL_TINTS = [
   "bg-indigo-50 border-indigo-200",
 ];
 
-const HERO_SLIDES = [
+const INTRO_SLIDES = [
   {
     accent: "Empowering",
     title: "All Learners:",
     line2: "Academic and Beyond",
     desc: "Techrola brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
+    icon: "🎓",
+    cta: "Get Started",
+    to: "/signup",
   },
   {
     accent: "Discover",
     title: "2,500+ Schemes",
     line2: "Built for Bharat",
     desc: "Find central & state government scholarships, jobs and welfare programs — with direct apply links and AI-powered search.",
+    icon: "🏛️",
+    cta: "Explore Schemes",
+    to: "#schemes",
   },
   {
     accent: "Get Hired",
     title: "with AI Mock",
     line2: "Interviews & Reports",
     desc: "Practice with live HR mock interviews, generate professional internship reports in minutes and stand out to recruiters.",
+    icon: "🤖",
+    cta: "Try AI Tools",
+    to: "/ai-tools",
   },
 ];
+
 
 const TECHROLA_TABS = [
   {
@@ -181,14 +191,29 @@ const Index = () => {
   const [heroSlide, setHeroSlide] = useState(0);
   const [techTab, setTechTab] = useState(0);
 
+  // Build hero slides: brand intros + one slide per AI tool
+  const HERO_SLIDES = [
+    ...INTRO_SLIDES,
+    ...aiStudentTools.map((t) => ({
+      accent: "AI Tool",
+      title: t.title.replace(/^AI\s+/, ""),
+      line2: t.badge,
+      desc: t.desc,
+      icon: t.icon,
+      cta: "Open Tool",
+      to: t.to,
+    })),
+  ];
+
   // Auto-advance hero slider
   useEffect(() => {
     const id = setInterval(() => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [HERO_SLIDES.length]);
 
   const prevSlide = () => setHeroSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
   const nextSlide = () => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length);
+
 
   // College finder
   const [cfLocation, setCfLocation] = useState("");
@@ -298,14 +323,21 @@ const Index = () => {
               {/* Left: copy */}
               <div className="text-white relative z-10">
                 <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
+                    <span className="h-7 w-7 rounded-full bg-white flex items-center justify-center text-base shadow">
+                      {HERO_SLIDES[heroSlide].icon || "✨"}
+                    </span>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
+                      {HERO_SLIDES[heroSlide].accent}
+                    </span>
+                  </div>
                   <h1
                     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
                     style={{ fontFamily: "Plus Jakarta Sans" }}
                   >
-                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].accent}</span>{" "}
                     <span className="text-white">{HERO_SLIDES[heroSlide].title}</span>
                     <br />
-                    <span className="text-white">{HERO_SLIDES[heroSlide].line2}</span>
+                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].line2}</span>
                   </h1>
 
                   <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
@@ -313,15 +345,27 @@ const Index = () => {
                   </p>
                 </div>
 
+
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <Link to={user ? "/dashboard" : "/signup"}>
-                    <Button
-                      size="lg"
-                      className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
-                    >
-                      Get Started
-                    </Button>
-                  </Link>
+                  {HERO_SLIDES[heroSlide].to?.startsWith("#") ? (
+                    <a href={HERO_SLIDES[heroSlide].to}>
+                      <Button
+                        size="lg"
+                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
+                      >
+                        {HERO_SLIDES[heroSlide].cta || "Get Started"}
+                      </Button>
+                    </a>
+                  ) : (
+                    <Link to={HERO_SLIDES[heroSlide].to || (user ? "/dashboard" : "/signup")}>
+                      <Button
+                        size="lg"
+                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
+                      >
+                        {HERO_SLIDES[heroSlide].cta || "Get Started"}
+                      </Button>
+                    </Link>
+                  )}
                   <a href="#tools">
                     <Button
                       size="lg"
@@ -333,13 +377,13 @@ const Index = () => {
                   </a>
                 </div>
 
-                {/* Prev/Next + dots */}
+                {/* Prev/Next + dots + counter */}
                 <div className="mt-6 flex items-center gap-3 text-white/80 text-xs">
                   <button onClick={prevSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Previous">
                     <ChevronRight className="h-4 w-4 rotate-180" />
                   </button>
-                  <div className="flex items-center gap-1.5">
-                    {HERO_SLIDES.map((_, i) => (
+                  <div className="flex items-center gap-1.5 flex-wrap max-w-[260px]">
+                    {HERO_SLIDES.slice(0, 12).map((_, i) => (
                       <button
                         key={i}
                         onClick={() => setHeroSlide(i)}
@@ -351,7 +395,11 @@ const Index = () => {
                   <button onClick={nextSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Next">
                     <ChevronRight className="h-4 w-4" />
                   </button>
+                  <span className="ml-auto font-mono text-white/70">
+                    {String(heroSlide + 1).padStart(2, "0")} / {String(HERO_SLIDES.length).padStart(2, "0")}
+                  </span>
                 </div>
+
               </div>
 
 
@@ -875,45 +923,78 @@ const Index = () => {
           </div>
         </section>
 
-        {/* 6 EASY STEPS TO A BETTER CAREER */}
-        <section className="bg-gradient-to-b from-violet-50 to-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
-            <h2
-              className="text-center text-xl md:text-3xl font-extrabold text-violet-900 tracking-wide"
-              style={{ fontFamily: "Plus Jakarta Sans" }}
-            >
-              6 EASY STEPS TO A BETTER CAREER
-            </h2>
+        {/* 6 EASY STEPS TO A BETTER CAREER — redesigned */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#0f0a3d] via-[#2a1670] to-[#5b21b6]">
+          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
 
-            <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-4">
-              {[
-                { n: 1, t: "REGISTER", d: "Create your account in just a few seconds", icon: "👤" },
-                { n: 2, t: "SUBSCRIBE", d: "Activate your subscription and unlock premium features", icon: "👑" },
-                { n: 3, t: "GET EMP CODE", d: "Receive your unique EMP Code", icon: "⭐" },
-                { n: 4, t: "PROMOTE", d: "Share Techrola with your friends and network", icon: "📣" },
-                { n: 5, t: "BUILD STREAK", d: "Stay active, complete tasks and build your activity streak", icon: "🔥" },
-                { n: 6, t: "GET HIRED", d: "Unlock internship & job opportunities and build your career", icon: "💼" },
-              ].map((s) => (
-                <div key={s.n} className="flex flex-col items-center text-center">
-                  <div className="relative">
-                    <div className="absolute -top-2 -left-2 h-7 w-7 rounded-full bg-amber-500 text-amber-950 text-xs font-extrabold flex items-center justify-center shadow-md z-10 border-2 border-white">
-                      {s.n}
+          <div className="container mx-auto px-4 py-14 md:py-20 relative">
+            <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
+              <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/40 text-amber-300 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Your Career Roadmap
+              </span>
+              <h2
+                className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight"
+                style={{ fontFamily: "Plus Jakarta Sans" }}
+              >
+                6 Easy Steps to a <span className="text-amber-400">Better Career</span>
+              </h2>
+              <p className="mt-3 text-sm md:text-base text-white/70">
+                A simple, proven path from signup to your first job offer.
+              </p>
+            </div>
+
+            {/* Desktop: horizontal timeline; Mobile: vertical timeline */}
+            <div className="relative">
+              {/* Desktop connecting line */}
+              <div className="hidden lg:block absolute top-12 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-3 relative">
+                {[
+                  { n: 1, t: "Register", d: "Create your free account in seconds", icon: "👤", color: "from-rose-400 to-pink-500" },
+                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", icon: "👑", color: "from-amber-400 to-orange-500" },
+                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", icon: "⭐", color: "from-yellow-400 to-amber-500" },
+                  { n: 4, t: "Promote", d: "Share Techrola with your network", icon: "📣", color: "from-emerald-400 to-teal-500" },
+                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", icon: "🔥", color: "from-sky-400 to-indigo-500" },
+                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", icon: "💼", color: "from-violet-400 to-purple-600" },
+                ].map((s) => (
+                  <div key={s.n} className="group relative">
+                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
+                      {/* Step number badge */}
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#1a1450]">
+                        STEP {s.n}
+                      </div>
+
+                      {/* Icon disc */}
+                      <div className={`mt-3 h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-3xl md:text-4xl shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                        {s.icon}
+                      </div>
+
+                      <h3 className="mt-4 text-sm md:text-base font-extrabold text-white tracking-tight">
+                        {s.t}
+                      </h3>
+                      <p className="mt-1.5 text-[11px] md:text-xs text-white/65 leading-snug">
+                        {s.d}
+                      </p>
                     </div>
-                    <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center text-3xl md:text-4xl shadow-lg ring-4 ring-violet-100">
-                      {s.icon}
-                    </div>
                   </div>
-                  <div className="mt-3 text-sm md:text-base font-extrabold text-violet-900">
-                    {s.t}
-                  </div>
-                  <div className="mt-1 text-[11px] md:text-xs text-muted-foreground leading-snug max-w-[160px]">
-                    {s.d}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-10 md:mt-12 flex justify-center">
+              <Link to={user ? "/career-program" : "/signup"}>
+                <Button
+                  size="lg"
+                  className="rounded-full bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-8 shadow-lg shadow-amber-900/40"
+                >
+                  Start your journey <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
+
+
 
         {/* ABOUT TECHROLA */}
         <section className="bg-background">
@@ -1054,9 +1135,14 @@ const Index = () => {
                   Get Pro — ₹999/year
                 </Button>
               </Link>
+              <p className="mt-3 text-[11px] text-muted-foreground text-center inline-flex items-center justify-center gap-1.5 w-full">
+                🔒 Secured payments by
+                <span className="font-bold text-[#072654] bg-white border border-border/60 px-1.5 py-0.5 rounded">Razorpay</span>
+              </p>
             </div>
           </div>
         </section>
+
 
         {/* COLLEGE & SCHOOL FINDER */}
         <section className="container mx-auto px-4 py-10 md:py-14">
