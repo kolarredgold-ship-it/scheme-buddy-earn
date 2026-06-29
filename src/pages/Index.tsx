@@ -339,14 +339,25 @@ const Index = () => {
                 </div>
 
                 <div className="mt-7 flex flex-wrap gap-3">
-                  <Link to={user ? "/dashboard" : "/signup"}>
-                    <Button
-                      size="lg"
-                      className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
-                    >
-                      Get Started
-                    </Button>
-                  </Link>
+                  {HERO_SLIDES[heroSlide].to?.startsWith("#") ? (
+                    <a href={HERO_SLIDES[heroSlide].to}>
+                      <Button
+                        size="lg"
+                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
+                      >
+                        {HERO_SLIDES[heroSlide].cta || "Get Started"}
+                      </Button>
+                    </a>
+                  ) : (
+                    <Link to={HERO_SLIDES[heroSlide].to || (user ? "/dashboard" : "/signup")}>
+                      <Button
+                        size="lg"
+                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
+                      >
+                        {HERO_SLIDES[heroSlide].cta || "Get Started"}
+                      </Button>
+                    </Link>
+                  )}
                   <a href="#tools">
                     <Button
                       size="lg"
@@ -358,13 +369,13 @@ const Index = () => {
                   </a>
                 </div>
 
-                {/* Prev/Next + dots */}
+                {/* Prev/Next + dots + counter */}
                 <div className="mt-6 flex items-center gap-3 text-white/80 text-xs">
                   <button onClick={prevSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Previous">
                     <ChevronRight className="h-4 w-4 rotate-180" />
                   </button>
-                  <div className="flex items-center gap-1.5">
-                    {HERO_SLIDES.map((_, i) => (
+                  <div className="flex items-center gap-1.5 flex-wrap max-w-[260px]">
+                    {HERO_SLIDES.slice(0, 12).map((_, i) => (
                       <button
                         key={i}
                         onClick={() => setHeroSlide(i)}
@@ -376,7 +387,11 @@ const Index = () => {
                   <button onClick={nextSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Next">
                     <ChevronRight className="h-4 w-4" />
                   </button>
+                  <span className="ml-auto font-mono text-white/70">
+                    {String(heroSlide + 1).padStart(2, "0")} / {String(HERO_SLIDES.length).padStart(2, "0")}
+                  </span>
                 </div>
+
               </div>
 
 
