@@ -122,26 +122,36 @@ const TOOL_TINTS = [
   "bg-indigo-50 border-indigo-200",
 ];
 
-const HERO_SLIDES = [
+const INTRO_SLIDES = [
   {
     accent: "Empowering",
     title: "All Learners:",
     line2: "Academic and Beyond",
     desc: "Techrola brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
+    icon: "🎓",
+    cta: "Get Started",
+    to: "/signup",
   },
   {
     accent: "Discover",
     title: "2,500+ Schemes",
     line2: "Built for Bharat",
     desc: "Find central & state government scholarships, jobs and welfare programs — with direct apply links and AI-powered search.",
+    icon: "🏛️",
+    cta: "Explore Schemes",
+    to: "#schemes",
   },
   {
     accent: "Get Hired",
     title: "with AI Mock",
     line2: "Interviews & Reports",
     desc: "Practice with live HR mock interviews, generate professional internship reports in minutes and stand out to recruiters.",
+    icon: "🤖",
+    cta: "Try AI Tools",
+    to: "/ai-tools",
   },
 ];
+
 
 const TECHROLA_TABS = [
   {
