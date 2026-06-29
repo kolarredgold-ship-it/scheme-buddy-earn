@@ -950,12 +950,12 @@ const Index = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-3 relative">
                 {[
-                  { n: 1, t: "Register", d: "Create your free account in seconds", icon: "👤", color: "from-rose-400 to-pink-500" },
-                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", icon: "👑", color: "from-amber-400 to-orange-500" },
-                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", icon: "⭐", color: "from-yellow-400 to-amber-500" },
-                  { n: 4, t: "Promote", d: "Share Techrola with your network", icon: "📣", color: "from-emerald-400 to-teal-500" },
-                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", icon: "🔥", color: "from-sky-400 to-indigo-500" },
-                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", icon: "💼", color: "from-violet-400 to-purple-600" },
+                  { n: 1, t: "Register", d: "Create your free account in seconds", color: "from-rose-400 to-pink-500" },
+                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", color: "from-amber-400 to-orange-500" },
+                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", color: "from-yellow-400 to-amber-500" },
+                  { n: 4, t: "Promote", d: "Share Techrola with your network", color: "from-emerald-400 to-teal-500" },
+                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", color: "from-sky-400 to-indigo-500" },
+                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-violet-400 to-purple-600" },
                 ].map((s) => (
                   <div key={s.n} className="group relative">
                     <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
@@ -964,12 +964,7 @@ const Index = () => {
                         STEP {s.n}
                       </div>
 
-                      {/* Icon disc */}
-                      <div className={`mt-3 h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-3xl md:text-4xl shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
-                        {s.icon}
-                      </div>
-
-                      <h3 className="mt-4 text-sm md:text-base font-extrabold text-white tracking-tight">
+                      <h3 className="mt-3 text-sm md:text-base font-extrabold text-white tracking-tight">
                         {s.t}
                       </h3>
                       <p className="mt-1.5 text-[11px] md:text-xs text-white/65 leading-snug">
