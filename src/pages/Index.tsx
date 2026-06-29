@@ -191,14 +191,29 @@ const Index = () => {
   const [heroSlide, setHeroSlide] = useState(0);
   const [techTab, setTechTab] = useState(0);
 
+  // Build hero slides: brand intros + one slide per AI tool
+  const HERO_SLIDES = [
+    ...INTRO_SLIDES,
+    ...aiStudentTools.map((t) => ({
+      accent: "AI Tool",
+      title: t.title.replace(/^AI\s+/, ""),
+      line2: t.badge,
+      desc: t.desc,
+      icon: t.icon,
+      cta: "Open Tool",
+      to: t.to,
+    })),
+  ];
+
   // Auto-advance hero slider
   useEffect(() => {
     const id = setInterval(() => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [HERO_SLIDES.length]);
 
   const prevSlide = () => setHeroSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
   const nextSlide = () => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length);
+
 
   // College finder
   const [cfLocation, setCfLocation] = useState("");
