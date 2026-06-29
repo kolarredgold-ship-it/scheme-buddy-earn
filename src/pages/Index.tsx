@@ -923,45 +923,78 @@ const Index = () => {
           </div>
         </section>
 
-        {/* 6 EASY STEPS TO A BETTER CAREER */}
-        <section className="bg-gradient-to-b from-violet-50 to-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
-            <h2
-              className="text-center text-xl md:text-3xl font-extrabold text-violet-900 tracking-wide"
-              style={{ fontFamily: "Plus Jakarta Sans" }}
-            >
-              6 EASY STEPS TO A BETTER CAREER
-            </h2>
+        {/* 6 EASY STEPS TO A BETTER CAREER — redesigned */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#0f0a3d] via-[#2a1670] to-[#5b21b6]">
+          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
 
-            <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-4">
-              {[
-                { n: 1, t: "REGISTER", d: "Create your account in just a few seconds", icon: "👤" },
-                { n: 2, t: "SUBSCRIBE", d: "Activate your subscription and unlock premium features", icon: "👑" },
-                { n: 3, t: "GET EMP CODE", d: "Receive your unique EMP Code", icon: "⭐" },
-                { n: 4, t: "PROMOTE", d: "Share Techrola with your friends and network", icon: "📣" },
-                { n: 5, t: "BUILD STREAK", d: "Stay active, complete tasks and build your activity streak", icon: "🔥" },
-                { n: 6, t: "GET HIRED", d: "Unlock internship & job opportunities and build your career", icon: "💼" },
-              ].map((s) => (
-                <div key={s.n} className="flex flex-col items-center text-center">
-                  <div className="relative">
-                    <div className="absolute -top-2 -left-2 h-7 w-7 rounded-full bg-amber-500 text-amber-950 text-xs font-extrabold flex items-center justify-center shadow-md z-10 border-2 border-white">
-                      {s.n}
+          <div className="container mx-auto px-4 py-14 md:py-20 relative">
+            <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
+              <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/40 text-amber-300 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Your Career Roadmap
+              </span>
+              <h2
+                className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight"
+                style={{ fontFamily: "Plus Jakarta Sans" }}
+              >
+                6 Easy Steps to a <span className="text-amber-400">Better Career</span>
+              </h2>
+              <p className="mt-3 text-sm md:text-base text-white/70">
+                A simple, proven path from signup to your first job offer.
+              </p>
+            </div>
+
+            {/* Desktop: horizontal timeline; Mobile: vertical timeline */}
+            <div className="relative">
+              {/* Desktop connecting line */}
+              <div className="hidden lg:block absolute top-12 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-3 relative">
+                {[
+                  { n: 1, t: "Register", d: "Create your free account in seconds", icon: "👤", color: "from-rose-400 to-pink-500" },
+                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", icon: "👑", color: "from-amber-400 to-orange-500" },
+                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", icon: "⭐", color: "from-yellow-400 to-amber-500" },
+                  { n: 4, t: "Promote", d: "Share Techrola with your network", icon: "📣", color: "from-emerald-400 to-teal-500" },
+                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", icon: "🔥", color: "from-sky-400 to-indigo-500" },
+                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", icon: "💼", color: "from-violet-400 to-purple-600" },
+                ].map((s) => (
+                  <div key={s.n} className="group relative">
+                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
+                      {/* Step number badge */}
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#1a1450]">
+                        STEP {s.n}
+                      </div>
+
+                      {/* Icon disc */}
+                      <div className={`mt-3 h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br ${s.color} flex items-center justify-center text-3xl md:text-4xl shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
+                        {s.icon}
+                      </div>
+
+                      <h3 className="mt-4 text-sm md:text-base font-extrabold text-white tracking-tight">
+                        {s.t}
+                      </h3>
+                      <p className="mt-1.5 text-[11px] md:text-xs text-white/65 leading-snug">
+                        {s.d}
+                      </p>
                     </div>
-                    <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center text-3xl md:text-4xl shadow-lg ring-4 ring-violet-100">
-                      {s.icon}
-                    </div>
                   </div>
-                  <div className="mt-3 text-sm md:text-base font-extrabold text-violet-900">
-                    {s.t}
-                  </div>
-                  <div className="mt-1 text-[11px] md:text-xs text-muted-foreground leading-snug max-w-[160px]">
-                    {s.d}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-10 md:mt-12 flex justify-center">
+              <Link to={user ? "/career-program" : "/signup"}>
+                <Button
+                  size="lg"
+                  className="rounded-full bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-8 shadow-lg shadow-amber-900/40"
+                >
+                  Start your journey <ArrowRight className="h-4 w-4 ml-1.5" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
+
+
 
         {/* ABOUT TECHROLA */}
         <section className="bg-background">
