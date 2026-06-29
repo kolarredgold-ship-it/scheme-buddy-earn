@@ -323,20 +323,28 @@ const Index = () => {
               {/* Left: copy */}
               <div className="text-white relative z-10">
                 <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
+                    <span className="h-7 w-7 rounded-full bg-white flex items-center justify-center text-base shadow">
+                      {HERO_SLIDES[heroSlide].icon || "✨"}
+                    </span>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
+                      {HERO_SLIDES[heroSlide].accent}
+                    </span>
+                  </div>
                   <h1
                     className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
                     style={{ fontFamily: "Plus Jakarta Sans" }}
                   >
-                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].accent}</span>{" "}
                     <span className="text-white">{HERO_SLIDES[heroSlide].title}</span>
                     <br />
-                    <span className="text-white">{HERO_SLIDES[heroSlide].line2}</span>
+                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].line2}</span>
                   </h1>
 
                   <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
                     {HERO_SLIDES[heroSlide].desc}
                   </p>
                 </div>
+
 
                 <div className="mt-7 flex flex-wrap gap-3">
                   {HERO_SLIDES[heroSlide].to?.startsWith("#") ? (
