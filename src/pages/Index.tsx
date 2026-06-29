@@ -1135,9 +1135,14 @@ const Index = () => {
                   Get Pro — ₹999/year
                 </Button>
               </Link>
+              <p className="mt-3 text-[11px] text-muted-foreground text-center inline-flex items-center justify-center gap-1.5 w-full">
+                🔒 Secured payments by
+                <span className="font-bold text-[#072654] bg-white border border-border/60 px-1.5 py-0.5 rounded">Razorpay</span>
+              </p>
             </div>
           </div>
         </section>
+
 
         {/* COLLEGE & SCHOOL FINDER */}
         <section className="container mx-auto px-4 py-10 md:py-14">
