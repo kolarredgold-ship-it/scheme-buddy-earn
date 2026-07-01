@@ -14,8 +14,12 @@ import { Link } from "react-router-dom";
 import {
   Lock, Check, Copy, Share2, Megaphone, TrendingUp, Award,
   UserPlus, CreditCard, Code2, BarChart3, Briefcase, ChevronRight,
-  Loader2, Trophy, Flame, Calendar, Users
+  Loader2, Trophy, Flame, Calendar, Users, Info
 } from "lucide-react";
+import {
+  getVisibleSteps, getSkippedSteps, getCurrentStep,
+  getProgressPercent, getSkipReason,
+} from "@/lib/careerSteps";
 
 interface CareerProgress {
   id: string;
