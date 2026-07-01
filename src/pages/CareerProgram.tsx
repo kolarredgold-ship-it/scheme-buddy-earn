@@ -512,6 +512,21 @@ const CareerProgram = () => {
           </p>
         </div>
 
+        {/* Skip reason banner */}
+        {skipReason && (
+          <div className="mb-4 flex items-start gap-2 rounded-xl border border-secondary/30 bg-secondary/10 p-3 text-sm">
+            <Info className="h-4 w-4 mt-0.5 text-secondary shrink-0" />
+            <div>
+              <p className="font-medium text-secondary-foreground">{skipReason}</p>
+              {skippedSteps.length > 0 && (
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Skipped: {skippedSteps.map(s => `Step ${s.num} — ${s.title}`).join(", ")}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Progress Bar */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
