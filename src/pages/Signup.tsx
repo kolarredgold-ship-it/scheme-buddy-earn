@@ -63,7 +63,10 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md relative">
+        <Link to="/" className="absolute left-4 top-4 p-2 rounded-full hover:bg-muted transition-colors">
+          <ArrowLeft className="h-5 w-5 text-muted-foreground" />
+        </Link>
         <CardHeader className="text-center">
           <div className="mx-auto h-12 w-12 rounded-xl bg-primary flex items-center justify-center mb-4">
             <span className="text-primary-foreground font-bold text-xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
