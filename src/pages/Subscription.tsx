@@ -263,9 +263,6 @@ const Subscription = () => {
             >
               Pay ₹{price.toLocaleString()} with Razorpay
             </RazorpayCheckoutButton>
-            <Button variant="outline" size="lg" className="w-full mt-2" onClick={handlePayNow}>
-              Pay via UPI / QR Screenshot
-            </Button>
             <Button
               variant="ghost"
               size="sm"
