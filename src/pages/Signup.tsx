@@ -187,8 +187,19 @@ const Signup = () => {
               <Input
                 placeholder="e.g. TRABC123"
                 value={referralCode}
-                onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                  setReferralCode(e.target.value.toUpperCase());
+                  setReferralError("");
+                  setRefValid(false);
+                }}
+                onBlur={() => referralCode.trim() && validateReferral(referralCode)}
+                className={referralError ? "border-red-500" : refValid ? "border-emerald-500" : ""}
               />
+              {validatingRef && <p className="text-xs text-muted-foreground">Checking code…</p>}
+              {referralError && <p className="text-xs text-red-500 font-medium">{referralError}</p>}
+              {refValid && !referralError && (
+                <p className="text-xs text-emerald-600 font-medium">✓ Valid code — you'll get ₹2,000 off</p>
+              )}
               <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹1000 instead of ₹2999!</p>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
