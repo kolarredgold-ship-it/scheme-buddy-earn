@@ -29,17 +29,61 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [referralCode, setReferralCode] = useState("");
+  const [referralError, setReferralError] = useState("");
+  const [validatingRef, setValidatingRef] = useState(false);
+  const [refValid, setRefValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const redirectTo = new URLSearchParams(window.location.search).get("redirect") || "/subscription";
 
   const strength = useMemo(() => getPasswordStrength(password), [password]);
 
+  const validateReferral = async (code: string): Promise<boolean> => {
+    const trimmed = code.trim().toUpperCase();
+    if (!trimmed) {
+      setReferralError("");
+      setRefValid(false);
+      return true;
+    }
+    if (trimmed === "WELCOME") {
+      setReferralError("");
+      setRefValid(true);
+      return true;
+    }
+    if (!/^TR[A-Z0-9]{4,10}$/.test(trimmed)) {
+      setReferralError("Invalid format. Codes start with TR (e.g. TRABC123)");
+      setRefValid(false);
+      return false;
+    }
+    setValidatingRef(true);
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("referral_code")
+      .eq("referral_code", trimmed)
+      .maybeSingle();
+    setValidatingRef(false);
+    if (error || !data) {
+      setReferralError("Referral code not found. Please check and try again.");
+      setRefValid(false);
+      return false;
+    }
+    setReferralError("");
+    setRefValid(true);
+    return true;
+  };
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password) {
       toast.error("Please enter a password");
       return;
+    }
+    if (referralCode.trim()) {
+      const ok = await validateReferral(referralCode);
+      if (!ok) {
+        toast.error("Please fix the referral code before continuing");
+        return;
+      }
     }
     setLoading(true);
     const { error } = await supabase.auth.signUp({
@@ -48,7 +92,7 @@ const Signup = () => {
       options: {
         data: {
           name,
-          referred_by: referralCode || undefined,
+          referred_by: referralCode.trim().toUpperCase() || undefined,
         },
       },
     });
@@ -143,8 +187,19 @@ const Signup = () => {
               <Input
                 placeholder="e.g. TRABC123"
                 value={referralCode}
-                onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                  setReferralCode(e.target.value.toUpperCase());
+                  setReferralError("");
+                  setRefValid(false);
+                }}
+                onBlur={() => referralCode.trim() && validateReferral(referralCode)}
+                className={referralError ? "border-red-500" : refValid ? "border-emerald-500" : ""}
               />
+              {validatingRef && <p className="text-xs text-muted-foreground">Checking code…</p>}
+              {referralError && <p className="text-xs text-red-500 font-medium">{referralError}</p>}
+              {refValid && !referralError && (
+                <p className="text-xs text-emerald-600 font-medium">✓ Valid code — you'll get ₹2,000 off</p>
+              )}
               <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹1000 instead of ₹2999!</p>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
