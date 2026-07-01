@@ -14,8 +14,12 @@ import { Link } from "react-router-dom";
 import {
   Lock, Check, Copy, Share2, Megaphone, TrendingUp, Award,
   UserPlus, CreditCard, Code2, BarChart3, Briefcase, ChevronRight,
-  Loader2, Trophy, Flame, Calendar, Users
+  Loader2, Trophy, Flame, Calendar, Users, Info
 } from "lucide-react";
+import {
+  getVisibleSteps, getSkippedSteps, getCurrentStep,
+  getProgressPercent, getSkipReason,
+} from "@/lib/careerSteps";
 
 interface CareerProgress {
   id: string;
@@ -82,20 +86,21 @@ const CareerProgram = () => {
   }, [profile]);
 
   const isSubscribed = profile?.subscription_status === "active";
-  // Hide step 1 once signed in; hide step 2 once subscribed
-  const visibleSteps = STEPS.filter(s => {
-    if (s.num === 1 && user) return false;
-    if (s.num === 2 && isSubscribed) return false;
-    return true;
+  const hasEmpCode = !!profile?.referral_code?.startsWith("EMP");
+  const stepCtx = {
+    isSignedIn: !!user,
+    isSubscribed,
+    hasEmpCode,
+    persistedStep: progress?.current_step ?? null,
+  };
+  const visibleSteps = getVisibleSteps(stepCtx).map(vs => {
+    // Re-hydrate icon/desc from original STEPS since helper strips them.
+    return STEPS.find(s => s.num === vs.num)!;
   });
-
-  const currentStep = !user ? 1 :
-    !isSubscribed ? 2 :
-    !profile?.referral_code?.startsWith("EMP") ? 3 :
-    (progress?.current_step ?? 3);
-
-  const completedCount = visibleSteps.filter(s => s.num < currentStep).length;
-  const progressPercent = Math.round((completedCount / visibleSteps.length) * 100);
+  const skippedSteps = getSkippedSteps(stepCtx);
+  const skipReason = getSkipReason(stepCtx);
+  const currentStep = getCurrentStep(stepCtx);
+  const progressPercent = getProgressPercent(stepCtx);
 
   // Check if today's promotions need reset
   const todayStr = new Date().toISOString().split("T")[0];
@@ -506,6 +511,21 @@ const CareerProgram = () => {
             Work, Learn, and Get Hired Based on Your Performance
           </p>
         </div>
+
+        {/* Skip reason banner */}
+        {skipReason && (
+          <div className="mb-4 flex items-start gap-2 rounded-xl border border-secondary/30 bg-secondary/10 p-3 text-sm">
+            <Info className="h-4 w-4 mt-0.5 text-secondary shrink-0" />
+            <div>
+              <p className="font-medium text-secondary-foreground">{skipReason}</p>
+              {skippedSteps.length > 0 && (
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Skipped: {skippedSteps.map(s => `Step ${s.num} — ${s.title}`).join(", ")}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Progress Bar */}
         <div className="mb-6">
