@@ -286,7 +286,7 @@ const Subscription = () => {
         )}
 
         <p className="text-center text-xs text-muted-foreground mt-3">
-          🔒 Scan our UPI QR, pay, and upload your screenshot. Pro access activates after admin verification (usually within 24 hours).
+          🔒 Secured payments by Razorpay. Pro access activates instantly after successful payment.
         </p>
 
         {user && profile && (
