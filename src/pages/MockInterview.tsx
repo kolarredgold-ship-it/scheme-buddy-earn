@@ -40,6 +40,7 @@ interface InterviewResult {
 
 import { useToolCredits } from '@/hooks/useToolCredits';
 import TopupDialog from '@/components/TopupDialog';
+import ToolGateDialog from '@/components/ToolGateDialog';
 import { CreditCard } from 'lucide-react';
 
 const MockInterview = () => {
@@ -202,12 +203,9 @@ const MockInterview = () => {
   };
 
   const startMockInterview = async () => {
-    if (!credits.canGenerate) {
-      setShowTopup(true);
-      return;
-    }
+    if (!credits.checkAccess()) return;
     const consumed = await credits.consume({ topic: selectedOption });
-    if (!consumed) { setShowTopup(true); return; }
+    if (!consumed) return;
     setView('mock-interview');
     setInterviewRound(0);
     setResult(null);
@@ -734,6 +732,11 @@ const MockInterview = () => {
         )}
       </div>
       <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
+      <ToolGateDialog
+        reason={credits.gateReason}
+        onOpenChange={(o) => !o && credits.dismissGate()}
+        onTopup={() => { credits.dismissGate(); setShowTopup(true); }}
+      />
     </Layout>
 
   );

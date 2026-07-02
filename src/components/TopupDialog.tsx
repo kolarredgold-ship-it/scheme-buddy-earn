@@ -26,13 +26,13 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
         <div className="space-y-4">
           <div className="bg-primary/10 rounded-xl p-4 text-center">
             <p className="text-3xl font-extrabold text-primary">₹499</p>
-            <p className="text-sm text-muted-foreground mt-1">+3 generations (any AI tool)</p>
+            <p className="text-sm text-muted-foreground mt-1">Premium AI Top-Up add-on</p>
           </div>
           <ul className="text-sm space-y-2">
-            <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Use across Report Generator, Mock Interview, Student Tool, HR Interview</li>
-            <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Credits added instantly after payment</li>
-            <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Credits never expire</li>
-            <li className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-amber-500" /> Or upgrade to Pro ₹999 for 3 free per tool</li>
+            <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Internship Report Generator: <b>+3 generations</b></li>
+            <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Every other AI tool: <b>+5 generations each</b></li>
+            <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Added instantly on top of your current balance</li>
+            <li className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-amber-500" /> Available only for Premium members</li>
           </ul>
           {user ? (
             <RazorpayCheckoutButton

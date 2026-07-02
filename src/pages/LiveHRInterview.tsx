@@ -35,6 +35,7 @@ const TOTAL_QUESTIONS = 25;
 
 import { useToolCredits } from "@/hooks/useToolCredits";
 import TopupDialog from "@/components/TopupDialog";
+import ToolGateDialog from "@/components/ToolGateDialog";
 import { CreditCard } from "lucide-react";
 
 const LiveHRInterview = () => {
@@ -195,14 +196,11 @@ const LiveHRInterview = () => {
       toast({ title: "Please select a role", variant: "destructive" });
       return;
     }
-    if (!credits.canGenerate) {
-      setShowTopup(true);
-      return;
-    }
+    if (!credits.checkAccess()) return;
     setLoading(true);
     try {
       const consumed = await credits.consume({ role });
-      if (!consumed) { setShowTopup(true); setLoading(false); return; }
+      if (!consumed) { setLoading(false); return; }
       const { data, error } = await supabase.functions.invoke("live-hr-interview", {
 
         body: { action: "generate_questions", role, questionCount: TOTAL_QUESTIONS },
@@ -586,6 +584,11 @@ const LiveHRInterview = () => {
         )}
       </div>
       <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
+      <ToolGateDialog
+        reason={credits.gateReason}
+        onOpenChange={(o) => !o && credits.dismissGate()}
+        onTopup={() => { credits.dismissGate(); setShowTopup(true); }}
+      />
     </Layout>
 
   );

@@ -514,6 +514,33 @@ export type Database = {
         }
         Relationships: []
       }
+      tool_credits: {
+        Row: {
+          created_at: string
+          credits: number
+          id: string
+          tool_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          id?: string
+          tool_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          id?: string
+          tool_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
@@ -689,6 +716,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      canonical_tool_keys: { Args: never; Returns: string[] }
+      consume_tool_credit: {
+        Args: { _meta?: Json; _tool_key: string }
+        Returns: Json
+      }
       generate_referral_code: { Args: never; Returns: string }
       get_cron_secret: { Args: never; Returns: string }
       get_user_referral_code: { Args: { _user_id: string }; Returns: string }
