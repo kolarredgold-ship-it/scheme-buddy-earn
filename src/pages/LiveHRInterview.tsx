@@ -584,6 +584,11 @@ const LiveHRInterview = () => {
         )}
       </div>
       <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
+      <ToolGateDialog
+        reason={credits.gateReason}
+        onOpenChange={(o) => !o && credits.dismissGate()}
+        onTopup={() => { credits.dismissGate(); setShowTopup(true); }}
+      />
     </Layout>
 
   );
