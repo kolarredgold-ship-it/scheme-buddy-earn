@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useToolCredits } from "@/hooks/useToolCredits";
 import TopupDialog from "@/components/TopupDialog";
+import ToolGateDialog from "@/components/ToolGateDialog";
 
 import {
   Document,
@@ -341,18 +342,12 @@ const StudentTool = () => {
       toast.error(`Please fill: ${missing.join(", ")}`);
       return;
     }
-    if (!credits.canGenerate) {
-      setShowTopup(true);
-      return;
-    }
+    if (!credits.checkAccess()) return;
     setLoading(true);
     setOutput("");
     try {
       const consumed = await credits.consume({ tool: slug });
-      if (!consumed) {
-        setShowTopup(true);
-        return;
-      }
+      if (!consumed) return; // gate dialog already surfaced
       const { data, error } = await supabase.functions.invoke("student-ai-tool", {
         body: { tool: tool.slug, data: form },
       });
@@ -739,6 +734,11 @@ const StudentTool = () => {
           </div>
         </Card>
         <TopupDialog open={showTopup} onOpenChange={setShowTopup} onSuccess={() => credits.refresh()} />
+        <ToolGateDialog
+          reason={credits.gateReason}
+          onOpenChange={(o) => !o && credits.dismissGate()}
+          onTopup={() => { credits.dismissGate(); setShowTopup(true); }}
+        />
 
 
 
