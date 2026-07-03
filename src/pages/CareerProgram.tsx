@@ -86,7 +86,7 @@ const CareerProgram = () => {
   }, [profile]);
 
   const isSubscribed = profile?.subscription_status === "active";
-  const hasEmpCode = !!profile?.referral_code?.startsWith("EMP");
+  const hasEmpCode = !!profile?.referral_code;
   const stepCtx = {
     isSignedIn: !!user,
     isSubscribed,
