@@ -352,12 +352,12 @@ const CareerProgram = () => {
         );
 
       case 3:
-        if (isCompleted || profile?.referral_code?.startsWith("EMP")) {
+        if (isCompleted || profile?.referral_code) {
           const code = profile?.referral_code || "";
           const link = `https://techrola.in/signup?ref=${code}`;
           return (
             <div className="space-y-3">
-              <CompletedBadge text="Referral Code Generated" />
+              <CompletedBadge text="Your Referral Code" />
               <div className="flex items-center gap-2 bg-muted rounded-xl p-3">
                 <span className="flex-1 text-center font-bold text-lg tracking-widest">{code}</span>
                 <Button size="sm" variant="outline" onClick={() => { navigator.clipboard.writeText(code); toast.success("Copied!"); }}>
@@ -382,10 +382,10 @@ const CareerProgram = () => {
         }
         return (
           <div className="text-center py-4">
-            <p className="text-sm text-muted-foreground mb-4">Generate your unique referral code to start promoting</p>
+            <p className="text-sm text-muted-foreground mb-4">Activate your unique referral code to start promoting</p>
             <Button onClick={handleGenerateCode} disabled={submitting} className="gap-2">
               {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Code2 className="h-4 w-4" />}
-              Generate My Code
+              Show My Code
             </Button>
           </div>
         );
