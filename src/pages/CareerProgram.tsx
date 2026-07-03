@@ -178,32 +178,23 @@ const CareerProgram = () => {
     setSubmitting(false);
   };
 
-  // Step 3: Generate EMP referral code
+  // Step 3: Activate existing referral code (unified — every user gets a TR code at signup)
   const handleGenerateCode = async () => {
     if (!user) return;
     setSubmitting(true);
-    
-    // Generate unique EMP code
-    let code = "";
-    let unique = false;
-    while (!unique) {
-      const rand = Math.floor(1000 + Math.random() * 999000);
-      code = `EMP${rand}`;
-      const { data } = await supabase.from("profiles").select("id").eq("referral_code", code).maybeSingle();
-      if (!data) unique = true;
+
+    if (!profile?.referral_code) {
+      toast.error("Your referral code isn't ready yet. Please refresh and try again.");
+      setSubmitting(false);
+      return;
     }
 
-    // Update profile with new code
-    const { error } = await supabase.from("profiles").update({ referral_code: code }).eq("user_id", user.id);
+    const { error } = await supabase.from("career_progress").update({ current_step: 4 }).eq("user_id", user.id);
     if (error) {
-      toast.error("Failed to generate code. Try again.");
+      toast.error("Failed to activate code. Try again.");
     } else {
-      // Update career progress step
-      await supabase.from("career_progress").update({ current_step: 4 }).eq("user_id", user.id);
       setProgress(prev => prev ? { ...prev, current_step: 4 } : null);
       toast.success("Your referral code is ready!");
-      // Force profile refresh
-      window.location.reload();
     }
     setSubmitting(false);
   };
