@@ -86,7 +86,7 @@ const CareerProgram = () => {
   }, [profile]);
 
   const isSubscribed = profile?.subscription_status === "active";
-  const hasEmpCode = !!profile?.referral_code?.startsWith("EMP");
+  const hasEmpCode = !!profile?.referral_code;
   const stepCtx = {
     isSignedIn: !!user,
     isSubscribed,
@@ -178,32 +178,23 @@ const CareerProgram = () => {
     setSubmitting(false);
   };
 
-  // Step 3: Generate EMP referral code
+  // Step 3: Activate existing referral code (unified — every user gets a TR code at signup)
   const handleGenerateCode = async () => {
     if (!user) return;
     setSubmitting(true);
-    
-    // Generate unique EMP code
-    let code = "";
-    let unique = false;
-    while (!unique) {
-      const rand = Math.floor(1000 + Math.random() * 999000);
-      code = `EMP${rand}`;
-      const { data } = await supabase.from("profiles").select("id").eq("referral_code", code).maybeSingle();
-      if (!data) unique = true;
+
+    if (!profile?.referral_code) {
+      toast.error("Your referral code isn't ready yet. Please refresh and try again.");
+      setSubmitting(false);
+      return;
     }
 
-    // Update profile with new code
-    const { error } = await supabase.from("profiles").update({ referral_code: code }).eq("user_id", user.id);
+    const { error } = await supabase.from("career_progress").update({ current_step: 4 }).eq("user_id", user.id);
     if (error) {
-      toast.error("Failed to generate code. Try again.");
+      toast.error("Failed to activate code. Try again.");
     } else {
-      // Update career progress step
-      await supabase.from("career_progress").update({ current_step: 4 }).eq("user_id", user.id);
       setProgress(prev => prev ? { ...prev, current_step: 4 } : null);
       toast.success("Your referral code is ready!");
-      // Force profile refresh
-      window.location.reload();
     }
     setSubmitting(false);
   };
@@ -361,12 +352,12 @@ const CareerProgram = () => {
         );
 
       case 3:
-        if (isCompleted || profile?.referral_code?.startsWith("EMP")) {
+        if (isCompleted || profile?.referral_code) {
           const code = profile?.referral_code || "";
           const link = `https://techrola.in/signup?ref=${code}`;
           return (
             <div className="space-y-3">
-              <CompletedBadge text="Referral Code Generated" />
+              <CompletedBadge text="Your Referral Code" />
               <div className="flex items-center gap-2 bg-muted rounded-xl p-3">
                 <span className="flex-1 text-center font-bold text-lg tracking-widest">{code}</span>
                 <Button size="sm" variant="outline" onClick={() => { navigator.clipboard.writeText(code); toast.success("Copied!"); }}>
@@ -391,10 +382,10 @@ const CareerProgram = () => {
         }
         return (
           <div className="text-center py-4">
-            <p className="text-sm text-muted-foreground mb-4">Generate your unique referral code to start promoting</p>
+            <p className="text-sm text-muted-foreground mb-4">Activate your unique referral code to start promoting</p>
             <Button onClick={handleGenerateCode} disabled={submitting} className="gap-2">
               {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Code2 className="h-4 w-4" />}
-              Generate My Code
+              Show My Code
             </Button>
           </div>
         );
