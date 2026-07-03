@@ -2,37 +2,44 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Check, Star, Zap, Shield, Loader2, Tag, MessageCircle, Clock } from "lucide-react";
+import {
+  Check,
+  Sparkles,
+  Loader2,
+  MessageCircle,
+  Clock,
+  Crown,
+  Zap,
+  Shield,
+  TrendingUp,
+  Rocket,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import PaymentModal from "@/components/PaymentModal";
 import RazorpayCheckoutButton from "@/components/RazorpayCheckoutButton";
 
+const ANNUAL_PRICE = 999;
+const MONTHLY_EQUIVALENT = (ANNUAL_PRICE / 12).toFixed(2); // 83.25
+const ORIGINAL_PRICE = 2999;
+const SAVINGS = ORIGINAL_PRICE - ANNUAL_PRICE;
+const SAVINGS_PCT = Math.round((SAVINGS / ORIGINAL_PRICE) * 100);
 
-const BENEFITS = [
-  "Full access to all government scheme details",
-  "Direct apply links for all schemes",
-  "Eligibility criteria & required documents",
-  "Priority notifications for new schemes",
-  "3 free AI generations (shared across all tools)",
-  "Top-up ₹499 to add +5 more generations anytime",
-  "Refer & earn up to ₹400 per referral",
-  "3-level referral earning system",
-  "AI Internship Report Generator (DOCX)",
-  "AI Mock Interview & Live HR Interview",
-  "All 19+ AI career tools",
+const FEATURES: { icon: any; title: string; desc: string }[] = [
+  { icon: Shield, title: "All Government Schemes", desc: "Full details, eligibility & direct apply links" },
+  { icon: Zap, title: "19+ AI Career Tools", desc: "Resume, Cover Letter, SOP, Flashcards & more" },
+  { icon: Rocket, title: "AI Mock & Live HR Interview", desc: "Real-time evaluation with feedback" },
+  { icon: Sparkles, title: "3 AI Generations / Tool", desc: "Refill anytime with ₹499 top-up (+3–5 credits)" },
+  { icon: TrendingUp, title: "Earn up to ₹400 / Referral", desc: "3-level referral earning system" },
+  { icon: Crown, title: "Priority Notifications", desc: "Be first to know about new schemes" },
 ];
 
 const Subscription = () => {
   const { user, profile, loading, refreshProfile } = useAuth();
   const navigate = useNavigate();
-  const [couponCode, setCouponCode] = useState("");
-  const [couponApplied, setCouponApplied] = useState(false);
-  const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [pending, setPending] = useState<{ id: string; created_at: string } | null>(null);
 
@@ -64,76 +71,26 @@ const Subscription = () => {
   if (profile?.subscription_status === "active") {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-12 text-center max-w-md">
-          <div className="h-16 w-16 rounded-2xl bg-secondary/10 flex items-center justify-center mx-auto mb-6">
-            <Check className="h-8 w-8 text-secondary" />
+        <div className="container mx-auto px-4 py-16 text-center max-w-md">
+          <div className="h-20 w-20 rounded-3xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary/30">
+            <Crown className="h-10 w-10 text-primary-foreground" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">You're a Premium Member!</h1>
-          <p className="text-muted-foreground mb-6">You have full access to all schemes and features.</p>
-          <Link to="/">
-            <Button>Browse Schemes</Button>
+          <h1 className="text-3xl font-extrabold mb-2">You're Premium!</h1>
+          <p className="text-muted-foreground mb-6">Enjoy full access to all schemes & AI tools.</p>
+          <Link to="/dashboard">
+            <Button size="lg" className="bg-gradient-to-r from-primary to-secondary">Go to Dashboard</Button>
           </Link>
         </div>
       </Layout>
     );
   }
 
-  const hasDiscount = !!profile?.referred_by || couponApplied;
-  const price = hasDiscount ? 999 : 2999;
-
-  const applyCoupon = async () => {
-    const code = couponCode.trim().toUpperCase();
-    if (!code) {
-      toast.error("Please enter a coupon code");
-      return;
-    }
-    setApplyingCoupon(true);
-    if (code === "WELCOME") {
-      if (user && profile && !profile.referred_by) {
-        await supabase.from("profiles").update({ referred_by: "WELCOME" }).eq("user_id", user.id);
-        await refreshProfile();
-      }
-      setCouponApplied(true);
-      toast.success("🎉 Coupon applied! You save ₹2,000");
-    } else {
-      const { data } = await supabase
-        .from("profiles")
-        .select("referral_code")
-        .eq("referral_code", code)
-        .maybeSingle();
-      if (data) {
-        if (user && profile && !profile.referred_by) {
-          await supabase.from("profiles").update({ referred_by: code }).eq("user_id", user.id);
-          await refreshProfile();
-        }
-        setCouponApplied(true);
-        toast.success("🎉 Referral code applied! You save ₹2,000");
-      } else {
-        toast.error("Invalid coupon or referral code");
-      }
-    }
-    setApplyingCoupon(false);
-  };
-
   const handlePayNow = async () => {
     if (!user) {
-      toast.error("Please sign up to continue");
       navigate("/signup?redirect=/subscription");
       return;
     }
-    let currentProfile = profile;
-    if (!currentProfile) {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      if (data) {
-        currentProfile = data as typeof profile;
-        await refreshProfile();
-      }
-    }
-    if (!currentProfile) {
+    if (!profile) {
       toast.error("Loading your profile, please try again in a moment");
       return;
     }
@@ -142,75 +99,70 @@ const Subscription = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-8 pb-20 md:pb-8 max-w-md">
-        <div className="text-center mb-8">
-          <Badge className="mb-4 bg-accent text-accent-foreground">
-            <Star className="h-3 w-3 mr-1" /> Premium Plan
+      <div className="container mx-auto px-4 py-6 pb-24 md:pb-10 max-w-lg">
+        {/* Hero */}
+        <div className="text-center mb-6 animate-fade-in">
+          <Badge className="mb-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0 shadow-md px-3 py-1">
+            <Crown className="h-3.5 w-3.5 mr-1.5" /> PREMIUM PLAN
           </Badge>
-          <h1 className="text-3xl font-bold mb-2">Unlock Full Access</h1>
-          <p className="text-muted-foreground">Get complete access to all government schemes</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
+            Unlock Everything
+          </h1>
+          <p className="text-sm text-muted-foreground">Full access to schemes, AI tools & career program</p>
         </div>
 
-        <Card className="mb-4 border-primary/30 shadow-lg">
-          <CardContent className="p-8 text-center">
-            <p className="text-lg text-muted-foreground line-through mb-1">₹2,999</p>
-            <div className="flex items-baseline justify-center gap-1 mb-2">
-              <span className="text-5xl font-extrabold text-secondary">₹{price.toLocaleString()}</span>
-              <span className="text-muted-foreground">/lifetime</span>
+        {/* Pricing card — hero */}
+        <div className="relative mb-5 animate-scale-in">
+          {/* Glow */}
+          <div className="absolute -inset-1 bg-gradient-to-br from-primary via-secondary to-amber-400 rounded-3xl blur-lg opacity-30" />
+          <Card className="relative overflow-hidden border-2 border-primary/40 rounded-3xl shadow-2xl bg-gradient-to-br from-background via-background to-primary/5">
+            {/* Top ribbon */}
+            <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl shadow-md">
+              SAVE {SAVINGS_PCT}%
             </div>
-            {hasDiscount ? (
-              <Badge variant="outline" className="border-secondary text-secondary">
-                <Zap className="h-3 w-3 mr-1" /> Discount Applied! You save ₹2,000
-              </Badge>
-            ) : (
-              <p className="text-xs text-muted-foreground mt-1">
-                Apply a coupon code below to get ₹2,000 off
-              </p>
-            )}
-          </CardContent>
-        </Card>
 
-        {!hasDiscount && (
-          <Card className="mb-4 border-dashed border-2 border-primary/30">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Tag className="h-4 w-4 text-primary" />
-                <span className="text-sm font-semibold">Have a coupon or referral code?</span>
+            <CardContent className="p-6 md:p-8">
+              {/* Monthly headline */}
+              <div className="text-center mb-4">
+                <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-1">
+                  Starts at just
+                </p>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-2xl font-bold text-primary">₹</span>
+                  <span className="text-6xl md:text-7xl font-extrabold bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent leading-none">
+                    {MONTHLY_EQUIVALENT.split(".")[0]}
+                  </span>
+                  <span className="text-3xl font-bold text-primary">
+                    .{MONTHLY_EQUIVALENT.split(".")[1]}
+                  </span>
+                  <span className="text-sm text-muted-foreground font-medium ml-1">/month</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Billed annually as <span className="font-bold text-foreground">₹{ANNUAL_PRICE}</span>
+                  <span className="line-through ml-2 text-muted-foreground/70">₹{ORIGINAL_PRICE.toLocaleString()}</span>
+                </p>
               </div>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Enter code (e.g. WELCOME)"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                  className="uppercase"
-                  onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
-                />
-                <Button onClick={applyCoupon} disabled={applyingCoupon || !couponCode.trim()} variant="secondary">
-                  {applyingCoupon ? <Loader2 className="h-4 w-4 animate-spin" /> : "Apply"}
-                </Button>
+
+              {/* Highlights strip */}
+              <div className="grid grid-cols-3 gap-2 mt-5 pt-5 border-t border-border/60">
+                <div className="text-center">
+                  <p className="text-lg font-extrabold text-primary">12</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Months</p>
+                </div>
+                <div className="text-center border-x border-border/60">
+                  <p className="text-lg font-extrabold text-secondary">19+</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">AI Tools</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-lg font-extrabold text-amber-500">800+</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Schemes</p>
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                💡 Try code{" "}
-                <span className="font-bold text-primary cursor-pointer" onClick={() => setCouponCode("WELCOME")}>
-                  WELCOME
-                </span>{" "}
-                to get ₹2,000 discount!
-              </p>
             </CardContent>
           </Card>
-        )}
+        </div>
 
-        {hasDiscount && (
-          <Card className="mb-4 border-secondary/50 bg-secondary/5">
-            <CardContent className="p-3 flex items-center gap-2">
-              <Check className="h-4 w-4 text-secondary" />
-              <span className="text-sm font-medium text-secondary">
-                Coupon "{profile?.referred_by || couponCode}" applied — ₹2,000 off!
-              </span>
-            </CardContent>
-          </Card>
-        )}
-
+        {/* Pending payment banner */}
         {pending && (
           <Card className="mb-4 border-amber-500/40 bg-amber-500/5">
             <CardContent className="p-4 flex items-start gap-3">
@@ -218,82 +170,97 @@ const Subscription = () => {
               <div className="text-sm">
                 <p className="font-semibold text-amber-700">Payment under review</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Submitted {new Date(pending.created_at).toLocaleString()}. Pro activates within 24 hours of verification.
+                  Submitted {new Date(pending.created_at).toLocaleString()}. Pro activates within 24 hours.
                 </p>
               </div>
             </CardContent>
           </Card>
         )}
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Shield className="h-5 w-5 text-primary" /> What you get
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3">
-              {BENEFITS.map((b, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <Check className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
-                  <span className="text-sm">{b}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+        {/* Features grid */}
+        <div className="grid grid-cols-1 gap-2.5 mb-6">
+          {FEATURES.map((f, i) => {
+            const Icon = f.icon;
+            return (
+              <div
+                key={i}
+                className="group flex items-start gap-3 p-3 rounded-2xl border border-border/60 bg-card hover:border-primary/40 hover:shadow-md transition-all"
+              >
+                <div className="h-9 w-9 shrink-0 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Icon className="h-4.5 w-4.5 text-primary" strokeWidth={2.2} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold leading-tight">{f.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{f.desc}</p>
+                </div>
+                <Check className="h-4 w-4 text-secondary shrink-0 ml-auto mt-2" />
+              </div>
+            );
+          })}
+        </div>
 
+        {/* CTA */}
         {user ? (
-          <>
+          <div className="space-y-3">
             <RazorpayCheckoutButton
-              amount={price}
+              amount={ANNUAL_PRICE}
               userId={user.id}
               paymentType="subscription"
-              description="Techrola Premium (Lifetime)"
+              description="Techrola Premium (Annual)"
               prefill={{
                 name: profile?.name || "",
                 email: profile?.email || user.email || "",
                 contact: (profile?.mobile || "").replace(/\D/g, "").slice(-10),
               }}
-              className="w-full text-lg py-6 h-auto"
+              className="w-full text-base font-bold py-6 h-auto rounded-2xl bg-gradient-to-r from-primary via-primary to-secondary hover:opacity-95 shadow-lg shadow-primary/30"
               onSuccess={async () => {
                 await refreshProfile();
                 navigate("/dashboard");
               }}
             >
-              Pay ₹{price.toLocaleString()} with Razorpay
+              <Rocket className="h-5 w-5 mr-2" />
+              Get Premium — Pay ₹{ANNUAL_PRICE}
             </RazorpayCheckoutButton>
+
             <Button
               variant="ghost"
               size="sm"
-              className="w-full mt-2"
+              className="w-full text-muted-foreground"
               onClick={() => {
-                const msg = `Hi, I need help paying for Techrola Premium (₹${price.toLocaleString()}).%0AName: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}`;
+                const msg = `Hi, I need help paying for Techrola Premium (₹${ANNUAL_PRICE}).%0AName: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}`;
                 window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
               }}
             >
               <MessageCircle className="h-4 w-4 mr-2" />
-              Need help? Contact on WhatsApp
+              Need help? Chat on WhatsApp
             </Button>
-          </>
-
+          </div>
         ) : (
           <Link to="/signup?redirect=/subscription">
-            <Button size="lg" className="w-full text-lg py-6">
-              Sign Up to Subscribe
+            <Button size="lg" className="w-full text-base font-bold py-6 h-auto rounded-2xl bg-gradient-to-r from-primary to-secondary shadow-lg shadow-primary/30">
+              <Rocket className="h-5 w-5 mr-2" />
+              Sign Up & Get Premium
             </Button>
           </Link>
         )}
 
-        <p className="text-center text-xs text-muted-foreground mt-3">
-          🔒 Secured payments by Razorpay. Pro access activates instantly after successful payment.
-        </p>
+        <div className="flex items-center justify-center gap-4 mt-4 text-[11px] text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Shield className="h-3 w-3" /> Secure Razorpay
+          </div>
+          <div className="flex items-center gap-1">
+            <Zap className="h-3 w-3" /> Instant Access
+          </div>
+          <div className="flex items-center gap-1">
+            <Check className="h-3 w-3" /> 12 Months
+          </div>
+        </div>
 
         {user && profile && (
           <PaymentModal
             isOpen={modalOpen}
             onClose={() => setModalOpen(false)}
-            amount={price}
+            amount={ANNUAL_PRICE}
             userId={user.id}
             paymentType="subscription"
             defaultPayerName={profile.name || ""}
