@@ -50,8 +50,8 @@ const Signup = () => {
       setRefValid(true);
       return true;
     }
-    if (!/^TR[A-Z0-9]{4,10}$/.test(trimmed)) {
-      setReferralError("Invalid format. Codes start with TR (e.g. TRABC123)");
+    if (!/^[A-Z0-9]{4,14}$/.test(trimmed)) {
+      setReferralError("Invalid format. Enter the referral code exactly as shared with you.");
       setRefValid(false);
       return false;
     }
