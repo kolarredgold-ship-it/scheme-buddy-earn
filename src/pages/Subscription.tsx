@@ -101,18 +101,19 @@ const Subscription = () => {
     <Layout>
       <div className="container mx-auto px-4 py-6 md:py-12 pb-24 md:pb-16 max-w-lg lg:max-w-6xl">
         {/* Hero */}
-        <div className="text-center mb-6 animate-fade-in">
+        <div className="text-center mb-6 md:mb-10 animate-fade-in">
           <Badge className="mb-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0 shadow-md px-3 py-1">
             <Crown className="h-3.5 w-3.5 mr-1.5" /> PREMIUM PLAN
           </Badge>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-2 bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-transparent">
             Unlock Everything
           </h1>
-          <p className="text-sm text-muted-foreground">Full access to schemes, AI tools & career program</p>
+          <p className="text-sm md:text-base text-muted-foreground">Full access to schemes, AI tools & career program</p>
         </div>
 
+        <div className="lg:grid lg:grid-cols-2 lg:gap-10 lg:items-start">
         {/* Pricing card — hero */}
-        <div className="relative mb-5 animate-scale-in">
+        <div className="relative mb-5 lg:mb-0 lg:sticky lg:top-24 animate-scale-in">
           {/* Glow */}
           <div className="absolute -inset-1 bg-gradient-to-br from-primary via-secondary to-amber-400 rounded-3xl blur-lg opacity-30" />
           <Card className="relative overflow-hidden border-2 border-primary/40 rounded-3xl shadow-2xl bg-gradient-to-br from-background via-background to-primary/5">
