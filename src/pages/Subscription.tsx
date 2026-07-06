@@ -99,7 +99,7 @@ const Subscription = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-6 pb-24 md:pb-10 max-w-lg">
+      <div className="container mx-auto px-4 py-6 md:py-12 pb-24 md:pb-16 max-w-lg lg:max-w-6xl">
         {/* Hero */}
         <div className="text-center mb-6 animate-fade-in">
           <Badge className="mb-3 bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0 shadow-md px-3 py-1">
