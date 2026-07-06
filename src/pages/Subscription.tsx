@@ -163,7 +163,9 @@ const Subscription = () => {
           </Card>
         </div>
 
+        <div className="lg:min-w-0">
         {/* Pending payment banner */}
+
         {pending && (
           <Card className="mb-4 border-amber-500/40 bg-amber-500/5">
             <CardContent className="p-4 flex items-start gap-3">
