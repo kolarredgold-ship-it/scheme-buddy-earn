@@ -51,7 +51,7 @@ const SchemeDetail = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-3 md:px-4 py-4 pb-24 md:pb-8 max-w-3xl animate-fade-in">
+      <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 pb-24 md:pb-10 max-w-3xl lg:max-w-5xl animate-fade-in">
         <div className="flex items-center justify-between mb-4">
           <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4 mr-1" /> Back

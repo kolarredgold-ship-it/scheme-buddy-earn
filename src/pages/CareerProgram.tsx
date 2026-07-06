@@ -491,7 +491,7 @@ const CareerProgram = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-3 md:px-4 py-6 pb-24 md:pb-8 max-w-2xl">
+      <div className="container mx-auto px-3 md:px-4 py-6 pb-24 md:pb-10 max-w-2xl lg:max-w-5xl">
         {/* Header */}
         <div className="text-center mb-6">
           <Badge className="mb-3 bg-primary/10 text-primary border-primary/20">
