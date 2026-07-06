@@ -256,6 +256,19 @@ const Subscription = () => {
             <Check className="h-3 w-3" /> 12 Months
           </div>
         </div>
+        </div>
+        {/* end lg grid */}
+        </div>
+
+        {user && profile && (
+          </div>
+          <div className="flex items-center gap-1">
+            <Zap className="h-3 w-3" /> Instant Access
+          </div>
+          <div className="flex items-center gap-1">
+            <Check className="h-3 w-3" /> 12 Months
+          </div>
+        </div>
 
         {user && profile && (
           <PaymentModal
