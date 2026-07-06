@@ -106,8 +106,28 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md relative">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-background">
+      {/* Brand panel — desktop only */}
+      <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-secondary via-primary to-primary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_50%),radial-gradient(circle_at_80%_60%,white,transparent_40%)]" />
+        <div className="relative">
+          <div className="h-14 w-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center mb-8">
+            <span className="text-primary-foreground font-bold text-2xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
+          </div>
+          <h2 className="text-4xl font-extrabold leading-tight max-w-md">Join Techrola in seconds.</h2>
+          <p className="mt-4 text-lg text-primary-foreground/85 max-w-md">Get 1 free AI generation per tool, browse 800+ government schemes, and earn ₹400 per Premium referral.</p>
+          <ul className="mt-8 space-y-3 text-primary-foreground/90 text-sm">
+            <li className="flex items-center gap-2">✓ 1 free AI generation per tool</li>
+            <li className="flex items-center gap-2">✓ Unified referral code (works everywhere)</li>
+            <li className="flex items-center gap-2">✓ 3-level referral earnings up to ₹550</li>
+          </ul>
+        </div>
+        <p className="relative text-xs text-primary-foreground/60">© Techrola · Secure sign-up powered by Lovable Cloud</p>
+      </div>
+
+      {/* Form panel */}
+      <div className="flex items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md relative shadow-xl border-border/60">
         <Link to="/" className="absolute left-4 top-4 p-2 rounded-full hover:bg-muted transition-colors">
           <ArrowLeft className="h-5 w-5 text-muted-foreground" />
         </Link>
