@@ -142,7 +142,7 @@ const Withdrawals = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-6 pb-20 md:pb-8 space-y-6 max-w-lg">
+      <div className="container mx-auto px-4 py-6 pb-20 md:pb-10 space-y-6 max-w-lg lg:max-w-4xl">
         <h1 className="text-2xl font-bold">Withdrawals</h1>
 
         {/* Bank details */}

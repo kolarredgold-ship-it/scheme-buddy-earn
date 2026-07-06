@@ -36,7 +36,7 @@ const Earnings = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-4 py-6 pb-20 md:pb-8 space-y-6">
+      <div className="container mx-auto px-4 py-6 md:py-10 pb-20 md:pb-10 space-y-6 max-w-4xl">
         <h1 className="text-2xl font-bold">Earnings</h1>
 
         <Card className="bg-gradient-to-br from-accent/20 to-accent/5 border-accent/30">

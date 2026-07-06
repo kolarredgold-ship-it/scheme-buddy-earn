@@ -68,7 +68,7 @@ const Leaderboard = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto px-3 md:px-4 py-6 pb-24 md:pb-8 max-w-2xl">
+      <div className="container mx-auto px-3 md:px-4 py-6 md:py-10 pb-24 md:pb-10 max-w-2xl lg:max-w-4xl">
         <div className="text-center mb-6">
           <Badge className="mb-3 bg-yellow-500/10 text-yellow-600 border-yellow-500/20">
             <Trophy className="h-3 w-3 mr-1" /> Leaderboard
