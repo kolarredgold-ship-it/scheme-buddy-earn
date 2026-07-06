@@ -28,8 +28,27 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md relative">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-background">
+      {/* Brand panel — desktop only */}
+      <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-primary via-primary to-secondary text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_50%),radial-gradient(circle_at_80%_60%,white,transparent_40%)]" />
+        <div className="relative">
+          <div className="h-14 w-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center mb-8">
+            <span className="text-primary-foreground font-bold text-2xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
+          </div>
+          <h2 className="text-4xl font-extrabold leading-tight max-w-md">Welcome back to Techrola.</h2>
+          <p className="mt-4 text-lg text-primary-foreground/80 max-w-md">Sign in to access 800+ government schemes, 19+ AI tools, and your referral earnings.</p>
+        </div>
+        <div className="relative grid grid-cols-3 gap-4 max-w-md">
+          <div><p className="text-3xl font-extrabold">800+</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Schemes</p></div>
+          <div><p className="text-3xl font-extrabold">19+</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">AI Tools</p></div>
+          <div><p className="text-3xl font-extrabold">₹400</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Per Referral</p></div>
+        </div>
+      </div>
+
+      {/* Form panel */}
+      <div className="flex items-center justify-center px-4 py-12">
+      <Card className="w-full max-w-md relative shadow-xl border-border/60">
         <Link to="/" className="absolute left-4 top-4 p-2 rounded-full hover:bg-muted transition-colors">
           <ArrowLeft className="h-5 w-5 text-muted-foreground" />
         </Link>
