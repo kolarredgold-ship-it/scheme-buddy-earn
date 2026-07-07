@@ -55,16 +55,17 @@ const BlogDetail = () => {
         .eq("status", "published")
         .maybeSingle();
       if (error || !data) { setNotFound(true); setLoading(false); return; }
-      setBlog(data as Blog);
+      setBlog(data as unknown as Blog);
       setLoading(false);
 
       // Fetch related (same category, latest 3)
+      const d = data as unknown as Blog;
       const { data: rel } = await supabase
         .from("blogs")
         .select("slug, title, featured_image_url")
         .eq("status", "published")
-        .eq("category", (data as Blog).category ?? "")
-        .neq("id", (data as Blog).id)
+        .eq("category", d.category ?? "")
+        .neq("id", d.id)
         .order("published_at", { ascending: false })
         .limit(3);
       setRelated(rel ?? []);
