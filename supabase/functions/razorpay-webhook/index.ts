@@ -19,24 +19,31 @@ Deno.serve(async (req) => {
   const signature = req.headers.get('x-razorpay-signature') ?? '';
   const webhookSecret = Deno.env.get('RAZORPAY_WEBHOOK_SECRET');
 
-  // Verify signature when secret is configured
-  if (webhookSecret) {
-    try {
-      const expected = createHmac('sha256', webhookSecret).update(rawBody).digest('hex');
-      const a = Buffer.from(expected);
-      const b = Buffer.from(signature);
-      if (a.length !== b.length || !timingSafeEqual(a, b)) {
-        await admin.from('payment_logs').insert({
-          event: 'webhook.signature.invalid',
-          status: 'failed',
-          error_message: 'Invalid signature',
-          raw_payload: { headers: { signature } },
-        });
-        return new Response('Invalid signature', { status: 401 });
-      }
-    } catch (e) {
-      return new Response('Signature check failed', { status: 401 });
+  // SECURITY: Fail closed when secret is unset — never accept unverified webhooks.
+  if (!webhookSecret) {
+    await admin.from('payment_logs').insert({
+      event: 'webhook.secret_missing',
+      status: 'failed',
+      error_message: 'RAZORPAY_WEBHOOK_SECRET not configured — rejecting webhook',
+    });
+    return new Response('Webhook secret not configured', { status: 503 });
+  }
+
+  try {
+    const expected = createHmac('sha256', webhookSecret).update(rawBody).digest('hex');
+    const a = Buffer.from(expected);
+    const b = Buffer.from(signature);
+    if (a.length !== b.length || !timingSafeEqual(a, b)) {
+      await admin.from('payment_logs').insert({
+        event: 'webhook.signature.invalid',
+        status: 'failed',
+        error_message: 'Invalid signature',
+        raw_payload: { headers: { signature } },
+      });
+      return new Response('Invalid signature', { status: 401 });
     }
+  } catch (e) {
+    return new Response('Signature check failed', { status: 401 });
   }
 
   let payload: any;

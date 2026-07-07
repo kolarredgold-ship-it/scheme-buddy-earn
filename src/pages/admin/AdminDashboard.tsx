@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, BookOpen, Wallet, Clock, IndianRupee } from "lucide-react";
+import { Users, BookOpen, Wallet, Clock, IndianRupee, FileText } from "lucide-react";
 
 const AdminDashboard = () => {
   const { isAdmin, loading: authLoading } = useAuth();
@@ -86,6 +86,12 @@ const AdminDashboard = () => {
             <Card className="hover:shadow-md transition-shadow cursor-pointer p-6 text-center">
               <Wallet className="h-8 w-8 mx-auto text-accent mb-2" />
               <p className="font-semibold">Manage Withdrawals</p>
+            </Card>
+          </Link>
+          <Link to="/admin/blogs">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer p-6 text-center">
+              <FileText className="h-8 w-8 mx-auto text-primary mb-2" />
+              <p className="font-semibold">Daily Blogs</p>
             </Card>
           </Link>
         </div>

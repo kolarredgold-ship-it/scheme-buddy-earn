@@ -38,6 +38,9 @@ const TermsConditions = lazy(() => import("./pages/TermsConditions"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const ContactUs = lazy(() => import("./pages/ContactUs"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogDetail = lazy(() => import("./pages/BlogDetail"));
+const AdminBlogs = lazy(() => import("./pages/admin/AdminBlogs"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -100,6 +103,9 @@ const App = () => {
               <Route path="/refund-policy" element={<RefundPolicy />} />
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogDetail />} />
+              <Route path="/admin/blogs" element={<AdminBlogs />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

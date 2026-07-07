@@ -14,6 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
+      blogs: {
+        Row: {
+          author: string | null
+          body_markdown: string
+          category: string | null
+          created_at: string
+          excerpt: string | null
+          faq: Json | null
+          featured_image_prompt: string | null
+          featured_image_url: string | null
+          focus_keyword: string | null
+          hook: string | null
+          id: string
+          internal_links: Json | null
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          reading_time: number | null
+          related_articles: Json | null
+          secondary_keywords: string[] | null
+          slug: string
+          social_captions: Json | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          body_markdown: string
+          category?: string | null
+          created_at?: string
+          excerpt?: string | null
+          faq?: Json | null
+          featured_image_prompt?: string | null
+          featured_image_url?: string | null
+          focus_keyword?: string | null
+          hook?: string | null
+          id?: string
+          internal_links?: Json | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          reading_time?: number | null
+          related_articles?: Json | null
+          secondary_keywords?: string[] | null
+          slug: string
+          social_captions?: Json | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          body_markdown?: string
+          category?: string | null
+          created_at?: string
+          excerpt?: string | null
+          faq?: Json | null
+          featured_image_prompt?: string | null
+          featured_image_url?: string | null
+          focus_keyword?: string | null
+          hook?: string | null
+          id?: string
+          internal_links?: Json | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          reading_time?: number | null
+          related_articles?: Json | null
+          secondary_keywords?: string[] | null
+          slug?: string
+          social_captions?: Json | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       career_progress: {
         Row: {
           college: string | null
