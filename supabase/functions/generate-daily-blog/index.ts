@@ -1,56 +1,105 @@
-// Generate one SEO blog per day using DeepSeek + Lovable AI image gateway.
-// Trigger: pg_cron (with x-cron-secret header) or admin JWT.
+// Generate a batch of short SEO blogs per day using DeepSeek.
+// Triggered by pg_cron (with x-cron-secret) or an admin JWT.
+// Default batch: 25 blogs. Override with { count: N } (10-50).
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const TOPIC_POOL = [
-  'Earn Money Online', 'Extra Income for Students', 'Side Income Ideas', 'Passive Income',
-  'Work From Home', 'Part Time Jobs', 'Data Entry Jobs Truth', 'Online Jobs',
-  'Government Jobs', 'Career Tips', 'Resume Tips', 'Interview Tips', 'Internship',
-  'Placement Preparation', 'Scholarships', 'Government Schemes', 'Student Productivity',
-  'AI Tools for Students', 'Study Tips', 'Remote Jobs', 'Freelancing', 'Career Growth',
-  'Digital Skills', 'Entrepreneurship', 'Financial Awareness', 'Skill Development',
-  'Women Empowerment', 'Education Loans', 'Startup Ideas', 'Student Success',
+  'Earn Money Online Safely', 'Extra Income for Indian Students', 'Side Income Ideas',
+  'Passive Income for Beginners', 'Work From Home Jobs', 'Part Time Jobs for College',
+  'Data Entry Job Scams', 'Online Jobs Without Investment', 'Government Jobs Preparation',
+  'Career Tips for Freshers', 'Resume Writing Tips', 'HR Interview Questions',
+  'Internship Report Writing', 'Placement Preparation Guide', 'Scholarships for Students',
+  'PM Government Schemes', 'State Government Schemes', 'Student Productivity Habits',
+  'AI Tools for Students', 'Free Certification Courses', 'Study Tips for Exams',
+  'Remote Jobs for Freshers', 'Freelancing for Beginners', 'Career Growth Roadmap',
+  'Digital Skills to Learn', 'Startup Ideas for Students', 'Financial Literacy Basics',
+  'Skill Development Programs', 'Women Empowerment Schemes', 'Education Loans in India',
+  'Referral Program Tips', 'How to Get Hired Fast', 'Best Side Hustles',
+  'Building an Online Portfolio', 'LinkedIn Profile Tips', 'Cover Letter Writing',
+  'Group Discussion Tips', 'Aptitude Test Preparation', 'Coding Interview Prep',
+  'MBA Entrance Tips', 'UPSC Beginner Guide', 'Bank Exam Preparation',
+  'SSC Preparation Tips', 'Government Scholarship Application', 'Startup India Registration',
+  'PMEGP Loan Guide', 'Mudra Loan for Students', 'Skill India Courses',
+  'Digital India Benefits', 'NSP Scholarship Guide',
 ];
 
-const SYSTEM_PROMPT = `You are the official AI Content Writer for Techrola, India's AI-powered Career & Student Platform.
-Your job: generate ONE brand-new, SEO-optimized blog. Every blog must be unique, target Indian readers, never copy existing content.
-Never describe Techrola as an MLM or get-rich platform.
-Always end referral talk with: "Referral rewards are subject to the official Techrola Career Program Terms & Conditions."
-Every blog MUST begin with a strong emotional hook (e.g. "🚨 Don't Fall for Fake Online Earning Apps.").
-Every blog MUST include a "## Why Choose the Techrola Career Program?" section with the 6-step roadmap (Register, Subscribe, Get EMP Code, Share, Stay Active, Get Hired).
-Every blog MUST end with a "# 🚀 Don't Fall for Online Earning Scams" CTA linking to https://techrola.in, https://techrola.in/career-program, and https://techrola.in/ai-tools.
-Word count: 2500-3500 words. Markdown format. Educational first, promotional second.`;
+const CATEGORIES = [
+  'Earn Money', 'Career Tips', 'Government Schemes', 'AI Tools',
+  'Interview Prep', 'Skill Development', 'Student Life',
+] as const;
 
-const USER_PROMPT = (topic: string, avoidTitles: string[]) => `Write today's Techrola blog on the topic: "${topic}".
+const SYSTEM_PROMPT = `You are the AI Content Writer for Techrola — India's AI-powered Career & Student Platform.
+You write SHORT, punchy, SEO-optimized blogs (500-800 words each) for Indian students and job seekers.
+Rules:
+- Never mention any specific year (do NOT include 2024, 2025, 2026, 2027 etc. in titles, slugs or body).
+- Never describe Techrola as an MLM or a get-rich-quick platform.
+- Educational and honest tone. Warn against scams. Always cite realistic Indian examples.
+- End every article with a short CTA to techrola.in, /career-program and /ai-tools.`;
 
-AVOID these recent titles (never repeat): ${avoidTitles.length ? avoidTitles.join(' | ') : 'none yet'}.
+const batchPrompt = (topics: string[], avoidTitles: string[]) => `Generate ${topics.length} SHORT SEO blog posts for Techrola.
+Assign each blog to one topic in order:
+${topics.map((t, i) => `${i + 1}. ${t}`).join('\n')}
+
+AVOID these existing titles (do NOT repeat or paraphrase): ${avoidTitles.slice(0, 40).join(' | ') || 'none'}.
 
 Return STRICT JSON only (no markdown fences) matching this exact shape:
 {
-  "title": "SEO title, 55-65 chars, includes focus keyword",
-  "meta_title": "60 chars max",
-  "meta_description": "150-160 chars",
-  "slug": "url-friendly-slug-with-hyphens",
-  "focus_keyword": "primary keyword",
-  "secondary_keywords": ["kw1","kw2","kw3","kw4","kw5"],
-  "category": "one of: Earn Money | Career Tips | Government Schemes | AI Tools | Interview Prep | Skill Development | Student Life",
-  "reading_time": 10,
-  "hook": "the opening emotional hook line",
-  "excerpt": "2-3 sentence teaser, 180 chars max",
-  "featured_image_prompt": "detailed prompt for a hero image — Indian student/professional context, vibrant, editorial magazine style, no text on image",
-  "body_markdown": "Full 2500-3500 word article in markdown. Include: Introduction, Problem, Real Indian Examples, Statistics (with source names), Common Mistakes, Expert Tips, Checklist, Comparison Table (markdown), Career Advice, '## Why Choose the Techrola Career Program?' with 6-step roadmap, and the mandatory closing CTA section '# 🚀 Don't Fall for Online Earning Scams'. Use H2/H3, bullet lists, and markdown tables. Do NOT include the FAQ inside body_markdown (return it separately below).",
-  "faq": [{"q":"...","a":"..."}, ...at least 5],
-  "social_captions": {
-    "instagram": "hook + 5-8 hashtags, <220 chars",
-    "linkedin": "professional 3-paragraph post, <1200 chars",
-    "twitter": "punchy tweet <260 chars with 2-3 hashtags",
-    "pinterest": "descriptive caption with keywords, <450 chars"
-  },
-  "internal_links": [{"anchor":"...","url":"https://techrola.in/..."}],
-  "related_articles": ["Suggested Related Title 1","Suggested Related Title 2","Suggested Related Title 3"]
+  "blogs": [
+    {
+      "title": "SEO title 45-65 chars, NO YEAR mentioned, includes a keyword",
+      "meta_title": "60 chars max, no year",
+      "meta_description": "150-160 chars, no year",
+      "slug": "url-friendly-slug-with-hyphens (no year, no numbers unless part of scheme name)",
+      "focus_keyword": "primary keyword",
+      "secondary_keywords": ["kw1","kw2","kw3"],
+      "category": "one of: ${CATEGORIES.join(' | ')}",
+      "reading_time": 4,
+      "hook": "one strong opening line (emoji ok)",
+      "excerpt": "2 sentence teaser, 180 chars max, no year",
+      "body_markdown": "500-800 word markdown article. Must include: H2 intro, 2-3 H2 sections with bullets, a small markdown comparison table, a '## Why Techrola?' 3-bullet section, and a closing '## Next Steps' CTA linking to https://techrola.in, https://techrola.in/career-program and https://techrola.in/ai-tools. Never mention a year.",
+      "faq": [{"q":"...","a":"..."}, {"q":"...","a":"..."}, {"q":"...","a":"..."}]
+    }
+  ]
 }
-Return ONLY the JSON object. No commentary, no markdown fences.`;
+Return ONLY the JSON object. No commentary. No fences. Ensure valid JSON.`;
+
+const YEAR_RE = /\b(20\d{2}|19\d{2})\b/g;
+const stripYear = (s: string | undefined | null) =>
+  (s ?? '').replace(YEAR_RE, '').replace(/\s{2,}/g, ' ').replace(/\s+([,.:;!?])/g, '$1').trim();
+
+const slugify = (s: string) =>
+  s.toLowerCase().replace(YEAR_RE, '').replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')
+    .replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 80);
+
+async function callDeepSeek(topics: string[], avoidTitles: string[], apiKey: string) {
+  const res = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      response_format: { type: 'json_object' },
+      temperature: 0.9,
+      max_tokens: 8000,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: batchPrompt(topics, avoidTitles) },
+      ],
+    }),
+  });
+  if (!res.ok) throw new Error(`DeepSeek ${res.status}: ${await res.text()}`);
+  const json = await res.json();
+  const content = json?.choices?.[0]?.message?.content;
+  if (!content) throw new Error('DeepSeek empty content');
+  let parsed: any;
+  try { parsed = JSON.parse(content); }
+  catch {
+    const m = content.match(/\{[\s\S]*\}/);
+    if (!m) throw new Error('DeepSeek did not return JSON');
+    parsed = JSON.parse(m[0]);
+  }
+  return Array.isArray(parsed?.blogs) ? parsed.blogs : [];
+}
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -60,11 +109,9 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
-  // Auth: cron secret header OR admin JWT
   const cronSecret = req.headers.get('x-cron-secret');
   const authHeader = req.headers.get('Authorization');
   let authorized = false;
-
   if (cronSecret) {
     const { data } = await admin.rpc('verify_cron_secret', { _token: cronSecret });
     if (data === true) authorized = true;
@@ -86,146 +133,87 @@ Deno.serve(async (req) => {
 
   try {
     const DEEPSEEK = Deno.env.get('DEEPSEEK_API_KEY');
-    const LOVABLE = Deno.env.get('LOVABLE_API_KEY');
     if (!DEEPSEEK) throw new Error('DEEPSEEK_API_KEY not set');
-    if (!LOVABLE) throw new Error('LOVABLE_API_KEY not set');
 
-    // Recent titles to avoid
+    let body: any = {};
+    try { body = await req.json(); } catch { /* no body */ }
+    const requested = Math.min(50, Math.max(10, Number(body?.count) || 25));
+
+    // Recent titles to avoid duplication
     const { data: recent } = await admin
       .from('blogs')
-      .select('title, category')
+      .select('title')
       .order('published_at', { ascending: false })
-      .limit(20);
-    const avoidTitles = (recent ?? []).map((r: any) => r.title);
-    const recentCategories = new Set((recent ?? []).slice(0, 5).map((r: any) => r.category));
+      .limit(120);
+    const avoidTitles = (recent ?? []).map((r: any) => r.title).filter(Boolean);
+    const avoidLower = new Set(avoidTitles.map((t) => t.toLowerCase()));
 
-    // Pick a topic not recently used
-    const available = TOPIC_POOL.filter((t) => !avoidTitles.some((tt) => tt?.toLowerCase().includes(t.toLowerCase())));
-    const pool = available.length ? available : TOPIC_POOL;
-    const topic = pool[Math.floor(Math.random() * pool.length)];
+    // Pick unique topics not in avoid list
+    const shuffled = [...TOPIC_POOL].sort(() => Math.random() - 0.5);
+    const topics = shuffled.filter((t) => !avoidLower.has(t.toLowerCase())).slice(0, requested);
+    while (topics.length < requested) topics.push(shuffled[topics.length % shuffled.length]);
 
-    // 1) DeepSeek: full article JSON
-    const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${DEEPSEEK}`,
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        response_format: { type: 'json_object' },
-        temperature: 0.85,
-        max_tokens: 8000,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: USER_PROMPT(topic, avoidTitles) },
-        ],
-      }),
-    });
-    if (!dsRes.ok) {
-      const err = await dsRes.text();
-      throw new Error(`DeepSeek ${dsRes.status}: ${err}`);
-    }
-    const dsJson = await dsRes.json();
-    const rawContent = dsJson?.choices?.[0]?.message?.content;
-    if (!rawContent) throw new Error('DeepSeek returned empty content');
-
-    let blog: any;
-    try {
-      blog = JSON.parse(rawContent);
-    } catch {
-      // Try to salvage JSON from fenced content
-      const m = rawContent.match(/\{[\s\S]*\}/);
-      if (!m) throw new Error('DeepSeek did not return JSON');
-      blog = JSON.parse(m[0]);
-    }
-
-    // Sanitize slug + ensure uniqueness
-    let baseSlug = String(blog.slug || blog.title || 'blog')
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '')
-      .slice(0, 80);
-    if (!baseSlug) baseSlug = 'blog-' + Date.now();
-    let slug = baseSlug;
-    let n = 0;
-    while (true) {
-      const { data: exists } = await admin.from('blogs').select('id').eq('slug', slug).maybeSingle();
-      if (!exists) break;
-      n += 1;
-      slug = `${baseSlug}-${n}`;
-    }
-
-    // 2) Lovable AI image (Nano Banana, non-streaming)
-    let featured_image_url: string | null = null;
-    try {
-      const imgPrompt = blog.featured_image_prompt ||
-        `Editorial magazine hero image: ${blog.title}. Indian student context, vibrant colors, modern, no text.`;
-      const imgRes = await fetch('https://ai.gateway.lovable.dev/v1/images/generations', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${LOVABLE}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'google/gemini-2.5-flash-image',
-          messages: [{ role: 'user', content: imgPrompt }],
-          modalities: ['image', 'text'],
-        }),
-      });
-      if (imgRes.ok) {
-        const imgJson = await imgRes.json();
-        const b64 = imgJson?.data?.[0]?.b64_json;
-        if (b64) {
-          const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-          const path = `blogs/${slug}.png`;
-          const { error: upErr } = await admin.storage
-            .from('scheme-images')
-            .upload(path, bytes, { contentType: 'image/png', upsert: true });
-          if (!upErr) {
-            const { data: pub } = admin.storage.from('scheme-images').getPublicUrl(path);
-            featured_image_url = pub.publicUrl;
-          }
-        }
+    // Generate in chunks of 8 to stay within token limits
+    const CHUNK = 8;
+    const allBlogs: any[] = [];
+    for (let i = 0; i < topics.length; i += CHUNK) {
+      const slice = topics.slice(i, i + CHUNK);
+      try {
+        const blogs = await callDeepSeek(slice, avoidTitles, DEEPSEEK);
+        allBlogs.push(...blogs);
+      } catch (e) {
+        console.error(`Chunk ${i} failed:`, (e as Error).message);
       }
-    } catch (e) {
-      console.error('Image generation failed:', e);
     }
 
-    // 3) Insert row
-    const { data: inserted, error: insErr } = await admin
-      .from('blogs')
-      .insert({
-        slug,
-        title: blog.title,
-        meta_title: blog.meta_title ?? blog.title,
-        meta_description: blog.meta_description ?? blog.excerpt ?? '',
-        focus_keyword: blog.focus_keyword ?? null,
-        secondary_keywords: Array.isArray(blog.secondary_keywords) ? blog.secondary_keywords : [],
-        category: blog.category ?? 'Career Tips',
-        reading_time: Number(blog.reading_time) || 10,
-        featured_image_url,
-        featured_image_prompt: blog.featured_image_prompt ?? null,
-        hook: blog.hook ?? null,
-        excerpt: blog.excerpt ?? null,
-        body_markdown: blog.body_markdown ?? '',
-        faq: Array.isArray(blog.faq) ? blog.faq : [],
-        social_captions: blog.social_captions ?? {},
-        internal_links: Array.isArray(blog.internal_links) ? blog.internal_links : [],
-        related_articles: Array.isArray(blog.related_articles) ? blog.related_articles : [],
-        status: 'published',
-        published_at: new Date().toISOString(),
-      })
-      .select('id, slug, title')
-      .single();
+    // Insert rows with unique slugs, stripping years
+    let inserted = 0;
+    const errors: string[] = [];
+    for (const b of allBlogs) {
+      try {
+        const title = stripYear(b.title);
+        if (!title) continue;
+        let baseSlug = slugify(b.slug || title);
+        if (!baseSlug) baseSlug = 'blog-' + Date.now();
+        let slug = baseSlug;
+        let n = 0;
+        while (true) {
+          const { data: exists } = await admin.from('blogs').select('id').eq('slug', slug).maybeSingle();
+          if (!exists) break;
+          n += 1;
+          slug = `${baseSlug}-${n}`;
+          if (n > 10) { slug = `${baseSlug}-${Date.now()}`; break; }
+        }
 
-    if (insErr) throw new Error(`Insert failed: ${insErr.message}`);
+        const { error: insErr } = await admin.from('blogs').insert({
+          slug,
+          title,
+          meta_title: stripYear(b.meta_title) || title,
+          meta_description: stripYear(b.meta_description) || stripYear(b.excerpt) || '',
+          focus_keyword: b.focus_keyword ?? null,
+          secondary_keywords: Array.isArray(b.secondary_keywords) ? b.secondary_keywords : [],
+          category: CATEGORIES.includes(b.category) ? b.category : 'Career Tips',
+          reading_time: Number(b.reading_time) || 4,
+          hook: b.hook ?? null,
+          excerpt: stripYear(b.excerpt),
+          body_markdown: stripYear(b.body_markdown),
+          faq: Array.isArray(b.faq) ? b.faq : [],
+          social_captions: {},
+          internal_links: [],
+          related_articles: [],
+          status: 'published',
+          published_at: new Date().toISOString(),
+        });
+        if (insErr) errors.push(insErr.message);
+        else inserted += 1;
+      } catch (e) {
+        errors.push((e as Error).message);
+      }
+    }
 
-    return new Response(JSON.stringify({ success: true, blog: inserted, topic }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(JSON.stringify({
+      success: true, requested, generated: allBlogs.length, inserted, errors: errors.slice(0, 5),
+    }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error(e);
     return new Response(JSON.stringify({ success: false, error: (e as Error).message }), {

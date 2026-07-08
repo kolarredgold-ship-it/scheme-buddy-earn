@@ -12,6 +12,7 @@ const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = 
   { path: "/plans", priority: "0.8", changefreq: "monthly" },
   { path: "/subscription", priority: "0.7", changefreq: "monthly" },
   { path: "/leaderboard", priority: "0.6", changefreq: "daily" },
+  { path: "/blog", priority: "0.9", changefreq: "daily" },
   { path: "/install", priority: "0.5", changefreq: "monthly" },
   { path: "/login", priority: "0.4", changefreq: "yearly" },
   { path: "/signup", priority: "0.5", changefreq: "yearly" },
@@ -32,12 +33,10 @@ Deno.serve(async () => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const { data: schemes } = await supabase
-      .from("schemes")
-      .select("slug, updated_at")
-      .not("slug", "is", null)
-      .order("updated_at", { ascending: false })
-      .limit(50000);
+    const [{ data: schemes }, { data: blogs }] = await Promise.all([
+      supabase.from("schemes").select("slug, updated_at").not("slug", "is", null).order("updated_at", { ascending: false }).limit(50000),
+      supabase.from("blogs").select("slug, updated_at, published_at").eq("status", "published").order("published_at", { ascending: false }).limit(50000),
+    ]);
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -62,10 +61,23 @@ Deno.serve(async () => {
       })
       .join("\n");
 
+    const blogUrls = (blogs || [])
+      .map((b: { slug: string; updated_at: string | null; published_at: string | null }) => {
+        const lastmod = (b.updated_at || b.published_at || "").split("T")[0] || today;
+        return `  <url>
+    <loc>${SITE_URL}/blog/${escapeXml(b.slug)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+      })
+      .join("\n");
+
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticUrls}
 ${schemeUrls}
+${blogUrls}
 </urlset>`;
 
     return new Response(xml, {
