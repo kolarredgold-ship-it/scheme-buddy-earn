@@ -50,3 +50,5 @@ Disallow: /login
 Disallow: /signup
 
 Sitemap: https://techrola.in/sitemap.xml
+# RSS feed for blog posts
+# https://techrola.in/rss.xml
