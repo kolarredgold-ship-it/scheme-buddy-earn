@@ -12,6 +12,7 @@ import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
 import heroStudents from "@/assets/hero-students.png";
 import { Landmark, IdCard, BookOpen, Briefcase } from "lucide-react";
+import HomeBlogSection from "@/components/HomeBlogSection";
 
 const INDIAN_STATES = [
   { value: "all", label: "All states & central" },
@@ -1240,7 +1241,7 @@ const Index = () => {
           </div>
         </section>
 
-
+        <HomeBlogSection />
 
         {prefsOpen && (
           <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
