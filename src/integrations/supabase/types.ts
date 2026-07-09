@@ -809,6 +809,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      referral_code_exists: { Args: { _code: string }; Returns: boolean }
       verify_cron_secret: { Args: { _token: string }; Returns: boolean }
     }
     Enums: {
