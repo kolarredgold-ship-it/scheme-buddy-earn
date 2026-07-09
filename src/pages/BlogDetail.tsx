@@ -131,10 +131,10 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      <article className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl">
+      <article className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl text-left">
         {blog.category && <Badge className="mb-3">{blog.category}</Badge>}
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">{blog.title}</h1>
-        {blog.excerpt && <p className="mt-4 text-lg text-muted-foreground">{blog.excerpt}</p>}
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight text-left">{blog.title}</h1>
+        {blog.excerpt && <p className="mt-4 text-lg text-muted-foreground text-left">{blog.excerpt}</p>}
 
         <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
@@ -148,10 +148,15 @@ const BlogDetail = () => {
                className="w-full aspect-video object-cover rounded-xl mt-6 border" />
         )}
 
-        <div className="prose prose-lg dark:prose-invert max-w-none mt-8
-                        prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
-                        prose-a:text-primary prose-img:rounded-lg
-                        prose-table:border prose-th:bg-muted prose-th:p-2 prose-td:p-2 prose-td:border">
+        <div className="prose prose-lg dark:prose-invert max-w-none mt-8 text-left
+                        prose-p:text-left prose-p:leading-relaxed prose-p:my-4
+                        prose-headings:font-bold prose-headings:text-left prose-headings:mt-8 prose-headings:mb-3
+                        prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
+                        prose-ul:my-4 prose-ol:my-4 prose-li:my-1 prose-li:text-left
+                        prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                        prose-img:rounded-lg prose-img:mx-0
+                        prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
+                        prose-table:border prose-table:w-full prose-th:bg-muted prose-th:p-2 prose-th:text-left prose-td:p-2 prose-td:border prose-td:align-top">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{blog.body_markdown}</ReactMarkdown>
         </div>
 

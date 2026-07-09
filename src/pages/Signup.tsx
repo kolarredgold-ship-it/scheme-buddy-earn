@@ -118,7 +118,7 @@ const Signup = () => {
             <li className="flex items-center gap-2">✓ 3-level referral earnings up to ₹550</li>
           </ul>
         </div>
-        <p className="relative text-xs text-primary-foreground/60">© Techrola · Secure sign-up powered by Lovable Cloud</p>
+        <p className="relative text-xs text-primary-foreground/60">© Techrola · Secure sign-up</p>
       </div>
 
       {/* Form panel */}
