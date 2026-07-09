@@ -56,11 +56,7 @@ const Signup = () => {
       return false;
     }
     setValidatingRef(true);
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("referral_code")
-      .eq("referral_code", trimmed)
-      .maybeSingle();
+    const { data, error } = await supabase.rpc("referral_code_exists", { _code: trimmed });
     setValidatingRef(false);
     if (error || !data) {
       setReferralError("Referral code not found. Please check and try again.");
