@@ -1,7 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { CheckCircle2, CreditCard, Sparkles } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { CheckCircle2, CreditCard, Sparkles, Lock } from "lucide-react";
 import RazorpayCheckoutButton from "@/components/RazorpayCheckoutButton";
 import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 interface Props {
   open: boolean;
@@ -10,7 +14,17 @@ interface Props {
 }
 
 export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (open && !loading && !user) {
+      toast.error("Please sign in to purchase AI credits");
+    }
+  }, [open, loading, user]);
+
+  const redirectParam = encodeURIComponent(location.pathname + location.search);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
