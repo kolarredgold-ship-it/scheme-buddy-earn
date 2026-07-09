@@ -68,7 +68,37 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
             >
               Pay ₹499 with Razorpay
             </RazorpayCheckoutButton>
-          ) : null}
+          ) : (
+            <div className="rounded-xl border border-amber-500/40 bg-amber-500/5 p-4 text-center space-y-3">
+              <div className="flex items-center justify-center gap-2 text-amber-700 font-semibold text-sm">
+                <Lock className="h-4 w-4" /> Sign in required
+              </div>
+              <p className="text-xs text-muted-foreground">
+                You need a Techrola account to purchase AI credits.
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    onOpenChange(false);
+                    navigate(`/login?redirect=${redirectParam}`);
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  className="flex-1"
+                  onClick={() => {
+                    onOpenChange(false);
+                    navigate(`/signup?redirect=${redirectParam}`);
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
