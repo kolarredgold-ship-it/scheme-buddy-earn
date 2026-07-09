@@ -1,7 +1,11 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { CheckCircle2, CreditCard, Sparkles } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { CheckCircle2, CreditCard, Sparkles, Lock } from "lucide-react";
 import RazorpayCheckoutButton from "@/components/RazorpayCheckoutButton";
 import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 interface Props {
   open: boolean;
@@ -10,7 +14,17 @@ interface Props {
 }
 
 export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
-  const { user, profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (open && !loading && !user) {
+      toast.error("Please sign in to purchase AI credits");
+    }
+  }, [open, loading, user]);
+
+  const redirectParam = encodeURIComponent(location.pathname + location.search);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -54,7 +68,37 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
             >
               Pay ₹499 with Razorpay
             </RazorpayCheckoutButton>
-          ) : null}
+          ) : (
+            <div className="rounded-xl border border-amber-500/40 bg-amber-500/5 p-4 text-center space-y-3">
+              <div className="flex items-center justify-center gap-2 text-amber-700 font-semibold text-sm">
+                <Lock className="h-4 w-4" /> Sign in required
+              </div>
+              <p className="text-xs text-muted-foreground">
+                You need a Techrola account to purchase AI credits.
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    onOpenChange(false);
+                    navigate(`/login?redirect=${redirectParam}`);
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  className="flex-1"
+                  onClick={() => {
+                    onOpenChange(false);
+                    navigate(`/signup?redirect=${redirectParam}`);
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
