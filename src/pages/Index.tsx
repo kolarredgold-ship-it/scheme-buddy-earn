@@ -320,10 +320,8 @@ const Index = () => {
               {/* Left: copy */}
               <div className="text-white relative z-10">
                 <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
-                    <span className="h-7 w-7 rounded-full bg-white flex items-center justify-center text-base shadow">
-                      {HERO_SLIDES[heroSlide].icon || "✨"}
-                    </span>
+                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                     <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
                       {HERO_SLIDES[heroSlide].accent}
                     </span>
