@@ -5,14 +5,38 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronRight, MapPin, Filter, GraduationCap, School, ExternalLink, Camera, Mic, ScanLine, Home, ChevronDown, Zap, Bell } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Search,
+  Loader2,
+  X,
+  Check,
+  ChevronRight,
+  MapPin,
+  GraduationCap,
+  School,
+  ExternalLink,
+  Landmark,
+  IdCard,
+  BookOpen,
+  Briefcase,
+  Mic,
+  FileText,
+  Trophy,
+  Rocket,
+  Building2,
+  Star,
+} from "lucide-react";
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
 import heroStudents from "@/assets/hero-students.png";
-import { Landmark, IdCard, BookOpen, Briefcase } from "lucide-react";
 import HomeBlogSection from "@/components/HomeBlogSection";
+import SectionHeader from "@/components/home/SectionHeader";
+import CategoryTile from "@/components/home/CategoryTile";
+import SchemeCardFiverr from "@/components/home/SchemeCardFiverr";
 
 const INDIAN_STATES = [
   { value: "all", label: "All states & central" },
@@ -42,34 +66,6 @@ const INDIAN_STATES = [
   { value: "west_bengal", label: "West Bengal" },
 ];
 
-const CATEGORY_CHIPS = [
-  { key: "all", label: "All", icon: "🌐", color: "from-slate-500 to-slate-600", bg: "bg-slate-50 border-slate-200 hover:border-slate-400" },
-  { key: "scholarships", label: "Scholarships", icon: "🎓", color: "from-blue-500 to-blue-600", bg: "bg-blue-50 border-blue-200 hover:border-blue-400" },
-  { key: "women_empowerment", label: "Women", icon: "👩", color: "from-pink-500 to-pink-600", bg: "bg-pink-50 border-pink-200 hover:border-pink-400" },
-  { key: "farmers", label: "Farmers", icon: "🌾", color: "from-amber-500 to-amber-600", bg: "bg-amber-50 border-amber-200 hover:border-amber-400" },
-  { key: "employment", label: "Employment", icon: "💼", color: "from-emerald-500 to-emerald-600", bg: "bg-emerald-50 border-emerald-200 hover:border-emerald-400" },
-  { key: "housing", label: "Housing", icon: "🏠", color: "from-orange-500 to-orange-600", bg: "bg-orange-50 border-orange-200 hover:border-orange-400" },
-  { key: "health", label: "Healthcare", icon: "🏥", color: "from-rose-500 to-rose-600", bg: "bg-rose-50 border-rose-200 hover:border-rose-400" },
-  { key: "business", label: "Entrepreneurs", icon: "🚀", color: "from-violet-500 to-violet-600", bg: "bg-violet-50 border-violet-200 hover:border-violet-400" },
-];
-
-const TAG_COLORS: Record<string, string> = {
-  scholarships: "bg-blue-100 text-blue-700",
-  women_empowerment: "bg-pink-100 text-pink-700",
-  farmers: "bg-amber-100 text-amber-800",
-  employment: "bg-emerald-100 text-emerald-700",
-  housing: "bg-orange-100 text-orange-700",
-  health: "bg-rose-100 text-rose-700",
-  business: "bg-violet-100 text-violet-700",
-  education: "bg-cyan-100 text-cyan-700",
-  sc_st: "bg-purple-100 text-purple-700",
-  minority: "bg-fuchsia-100 text-fuchsia-700",
-  govt_jobs: "bg-indigo-100 text-indigo-700",
-};
-
-const STATE_TAG = "bg-amber-100 text-amber-800";
-const CENTRAL_TAG = "bg-slate-100 text-slate-700";
-
 interface Scheme {
   id: string;
   title: string;
@@ -83,11 +79,8 @@ interface Scheme {
 
 const prettyState = (s: string | null) => {
   if (!s) return "";
-  if (s === "central") return "Central";
-  return s
-    .split("_")
-    .map((w) => w[0].toUpperCase() + w.slice(1))
-    .join(" ");
+  if (s === "central") return "Central Govt";
+  return s.split("_").map((w) => w[0].toUpperCase() + w.slice(1)).join(" ");
 };
 
 const prettyCategory = (c: string) => {
@@ -108,140 +101,50 @@ const prettyCategory = (c: string) => {
   return map[c] || c.replace(/_/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 };
 
-const TOOL_TINTS = [
-  "bg-violet-50 border-violet-200",
-  "bg-rose-50 border-rose-200",
-  "bg-amber-50 border-amber-200",
-  "bg-emerald-50 border-emerald-200",
-  "bg-sky-50 border-sky-200",
-  "bg-orange-50 border-orange-200",
-  "bg-pink-50 border-pink-200",
-  "bg-lime-50 border-lime-200",
-  "bg-cyan-50 border-cyan-200",
-  "bg-fuchsia-50 border-fuchsia-200",
-  "bg-teal-50 border-teal-200",
-  "bg-indigo-50 border-indigo-200",
+const ROTATING_WORDS = ["scheme", "internship", "mock interview", "career tool", "scholarship"];
+
+const CATEGORY_TILES = [
+  { label: "Central Schemes", icon: Landmark, href: "/?cat=central", tint: "bg-primary/10 text-primary" },
+  { label: "State Schemes", icon: MapPin, href: "/?cat=state", tint: "bg-secondary/10 text-secondary" },
+  { label: "Scholarships", icon: GraduationCap, href: "/?cat=scholarships", tint: "bg-accent/15 text-accent" },
+  { label: "Internships", icon: Briefcase, href: "/ai-tools", tint: "bg-primary/10 text-primary" },
+  { label: "AI Tools", icon: Sparkles, href: "/ai-tools", tint: "bg-secondary/10 text-secondary" },
+  { label: "Mock Interview", icon: Mic, href: "/mock-interview", tint: "bg-accent/15 text-accent" },
+  { label: "Career Program", icon: Trophy, href: "/career-program", tint: "bg-primary/10 text-primary" },
+  { label: "Reports", icon: FileText, href: "/ai-tools", tint: "bg-secondary/10 text-secondary" },
 ];
 
-const INTRO_SLIDES = [
-  {
-    accent: "Empowering",
-    title: "All Learners:",
-    line2: "Academic and Beyond",
-    desc: "Techrola brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
-    icon: "🎓",
-    cta: "Get Started",
-    to: "/signup",
-  },
-  {
-    accent: "Discover",
-    title: "2,500+ Schemes",
-    line2: "Built for Bharat",
-    desc: "Find central & state government scholarships, jobs and welfare programs — with direct apply links and AI-powered search.",
-    icon: "🏛️",
-    cta: "Explore Schemes",
-    to: "#schemes",
-  },
-  {
-    accent: "Get Hired",
-    title: "with AI Mock",
-    line2: "Interviews & Reports",
-    desc: "Practice with live HR mock interviews, generate professional internship reports in minutes and stand out to recruiters.",
-    icon: "🤖",
-    cta: "Try AI Tools",
-    to: "/ai-tools",
-  },
-];
-
-
-const TECHROLA_TABS = [
-  {
-    key: "job",
-    label: "Job Seekers",
-    title: "Land your first job, faster",
-    desc: "AI resume builder, mock HR interviews, verified internships and direct apply links to top employers.",
-    bullets: ["AI Resume & Cover Letter", "Live HR Mock Interviews", "Verified internship board"],
-  },
-  {
-    key: "higher",
-    label: "Higher / Skill Education Learners",
-    title: "Plan your higher education",
-    desc: "Compare 10,000+ colleges, discover scholarships and build a skill roadmap that fits your goal.",
-    bullets: ["College & course finder", "Scholarship matcher", "AI study planner"],
-  },
-  {
-    key: "other",
-    label: "Other Learners",
-    title: "Learn at your own pace",
-    desc: "Free government scheme discovery, career guidance and AI tools open to every learner across India.",
-    bullets: ["2,500+ govt schemes", "AI career counsellor", "Skill-based content library"],
-  },
+const POPULAR_CHIPS = [
+  { label: "PM Schemes", href: "/?q=PM" },
+  { label: "Scholarships", href: "/?cat=scholarships" },
+  { label: "Mock Interview", href: "/mock-interview" },
+  { label: "Resume Builder", href: "/ai-tools" },
+  { label: "Internships", href: "/ai-tools" },
 ];
 
 const Index = () => {
   const { user } = useAuth();
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
   const [aiSummary, setAiSummary] = useState("");
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
-  const [heroSlide, setHeroSlide] = useState(0);
-  const [techTab, setTechTab] = useState(0);
+  const [wordIdx, setWordIdx] = useState(0);
 
-  // Build hero slides: brand intros + one slide per AI tool
-  const HERO_SLIDES = [
-    ...INTRO_SLIDES,
-    ...aiStudentTools.map((t) => ({
-      accent: "AI Tool",
-      title: t.title.replace(/^AI\s+/, ""),
-      line2: t.badge,
-      desc: t.desc,
-      icon: t.icon,
-      cta: "Open Tool",
-      to: t.to,
-    })),
-  ];
-
-  // Auto-advance hero slider
-  useEffect(() => {
-    const id = setInterval(() => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
-    return () => clearInterval(id);
-  }, [HERO_SLIDES.length]);
-
-  const prevSlide = () => setHeroSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  const nextSlide = () => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length);
-
-
-  // College finder
+  // College finder state
   const [cfLocation, setCfLocation] = useState("");
   const [cfType, setCfType] = useState<"both" | "college" | "school">("both");
   const [cfLoading, setCfLoading] = useState(false);
   const [cfItems, setCfItems] = useState<Array<{ name: string; type: string; city?: string; state?: string; category?: string; website?: string }> | null>(null);
   const [cfError, setCfError] = useState("");
 
-  const handleCollegeFinder = async () => {
-    const loc = cfLocation.trim();
-    if (loc.length < 2) return;
-    setCfLoading(true);
-    setCfError("");
-    setCfItems(null);
-    try {
-      const { data, error } = await supabase.functions.invoke("college-finder", {
-        body: { location: loc, type: cfType },
-      });
-      if (error) throw error;
-      if (!data?.success) throw new Error(data?.error || "Search failed");
-      setCfItems(data.items || []);
-    } catch (e: any) {
-      setCfError(e?.message || "Could not load results. Please try again.");
-    } finally {
-      setCfLoading(false);
-    }
-  };
+  useEffect(() => {
+    const id = setInterval(() => setWordIdx((i) => (i + 1) % ROTATING_WORDS.length), 2200);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -275,9 +178,7 @@ const Index = () => {
     if (q.length < 3) return;
     setSearching(true);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-scheme-search", {
-        body: { query: q },
-      });
+      const { data, error } = await supabase.functions.invoke("ai-scheme-search", { body: { query: q } });
       if (error) throw error;
       setAiResults(data.schemes || []);
       setAiSummary(data.ai_summary || "");
@@ -300,981 +201,340 @@ const Index = () => {
     setAiSummary("");
   };
 
+  const handleCollegeFinder = async () => {
+    const loc = cfLocation.trim();
+    if (loc.length < 2) return;
+    setCfLoading(true);
+    setCfError("");
+    setCfItems(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("college-finder", { body: { location: loc, type: cfType } });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || "Search failed");
+      setCfItems(data.items || []);
+    } catch (e: any) {
+      setCfError(e?.message || "Could not load results. Please try again.");
+    } finally {
+      setCfLoading(false);
+    }
+  };
+
   const stateFiltered =
     selectedState === "all"
       ? schemes
       : schemes.filter((s) => s.state === selectedState || s.state === "central");
 
-  const visible = aiResults
-    ? aiResults
-    : activeCategory === "all"
-      ? stateFiltered
-      : stateFiltered.filter((s) => s.category === activeCategory);
+  const visible = aiResults ? aiResults : stateFiltered;
 
   return (
     <Layout>
       <div className="pb-24 md:pb-12 bg-background">
-        {/* HERO — App shell: top tabs, location, search, category strip, swipe carousel */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#2a1470] via-[#3b1d8a] to-[#6b2fb3]">
-          {/* Ambient glow blobs */}
-          <div className="pointer-events-none absolute -top-24 -left-24 h-96 w-96 rounded-full bg-[#6b2fb3]/40 blur-[120px]" />
-          <div className="pointer-events-none absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-[#f59e0b]/10 blur-[100px]" />
-          <div className="absolute bottom-0 inset-x-0 h-8 bg-background rounded-t-[28px]" />
-
-          <div className="container mx-auto px-4 pt-4 pb-10 relative z-10">
-            {/* Top row — 3 quick-launch pill tabs */}
-            <div className="grid grid-cols-3 gap-2.5 mb-4">
-              <Link
-                to="/signup"
-                className="flex items-center justify-center gap-2 h-11 rounded-xl bg-amber-400 text-[#1a1450] font-extrabold text-sm shadow-lg shadow-amber-500/25 active:scale-[0.97] transition-transform"
-              >
-                <span className="text-lg">🎓</span> Techrola
-              </Link>
-              <a
-                href="#schemes"
-                className="flex items-center justify-center gap-2 h-11 rounded-xl bg-white text-[#1a1450] font-bold text-sm shadow-md active:scale-[0.97] transition-transform"
-              >
-                <span className="text-lg">🏛️</span> Schemes
-              </a>
-              <Link
-                to="/ai-tools"
-                className="flex items-center justify-center gap-2 h-11 rounded-xl bg-white text-[#1a1450] font-bold text-sm shadow-md active:scale-[0.97] transition-transform"
-              >
-                <span className="text-lg">🤖</span> AI Tools
-              </Link>
-            </div>
-
-            {/* Location bar + wallet chip */}
-            <div className="flex items-center gap-2 mb-3">
-              <button className="flex-1 flex items-center gap-2 h-10 px-3 rounded-xl bg-[#1a1450]/60 backdrop-blur border border-white/15 text-white text-sm font-bold">
-                <Home className="h-4 w-4 text-amber-400" />
-                <span className="truncate">HOME · India</span>
-                <ChevronDown className="h-4 w-4 ml-auto opacity-70" />
-              </button>
-              <Link
-                to={user ? "/dashboard" : "/signup"}
-                className="h-10 px-3 rounded-xl bg-[#1a1450]/60 backdrop-blur border border-white/15 flex items-center gap-1.5 text-white"
-                aria-label="Wallet"
-              >
-                <span className="h-6 w-6 rounded-lg bg-amber-400 flex items-center justify-center">
-                  <Zap className="h-3.5 w-3.5 text-[#1a1450]" />
-                </span>
-                <span className="text-sm font-extrabold">{HERO_SLIDES.length}</span>
-              </Link>
-            </div>
-
-            {/* Search bar */}
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex-1 flex items-center h-12 rounded-2xl bg-white px-3 shadow-lg shadow-black/10">
-                <Search className="h-5 w-5 text-slate-400 shrink-0" />
-                <input
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  placeholder="Search schemes, tools, colleges…"
-                  className="flex-1 min-w-0 mx-2 bg-transparent outline-none text-sm text-slate-800 placeholder:text-slate-400"
-                />
-                <button aria-label="Image search" className="p-1.5 text-slate-500 hover:text-slate-700">
-                  <Camera className="h-5 w-5" />
-                </button>
-                <button aria-label="Voice search" className="p-1.5 text-slate-500 hover:text-slate-700">
-                  <Mic className="h-5 w-5" />
-                </button>
-              </div>
-              <button
-                aria-label="Scan"
-                className="h-12 w-12 rounded-2xl bg-white/10 border border-white/15 backdrop-blur flex items-center justify-center text-white active:scale-95 transition-transform"
-              >
-                <ScanLine className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Category strip — active underline */}
-            <div className="-mx-4 px-4 overflow-x-auto no-scrollbar mb-5">
-              <div className="flex items-end gap-6 min-w-max pb-1">
-                {[
-                  { key: "for-you", label: "For You", icon: "✨" },
-                  { key: "schemes", label: "Schemes", icon: "🏛️" },
-                  { key: "tools", label: "AI Tools", icon: "🤖" },
-                  { key: "interview", label: "Interview", icon: "🎤" },
-                  { key: "jobs", label: "Jobs", icon: "💼" },
-                  { key: "colleges", label: "Colleges", icon: "🏫" },
-                  { key: "reports", label: "Reports", icon: "📄" },
-                ].map((c, i) => {
-                  const active = i === 0;
-                  return (
-                    <button
-                      key={c.key}
-                      className="flex flex-col items-center gap-1.5 shrink-0 pb-2 relative"
+        {/* HERO — Fiverr-style editorial */}
+        <section className="relative bg-background border-b border-border">
+          <div className="container mx-auto px-4 pt-8 md:pt-16 pb-10 md:pb-20">
+            <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-8 lg:gap-12 items-center">
+              <div>
+                <h1
+                  className="text-[34px] leading-[1.05] md:text-6xl lg:text-7xl font-extrabold text-foreground tracking-tight"
+                  style={{ fontFamily: "Plus Jakarta Sans" }}
+                >
+                  Find the right
+                  <br className="hidden md:block" />{" "}
+                  <span className="relative inline-block align-baseline">
+                    <span
+                      key={wordIdx}
+                      className="inline-block text-primary italic underline decoration-accent decoration-[6px] underline-offset-[6px] animate-in fade-in slide-in-from-bottom-2 duration-500"
+                      style={{ fontFamily: "Plus Jakarta Sans" }}
                     >
-                      <div
-                        className={`h-11 w-11 rounded-xl flex items-center justify-center text-xl ${
-                          active
-                            ? "bg-white/15 border border-white/30"
-                            : "bg-white/5 border border-white/10"
-                        }`}
-                      >
-                        {c.icon}
-                      </div>
-                      <span
-                        className={`text-[11px] font-bold ${
-                          active ? "text-white" : "text-white/70"
-                        }`}
-                      >
-                        {c.label}
-                      </span>
-                      {active && (
-                        <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-full bg-amber-400" />
-                      )}
+                      {ROTATING_WORDS[wordIdx]}
+                    </span>
+                  </span>
+                  ,<br />
+                  right away.
+                </h1>
+
+                <p className="mt-4 md:mt-6 text-sm md:text-lg text-muted-foreground max-w-xl leading-relaxed">
+                  Browse 2,500+ government schemes, AI career tools and mock interviews — all in one trusted platform built for Bharat.
+                </p>
+
+                {/* Big search bar */}
+                <div className="mt-6 md:mt-8 flex items-center h-14 md:h-16 rounded-2xl border border-border bg-card shadow-sm focus-within:shadow-md focus-within:border-foreground/40 transition-all overflow-hidden pl-4 md:pl-5 pr-1.5 md:pr-2">
+                  <Search className="h-5 w-5 text-muted-foreground shrink-0" />
+                  <input
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      if (e.target.value.trim().length < 3) {
+                        setAiResults(null);
+                        setAiSummary("");
+                      }
+                    }}
+                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                    placeholder='Try "free laptop for students in Tamil Nadu"'
+                    className="flex-1 min-w-0 mx-2 md:mx-3 bg-transparent outline-none text-sm md:text-base text-foreground placeholder:text-muted-foreground"
+                    aria-label="Search schemes and tools"
+                  />
+                  {searchQuery && (
+                    <button onClick={clearSearch} aria-label="Clear" className="p-1 text-muted-foreground hover:text-foreground">
+                      <X className="h-4 w-4" />
                     </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Swipe carousel — big card + peek */}
-            <div className="-mx-4 px-4 overflow-hidden">
-              <div
-                className="flex gap-3 transition-transform duration-500 ease-out"
-                style={{ transform: `translateX(calc(-${heroSlide} * (85% + 0.75rem)))` }}
-              >
-                {HERO_SLIDES.map((slide, i) => (
-                  <article
-                    key={i}
-                    className="shrink-0 w-[85%] rounded-3xl bg-gradient-to-br from-white to-slate-50 shadow-2xl shadow-black/20 overflow-hidden relative"
-                  >
-                    {/* Top accent band */}
-                    <div className="h-1.5 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
-                    <div className="p-5 flex gap-4">
-                      <div className="flex-1 min-w-0 flex flex-col">
-                        <div className="inline-flex items-center gap-1.5 self-start bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider mb-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse" />
-                          {slide.accent}
-                        </div>
-                        <h2
-                          className="text-xl font-extrabold text-[#1a1450] leading-tight tracking-tight"
-                          style={{ fontFamily: "Plus Jakarta Sans" }}
-                        >
-                          {slide.title}
-                          <br />
-                          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">
-                            {slide.line2}
-                          </span>
-                        </h2>
-                        <p className="text-[13px] text-slate-600 mt-2 line-clamp-3 leading-relaxed">
-                          {slide.desc}
-                        </p>
-                        <div className="mt-3">
-                          {slide.to?.startsWith("#") ? (
-                            <a href={slide.to}>
-                              <Button
-                                size="sm"
-                                className="rounded-xl bg-[#1a1450] hover:bg-[#2a1470] text-white font-bold h-9 px-4 shadow-md"
-                              >
-                                {slide.cta || "Get Started"} <ArrowRight className="h-3.5 w-3.5 ml-1" />
-                              </Button>
-                            </a>
-                          ) : (
-                            <Link to={slide.to || (user ? "/dashboard" : "/signup")}>
-                              <Button
-                                size="sm"
-                                className="rounded-xl bg-[#1a1450] hover:bg-[#2a1470] text-white font-bold h-9 px-4 shadow-md"
-                              >
-                                {slide.cta || "Get Started"} <ArrowRight className="h-3.5 w-3.5 ml-1" />
-                              </Button>
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                      {/* Right visual — icon tile or image on first slide */}
-                      <div className="w-24 shrink-0 flex items-center justify-center">
-                        {i === 0 ? (
-                          <div className="h-28 w-24 rounded-2xl overflow-hidden ring-2 ring-white shadow-lg">
-                            <img
-                              src={heroStudents}
-                              alt="Techrola students"
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="h-24 w-24 rounded-2xl bg-gradient-to-br from-[#3b1d8a] to-[#6b2fb3] flex items-center justify-center text-5xl shadow-lg shadow-purple-900/30">
-                            <span>{slide.icon}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            {/* Dots + count */}
-            <div className="mt-4 flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                {HERO_SLIDES.slice(0, 10).map((_, i) => (
+                  )}
                   <button
-                    key={i}
-                    onClick={() => setHeroSlide(i)}
-                    aria-label={`Slide ${i + 1}`}
-                    className={`h-1.5 rounded-full transition-all ${
-                      i === heroSlide ? "w-6 bg-amber-400" : "w-1.5 bg-white/30"
-                    }`}
+                    onClick={handleSearch}
+                    disabled={searching || searchQuery.trim().length < 3}
+                    className="h-11 md:h-12 px-4 md:px-6 rounded-xl bg-foreground text-background text-sm font-bold inline-flex items-center gap-1.5 disabled:opacity-40 hover:opacity-90 transition-opacity"
+                  >
+                    {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Search</>}
+                  </button>
+                </div>
+
+                {/* Popular chips */}
+                <div className="mt-4 flex items-center gap-2 flex-wrap">
+                  <span className="text-xs md:text-sm text-muted-foreground font-medium">Popular:</span>
+                  {POPULAR_CHIPS.map((c) => (
+                    <Link
+                      key={c.label}
+                      to={c.href}
+                      className="text-xs md:text-sm border border-border rounded-full px-3 py-1 hover:border-foreground/40 hover:bg-muted/50 transition-colors"
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right visual */}
+              <div className="hidden lg:block">
+                <div className="relative">
+                  <div className="absolute -top-4 -left-4 h-24 w-24 rounded-2xl bg-accent/20" aria-hidden />
+                  <div className="absolute -bottom-6 -right-6 h-32 w-32 rounded-full bg-secondary/20" aria-hidden />
+                  <div className="relative aspect-[4/5] rounded-3xl overflow-hidden border border-border shadow-xl bg-card">
+                    <img src={heroStudents} alt="Techrola students" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="absolute -bottom-4 left-6 right-6 bg-card border border-border rounded-2xl shadow-lg p-3 flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-accent/20 flex items-center justify-center">
+                      <Star className="h-5 w-5 text-accent" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold text-foreground">Trusted by 50,000+ students</div>
+                      <div className="text-[11px] text-muted-foreground">4.8/5 across India</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* TRUSTED STRIP */}
+        <section className="border-b border-border bg-muted/30">
+          <div className="container mx-auto px-4 py-4 md:py-5">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <span className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                Trusted by students across India
+              </span>
+              <div className="flex items-center gap-5 md:gap-8 text-xs md:text-sm text-muted-foreground font-semibold">
+                <span><span className="text-foreground font-extrabold">50,000+</span> students</span>
+                <span><span className="text-foreground font-extrabold">2,500+</span> schemes</span>
+                <span><span className="text-foreground font-extrabold">28</span> states covered</span>
+                <span className="hidden md:inline"><span className="text-foreground font-extrabold">20+</span> AI tools</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CATEGORY TILES RAIL */}
+        <section className="container mx-auto px-4 py-10 md:py-14">
+          <SectionHeader title="Browse by category" subtitle="Everything a learner needs in one place" />
+          <div className="-mx-4 px-4 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-3 md:gap-4 min-w-max pb-2">
+              {CATEGORY_TILES.map((t) => (
+                <CategoryTile key={t.label} icon={t.icon} label={t.label} href={t.href} tint={t.tint} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* POPULAR SCHEMES RAIL */}
+        <section className="container mx-auto px-4 py-10 md:py-14">
+          <SectionHeader
+            title="Popular schemes"
+            subtitle="Direct apply links, verified sources"
+            href="#all-schemes"
+            linkLabel="See all schemes"
+          />
+          {loading ? (
+            <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+          ) : (
+            <div className="-mx-4 px-4 overflow-x-auto scrollbar-hide">
+              <div className="flex gap-4 min-w-max pb-2">
+                {schemes.slice(0, 10).map((s) => (
+                  <SchemeCardFiverr
+                    key={s.id}
+                    slug={s.slug}
+                    title={s.title}
+                    category={s.category}
+                    state={s.state}
+                    image_url={s.image_url}
+                    categoryLabel={prettyCategory(s.category)}
+                    stateLabel={prettyState(s.state) || "Central Govt"}
                   />
                 ))}
               </div>
-              <div className="flex items-center gap-1.5">
-                <button
-                  onClick={prevSlide}
-                  aria-label="Previous"
-                  className="h-8 w-8 rounded-lg bg-white/10 border border-white/15 text-white flex items-center justify-center active:scale-95"
-                >
-                  <ChevronRight className="h-4 w-4 rotate-180" />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  aria-label="Next"
-                  className="h-8 w-8 rounded-lg bg-white/10 border border-white/15 text-white flex items-center justify-center active:scale-95"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </button>
-              </div>
             </div>
-          </div>
-
-          {/* Floating 4 feature pills bar at bottom of hero */}
-          <div className="relative container mx-auto px-4 pb-8 md:pb-0 md:-mb-10 md:translate-y-1/2 z-20">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-4 bg-white rounded-2xl shadow-2xl border border-white/60 p-3 md:p-5">
-
-              {[
-                { icon: "📝", title: "Student Registration", desc: "Create your free Techrola account", to: "/signup", color: "bg-orange-100 text-orange-700" },
-                { icon: "🏫", title: "Search Colleges", desc: "Find the right college from 10,000+", to: "#colleges", color: "bg-blue-100 text-blue-700" },
-                { icon: "💼", title: "Find Internships", desc: "Verified internships from top companies", to: "/ai-tools", color: "bg-emerald-100 text-emerald-700" },
-                { icon: "🤖", title: "AI Career Tools", desc: "20+ AI tools to boost your career", to: "/ai-tools", color: "bg-violet-100 text-violet-700" },
-              ].map((f) => (
-                <a
-                  key={f.title}
-                  href={f.to}
-                  className="flex items-center gap-3 rounded-xl px-2.5 py-2 hover:bg-muted/60 transition-colors"
-                >
-                  <div className={`h-10 w-10 md:h-11 md:w-11 shrink-0 rounded-full ${f.color} flex items-center justify-center text-lg`}>
-                    {f.icon}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-[12px] md:text-[13px] font-bold text-foreground leading-tight">{f.title}</div>
-                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-2">{f.desc}</div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
+          )}
         </section>
 
-
-        {/* Sliding tools strip — auto-marquee banner */}
-        <div className="relative mt-16 md:mt-20 overflow-hidden border-y border-emerald-100/80 bg-emerald-50/50 backdrop-blur-sm">
-          <div
-            className="flex gap-3 py-3 w-max"
-            style={{ animation: "ticker 40s linear infinite" }}
-          >
-            {[...aiStudentTools, ...aiStudentTools].map((t, i) => (
-              <Link
-                key={`${t.to}-${i}`}
-                to={t.to}
-                className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-emerald-200/70 px-3.5 py-1.5 hover:border-emerald-400 hover:shadow-sm transition-all"
-              >
-                <span className="text-base leading-none">{t.icon}</span>
-                <span className="text-xs font-semibold text-foreground whitespace-nowrap">
-                  {t.title.replace(/^AI\s+/, "")}
-                </span>
-              </Link>
-            ))}
-          </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-emerald-50 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
-        </div>
-
-        {/* STATS BAR — early social proof */}
-        <section className="bg-gradient-to-r from-[#0c1a4d] via-[#142166] to-[#1a2a7a] text-white">
-          <div className="container mx-auto px-4 py-10 md:py-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              {[
-                { v: "50,000+", l: "STUDENTS REGISTERED" },
-                { v: "10,000+", l: "COLLEGES LISTED" },
-                { v: "1,200+", l: "HIRING PARTNERS" },
-                { v: "20+", l: "AI TOOLS AVAILABLE" },
-              ].map((s) => (
-                <div key={s.l}>
-                  <div className="text-2xl md:text-4xl font-extrabold text-amber-400" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    {s.v}
-                  </div>
-                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/80 mt-1">
-                    {s.l}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* AI TOOLS */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
-
-          <div className="mb-5">
-            <h2
-              className="text-xl md:text-3xl font-extrabold text-foreground"
-              style={{ fontFamily: "Plus Jakarta Sans" }}
-            >
-              AI tools built for your career
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">
-              19+ tools to write, prepare, and grow — unlock all with Pro
-            </p>
-          </div>
-
-          {/* Featured hero tool — Internship Report Generator */}
-          {aiStudentTools[0] && (
-            <Link
-              to={aiStudentTools[0].to}
-              onClick={() => trackToolClick("internship-report-generator", "home-hero")}
-              className="block group mb-8 active:scale-[0.99] transition-transform"
-            >
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
-                <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
-                <div className="relative flex items-start md:items-center gap-4 md:gap-6">
-                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
-                    📄
-                  </div>
-                  <div className="flex-1 min-w-0 text-white">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="text-[10px] md:text-xs font-bold bg-orange-400 text-orange-950 px-2 py-0.5 rounded-full">
-                        Most popular
-                      </span>
-                      <span className="text-[10px] md:text-xs font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
-                        DOCX
-                      </span>
+        {/* AI TOOLS RAIL */}
+        <section className="bg-muted/30 border-y border-border">
+          <div className="container mx-auto px-4 py-10 md:py-14">
+            <SectionHeader
+              title="AI tools built for your career"
+              subtitle="Write, prepare and grow — 20+ tools"
+              href="/ai-tools"
+              linkLabel="View all tools"
+            />
+            <div className="-mx-4 px-4 overflow-x-auto scrollbar-hide">
+              <div className="flex gap-4 min-w-max pb-2">
+                {aiStudentTools.slice(0, 10).map((t) => (
+                  <Link
+                    key={t.to}
+                    to={t.to}
+                    onClick={() => trackToolClick(t.to, "home-rail")}
+                    className="shrink-0 w-[220px] rounded-2xl border border-border bg-card p-4 hover:shadow-md hover:-translate-y-0.5 transition-all group"
+                  >
+                    <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl mb-3">
+                      {t.icon}
                     </div>
-                    <h3
-                      className="font-extrabold text-lg md:text-2xl leading-tight mb-1"
-                      style={{ fontFamily: "Plus Jakarta Sans" }}
-                    >
-                      AI Internship Report Generator
+                    <h3 className="text-sm font-bold text-foreground leading-tight line-clamp-2">
+                      {t.title.replace(/^AI\s+/, "")}
                     </h3>
-                    <p className="text-[12px] md:text-sm text-white/85 mb-3 max-w-xl">
-                      Generate professional reports instantly. Download-ready DOCX in 60 seconds.
-                    </p>
-                    <span className="inline-flex items-center gap-1.5 bg-white text-indigo-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
-                      Generate now <ArrowRight className="h-3.5 w-3.5" />
+                    <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2">{t.desc}</p>
+                    <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
+                      Open <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
                     </span>
-                  </div>
-                </div>
+                  </Link>
+                ))}
               </div>
-            </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ALL SCHEMES — filterable */}
+        <section id="all-schemes" className="container mx-auto px-4 py-10 md:py-14">
+          <SectionHeader title="Explore all schemes" subtitle="2,500+ free to browse — no sign-up needed" />
+
+          <div className="flex flex-col md:flex-row gap-2 mb-5">
+            <Select value={selectedState} onValueChange={setSelectedState}>
+              <SelectTrigger className="md:w-[280px] h-11 rounded-xl bg-card">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="max-h-[320px]">
+                {INDIAN_STATES.map((s) => (
+                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {aiSummary && (
+            <div className="flex items-start gap-2 p-3 rounded-xl bg-secondary/10 border border-secondary/30 mb-4">
+              <Sparkles className="h-4 w-4 text-secondary shrink-0 mt-0.5" />
+              <p className="text-xs text-foreground/80">{aiSummary}</p>
+            </div>
           )}
 
-          {/* Tool cards grid — improved spacing, hover/press states, descriptions */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
-            {aiStudentTools.slice(1).map((t, i) => (
-              <Link
-                key={t.to}
-                to={t.to}
-                onClick={() => trackToolClick(t.to, "home-grid")}
-                className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
-              >
-                <div className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-white dark:bg-white/10 border-2 border-white/80 flex items-center justify-center text-2xl shadow-md ring-1 ring-foreground/5 group-hover:scale-110 group-hover:ring-emerald-300 transition-all">
-                  {t.icon}
-                </div>
-                <h3 className="text-[13px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
-                  {t.title.replace(/^AI\s+/, "")}
-                </h3>
-                <p className="text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
-                  {t.desc}
-                </p>
-                <span className="mt-auto inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  Open <ArrowRight className="h-3 w-3" />
-                </span>
-              </Link>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-16"><Loader2 className="h-7 w-7 text-primary animate-spin" /></div>
+          ) : visible.length === 0 ? (
+            <div className="py-12 text-center text-sm text-muted-foreground">No schemes match your filters.</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {visible.slice(0, 15).map((s) => (
+                <Link
+                  key={s.id}
+                  to={`/scheme/${s.slug}`}
+                  className="group flex gap-3 p-3.5 rounded-2xl border border-border bg-card hover:border-foreground/30 hover:shadow-sm transition-all"
+                >
+                  <div className="h-16 w-16 shrink-0 rounded-xl bg-muted overflow-hidden">
+                    {s.image_url ? (
+                      <img src={s.image_url} alt={s.title} loading="lazy" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
+                        <Landmark className="h-6 w-6 text-primary/60" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                      {s.title}
+                    </h3>
+                    <div className="mt-1.5 flex items-center gap-2 text-[11px] text-muted-foreground">
+                      <span className="font-semibold text-foreground/70">{prettyCategory(s.category)}</span>
+                      <span>·</span>
+                      <span className="truncate">{prettyState(s.state) || "Central"}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
 
-          <div className="flex justify-center mt-8">
-            <Link to="/ai-tools" onClick={() => trackToolClick("view-all", "home")}>
-              <Button
-                variant="outline"
-                className="rounded-xl border-foreground/15 font-semibold gap-2 px-5"
+        {/* CAREER PROGRAM BAND */}
+        <section className="container mx-auto px-4 py-10 md:py-14">
+          <div className="rounded-3xl border border-border bg-card p-6 md:p-10 grid lg:grid-cols-[1fr_auto] gap-8 items-center">
+            <div>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider bg-accent/20 text-accent-foreground px-2.5 py-1 rounded-full">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" /> Career Program
+              </span>
+              <h2
+                className="mt-3 text-2xl md:text-4xl font-extrabold text-foreground leading-tight tracking-tight"
+                style={{ fontFamily: "Plus Jakarta Sans" }}
               >
-                <Sparkles className="h-4 w-4" /> View all AI tools on Techrola
+                Work · Learn · Get Hired
+              </h2>
+              <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-xl">
+                A simple 6-step path from signup to your first job offer. Earn rewards, get certified, land real opportunities.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {["Register", "Subscribe", "EMP Code", "Promote", "Build Streak", "Get Hired"].map((s, i) => (
+                  <span key={s} className="inline-flex items-center gap-1.5 text-xs font-semibold border border-border rounded-full px-2.5 py-1">
+                    <span className="h-5 w-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center">{i + 1}</span>
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <Link to={user ? "/career-program" : "/signup"} className="shrink-0">
+              <Button size="lg" className="rounded-xl font-bold bg-foreground text-background hover:opacity-90">
+                Start your journey <ArrowRight className="h-4 w-4 ml-1.5" />
               </Button>
             </Link>
           </div>
         </section>
 
-
-        {/* SCHEMES */}
-        <section id="schemes" className="bg-stone-50/70 border-y border-border/40">
-          <div className="container mx-auto px-4 py-10 md:py-14">
-            <div className="mb-5">
-              <h2
-                className="text-xl md:text-3xl font-extrabold text-foreground"
-                style={{ fontFamily: "Plus Jakarta Sans" }}
-              >
-                Explore government schemes
-              </h2>
-              <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                2,500+ free to browse — no sign-up needed
-              </p>
-            </div>
-
-            {/* Featured schemes sliding strip */}
-            {schemes.length > 0 && (
-              <div className="relative -mx-4 mb-6 overflow-hidden group">
-                <div
-                  className="flex gap-3 py-2 px-4 w-max group-hover:[animation-play-state:paused]"
-                  style={{ animation: "ticker 60s linear infinite" }}
-                >
-                  {[...schemes.slice(0, 12), ...schemes.slice(0, 12)].map((s, i) => (
-                    <Link
-                      key={`${s.id}-${i}`}
-                      to={`/scheme/${s.slug}`}
-                      className="shrink-0 w-[260px] rounded-2xl border border-emerald-200/70 bg-white p-4 hover:shadow-md hover:border-emerald-400 transition-all flex flex-col gap-2"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
-                          {prettyCategory(s.category)}
-                        </span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
-                          {prettyState(s.state) || "Central"}
-                        </span>
-                      </div>
-                      <h3 className="text-sm font-bold text-foreground line-clamp-2 leading-snug">
-                        {s.title}
-                      </h3>
-                      <span className="mt-auto text-[11px] font-semibold text-emerald-700 inline-flex items-center gap-1">
-                        View details <ChevronRight className="h-3 w-3" />
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-                <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-stone-50/90 to-transparent" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-stone-50/90 to-transparent" />
-              </div>
-            )}
-
-            {/* Search */}
-            <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="AI Search: 'free laptop Tamil Nadu'"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    if (e.target.value.trim().length < 3) {
-                      setAiResults(null);
-                      setAiSummary("");
-                    }
-                  }}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full h-11 pl-9 pr-20 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={clearSearch}
-                    className="absolute right-12 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-                <button
-                  onClick={handleSearch}
-                  disabled={searching || searchQuery.trim().length < 3}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1 disabled:opacity-40"
-                >
-                  {searching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Search"}
-                </button>
-              </div>
-            </div>
-
-            {/* Filter by state */}
-            <div className="mb-3">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1.5">
-                <Filter className="h-3.5 w-3.5" /> Filter by state
-              </div>
-              <Select value={selectedState} onValueChange={setSelectedState}>
-                <SelectTrigger className="w-full sm:w-[320px] h-11 rounded-xl bg-background">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="max-h-[320px]">
-                  {INDIAN_STATES.map((s) => (
-                    <SelectItem key={s.value} value={s.value}>
-                      {s.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Category cards grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2.5 md:gap-3 mb-6">
-              {CATEGORY_CHIPS.map((c) => {
-                const active = activeCategory === c.key;
-                return (
-                  <button
-                    key={c.key}
-                    onClick={() => setActiveCategory(c.key)}
-                    className={`relative flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 rounded-2xl border-2 transition-all ${
-                      active
-                        ? `bg-gradient-to-br ${c.color} text-white border-transparent shadow-lg scale-[1.03]`
-                        : `${c.bg} text-foreground/80`
-                    }`}
-                  >
-                    <span className="text-2xl md:text-3xl leading-none">{c.icon}</span>
-                    <span className={`text-[11px] md:text-xs font-semibold text-center leading-tight ${active ? "text-white" : ""}`}>
-                      {c.label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-
-            {/* Scheme list */}
-            {loading ? (
-              <div className="flex justify-center py-16">
-                <Loader2 className="h-7 w-7 text-emerald-600 animate-spin" />
-              </div>
-            ) : (
-              <>
-                {aiSummary && (
-                  <div className="flex items-start gap-2 p-3 rounded-xl bg-emerald-50 border border-emerald-200 mb-4">
-                    <Sparkles className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <p className="text-xs text-foreground/80">{aiSummary}</p>
-                  </div>
-                )}
-                {/* Desktop: colorful grid cards */}
-                <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
-                  {visible.slice(0, 12).map((s, i) => {
-                    const palettes = [
-                      { bg: "bg-rose-50", border: "border-rose-200", dot: "bg-rose-500", hover: "hover:border-rose-400" },
-                      { bg: "bg-amber-50", border: "border-amber-200", dot: "bg-amber-500", hover: "hover:border-amber-400" },
-                      { bg: "bg-emerald-50", border: "border-emerald-200", dot: "bg-emerald-500", hover: "hover:border-emerald-400" },
-                      { bg: "bg-sky-50", border: "border-sky-200", dot: "bg-sky-500", hover: "hover:border-sky-400" },
-                      { bg: "bg-violet-50", border: "border-violet-200", dot: "bg-violet-500", hover: "hover:border-violet-400" },
-                      { bg: "bg-fuchsia-50", border: "border-fuchsia-200", dot: "bg-fuchsia-500", hover: "hover:border-fuchsia-400" },
-                      { bg: "bg-teal-50", border: "border-teal-200", dot: "bg-teal-500", hover: "hover:border-teal-400" },
-                      { bg: "bg-orange-50", border: "border-orange-200", dot: "bg-orange-500", hover: "hover:border-orange-400" },
-                    ];
-                    const p = palettes[i % palettes.length];
-                    return (
-                      <Link
-                        key={s.id}
-                        to={`/scheme/${s.slug}`}
-                        className={`group relative rounded-2xl border ${p.bg} ${p.border} ${p.hover} p-4 transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3 min-h-[130px]`}
-                      >
-                        <div className="flex items-start gap-2">
-                          <span className={`h-2.5 w-2.5 rounded-full ${p.dot} shrink-0 mt-1.5`} />
-                          <h3 className="font-bold text-sm text-foreground line-clamp-2 group-hover:text-emerald-700">
-                            {s.title}
-                          </h3>
-                        </div>
-                        <div className="flex items-center gap-1.5 flex-wrap mt-auto">
-                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
-                            {prettyCategory(s.category)}
-                          </span>
-                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
-                            {prettyState(s.state) || "Central"}
-                          </span>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all ml-auto" />
-                        </div>
-                      </Link>
-                    );
-                  })}
-                  {visible.length === 0 && (
-                    <div className="col-span-full py-12 text-center text-sm text-muted-foreground">
-                      No schemes match your filters.
-                    </div>
-                  )}
-                </div>
-
-                {/* Mobile: compact list */}
-                <div className="md:hidden bg-background rounded-2xl border border-border/60 divide-y divide-border/60 overflow-hidden">
-                  {visible.slice(0, 15).map((s) => (
-                    <Link
-                      key={s.id}
-                      to={`/scheme/${s.slug}`}
-                      className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted/40 transition-colors group"
-                    >
-                      <span className="h-2 w-2 rounded-full bg-orange-400 shrink-0" />
-                      <span className="font-semibold text-sm text-foreground group-hover:text-emerald-700 truncate">
-                        {s.title}
-                      </span>
-                      <span className="flex items-center gap-1.5 flex-wrap ml-auto shrink-0">
-                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
-                          {prettyCategory(s.category)}
-                        </span>
-                      </span>
-                    </Link>
-                  ))}
-                  {visible.length === 0 && (
-                    <div className="py-12 text-center text-sm text-muted-foreground">
-                      No schemes match your filters.
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-        </section>
-
-        {/* LATEST BLOGS — right after schemes for better content discovery */}
+        {/* BLOGS */}
         <HomeBlogSection />
-
-
-        {/* INTRODUCING TECHROLA — One Nation, One APP */}
-        <section className="bg-gradient-to-br from-amber-50 via-orange-50/40 to-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-              <div>
-                <h2
-                  className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
-                  style={{ fontFamily: "Plus Jakarta Sans" }}
-                >
-                  Introducing <span className="text-violet-700">TECHROLA</span> —<br />
-                  One Nation, One APP
-                </h2>
-                <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
-                  The TECHROLA app is a one-of-a-kind identifier that simplifies the way you
-                  track and manage your academic and skill-based achievements. It consolidates
-                  all your educational records in one place, making it easy to accumulate,
-                  transfer, and access your job profile across different learning pathways.
-                </p>
-                <Link to="/about-us" className="inline-block mt-6">
-                  <Button className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-6 border border-amber-400 shadow-md">
-                    Know More
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="relative">
-                <div className="rounded-3xl bg-gradient-to-br from-violet-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
-                  <div className="flex items-center gap-4">
-                    <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl">
-                      👩‍🎓
-                    </div>
-                    <div>
-                      <div className="text-base md:text-lg font-extrabold text-foreground">
-                        Tanvi Sharma
-                      </div>
-                      <div className="text-xs md:text-sm text-muted-foreground">
-                        I am a registered TECHROLA ID holder.
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-5 grid grid-cols-3 gap-2 text-center">
-                    {["📚", "🏆", "💼"].map((e, i) => (
-                      <div key={i} className="rounded-xl bg-white/70 py-3 text-2xl">
-                        {e}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12 md:mt-16 text-center">
-              <h3
-                className="text-xl md:text-3xl font-extrabold text-foreground"
-                style={{ fontFamily: "Plus Jakarta Sans" }}
-              >
-                Get Started with <span className="text-violet-700">TECHROLA</span> — Create Yours Today!
-              </h3>
-              <div className="mt-5 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white border border-border shadow-sm max-w-full overflow-x-auto">
-                {TECHROLA_TABS.map((t, i) => (
-                  <button
-                    key={t.key}
-                    onClick={() => setTechTab(i)}
-                    className={`px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs md:text-sm font-semibold whitespace-nowrap transition-all duration-300 ${
-                      techTab === i
-                        ? "bg-amber-500 text-amber-950 shadow"
-                        : "text-muted-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-6 max-w-2xl mx-auto">
-                <div
-                  key={techTab}
-                  className="rounded-2xl border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
-                >
-                  <h4 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    {TECHROLA_TABS[techTab].title}
-                  </h4>
-                  <p className="mt-2 text-sm md:text-base text-muted-foreground">
-                    {TECHROLA_TABS[techTab].desc}
-                  </p>
-                  <ul className="mt-4 grid sm:grid-cols-3 gap-2">
-                    {TECHROLA_TABS[techTab].bullets.map((b) => (
-                      <li key={b} className="flex items-center gap-2 text-xs md:text-sm font-medium text-foreground/80 bg-violet-50 border border-violet-100 rounded-lg px-3 py-2">
-                        <Check className="h-4 w-4 text-violet-600 shrink-0" /> {b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* 6 EASY STEPS TO A BETTER CAREER — redesigned */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#0f0a3d] via-[#2a1670] to-[#5b21b6]">
-          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
-
-          <div className="container mx-auto px-4 py-14 md:py-20 relative">
-            <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
-              <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/40 text-amber-300 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Your Career Roadmap
-              </span>
-              <h2
-                className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight"
-                style={{ fontFamily: "Plus Jakarta Sans" }}
-              >
-                6 Easy Steps to a <span className="text-amber-400">Better Career</span>
-              </h2>
-              <p className="mt-3 text-sm md:text-base text-white/70">
-                A simple, proven path from signup to your first job offer.
-              </p>
-            </div>
-
-            {/* Desktop: horizontal timeline; Mobile: vertical timeline */}
-            <div className="relative">
-              {/* Desktop connecting line */}
-              <div className="hidden lg:block absolute top-12 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0" />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-3 relative">
-                {[
-                  { n: 1, t: "Register", d: "Create your free account in seconds", color: "from-rose-400 to-pink-500" },
-                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", color: "from-amber-400 to-orange-500" },
-                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", color: "from-yellow-400 to-amber-500" },
-                  { n: 4, t: "Promote", d: "Share Techrola with your network", color: "from-emerald-400 to-teal-500" },
-                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", color: "from-sky-400 to-indigo-500" },
-                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-violet-400 to-purple-600" },
-                ].map((s) => (
-                  <div key={s.n} className="group relative">
-                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
-                      {/* Step number badge */}
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#1a1450]">
-                        STEP {s.n}
-                      </div>
-
-                      <h3 className="mt-3 text-sm md:text-base font-extrabold text-white tracking-tight">
-                        {s.t}
-                      </h3>
-                      <p className="mt-1.5 text-[11px] md:text-xs text-white/65 leading-snug">
-                        {s.d}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-10 md:mt-12 flex justify-center">
-              <Link to={user ? "/career-program" : "/signup"}>
-                <Button
-                  size="lg"
-                  className="rounded-full bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-8 shadow-lg shadow-amber-900/40"
-                >
-                  Start your journey <ArrowRight className="h-4 w-4 ml-1.5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-
-
-        {/* ABOUT TECHROLA */}
-        <section className="bg-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-              <div>
-                <div className="text-xs md:text-sm font-bold text-violet-700 tracking-widest uppercase mb-3">
-                  About Techrola
-                </div>
-                <h2
-                  className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
-                  style={{ fontFamily: "Plus Jakarta Sans" }}
-                >
-                  A trusted career companion for every student
-                </h2>
-                <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
-                  Techrola AI is a student-first platform that brings opportunities, guidance and
-                  AI-powered tools under one trusted portal — helping learners across India go
-                  from classroom to career with confidence.
-                </p>
-                <ul className="mt-5 space-y-2.5">
-                  {[
-                    "Verified colleges, internships and jobs",
-                    "AI tools trained for Indian education context",
-                    "Free for every registered student",
-                    "Trusted by 50,000+ students nationwide",
-                    "Government Schemes direct apply link",
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm md:text-base text-foreground">
-                      <Check className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                {[
-                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-emerald-50 to-emerald-100 border-emerald-200" },
-                  { icon: "🏆", k: "RECOGNITION", v: "Top Ed-Tech 2025", color: "from-amber-50 to-amber-100 border-amber-200" },
-                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-violet-50 to-violet-100 border-violet-200" },
-                  { icon: "🎓", k: "COLLEGES LISTED", v: "10,000+ institutes", color: "from-sky-50 to-sky-100 border-sky-200" },
-                ].map((c) => (
-                  <div
-                    key={c.k}
-                    className={`rounded-2xl border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
-                  >
-                    <div className="h-10 w-10 rounded-full bg-white shadow flex items-center justify-center text-xl mb-3">
-                      {c.icon}
-                    </div>
-                    <div className="text-[10px] md:text-xs font-bold tracking-wider text-muted-foreground">
-                      {c.k}
-                    </div>
-                    <div className="text-sm md:text-base font-extrabold text-foreground mt-0.5">
-                      {c.v}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* PRICING */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
-
-          <div className="mb-6">
-            <h2
-              className="text-xl md:text-3xl font-extrabold text-foreground"
-              style={{ fontFamily: "Plus Jakarta Sans" }}
-            >
-              Simple, honest pricing
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">
-              Start free, unlock everything for less than ₹83/month
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4 md:gap-5 max-w-4xl">
-            {/* Free */}
-            <div className="rounded-2xl border border-border bg-card p-6">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Free
-              </div>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold">₹0</span>
-                <span className="text-sm text-muted-foreground">forever</span>
-              </div>
-              <ul className="mt-5 space-y-2.5 text-sm">
-                {[
-                  "Browse 2,500+ schemes",
-                  "No apply links",
-                  "Try 1 AI tool",
-                  "Downloaded reports",
-                  "Full AI tools access",
-                ].map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-foreground/80">
-                    <Check className="h-4 w-4 text-muted-foreground" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/signup" className="block mt-6">
-                <Button variant="outline" className="w-full rounded-xl font-semibold">
-                  Get started free
-                </Button>
-              </Link>
-            </div>
-
-            {/* Pro */}
-            <div className="relative rounded-2xl border-2 border-emerald-500 bg-card p-6 shadow-lg shadow-emerald-500/10">
-              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-emerald-600 text-white px-2.5 py-1 rounded-full">
-                Most popular
-              </span>
-              <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">
-                Pro
-              </div>
-              <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold">₹999</span>
-                <span className="text-sm text-muted-foreground">/ year</span>
-              </div>
-              <div className="text-xs text-emerald-700 font-semibold mt-1">Just ₹83/month</div>
-              <ul className="mt-5 space-y-2.5 text-sm">
-                {[
-                  "Browse 2,500+ schemes",
-                  "All 19+ AI tools",
-                  "3 free AI generations (shared)",
-                  "+5 generations per ₹499 top-up",
-                  "Download DOCX reports",
-                  "Priority support",
-                ].map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-foreground">
-                    <Check className="h-4 w-4 text-emerald-600" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/subscription" className="block mt-6">
-                <Button className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
-                  Get Pro — ₹999/year
-                </Button>
-              </Link>
-              <p className="mt-3 text-[11px] text-muted-foreground text-center inline-flex items-center justify-center gap-1.5 w-full">
-                🔒 Secured payments by
-                <span className="font-bold text-[#072654] bg-white border border-border/60 px-1.5 py-0.5 rounded">Razorpay</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
 
         {/* COLLEGE & SCHOOL FINDER */}
         <section className="container mx-auto px-4 py-10 md:py-14">
-          <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 p-5 md:p-8">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-full">
-                <GraduationCap className="h-3.5 w-3.5" /> College & School Finder
-              </span>
-            </div>
-            <h2 className="text-xl md:text-3xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
-              Find colleges and schools near you
-            </h2>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">
-              Search by city, district or state — powered by AI. Results are listed as a directory, not ranked.
-            </p>
-
-            <div className="mt-5 flex flex-col md:flex-row gap-2">
+          <div className="rounded-3xl border border-border bg-card p-6 md:p-10">
+            <SectionHeader title="Find colleges & schools near you" subtitle="Search by city, district or state — AI-powered directory" />
+            <div className="flex flex-col md:flex-row gap-2">
               <div className="relative flex-1">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={cfLocation}
                   onChange={(e) => setCfLocation(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleCollegeFinder()}
-                  placeholder="Enter city, district, or state (e.g. Hyderabad, Pune)"
-                  className="pl-9 h-11 bg-white"
+                  placeholder="Enter city, district or state (e.g. Hyderabad, Pune)"
+                  className="pl-9 h-11 bg-background"
                 />
               </div>
               <Select value={cfType} onValueChange={(v: any) => setCfType(v)}>
-                <SelectTrigger className="md:w-44 h-11 bg-white">
+                <SelectTrigger className="md:w-44 h-11 bg-background">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1286,33 +546,29 @@ const Index = () => {
               <Button
                 onClick={handleCollegeFinder}
                 disabled={cfLoading || cfLocation.trim().length < 2}
-                className="h-11 px-5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+                className="h-11 px-5 bg-foreground hover:opacity-90 text-background font-semibold rounded-xl"
               >
                 {cfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4 mr-1.5" /> Search</>}
               </Button>
             </div>
 
-            {cfError && (
-              <p className="mt-4 text-sm text-rose-600">{cfError}</p>
-            )}
-
+            {cfError && <p className="mt-4 text-sm text-destructive">{cfError}</p>}
             {cfItems && cfItems.length === 0 && !cfLoading && (
               <p className="mt-4 text-sm text-muted-foreground">No results found for this location.</p>
             )}
-
             {cfItems && cfItems.length > 0 && (
               <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-3">
                 {cfItems.map((it, i) => {
                   const isSchool = it.type === "school";
                   return (
-                    <div key={i} className="rounded-xl bg-white border border-border/60 p-4 hover:shadow-md transition-shadow">
+                    <div key={i} className="rounded-xl bg-background border border-border p-4 hover:shadow-sm transition-shadow">
                       <div className="flex items-start gap-3">
-                        <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${isSchool ? "bg-amber-100 text-amber-700" : "bg-indigo-100 text-indigo-700"}`}>
+                        <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${isSchool ? "bg-accent/15 text-accent" : "bg-primary/10 text-primary"}`}>
                           {isSchool ? <School className="h-5 w-5" /> : <GraduationCap className="h-5 w-5" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${isSchool ? "bg-amber-100 text-amber-800" : "bg-indigo-100 text-indigo-800"}`}>
+                            <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${isSchool ? "bg-accent/15 text-accent" : "bg-primary/10 text-primary"}`}>
                               {isSchool ? "School" : "College"}
                             </span>
                             {it.category && (
@@ -1333,7 +589,7 @@ const Index = () => {
                               href={it.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 mt-2 font-medium"
+                              className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
                             >
                               Visit website <ExternalLink className="h-3 w-3" />
                             </a>
@@ -1348,11 +604,55 @@ const Index = () => {
           </div>
         </section>
 
+        {/* PRICING */}
+        <section className="container mx-auto px-4 py-10 md:py-14">
+          <SectionHeader title="Simple, honest pricing" subtitle="Start free, unlock everything for less than ₹83/month" />
+          <div className="grid md:grid-cols-2 gap-4 md:gap-5 max-w-4xl">
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Free</div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-4xl font-extrabold">₹0</span>
+                <span className="text-sm text-muted-foreground">forever</span>
+              </div>
+              <ul className="mt-5 space-y-2.5 text-sm">
+                {["Browse 2,500+ schemes", "Try 1 AI tool", "Basic search"].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-foreground/80">
+                    <Check className="h-4 w-4 text-muted-foreground" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/signup" className="block mt-6">
+                <Button variant="outline" className="w-full rounded-xl font-semibold">Get started free</Button>
+              </Link>
+            </div>
 
+            <div className="relative rounded-2xl border-2 border-secondary bg-card p-6 shadow-sm">
+              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full">
+                Most popular
+              </span>
+              <div className="text-xs font-semibold text-secondary uppercase tracking-wide">Pro</div>
+              <div className="mt-2 flex items-baseline gap-2">
+                <span className="text-4xl font-extrabold">₹999</span>
+                <span className="text-sm text-muted-foreground">/ year</span>
+              </div>
+              <div className="text-xs text-secondary font-semibold mt-1">Just ₹83/month</div>
+              <ul className="mt-5 space-y-2.5 text-sm">
+                {["All 20+ AI tools", "Direct apply links", "3 free AI generations", "Download DOCX reports", "Priority support"].map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-foreground">
+                    <Check className="h-4 w-4 text-secondary" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link to="/subscription" className="block mt-6">
+                <Button className="w-full rounded-xl bg-foreground text-background hover:opacity-90 font-semibold">
+                  Get Pro — ₹999/year
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
 
-        {prefsOpen && (
-          <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
-        )}
+        <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
       </div>
     </Layout>
   );
