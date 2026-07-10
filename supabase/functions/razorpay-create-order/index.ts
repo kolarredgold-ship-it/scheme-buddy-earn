@@ -1,15 +1,46 @@
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { createClient } from 'npm:@supabase/supabase-js@2';
+
+// Server-side price table (INR rupees). Client-supplied amounts are ignored;
+// the amount is derived from payment_type to prevent price tampering.
+const PRICE_TABLE: Record<string, number> = {
+  subscription: 999,
+  topup: 499,
+  ai_topup: 499,
+};
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
 
   try {
-    const { amount, currency = 'INR', receipt } = await req.json();
-    if (typeof amount !== 'number' || amount < 100) {
-      return new Response(JSON.stringify({ error: 'Amount must be >= 100 paise' }), {
+    // 1) Require an authenticated caller.
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Authentication required' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+    );
+    const { data: userData, error: userErr } = await supabase.auth.getUser(
+      authHeader.replace('Bearer ', ''),
+    );
+    if (userErr || !userData?.user) {
+      return new Response(JSON.stringify({ error: 'Invalid session' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { payment_type = 'subscription', currency = 'INR', receipt } = await req.json();
+    const price = PRICE_TABLE[payment_type];
+    if (!price) {
+      return new Response(JSON.stringify({ error: 'Invalid payment_type' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    const amount = price * 100; // paise
 
     const keyId = Deno.env.get('RAZORPAY_KEY_ID')!;
     const keySecret = Deno.env.get('RAZORPAY_KEY_SECRET')!;
@@ -21,6 +52,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         amount, currency,
         receipt: receipt ?? `rcpt_${Date.now()}`,
+        notes: { payment_type, user_id: userData.user.id },
       }),
     });
 
