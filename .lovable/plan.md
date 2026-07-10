@@ -1,75 +1,61 @@
+# Fiverr-Style Redesign — Site Shell + Homepage
 
+Keep all existing colors, routes, data, and business logic. Only presentation (Layout + Index) and a couple of shared card primitives change.
 
-# TechRola – Phase 1 Plan
+## Design direction
 
-## Overview
-Build the complete user-facing web app and admin panel for TechRola, a freemium platform for browsing government schemes with a referral-based earning system. We'll use Supabase for auth, database, and storage. Payments (Razorpay) will be added later.
+Fiverr's visual signature, translated to Techrola:
+- Clean white app shell, generous whitespace, thin 1px borders instead of heavy shadows
+- Sticky top nav: logo · main links · search · right-side actions
+- Massive editorial hero headline with an inline rotating word, oversized search bar with a dark pill "Search" button
+- "Popular" tag row directly under the search
+- Trusted-by strip
+- Horizontally scrollable category tiles (icon + label, thin border, hover lift)
+- Section blocks: left-aligned bold headline + right "See more" link + horizontal card rail
+- Cards: image top, 2-line title, small meta row, price/CTA on the right — no gradient chrome
 
----
+Colors stay as-is (blue `221 83% 53%`, green `152 69% 41%`, amber `45 93% 47%`). Fiverr uses black for primary CTAs; we'll use the existing `foreground` token so it reads as near-black in light mode and adapts in dark mode. No new palette, no new fonts — Plus Jakarta Sans (display) + Inter (body) already fit this aesthetic.
 
-## 1. Design System & Layout
-- **Colors**: Primary blue (#2563EB), accent green (#16A34A), earnings yellow (#EAB308), clean white/light gray backgrounds
-- **Mobile-first** responsive layout with bottom nav on mobile
-- **Shared layout** with header (logo, nav, auth buttons) and footer
+## Scope
 
-## 2. Database Setup (Supabase)
-- **profiles** table: name, mobile, email, referral_code (auto-generated), referred_by, subscription_status, wallet_balance
-- **user_roles** table: role enum (admin, user)
-- **schemes** table: title, category, description, eligibility, documents, image_url, apply_link, created_at
-- **transactions** table: user_id, amount, type (credit/debit), source, created_at
-- **withdrawals** table: user_id, amount, status (pending/approved/rejected), created_at
-- RLS policies for all tables
+### 1. `src/components/Layout.tsx` (header only)
+- Replace the pill-group desktop nav with a Fiverr-style horizontal nav: logo left, primary links inline with lower weight, an inline compact search field appearing after scroll, right side = wallet chip + notification + avatar + logout
+- Remove the muted rounded background behind the nav; use plain header with a 1px bottom border on scroll (drop the current glass-strong feel toward crisper white)
+- Mobile header: keep logo + wallet + menu button, but tighten spacing and switch to a clean sheet menu (keep existing bottom nav untouched)
 
-## 3. Authentication
-- Email/password signup & login
-- Referral code field on signup (optional)
-- Auto-generate unique referral code per user
-- Profile auto-creation via trigger
+### 2. `src/pages/Index.tsx` — full homepage rebuild
+Sections top → bottom:
 
-## 4. User-Facing Screens
+1. **Hero** — white background, huge headline "Find the right **[scheme | internship | interview | job]**, right away." with a rotating word. Below it a full-width search bar (rounded, thin border, dark pill "Search" button). "Popular:" chips row (PM schemes, Scholarships, Mock interview, Resume, Internships). Right side of hero on desktop: a soft product mock illustration using `heroStudents` in a rounded frame with subtle amber accent.
+2. **Trusted strip** — small "Trusted by students across India" + a muted logo/stat row (users count, schemes count, states covered — pulled from existing counters if present, else static copy).
+3. **Category tiles rail** — horizontally scrollable row of ~8 tiles (Central Schemes, State Schemes, Scholarships, Internships, AI Tools, Mock Interview, Career Program, Reports). Each = icon in tinted square + label, thin border, hover lift.
+4. **"Popular schemes" rail** — section header + horizontal card rail using existing scheme data + a shared `SchemeCardFiverr` presentational card (image, tag, 2-line title, ministry meta, "View" CTA).
+5. **"Students AI Tools" rail** — same card pattern, links into `/ai-tools`.
+6. **"Career Program" band** — keep existing content but restyled: white card with left copy + right step list, thin border, single amber accent.
+7. **Blog rail** — reuse `HomeBlogSection` styles or wrap it in the new section header pattern.
+8. Keep footer + Career CTA band + mobile bottom nav as-is.
 
-### Home / Schemes Page
-- Category sections: 🔥 Recent, 🎓 Scholarships, 🌾 Farmers, 🏷️ SC/ST, 🌙 Minority
-- Horizontal scroll cards with image, title, short description
-- 🔒 Lock icon for free users
+Business logic, data fetching, routes, subscription gates, and analytics calls stay untouched — only JSX/classes change.
 
-### Scheme Detail Page
-- **Free users**: 50% description visible, rest blurred, locked apply button, CTA "Unlock for ₹1000"
-- **Paid users**: Full description, eligibility, documents, active apply button
+### 3. New shared presentational components (no logic)
+- `src/components/home/SectionHeader.tsx` — `{title, href}` with right-side "See all →"
+- `src/components/home/CategoryTile.tsx` — icon + label tile
+- `src/components/home/SchemeCardFiverr.tsx` — receives the same scheme shape currently rendered on Index and outputs the new card
 
-### Dashboard
-- Wallet balance card with total earnings
-- Referral code with share button (copy/WhatsApp)
-- Quick action buttons: Refer, Withdraw, Browse Schemes
+## Out of scope
+- No changes to Dashboard, Admin, Auth, Career Program page internals, AI tool pages
+- No changes to `index.css` tokens, `tailwind.config.ts`, fonts, or dark-mode palette
+- No changes to Supabase, edge functions, or any data logic
+- Footer stays as-is
 
-### Earnings Screen
-- List of referral earnings with amounts (+₹400, +₹50) and dates
-- Level indicators (Level 1/2/3)
+## Technical notes
+- Existing `HERO_SLIDES` array in `Index.tsx` is retired for the hero; it can still feed the "Popular schemes" rail if useful, otherwise deleted
+- Rotating hero word: simple `useEffect` + `setInterval` swapping from a local array, `AnimatePresence` if `framer-motion` already installed, otherwise a CSS keyframe fade
+- All new UI uses existing semantic tokens (`bg-background`, `text-foreground`, `border-border`, `bg-primary`, `text-accent`) — no hardcoded hex
 
-### Withdrawal Screen
-- Amount input (min ₹500 validation)
-- Submit request button
-- Status tracking list (pending/approved/rejected)
-
-### Subscription Screen
-- Price display: ~~₹2999~~ → ₹1000 (with referral)
-- Benefits list
-- "Pay Now" button (placeholder for Razorpay)
-- Success/failure screens
-
-## 5. Referral Engine (Logic)
-- 3-level referral tracking: Level 1 = ₹400, Level 2 = ₹50, Level 3 = ₹50
-- Wallet credit on successful referral subscription
-- Referral tree stored via referred_by chain
-
-## 6. Admin Panel (at /admin route)
-- **Login**: Separate admin auth check
-- **Dashboard**: Stats cards (total users, paid users, pending withdrawals, total schemes)
-- **Scheme Management**: Add/edit/delete schemes with image upload, category selection
-- **User Management**: Table view with search, subscription status
-- **Withdrawal Management**: List with approve/reject buttons, balance auto-deduction
-
-## 7. Navigation Structure
-- **User**: Home → Scheme Detail → Dashboard → Earnings → Withdrawals → Subscription
-- **Admin**: /admin/dashboard → /admin/schemes → /admin/users → /admin/withdrawals
-
+## Verification
+After the edits, capture the homepage at 390px and 1280px via Playwright, confirm:
+- Hero renders with rotating word and search
+- Category rail scrolls horizontally on mobile
+- No console errors, no missing images, no broken links
+- Header stays sticky and readable on scroll in both themes
