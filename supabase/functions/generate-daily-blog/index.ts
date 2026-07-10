@@ -200,7 +200,10 @@ Deno.serve(async (req) => {
           reading_time: Number(b.reading_time) || 4,
           hook: b.hook ?? null,
           excerpt: stripYear(b.excerpt),
-          body_markdown: stripYear(b.body_markdown),
+          body_markdown: (() => {
+            const md = stripYear(b.body_markdown) || '';
+            return md.includes('Techrola Career Program (Work from Home)') ? md : md + CAREER_CTA_BLOCK;
+          })(),
           faq: Array.isArray(b.faq) ? b.faq : [],
           social_captions: {},
           internal_links: [],
