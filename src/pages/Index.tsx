@@ -490,9 +490,32 @@ const Index = () => {
           <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
         </div>
 
+        {/* STATS BAR — early social proof */}
+        <section className="bg-gradient-to-r from-[#0c1a4d] via-[#142166] to-[#1a2a7a] text-white">
+          <div className="container mx-auto px-4 py-10 md:py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+              {[
+                { v: "50,000+", l: "STUDENTS REGISTERED" },
+                { v: "10,000+", l: "COLLEGES LISTED" },
+                { v: "1,200+", l: "HIRING PARTNERS" },
+                { v: "20+", l: "AI TOOLS AVAILABLE" },
+              ].map((s) => (
+                <div key={s.l}>
+                  <div className="text-2xl md:text-4xl font-extrabold text-amber-400" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                    {s.v}
+                  </div>
+                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/80 mt-1">
+                    {s.l}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* AI TOOLS */}
         <section className="container mx-auto px-4 py-10 md:py-14">
+
           <div className="mb-5">
             <h2
               className="text-xl md:text-3xl font-extrabold text-foreground"
@@ -802,28 +825,9 @@ const Index = () => {
           </div>
         </section>
 
-        {/* STATS BAR — dark blue band */}
-        <section className="bg-gradient-to-r from-[#0c1a4d] via-[#142166] to-[#1a2a7a] text-white">
-          <div className="container mx-auto px-4 py-10 md:py-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-              {[
-                { v: "50,000+", l: "STUDENTS REGISTERED" },
-                { v: "10,000+", l: "COLLEGES LISTED" },
-                { v: "1,200+", l: "HIRING PARTNERS" },
-                { v: "20+", l: "AI TOOLS AVAILABLE" },
-              ].map((s) => (
-                <div key={s.l}>
-                  <div className="text-2xl md:text-4xl font-extrabold text-amber-400" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    {s.v}
-                  </div>
-                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/80 mt-1">
-                    {s.l}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* LATEST BLOGS — right after schemes for better content discovery */}
+        <HomeBlogSection />
+
 
         {/* INTRODUCING TECHROLA — One Nation, One APP */}
         <section className="bg-gradient-to-br from-amber-50 via-orange-50/40 to-background">
@@ -1241,7 +1245,7 @@ const Index = () => {
           </div>
         </section>
 
-        <HomeBlogSection />
+
 
         {prefsOpen && (
           <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
