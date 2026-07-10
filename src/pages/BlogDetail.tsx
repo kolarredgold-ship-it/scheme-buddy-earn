@@ -132,9 +132,31 @@ const BlogDetail = () => {
   return (
     <Layout>
       <article className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl text-left">
+        {/* Top career program banner — visible on every blog */}
+        <Link
+          to="/career-program"
+          className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-secondary/10 px-4 py-3 hover:from-primary/15 hover:to-secondary/15 transition-colors"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="hidden sm:flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-lg">🏠</span>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-foreground leading-tight">
+                Join the Techrola Career Program <span className="text-primary">(work from home)</span>
+              </p>
+              <p className="text-xs text-muted-foreground truncate">
+                Earn while you learn — AI tools, referrals & wallet payouts.
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-bold text-primary flex items-center gap-1 shrink-0">
+            Join <ArrowRight className="h-3.5 w-3.5" />
+          </span>
+        </Link>
+
         {blog.category && <Badge className="mb-3">{blog.category}</Badge>}
         <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight text-left">{blog.title}</h1>
         {blog.excerpt && <p className="mt-4 text-lg text-muted-foreground text-left">{blog.excerpt}</p>}
+
 
         <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
