@@ -61,10 +61,9 @@ export default function RazorpayCheckoutButton({
       if (!ok) throw new Error("Razorpay SDK failed to load");
 
       const { data: order, error } = await supabase.functions.invoke("razorpay-create-order", {
-        body: { payment_type: paymentType, currency, receipt },
+        body: { amount: Math.round(amount * 100), currency, receipt },
       });
       if (error || !order?.order_id) throw new Error(error?.message || "Failed to create order");
-
 
       const rzp = new window.Razorpay({
         key: order.key_id,

@@ -48,26 +48,28 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header — Fiverr-style clean */}
+      {/* Header */}
       <header
-        className={`sticky top-0 z-50 bg-background transition-shadow duration-200 ${
-          scrolled ? "border-b border-border shadow-sm" : "border-b border-transparent"
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "glass-strong shadow-sm"
+            : "bg-transparent"
         }`}
       >
-        <div className="container mx-auto flex h-14 md:h-16 items-center justify-between gap-4 px-4">
-          <Link to="/" className="flex items-center shrink-0">
-            <img src={techrolaLogo} alt="Techrola" className="h-8 md:h-9 w-auto" />
+        <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
+          <Link to="/" className="flex items-center group">
+            <img src={techrolaLogo} alt="Techrola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
           </Link>
 
-          {/* Desktop nav — inline links, low weight */}
-          <nav className="hidden md:flex items-center gap-1">
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1 bg-muted/50 rounded-xl p-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.path)
-                    ? "text-foreground"
+                    ? "bg-card text-foreground shadow-sm"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -76,50 +78,34 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-3">
             {user ? (
-              <>
-                <Button
-                  aria-label="Personalize feed"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setPrefsOpen(true)}
-                  className="rounded-lg h-9 w-9 text-muted-foreground hover:text-foreground"
-                  title="Personalize"
-                >
+              <div className="flex items-center gap-3">
+                <Button aria-label="Personalize feed" variant="ghost" size="icon" onClick={() => setPrefsOpen(true)} className="rounded-xl h-9 w-9 hover:bg-primary/10 hover:text-primary" title="Personalize">
                   <Settings2 className="h-4 w-4" />
                 </Button>
                 <NotificationBell />
-                <Link
-                  to="/dashboard"
-                  className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 hover:border-foreground/30 transition-colors"
-                >
+                <Link to="/dashboard" className="flex items-center gap-1.5 bg-accent/10 rounded-xl px-3 py-1.5 hover:bg-accent/20 transition-colors">
                   <Wallet className="h-3.5 w-3.5 text-accent" />
                   <span className="text-sm font-bold">₹{profile?.wallet_balance?.toFixed(0) || '0'}</span>
                 </Link>
-                <div className="flex items-center gap-2 rounded-lg px-2 py-1">
-                  <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center">
+                <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-1.5">
+                  <div className="h-7 w-7 rounded-lg bg-gradient-primary flex items-center justify-center">
                     <User className="h-3.5 w-3.5 text-primary-foreground" />
                   </div>
-                  <span className="text-sm font-semibold max-w-[100px] truncate">{profile?.name || 'User'}</span>
+                  <span className="text-sm font-medium max-w-[120px] truncate">{profile?.name || 'User'}</span>
                 </div>
-                <Button
-                  aria-label="Log out"
-                  variant="ghost"
-                  size="icon"
-                  onClick={signOut}
-                  className="rounded-lg h-9 w-9 text-muted-foreground hover:text-destructive"
-                >
+                <Button aria-label="Log out" variant="ghost" size="icon" onClick={signOut} className="rounded-xl h-9 w-9 hover:bg-destructive/10 hover:text-destructive">
                   <LogOut className="h-4 w-4" />
                 </Button>
-              </>
+              </div>
             ) : (
-              <div className="flex items-center gap-1">
+              <div className="flex gap-2">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm" className="rounded-lg font-semibold">Sign in</Button>
+                  <Button variant="ghost" size="sm" className="rounded-xl font-medium">Login</Button>
                 </Link>
                 <Link to="/subscription">
-                  <Button size="sm" className="rounded-lg font-semibold bg-foreground text-background hover:opacity-90">Join Techrola</Button>
+                  <Button size="sm" className="rounded-xl font-semibold bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">Sign Up</Button>
                 </Link>
               </div>
             )}
@@ -128,7 +114,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           {/* Mobile: wallet + menu toggle */}
           <div className="md:hidden flex items-center gap-2">
             {user && profile && (
-              <Link to="/dashboard" className="flex items-center gap-1 rounded-lg border border-border px-2 py-1.5">
+              <Link to="/dashboard" className="flex items-center gap-1 bg-accent/10 rounded-lg px-2.5 py-1.5">
                 <Wallet className="h-3.5 w-3.5 text-accent" />
                 <span className="text-xs font-bold">₹{profile.wallet_balance?.toFixed(0) || '0'}</span>
               </Link>
@@ -136,15 +122,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <button
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileMenuOpen}
-              className="h-10 w-10 rounded-lg flex items-center justify-center hover:bg-muted transition-colors"
+              className="h-10 w-10 rounded-xl flex items-center justify-center hover:bg-muted transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
-
-
 
         {/* Mobile menu overlay */}
         {mobileMenuOpen && (
