@@ -197,7 +197,6 @@ const Index = () => {
       title: t.title.replace(/^AI\s+/, ""),
       line2: t.badge,
       desc: t.desc,
-      icon: t.icon,
       cta: "Open Tool",
       to: t.to,
     })),
