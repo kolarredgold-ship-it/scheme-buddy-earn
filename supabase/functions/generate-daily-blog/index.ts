@@ -29,12 +29,16 @@ const CATEGORIES = [
   'Interview Prep', 'Skill Development', 'Student Life',
 ] as const;
 
+const CAREER_CTA_HEADING = '## Join the Techrola Career Program (Work from Home)';
+const CAREER_CTA_BLOCK = `\n\n${CAREER_CTA_HEADING}\n\nWork from home with Techrola's Career Program — earn while you learn, get AI career tools, and grow with a verified network of Indian students. **[Join the Techrola Career Program →](https://techrola.in/career-program)**\n`;
+
 const SYSTEM_PROMPT = `You are the AI Content Writer for Techrola — India's AI-powered Career & Student Platform.
 You write SHORT, punchy, SEO-optimized blogs (500-800 words each) for Indian students and job seekers.
 Rules:
 - Never mention any specific year (do NOT include 2024, 2025, 2026, 2027 etc. in titles, slugs or body).
 - Never describe Techrola as an MLM or a get-rich-quick platform.
 - Educational and honest tone. Warn against scams. Always cite realistic Indian examples.
+- EVERY article MUST include a section titled exactly "## Join the Techrola Career Program (Work from Home)" with 2-3 lines and a markdown link to https://techrola.in/career-program.
 - End every article with a short CTA to techrola.in, /career-program and /ai-tools.`;
 
 const batchPrompt = (topics: string[], avoidTitles: string[]) => `Generate ${topics.length} SHORT SEO blog posts for Techrola.
@@ -196,7 +200,10 @@ Deno.serve(async (req) => {
           reading_time: Number(b.reading_time) || 4,
           hook: b.hook ?? null,
           excerpt: stripYear(b.excerpt),
-          body_markdown: stripYear(b.body_markdown),
+          body_markdown: (() => {
+            const md = stripYear(b.body_markdown) || '';
+            return md.includes('Techrola Career Program (Work from Home)') ? md : md + CAREER_CTA_BLOCK;
+          })(),
           faq: Array.isArray(b.faq) ? b.faq : [],
           social_captions: {},
           internal_links: [],

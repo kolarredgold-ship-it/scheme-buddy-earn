@@ -129,7 +129,6 @@ const INTRO_SLIDES = [
     title: "All Learners:",
     line2: "Academic and Beyond",
     desc: "Techrola brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
-    icon: "🎓",
     cta: "Get Started",
     to: "/signup",
   },
@@ -138,7 +137,6 @@ const INTRO_SLIDES = [
     title: "2,500+ Schemes",
     line2: "Built for Bharat",
     desc: "Find central & state government scholarships, jobs and welfare programs — with direct apply links and AI-powered search.",
-    icon: "🏛️",
     cta: "Explore Schemes",
     to: "#schemes",
   },
@@ -147,7 +145,6 @@ const INTRO_SLIDES = [
     title: "with AI Mock",
     line2: "Interviews & Reports",
     desc: "Practice with live HR mock interviews, generate professional internship reports in minutes and stand out to recruiters.",
-    icon: "🤖",
     cta: "Try AI Tools",
     to: "/ai-tools",
   },
@@ -200,7 +197,6 @@ const Index = () => {
       title: t.title.replace(/^AI\s+/, ""),
       line2: t.badge,
       desc: t.desc,
-      icon: t.icon,
       cta: "Open Tool",
       to: t.to,
     })),
@@ -324,10 +320,8 @@ const Index = () => {
               {/* Left: copy */}
               <div className="text-white relative z-10">
                 <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
-                    <span className="h-7 w-7 rounded-full bg-white flex items-center justify-center text-base shadow">
-                      {HERO_SLIDES[heroSlide].icon || "✨"}
-                    </span>
+                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                     <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
                       {HERO_SLIDES[heroSlide].accent}
                     </span>

@@ -293,7 +293,8 @@ Deno.serve(async (req) => {
     const failed: string[] = [];
     const newNotifications: any[] = [];
 
-    for (const state of statesToSync.slice(0, 5)) {
+    const stateBatchLimit = focus ? statesToSync.length : 5;
+    for (const state of statesToSync.slice(0, stateBatchLimit)) {
       const stateLabel = state.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       const currentCount = stateCounts[state] || 0;
       if (!isPrivateJobsFocus && currentCount >= 30) {
