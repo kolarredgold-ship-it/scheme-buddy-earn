@@ -200,14 +200,15 @@ const BlogDetail = () => {
 
         <Card className="mt-12 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/30">
           <CardContent className="p-6 text-center">
-            <h3 className="text-2xl font-bold">Join the Techrola Career Program</h3>
-            <p className="mt-2 text-muted-foreground">25+ AI tools, internships, job portal, government schemes & referral rewards.</p>
+            <h3 className="text-2xl font-bold">Join the Techrola Career Program <span className="text-primary">(work from home)</span></h3>
+            <p className="mt-2 text-muted-foreground">Earn from home with 25+ AI tools, referral rewards, verified internships & direct-apply government schemes.</p>
             <div className="mt-4 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg"><Link to="/career-program">Join Career Program <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>
               <Button asChild variant="outline" size="lg"><Link to="/ai-tools">Try AI Tools</Link></Button>
             </div>
           </CardContent>
         </Card>
+
 
         {related.length > 0 && (
           <section className="mt-12">
