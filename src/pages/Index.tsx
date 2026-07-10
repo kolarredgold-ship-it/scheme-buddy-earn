@@ -1245,7 +1245,7 @@ const Index = () => {
           </div>
         </section>
 
-        <HomeBlogSection />
+
 
         {prefsOpen && (
           <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
