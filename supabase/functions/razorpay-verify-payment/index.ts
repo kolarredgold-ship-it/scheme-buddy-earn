@@ -96,9 +96,29 @@ Deno.serve(async (req) => {
     // Razorpay stores amount in paise; store rupees.
     const trueAmount = Number(order?.amount ?? 0) / 100;
 
-    // 4) Constrain payment_type to known values; default subscription.
-    const allowed = new Set(['subscription', 'topup', 'ai_topup']);
-    const payment_type = allowed.has(requestedType) ? requestedType : 'subscription';
+    // 4) Constrain payment_type to known values and validate the paid amount
+    // matches the expected server-side price. Prevents ₹1-order exploits.
+    const PRICE_TABLE: Record<string, number> = {
+      subscription: 999,
+      topup: 499,
+      ai_topup: 499,
+    };
+    const payment_type = PRICE_TABLE[requestedType] ? requestedType : 'subscription';
+    const expectedAmount = PRICE_TABLE[payment_type];
+    if (Math.round(trueAmount) !== expectedAmount) {
+      await log({
+        event: 'verify.amount_mismatch', status: 'failed',
+        razorpay_order_id, razorpay_payment_id, user_id: authUserId,
+        amount: trueAmount, payment_type,
+        error_message: `Expected ${expectedAmount}, got ${trueAmount}`,
+        raw_payload: body,
+      });
+      return new Response(JSON.stringify({
+        success: false,
+        error: 'Payment amount does not match expected price. Contact support.',
+      }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
 
     // 5) Insert payment record with server-derived user_id and amount.
     const { data: inserted, error: insErr } = await admin
