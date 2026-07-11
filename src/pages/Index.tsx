@@ -685,21 +685,21 @@ const Index = () => {
             </div>
 
             {/* Category cards grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2 md:gap-2.5 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2.5 md:gap-3 mb-6">
               {CATEGORY_CHIPS.map((c) => {
                 const active = activeCategory === c.key;
                 return (
                   <button
                     key={c.key}
                     onClick={() => setActiveCategory(c.key)}
-                    className={`relative flex flex-col items-center justify-center gap-1 p-2 md:p-2.5 rounded-xl border-2 transition-all ${
+                    className={`relative flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 rounded-2xl border-2 transition-all ${
                       active
-                        ? `bg-gradient-to-br ${c.color} text-white border-transparent shadow-md scale-[1.02]`
+                        ? `bg-gradient-to-br ${c.color} text-white border-transparent shadow-lg scale-[1.03]`
                         : `${c.bg} text-foreground/80`
                     }`}
                   >
-                    <span className="text-lg md:text-xl leading-none">{c.icon}</span>
-                    <span className={`text-[10px] md:text-[11px] font-semibold text-center leading-tight ${active ? "text-white" : ""}`}>
+                    <span className="text-2xl md:text-3xl leading-none">{c.icon}</span>
+                    <span className={`text-[11px] md:text-xs font-semibold text-center leading-tight ${active ? "text-white" : ""}`}>
                       {c.label}
                     </span>
                   </button>
