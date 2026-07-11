@@ -485,69 +485,97 @@ const Index = () => {
         </div>
 
 
-        {/* AI TOOLS — List of Services style grid */}
+        {/* AI TOOLS */}
         <section className="container mx-auto px-4 py-10 md:py-14">
-          <div className="mb-6">
+          <div className="mb-5">
             <h2
-              className="text-2xl md:text-4xl font-extrabold text-foreground"
+              className="text-xl md:text-3xl font-extrabold text-foreground"
               style={{ fontFamily: "Plus Jakarta Sans" }}
             >
-              List of AI Tools
+              AI tools built for your career
             </h2>
-            <p className="text-sm md:text-base text-muted-foreground mt-1">
-              Choose from our most-loved AI career tools.
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">
+              19+ tools to write, prepare, and grow — unlock all with Pro
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-            {aiStudentTools.map((t, i) => {
-              const gradients = [
-                "from-cyan-100 via-sky-100 to-blue-200",
-                "from-orange-100 via-amber-100 to-rose-200",
-                "from-emerald-100 via-teal-100 to-cyan-200",
-                "from-violet-100 via-purple-100 to-fuchsia-200",
-                "from-yellow-100 via-amber-100 to-orange-200",
-                "from-pink-100 via-rose-100 to-red-200",
-                "from-indigo-100 via-blue-100 to-cyan-200",
-                "from-lime-100 via-green-100 to-emerald-200",
-                "from-slate-100 via-zinc-100 to-stone-200",
-              ];
-              const g = gradients[i % gradients.length];
-              return (
-                <Link
-                  key={t.to}
-                  to={t.to}
-                  onClick={() => trackToolClick(t.to, "home-grid")}
-                  className="group block rounded-3xl bg-card border border-border/60 overflow-hidden hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all duration-300"
-                >
-                  <div className={`aspect-square bg-gradient-to-br ${g} flex items-center justify-center relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.6),transparent_60%)]" />
-                    <span className="relative text-5xl md:text-7xl group-hover:scale-110 transition-transform duration-300 drop-shadow-sm">
-                      {t.icon}
+          {/* Featured hero tool — Internship Report Generator */}
+          {aiStudentTools[0] && (
+            <Link
+              to={aiStudentTools[0].to}
+              onClick={() => trackToolClick("internship-report-generator", "home-hero")}
+              className="block group mb-8 active:scale-[0.99] transition-transform"
+            >
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+                <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
+                <div className="relative flex items-start md:items-center gap-4 md:gap-6">
+                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
+                    📄
+                  </div>
+                  <div className="flex-1 min-w-0 text-white">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="text-[10px] md:text-xs font-bold bg-orange-400 text-orange-950 px-2 py-0.5 rounded-full">
+                        Most popular
+                      </span>
+                      <span className="text-[10px] md:text-xs font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
+                        DOCX
+                      </span>
+                    </div>
+                    <h3
+                      className="font-extrabold text-lg md:text-2xl leading-tight mb-1"
+                      style={{ fontFamily: "Plus Jakarta Sans" }}
+                    >
+                      AI Internship Report Generator
+                    </h3>
+                    <p className="text-[12px] md:text-sm text-white/85 mb-3 max-w-xl">
+                      Generate professional reports instantly. Download-ready DOCX in 60 seconds.
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 bg-white text-indigo-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
+                      Generate now <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </div>
-                  <div className="p-3 md:p-4 text-center">
-                    <h3 className="font-bold text-sm md:text-base text-foreground leading-tight line-clamp-2">
-                      {t.title.replace(/^AI\s+/, "")}
-                    </h3>
-                  </div>
-                </Link>
-              );
-            })}
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Tool cards grid — improved spacing, hover/press states, descriptions */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+            {aiStudentTools.slice(1).map((t, i) => (
+              <Link
+                key={t.to}
+                to={t.to}
+                onClick={() => trackToolClick(t.to, "home-grid")}
+                className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+              >
+                <div className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-white dark:bg-white/10 border-2 border-white/80 flex items-center justify-center text-2xl shadow-md ring-1 ring-foreground/5 group-hover:scale-110 group-hover:ring-emerald-300 transition-all">
+                  {t.icon}
+                </div>
+                <h3 className="text-[13px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
+                  {t.title.replace(/^AI\s+/, "")}
+                </h3>
+                <p className="text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
+                  {t.desc}
+                </p>
+                <span className="mt-auto inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  Open <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
+            ))}
           </div>
 
           <div className="flex justify-center mt-8">
             <Link to="/ai-tools" onClick={() => trackToolClick("view-all", "home")}>
               <Button
                 variant="outline"
-                className="rounded-full border-foreground/15 font-semibold gap-2 px-6"
+                className="rounded-xl border-foreground/15 font-semibold gap-2 px-5"
               >
-                <Sparkles className="h-4 w-4" /> View all AI tools
+                <Sparkles className="h-4 w-4" /> View all AI tools on Techrola
               </Button>
             </Link>
           </div>
         </section>
-
 
 
         {/* SCHEMES */}
