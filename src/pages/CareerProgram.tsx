@@ -503,6 +503,64 @@ const CareerProgram = () => {
           </p>
         </div>
 
+        {/* About + Procedure */}
+        <Card className="mb-6 border-primary/20 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base md:text-lg flex items-center gap-2">
+              <Info className="h-4 w-4 text-primary" /> About the Program & How to Start
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0 space-y-4 text-sm leading-relaxed">
+            <p className="text-muted-foreground">
+              The <strong className="text-foreground">Techrola Career Program</strong> is a
+              performance-based work-from-home opportunity for students and graduates.
+              Promote government schemes and AI career tools in your college / community,
+              earn per referral, and unlock a paid internship, job or completion
+              certificate once you cross the eligibility bar.
+            </p>
+
+            <div className="grid gap-2 sm:grid-cols-2">
+              {[
+                { icon: Trophy, title: "Earn Per Referral", text: "₹400 + ₹100 + ₹50 across 3 levels for every subscription your code brings." },
+                { icon: Flame, title: "30-Day Streak", text: "Log at least 3 promotions daily for 30 days to become eligible." },
+                { icon: Briefcase, title: "Get Hired", text: "Eligible members can apply for internship, job or a signed certificate." },
+                { icon: Award, title: "80% Conversion", text: "Higher-quality referrals lead to faster promotion inside the program." },
+              ].map((h, i) => (
+                <div key={i} className="flex items-start gap-2 rounded-lg border border-border/50 bg-background/50 p-3">
+                  <h.icon className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold">{h.title}</p>
+                    <p className="text-[11px] text-muted-foreground">{h.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold mb-2 uppercase tracking-wide text-primary">Procedure to Start</p>
+              <ol className="space-y-2">
+                {[
+                  "Register with your name, college, course and phone number below (Step 1).",
+                  "Activate your Techrola Pro subscription — ₹999 with a referral code, or ₹2999 without (Step 2).",
+                  "Copy your unique referral code and share link from Step 3.",
+                  "Promote daily on WhatsApp, Instagram and college groups — minimum 3 real promotions per day.",
+                  "Track streak, referrals and earnings in the Employee Dashboard (/emp).",
+                  "Maintain a 30-day streak and 80% conversion to unlock hiring in Step 6.",
+                ].map((t, i) => (
+                  <li key={i} className="flex gap-2 text-xs">
+                    <span className="h-5 w-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center shrink-0">{i + 1}</span>
+                    <span className="pt-0.5 text-muted-foreground">{t}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="rounded-lg border border-secondary/30 bg-secondary/10 p-3 text-xs">
+              <strong className="text-foreground">Need help?</strong> Reach us on WhatsApp / email from the Contact page — our team will guide you end to end.
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Skip reason banner */}
         {skipReason && (
           <div className="mb-4 flex items-start gap-2 rounded-xl border border-secondary/30 bg-secondary/10 p-3 text-sm">
