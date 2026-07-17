@@ -37,6 +37,25 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
   el.setAttribute("content", content);
 };
 
+// Normalize AI-generated markdown that arrives collapsed onto a single line.
+// Ensures headings, list items, and table pipes render correctly.
+const normalizeMarkdown = (raw: string): string => {
+  if (!raw) return "";
+  let s = raw.replace(/\r\n/g, "\n");
+  // Ensure a blank line before headings that appear mid-paragraph
+  s = s.replace(/([^\n])\s+(#{1,6}\s)/g, "$1\n\n$2");
+  // Ensure headings terminate with newline
+  s = s.replace(/(#{1,6}\s[^\n]+?)\s+(?=[A-Z])/g, (m, h) => `${h}\n\n`);
+  // Break inline " - **" bullet lists onto new lines
+  s = s.replace(/\s+-\s+\*\*/g, "\n- **");
+  // Break "| col |" tables — put pipes onto their own lines when many in a row
+  s = s.replace(/\s\|\s([-]{3,})\s\|/g, "\n| $1 |");
+  s = s.replace(/\s\|(?=[^\n|]+\|)/g, "\n| ");
+  // Collapse triple+ newlines
+  s = s.replace(/\n{3,}/g, "\n\n");
+  return s.trim();
+};
+
 const BlogDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [blog, setBlog] = useState<Blog | null>(null);
