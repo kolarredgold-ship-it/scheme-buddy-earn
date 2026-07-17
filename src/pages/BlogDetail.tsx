@@ -37,6 +37,33 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
   el.setAttribute("content", content);
 };
 
+// Normalize AI-generated markdown that arrives collapsed onto a single line.
+// The generator often writes headings ("## Title:") and bullets (" - **Item**")
+// inline without newlines. We reinsert paragraph breaks around them.
+const normalizeMarkdown = (raw: string): string => {
+  if (!raw) return "";
+  let s = raw.replace(/\r\n/g, "\n").trim();
+
+  // Only skip if headings already sit at line starts
+  const headingsAtLineStart = /(^|\n)#{2,6}\s/.test(s);
+  const inlineHeadings = /[^\n]\s#{2,6}\s/.test(s);
+  if (headingsAtLineStart && !inlineHeadings) return s;
+
+  // Insert blank line before every heading marker that isn't at the start
+  s = s.replace(/([^\n])\s+(#{2,6})\s+/g, "$1\n\n$2 ");
+  // Break at " - **Term**:" style bullets (converts inline list into real list)
+  s = s.replace(/([.!?)])\s+-\s+\*\*/g, "$1\n\n- **");
+  s = s.replace(/\s+-\s+\*\*/g, "\n- **");
+  // Break inline pipe tables — put each row on its own line
+  s = s.replace(/\s+(\|[^\n|]+\|[^\n]*\|)/g, "\n$1");
+  // Ensure heading line ends before the next sentence (heuristic: heading ends
+  // at the first period, exclamation, or question mark following the marker).
+  s = s.replace(/^(#{2,6}\s[^\n.!?]*[.!?:])\s+/gm, "$1\n\n");
+  // Collapse triple+ newlines
+  s = s.replace(/\n{3,}/g, "\n\n");
+  return s.trim();
+};
+
 const BlogDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [blog, setBlog] = useState<Blog | null>(null);
@@ -157,7 +184,7 @@ const BlogDetail = () => {
                         prose-img:rounded-lg prose-img:mx-0
                         prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
                         prose-table:border prose-table:w-full prose-th:bg-muted prose-th:p-2 prose-th:text-left prose-td:p-2 prose-td:border prose-td:align-top">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{blog.body_markdown}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{normalizeMarkdown(blog.body_markdown)}</ReactMarkdown>
         </div>
 
         {blog.faq && blog.faq.length > 0 && (
