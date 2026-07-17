@@ -176,7 +176,7 @@ const BlogDetail = () => {
                         prose-img:rounded-lg prose-img:mx-0
                         prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
                         prose-table:border prose-table:w-full prose-th:bg-muted prose-th:p-2 prose-th:text-left prose-td:p-2 prose-td:border prose-td:align-top">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{blog.body_markdown}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{normalizeMarkdown(blog.body_markdown)}</ReactMarkdown>
         </div>
 
         {blog.faq && blog.faq.length > 0 && (
