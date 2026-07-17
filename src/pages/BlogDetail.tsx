@@ -38,19 +38,26 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
 };
 
 // Normalize AI-generated markdown that arrives collapsed onto a single line.
-// Ensures headings, list items, and table pipes render correctly.
+// The generator often writes headings ("## Title:") and bullets (" - **Item**")
+// inline without newlines. We reinsert paragraph breaks around them.
 const normalizeMarkdown = (raw: string): string => {
   if (!raw) return "";
-  let s = raw.replace(/\r\n/g, "\n");
-  // Ensure a blank line before headings that appear mid-paragraph
-  s = s.replace(/([^\n])\s+(#{1,6}\s)/g, "$1\n\n$2");
-  // Ensure headings terminate with newline
-  s = s.replace(/(#{1,6}\s[^\n]+?)\s+(?=[A-Z])/g, (m, h) => `${h}\n\n`);
-  // Break inline " - **" bullet lists onto new lines
+  let s = raw.replace(/\r\n/g, "\n").trim();
+
+  // Skip if the markdown already has proper line breaks
+  const hasStructure = /\n\s*(#{1,6}|- |\* |\d+\.)\s/.test(s);
+  if (hasStructure && s.split("\n").length > 5) return s;
+
+  // Insert blank line before every heading marker that isn't at the start
+  s = s.replace(/([^\n])\s+(#{2,6})\s+/g, "$1\n\n$2 ");
+  // Break at " - **Term**:" style bullets (converts inline list into real list)
+  s = s.replace(/([.!?)])\s+-\s+\*\*/g, "$1\n\n- **");
   s = s.replace(/\s+-\s+\*\*/g, "\n- **");
-  // Break "| col |" tables — put pipes onto their own lines when many in a row
-  s = s.replace(/\s\|\s([-]{3,})\s\|/g, "\n| $1 |");
-  s = s.replace(/\s\|(?=[^\n|]+\|)/g, "\n| ");
+  // Break inline pipe tables — put each row on its own line
+  s = s.replace(/\s+(\|[^\n|]+\|[^\n]*\|)/g, "\n$1");
+  // Ensure heading line ends before the next sentence (heuristic: heading ends
+  // at the first period, exclamation, or question mark following the marker).
+  s = s.replace(/^(#{2,6}\s[^\n.!?]*[.!?:])\s+/gm, "$1\n\n");
   // Collapse triple+ newlines
   s = s.replace(/\n{3,}/g, "\n\n");
   return s.trim();
