@@ -44,9 +44,10 @@ const normalizeMarkdown = (raw: string): string => {
   if (!raw) return "";
   let s = raw.replace(/\r\n/g, "\n").trim();
 
-  // Skip if the markdown already has proper line breaks
-  const hasStructure = /\n\s*(#{1,6}|- |\* |\d+\.)\s/.test(s);
-  if (hasStructure && s.split("\n").length > 5) return s;
+  // Only skip if headings already sit at line starts
+  const headingsAtLineStart = /(^|\n)#{2,6}\s/.test(s);
+  const inlineHeadings = /[^\n]\s#{2,6}\s/.test(s);
+  if (headingsAtLineStart && !inlineHeadings) return s;
 
   // Insert blank line before every heading marker that isn't at the start
   s = s.replace(/([^\n])\s+(#{2,6})\s+/g, "$1\n\n$2 ");
