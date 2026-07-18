@@ -203,14 +203,14 @@ const BlogDetail = () => {
 
 
         {blog.faq && blog.faq.length > 0 && (
-          <section className="mt-12">
-            <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
-            <div className="space-y-4">
+          <section className="mt-10 sm:mt-14">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-3 sm:space-y-4">
               {blog.faq.map((f, i) => (
                 <Card key={i}>
-                  <CardContent className="p-5">
-                    <p className="font-semibold">{f.q}</p>
-                    <p className="mt-2 text-muted-foreground">{f.a}</p>
+                  <CardContent className="p-4 sm:p-5 lg:p-6">
+                    <p className="font-semibold text-base sm:text-lg leading-snug">{f.q}</p>
+                    <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">{f.a}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -218,11 +218,11 @@ const BlogDetail = () => {
           </section>
         )}
 
-        <Card className="mt-12 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/30">
-          <CardContent className="p-6 text-center">
-            <h3 className="text-2xl font-bold">Join the Techrola Career Program</h3>
-            <p className="mt-2 text-muted-foreground">25+ AI tools, internships, job portal, government schemes & referral rewards.</p>
-            <div className="mt-4 flex flex-wrap justify-center gap-3">
+        <Card className="mt-10 sm:mt-14 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/30">
+          <CardContent className="p-5 sm:p-8 text-center">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold">Join the Techrola Career Program</h3>
+            <p className="mt-2 sm:mt-3 text-sm sm:text-base text-muted-foreground">25+ AI tools, internships, job portal, government schemes & referral rewards.</p>
+            <div className="mt-4 sm:mt-5 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg"><Link to="/career-program">Join Career Program <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>
               <Button asChild variant="outline" size="lg"><Link to="/ai-tools">Try AI Tools</Link></Button>
             </div>
@@ -230,9 +230,9 @@ const BlogDetail = () => {
         </Card>
 
         {related.length > 0 && (
-          <section className="mt-12">
-            <h2 className="text-2xl font-bold mb-4">Related Articles</h2>
-            <div className="grid md:grid-cols-3 gap-4">
+          <section className="mt-10 sm:mt-14">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6">Related Articles</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
               {related.map((r) => (
                 <Link key={r.slug} to={`/blog/${r.slug}`} className="group">
                   <Card className="h-full overflow-hidden hover:shadow-lg transition-all">
@@ -243,7 +243,7 @@ const BlogDetail = () => {
                       )}
                     </div>
                     <CardContent className="p-4">
-                      <p className="font-semibold line-clamp-2 group-hover:text-primary transition-colors">{r.title}</p>
+                      <p className="font-semibold text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-primary transition-colors">{r.title}</p>
                     </CardContent>
                   </Card>
                 </Link>
@@ -255,5 +255,6 @@ const BlogDetail = () => {
     </Layout>
   );
 };
+
 
 export default BlogDetail;
