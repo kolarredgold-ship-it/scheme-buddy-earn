@@ -26,17 +26,21 @@ serve(async (req) => {
     const body = await req.json();
     const { mode, course, topic, description, chapter, studentName, registerNumber, collegeName, university, guideName, internshipTitle, companyName, companyLocation, internshipDuration, academicYear, topicSpecialization, pagesCount } = body;
 
-    // Server-side credit enforcement
-    const toolKey = mode === "quick" ? "quick" : "full";
-    const { data: creditRes, error: creditErr } = await userClient.rpc("consume_tool_credit", {
-      _tool_key: toolKey,
-      _meta: { source: "generate-report-content", mode, chapter: chapter ?? null },
-    });
-    if (creditErr) {
-      return new Response(JSON.stringify({ error: "Credit check failed" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-    }
-    if (!creditRes?.ok) {
-      return new Response(JSON.stringify({ error: "Limit reached", reason: creditRes?.reason ?? "limit_reached" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    // Server-side credit enforcement.
+    // For a "full" report, only consume a credit on the first chapter ("front") so one report = one credit.
+    const shouldConsume = mode === "quick" || chapter === "front";
+    if (shouldConsume) {
+      const toolKey = mode === "quick" ? "quick" : "full";
+      const { data: creditRes, error: creditErr } = await userClient.rpc("consume_tool_credit", {
+        _tool_key: toolKey,
+        _meta: { source: "generate-report-content", mode, chapter: chapter ?? null },
+      });
+      if (creditErr) {
+        return new Response(JSON.stringify({ error: "Credit check failed" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      if (!creditRes?.ok) {
+        return new Response(JSON.stringify({ error: "Limit reached", reason: creditRes?.reason ?? "limit_reached" }), { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
     }
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
