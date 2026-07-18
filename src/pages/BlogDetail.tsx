@@ -158,12 +158,18 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      <article className="container mx-auto px-4 py-8 lg:py-12 max-w-3xl text-left">
-        {blog.category && <Badge className="mb-3">{blog.category}</Badge>}
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight text-left">{blog.title}</h1>
-        {blog.excerpt && <p className="mt-4 text-lg text-muted-foreground text-left">{blog.excerpt}</p>}
+      <article className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-14 max-w-3xl text-left">
+        {blog.category && <Badge className="mb-3 sm:mb-4">{blog.category}</Badge>}
+        <h1 className="text-[1.75rem] sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.15] sm:leading-tight text-left">
+          {blog.title}
+        </h1>
+        {blog.excerpt && (
+          <p className="mt-3 sm:mt-5 text-base sm:text-lg lg:text-xl leading-relaxed text-muted-foreground text-left">
+            {blog.excerpt}
+          </p>
+        )}
 
-        <div className="mt-5 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+        <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
           <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" />{blog.published_at ? new Date(blog.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : ""}</span>
           <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{blog.reading_time ?? 8} min read</span>
@@ -172,20 +178,29 @@ const BlogDetail = () => {
 
         {blog.featured_image_url && (
           <img src={blog.featured_image_url} alt={blog.title}
-               className="w-full aspect-video object-cover rounded-xl mt-6 border" />
+               className="w-full aspect-video object-cover rounded-xl mt-6 sm:mt-8 border" />
         )}
 
-        <div className="prose prose-lg dark:prose-invert max-w-none mt-8 text-left
-                        prose-p:text-left prose-p:leading-relaxed prose-p:my-4
-                        prose-headings:font-bold prose-headings:text-left prose-headings:mt-8 prose-headings:mb-3
-                        prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl
-                        prose-ul:my-4 prose-ol:my-4 prose-li:my-1 prose-li:text-left
-                        prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                        prose-img:rounded-lg prose-img:mx-0
-                        prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic
-                        prose-table:border prose-table:w-full prose-th:bg-muted prose-th:p-2 prose-th:text-left prose-td:p-2 prose-td:border prose-td:align-top">
+        <div className="prose prose-base sm:prose-lg dark:prose-invert max-w-none mt-6 sm:mt-10 text-left
+                        prose-p:text-left prose-p:leading-[1.75] prose-p:my-4 sm:prose-p:my-5
+                        prose-p:text-[15px] sm:prose-p:text-[17px]
+                        prose-headings:font-bold prose-headings:text-left prose-headings:tracking-tight
+                        prose-headings:mt-8 sm:prose-headings:mt-10 prose-headings:mb-3 sm:prose-headings:mb-4
+                        prose-h1:text-2xl sm:prose-h1:text-3xl lg:prose-h1:text-4xl
+                        prose-h2:text-xl sm:prose-h2:text-2xl lg:prose-h2:text-3xl
+                        prose-h3:text-lg sm:prose-h3:text-xl lg:prose-h3:text-2xl
+                        prose-ul:my-4 sm:prose-ul:my-5 prose-ol:my-4 sm:prose-ol:my-5
+                        prose-li:my-1.5 sm:prose-li:my-2 prose-li:leading-[1.7] prose-li:text-left
+                        prose-a:text-primary prose-a:no-underline hover:prose-a:underline break-words
+                        prose-img:rounded-lg prose-img:mx-0 prose-img:my-6
+                        prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-5
+                        prose-hr:my-8
+                        prose-table:border prose-table:w-full prose-table:my-6 prose-table:text-sm sm:prose-table:text-base
+                        prose-th:bg-muted prose-th:p-2 sm:prose-th:p-3 prose-th:text-left
+                        prose-td:p-2 sm:prose-td:p-3 prose-td:border prose-td:align-top">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{normalizeMarkdown(blog.body_markdown)}</ReactMarkdown>
         </div>
+
 
         {blog.faq && blog.faq.length > 0 && (
           <section className="mt-12">
