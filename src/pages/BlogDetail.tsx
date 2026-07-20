@@ -158,59 +158,77 @@ const BlogDetail = () => {
 
   return (
     <Layout>
-      <article className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-14 max-w-3xl text-left">
-        {blog.category && <Badge className="mb-3 sm:mb-4">{blog.category}</Badge>}
-        <h1 className="text-[1.75rem] sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.15] sm:leading-tight text-left">
-          {blog.title}
-        </h1>
-        {blog.excerpt && (
-          <p className="mt-3 sm:mt-5 text-base sm:text-lg lg:text-xl leading-relaxed text-muted-foreground text-left">
-            {blog.excerpt}
-          </p>
-        )}
+      {/* Hero header */}
+      <header className="border-b bg-gradient-to-b from-primary/5 via-background to-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 max-w-3xl text-left">
+          {blog.category && (
+            <Badge variant="secondary" className="mb-4 uppercase tracking-wider text-[11px] font-semibold">
+              {blog.category}
+            </Badge>
+          )}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.15]">
+            {blog.title}
+          </h1>
+          {blog.excerpt && (
+            <p className="mt-4 sm:mt-6 text-lg sm:text-xl leading-relaxed text-muted-foreground">
+              {blog.excerpt}
+            </p>
+          )}
 
-        <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-muted-foreground">
-          <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
-          <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" />{blog.published_at ? new Date(blog.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : ""}</span>
-          <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{blog.reading_time ?? 8} min read</span>
-          <Button size="sm" variant="ghost" onClick={share} className="ml-auto"><Share2 className="h-4 w-4 mr-1.5" />Share</Button>
+          <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-muted-foreground border-t border-b py-3 sm:py-4">
+            <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
+            <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" />{blog.published_at ? new Date(blog.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : ""}</span>
+            <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{blog.reading_time ?? 8} min read</span>
+            <Button size="sm" variant="ghost" onClick={share} className="ml-auto h-8"><Share2 className="h-4 w-4 mr-1.5" />Share</Button>
+          </div>
         </div>
+      </header>
 
+      <article className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 max-w-3xl text-left">
         {blog.featured_image_url && (
-          <img src={blog.featured_image_url} alt={blog.title}
-               className="w-full aspect-video object-cover rounded-xl mt-6 sm:mt-8 border" />
+          <figure className="-mt-2 mb-8 sm:mb-12">
+            <img src={blog.featured_image_url} alt={blog.title}
+                 className="w-full aspect-video object-cover rounded-2xl border shadow-sm" />
+          </figure>
         )}
 
-        <div className="prose prose-base sm:prose-lg dark:prose-invert max-w-none mt-6 sm:mt-10 text-left
-                        prose-p:text-left prose-p:leading-[1.75] prose-p:my-4 sm:prose-p:my-5
-                        prose-p:text-[15px] sm:prose-p:text-[17px]
-                        prose-headings:font-bold prose-headings:text-left prose-headings:tracking-tight
-                        prose-headings:mt-8 sm:prose-headings:mt-10 prose-headings:mb-3 sm:prose-headings:mb-4
-                        prose-h1:text-2xl sm:prose-h1:text-3xl lg:prose-h1:text-4xl
-                        prose-h2:text-xl sm:prose-h2:text-2xl lg:prose-h2:text-3xl
-                        prose-h3:text-lg sm:prose-h3:text-xl lg:prose-h3:text-2xl
-                        prose-ul:my-4 sm:prose-ul:my-5 prose-ol:my-4 sm:prose-ol:my-5
-                        prose-li:my-1.5 sm:prose-li:my-2 prose-li:leading-[1.7] prose-li:text-left
-                        prose-a:text-primary prose-a:no-underline hover:prose-a:underline break-words
-                        prose-img:rounded-lg prose-img:mx-0 prose-img:my-6
-                        prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-5
-                        prose-hr:my-8
-                        prose-table:border prose-table:w-full prose-table:my-6 prose-table:text-sm sm:prose-table:text-base
-                        prose-th:bg-muted prose-th:p-2 sm:prose-th:p-3 prose-th:text-left
-                        prose-td:p-2 sm:prose-td:p-3 prose-td:border prose-td:align-top">
+        <div className="prose prose-base sm:prose-lg dark:prose-invert max-w-none text-left
+                        prose-p:text-left prose-p:leading-[1.8] prose-p:my-5 sm:prose-p:my-6
+                        prose-p:text-[16px] sm:prose-p:text-[18px] prose-p:text-foreground/90
+                        prose-headings:font-bold prose-headings:text-left prose-headings:tracking-tight prose-headings:text-foreground
+                        prose-headings:mt-10 sm:prose-headings:mt-14 prose-headings:mb-4 sm:prose-headings:mb-5
+                        prose-h2:text-2xl sm:prose-h2:text-3xl lg:prose-h2:text-[2rem]
+                        prose-h2:pb-2 prose-h2:border-b prose-h2:border-border/60
+                        prose-h3:text-xl sm:prose-h3:text-2xl
+                        prose-h4:text-lg sm:prose-h4:text-xl
+                        prose-strong:text-foreground prose-strong:font-semibold
+                        prose-ul:my-5 sm:prose-ul:my-6 prose-ol:my-5 sm:prose-ol:my-6 prose-ul:pl-6 prose-ol:pl-6
+                        prose-li:my-2 sm:prose-li:my-2.5 prose-li:leading-[1.75] prose-li:text-left prose-li:pl-1
+                        prose-li:marker:text-primary
+                        prose-a:text-primary prose-a:font-medium prose-a:underline-offset-4 hover:prose-a:underline break-words
+                        prose-img:rounded-xl prose-img:mx-0 prose-img:my-8 prose-img:border
+                        prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-muted/40
+                        prose-blockquote:pl-5 prose-blockquote:pr-4 prose-blockquote:py-2 prose-blockquote:rounded-r-lg
+                        prose-blockquote:not-italic prose-blockquote:my-6
+                        prose-hr:my-10 prose-hr:border-border
+                        prose-code:bg-muted prose-code:text-foreground prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.9em] prose-code:font-medium
+                        prose-code:before:content-none prose-code:after:content-none
+                        prose-pre:bg-muted prose-pre:border prose-pre:rounded-xl
+                        prose-table:border prose-table:w-full prose-table:my-8 prose-table:text-sm sm:prose-table:text-base prose-table:rounded-lg prose-table:overflow-hidden
+                        prose-th:bg-muted prose-th:p-3 sm:prose-th:p-4 prose-th:text-left prose-th:font-semibold
+                        prose-td:p-3 sm:prose-td:p-4 prose-td:border-t prose-td:align-top">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{normalizeMarkdown(blog.body_markdown)}</ReactMarkdown>
         </div>
 
-
         {blog.faq && blog.faq.length > 0 && (
-          <section className="mt-10 sm:mt-14">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6">Frequently Asked Questions</h2>
-            <div className="space-y-3 sm:space-y-4">
+          <section className="mt-12 sm:mt-16">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-5 sm:mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <div className="space-y-3">
               {blog.faq.map((f, i) => (
-                <Card key={i}>
-                  <CardContent className="p-4 sm:p-5 lg:p-6">
-                    <p className="font-semibold text-base sm:text-lg leading-snug">{f.q}</p>
-                    <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">{f.a}</p>
+                <Card key={i} className="border-border/60 hover:border-primary/40 transition-colors">
+                  <CardContent className="p-5 sm:p-6">
+                    <p className="font-semibold text-base sm:text-lg leading-snug text-foreground">{f.q}</p>
+                    <p className="mt-3 text-sm sm:text-base leading-[1.75] text-muted-foreground">{f.a}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -218,11 +236,11 @@ const BlogDetail = () => {
           </section>
         )}
 
-        <Card className="mt-10 sm:mt-14 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/30">
-          <CardContent className="p-5 sm:p-8 text-center">
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold">Join the Techrola Career Program</h3>
-            <p className="mt-2 sm:mt-3 text-sm sm:text-base text-muted-foreground">25+ AI tools, internships, job portal, government schemes & referral rewards.</p>
-            <div className="mt-4 sm:mt-5 flex flex-wrap justify-center gap-3">
+        <Card className="mt-12 sm:mt-16 bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 border-primary/30 overflow-hidden">
+          <CardContent className="p-6 sm:p-10 text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">Join the Techrola Career Program</h3>
+            <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">25+ AI tools, internships, job portal, government schemes & referral rewards.</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg"><Link to="/career-program">Join Career Program <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>
               <Button asChild variant="outline" size="lg"><Link to="/ai-tools">Try AI Tools</Link></Button>
             </div>
@@ -230,16 +248,16 @@ const BlogDetail = () => {
         </Card>
 
         {related.length > 0 && (
-          <section className="mt-10 sm:mt-14">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 sm:mb-6">Related Articles</h2>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
+          <section className="mt-12 sm:mt-16">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-5 sm:mb-6 tracking-tight">Related Articles</h2>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5">
               {related.map((r) => (
                 <Link key={r.slug} to={`/blog/${r.slug}`} className="group">
-                  <Card className="h-full overflow-hidden hover:shadow-lg transition-all">
+                  <Card className="h-full overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all border-border/60">
                     <div className="aspect-video bg-muted overflow-hidden">
                       {r.featured_image_url && (
                         <img src={r.featured_image_url} alt={r.title} loading="lazy"
-                             className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       )}
                     </div>
                     <CardContent className="p-4">
