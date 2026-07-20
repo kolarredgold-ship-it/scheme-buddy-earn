@@ -124,13 +124,6 @@ const Blog = () => {
                   <div className="mt-4 flex items-center gap-3 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4" />
                     <span>{featured.reading_time ?? 4} min read</span>
-                    <span>•</span>
-                    <CalendarDays className="h-4 w-4" />
-                    <span>
-                      {featured.published_at
-                        ? new Date(featured.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
-                        : ""}
-                    </span>
                   </div>
                   <div className="mt-5 inline-flex items-center gap-2 text-primary font-semibold">
                     Read article <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
