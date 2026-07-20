@@ -177,7 +177,6 @@ const BlogDetail = () => {
 
           <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-muted-foreground border-t border-b py-3 sm:py-4">
             <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
-            <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" />{blog.published_at ? new Date(blog.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : ""}</span>
             <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{blog.reading_time ?? 8} min read</span>
             <Button size="sm" variant="ghost" onClick={share} className="ml-auto h-8"><Share2 className="h-4 w-4 mr-1.5" />Share</Button>
           </div>
