@@ -175,13 +175,13 @@ const Blog = () => {
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16">
+                    <TableCell colSpan={4} className="text-center py-16">
                       <div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full mx-auto" />
                     </TableCell>
                   </TableRow>
                 ) : filtered.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16 text-muted-foreground">
+                    <TableCell colSpan={4} className="text-center py-16 text-muted-foreground">
                       No blogs found. Try a different search or category.
                     </TableCell>
                   </TableRow>
