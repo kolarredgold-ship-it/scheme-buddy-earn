@@ -305,7 +305,9 @@ const Index = () => {
     ? aiResults
     : activeCategory === "all"
       ? stateFiltered
-      : stateFiltered.filter((s) => s.category === activeCategory);
+      : activeCategory === "employment"
+        ? stateFiltered.filter((s) => s.category === "govt_jobs" || s.category === "private_jobs")
+        : stateFiltered.filter((s) => s.category === activeCategory);
 
   return (
     <Layout>
