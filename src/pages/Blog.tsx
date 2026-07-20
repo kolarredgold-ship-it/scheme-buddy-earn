@@ -229,11 +229,6 @@ const Blog = () => {
                       <TableCell className="hidden sm:table-cell align-middle text-center text-sm text-muted-foreground tabular-nums">
                         {b.reading_time ?? 4} min
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell align-middle text-sm text-muted-foreground tabular-nums">
-                        {b.published_at
-                          ? new Date(b.published_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
-                          : "—"}
-                      </TableCell>
                       <TableCell className="align-middle text-right">
                         <Link to={`/blog/${b.slug}`} aria-label={`Open ${b.title}`}
                               className="inline-flex items-center gap-1 text-primary font-semibold text-sm hover:underline">
