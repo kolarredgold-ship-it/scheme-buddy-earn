@@ -169,7 +169,6 @@ const Blog = () => {
                   <TableHead className="w-[55%] md:w-[50%]">Article</TableHead>
                   <TableHead className="hidden md:table-cell w-[15%]">Category</TableHead>
                   <TableHead className="hidden sm:table-cell w-[10%] text-center">Read</TableHead>
-                  <TableHead className="hidden lg:table-cell w-[15%]">Published</TableHead>
                   <TableHead className="w-[10%] text-right">Open</TableHead>
                 </TableRow>
               </TableHeader>
