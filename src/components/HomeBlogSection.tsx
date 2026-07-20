@@ -137,16 +137,7 @@ const HomeBlogSection = () => {
                     )}
                     <div className="mt-3 flex items-center gap-2 text-[11px] text-muted-foreground">
                       <Clock className="h-3 w-3" />
-                      {b.reading_time ?? 4} min
-                      {b.published_at && (
-                        <>
-                          <span>•</span>
-                          {new Date(b.published_at).toLocaleDateString("en-IN", {
-                            day: "numeric",
-                            month: "short",
-                          })}
-                        </>
-                      )}
+                      {b.reading_time ?? 4} min read
                     </div>
                   </div>
                 </Card>

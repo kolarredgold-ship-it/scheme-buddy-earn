@@ -177,7 +177,6 @@ const BlogDetail = () => {
 
           <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-muted-foreground border-t border-b py-3 sm:py-4">
             <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
-            <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" />{blog.published_at ? new Date(blog.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : ""}</span>
             <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{blog.reading_time ?? 8} min read</span>
             <Button size="sm" variant="ghost" onClick={share} className="ml-auto h-8"><Share2 className="h-4 w-4 mr-1.5" />Share</Button>
           </div>
@@ -193,30 +192,30 @@ const BlogDetail = () => {
         )}
 
         <div className="prose prose-base sm:prose-lg dark:prose-invert max-w-none text-left
-                        prose-p:text-left prose-p:leading-[1.8] prose-p:my-5 sm:prose-p:my-6
+                        prose-p:text-left prose-p:leading-[1.9] prose-p:my-6 sm:prose-p:my-7
                         prose-p:text-[16px] sm:prose-p:text-[18px] prose-p:text-foreground/90
                         prose-headings:font-bold prose-headings:text-left prose-headings:tracking-tight prose-headings:text-foreground
-                        prose-headings:mt-10 sm:prose-headings:mt-14 prose-headings:mb-4 sm:prose-headings:mb-5
+                        prose-headings:mt-12 sm:prose-headings:mt-16 prose-headings:mb-5 sm:prose-headings:mb-6
                         prose-h2:text-2xl sm:prose-h2:text-3xl lg:prose-h2:text-[2rem]
-                        prose-h2:pb-2 prose-h2:border-b prose-h2:border-border/60
-                        prose-h3:text-xl sm:prose-h3:text-2xl
+                        prose-h2:pb-3 prose-h2:border-b prose-h2:border-border/60
+                        prose-h3:text-xl sm:prose-h3:text-2xl prose-h3:mt-10 sm:prose-h3:mt-12
                         prose-h4:text-lg sm:prose-h4:text-xl
                         prose-strong:text-foreground prose-strong:font-semibold
-                        prose-ul:my-5 sm:prose-ul:my-6 prose-ol:my-5 sm:prose-ol:my-6 prose-ul:pl-6 prose-ol:pl-6
-                        prose-li:my-2 sm:prose-li:my-2.5 prose-li:leading-[1.75] prose-li:text-left prose-li:pl-1
+                        prose-ul:my-6 sm:prose-ul:my-7 prose-ol:my-6 sm:prose-ol:my-7 prose-ul:pl-6 prose-ol:pl-6 prose-ul:space-y-2 prose-ol:space-y-2
+                        prose-li:my-2.5 sm:prose-li:my-3 prose-li:leading-[1.8] prose-li:text-left prose-li:pl-1
                         prose-li:marker:text-primary
                         prose-a:text-primary prose-a:font-medium prose-a:underline-offset-4 hover:prose-a:underline break-words
-                        prose-img:rounded-xl prose-img:mx-0 prose-img:my-8 prose-img:border
+                        prose-img:rounded-xl prose-img:mx-0 prose-img:my-10 prose-img:border
                         prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:bg-muted/40
-                        prose-blockquote:pl-5 prose-blockquote:pr-4 prose-blockquote:py-2 prose-blockquote:rounded-r-lg
-                        prose-blockquote:not-italic prose-blockquote:my-6
-                        prose-hr:my-10 prose-hr:border-border
+                        prose-blockquote:pl-5 prose-blockquote:pr-4 prose-blockquote:py-3 prose-blockquote:rounded-r-lg
+                        prose-blockquote:not-italic prose-blockquote:my-8
+                        prose-hr:my-12 prose-hr:border-border
                         prose-code:bg-muted prose-code:text-foreground prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.9em] prose-code:font-medium
                         prose-code:before:content-none prose-code:after:content-none
-                        prose-pre:bg-muted prose-pre:border prose-pre:rounded-xl
-                        prose-table:border prose-table:w-full prose-table:my-8 prose-table:text-sm sm:prose-table:text-base prose-table:rounded-lg prose-table:overflow-hidden
+                        prose-pre:bg-muted prose-pre:border prose-pre:rounded-xl prose-pre:my-8
+                        prose-table:border prose-table:w-full prose-table:my-10 prose-table:text-sm sm:prose-table:text-base prose-table:rounded-lg prose-table:overflow-hidden
                         prose-th:bg-muted prose-th:p-3 sm:prose-th:p-4 prose-th:text-left prose-th:font-semibold
-                        prose-td:p-3 sm:prose-td:p-4 prose-td:border-t prose-td:align-top">
+                        prose-td:p-3 sm:prose-td:p-4 prose-td:border-t prose-td:align-top prose-td:leading-relaxed">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{normalizeMarkdown(blog.body_markdown)}</ReactMarkdown>
         </div>
 

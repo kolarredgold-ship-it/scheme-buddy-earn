@@ -124,13 +124,6 @@ const Blog = () => {
                   <div className="mt-4 flex items-center gap-3 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4" />
                     <span>{featured.reading_time ?? 4} min read</span>
-                    <span>•</span>
-                    <CalendarDays className="h-4 w-4" />
-                    <span>
-                      {featured.published_at
-                        ? new Date(featured.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
-                        : ""}
-                    </span>
                   </div>
                   <div className="mt-5 inline-flex items-center gap-2 text-primary font-semibold">
                     Read article <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -176,20 +169,19 @@ const Blog = () => {
                   <TableHead className="w-[55%] md:w-[50%]">Article</TableHead>
                   <TableHead className="hidden md:table-cell w-[15%]">Category</TableHead>
                   <TableHead className="hidden sm:table-cell w-[10%] text-center">Read</TableHead>
-                  <TableHead className="hidden lg:table-cell w-[15%]">Published</TableHead>
                   <TableHead className="w-[10%] text-right">Open</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16">
+                    <TableCell colSpan={4} className="text-center py-16">
                       <div className="animate-spin h-6 w-6 border-4 border-primary border-t-transparent rounded-full mx-auto" />
                     </TableCell>
                   </TableRow>
                 ) : filtered.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-16 text-muted-foreground">
+                    <TableCell colSpan={4} className="text-center py-16 text-muted-foreground">
                       No blogs found. Try a different search or category.
                     </TableCell>
                   </TableRow>
@@ -221,9 +213,6 @@ const Blog = () => {
                                 <Badge variant="outline" className="text-[10px] py-0 h-4">{b.category}</Badge>
                               )}
                               <span>{b.reading_time ?? 4} min</span>
-                              {b.published_at && (
-                                <span>• {new Date(b.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
-                              )}
                             </div>
                           </div>
                         </Link>
@@ -239,11 +228,6 @@ const Blog = () => {
                       </TableCell>
                       <TableCell className="hidden sm:table-cell align-middle text-center text-sm text-muted-foreground tabular-nums">
                         {b.reading_time ?? 4} min
-                      </TableCell>
-                      <TableCell className="hidden lg:table-cell align-middle text-sm text-muted-foreground tabular-nums">
-                        {b.published_at
-                          ? new Date(b.published_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
-                          : "—"}
                       </TableCell>
                       <TableCell className="align-middle text-right">
                         <Link to={`/blog/${b.slug}`} aria-label={`Open ${b.title}`}
