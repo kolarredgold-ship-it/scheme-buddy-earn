@@ -214,9 +214,6 @@ const Blog = () => {
                                 <Badge variant="outline" className="text-[10px] py-0 h-4">{b.category}</Badge>
                               )}
                               <span>{b.reading_time ?? 4} min</span>
-                              {b.published_at && (
-                                <span>• {new Date(b.published_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
-                              )}
                             </div>
                           </div>
                         </Link>
