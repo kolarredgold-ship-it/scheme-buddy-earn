@@ -197,8 +197,10 @@ Deno.serve(async (req) => {
     const ALL_CATEGORIES = ["scholarships","farmers","sc_st","minority","women_empowerment","housing","health","education","business","govt_jobs"];
     const PER_CATEGORY_TARGET = 12;
 
-    // For private_jobs focus, ignore the 30-cap and always try to add fresh listings
+    // For jobs focus, ignore the 30-cap and always try to add fresh listings
     const isPrivateJobsFocus = focus === "private_jobs";
+    const isGovtJobsFocus = focus === "govt_jobs";
+    const isJobsFocus = isPrivateJobsFocus || isGovtJobsFocus;
 
     // Per-category top-up mode: specific state, no focus → fill each category up to target
     if (targetState !== "all" && !focus) {
