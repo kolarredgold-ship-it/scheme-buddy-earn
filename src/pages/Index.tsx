@@ -312,71 +312,56 @@ const Index = () => {
   return (
     <Layout>
       <div className="pb-24 md:pb-12 bg-background">
-        {/* HERO — ABC.gov.in inspired */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#1a1450] via-[#3b1d8a] to-[#6b2fb3]">
-          {/* Orange top accent */}
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
-
+        {/* HERO — Coursera-inspired */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-[#f0f6ff] via-[#eaf3ff] to-white border-b border-border/40">
           <div className="container mx-auto px-4 py-10 md:py-16 lg:py-20 relative">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-6 items-center">
+            <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
               {/* Left: copy */}
-              <div className="text-white relative z-10">
+              <div className="relative z-10">
                 <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
+                  <div className="inline-flex items-center gap-2 mb-4 bg-white border border-[#0056d2]/20 rounded-full px-3 py-1 shadow-sm">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#0056d2]" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#0056d2]">
                       {HERO_SLIDES[heroSlide].accent}
                     </span>
                   </div>
                   <h1
-                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-extrabold leading-[1.05] tracking-tight text-[#0a1f44]"
                     style={{ fontFamily: "Plus Jakarta Sans" }}
                   >
-                    <span className="text-white">{HERO_SLIDES[heroSlide].title}</span>
-                    <br />
-                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].line2}</span>
+                    <span>{HERO_SLIDES[heroSlide].title}</span>{" "}
+                    <span className="text-[#0056d2]">{HERO_SLIDES[heroSlide].line2}</span>
                   </h1>
 
-                  <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
+                  <p className="mt-5 text-sm md:text-lg text-[#1f1f1f]/75 max-w-xl leading-relaxed">
                     {HERO_SLIDES[heroSlide].desc}
                   </p>
                 </div>
 
-
                 <div className="mt-7 flex flex-wrap gap-3">
                   {HERO_SLIDES[heroSlide].to?.startsWith("#") ? (
                     <a href={HERO_SLIDES[heroSlide].to}>
-                      <Button
-                        size="lg"
-                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
-                      >
+                      <Button size="lg" className="rounded-full bg-[#0056d2] hover:bg-[#00449e] text-white font-semibold px-7 shadow-md">
                         {HERO_SLIDES[heroSlide].cta || "Get Started"}
                       </Button>
                     </a>
                   ) : (
                     <Link to={HERO_SLIDES[heroSlide].to || (user ? "/dashboard" : "/signup")}>
-                      <Button
-                        size="lg"
-                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
-                      >
+                      <Button size="lg" className="rounded-full bg-[#0056d2] hover:bg-[#00449e] text-white font-semibold px-7 shadow-md">
                         {HERO_SLIDES[heroSlide].cta || "Get Started"}
                       </Button>
                     </Link>
                   )}
                   <a href="#tools">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="rounded-md bg-white/10 hover:bg-white/20 text-white border-white/30 font-semibold backdrop-blur-sm"
-                    >
+                    <Button size="lg" variant="outline" className="rounded-full bg-white hover:bg-[#f0f6ff] text-[#0056d2] border-[#0056d2]/30 font-semibold">
                       <Sparkles className="h-4 w-4 mr-1.5" /> Explore AI Tools
                     </Button>
                   </a>
                 </div>
 
                 {/* Prev/Next + dots + counter */}
-                <div className="mt-6 flex items-center gap-3 text-white/80 text-xs">
-                  <button onClick={prevSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Previous">
+                <div className="mt-8 flex items-center gap-3 text-[#0a1f44]/70 text-xs">
+                  <button onClick={prevSlide} className="h-8 w-8 rounded-full border border-[#0a1f44]/20 hover:bg-[#0a1f44]/5 flex items-center justify-center transition-colors" aria-label="Previous">
                     <ChevronRight className="h-4 w-4 rotate-180" />
                   </button>
                   <div className="flex items-center gap-1.5 flex-wrap max-w-[260px]">
@@ -385,77 +370,82 @@ const Index = () => {
                         key={i}
                         onClick={() => setHeroSlide(i)}
                         aria-label={`Slide ${i + 1}`}
-                        className={`h-1.5 rounded-full transition-all ${i === heroSlide ? "w-6 bg-amber-400" : "w-1.5 bg-white/40 hover:bg-white/60"}`}
+                        className={`h-1.5 rounded-full transition-all ${i === heroSlide ? "w-6 bg-[#0056d2]" : "w-1.5 bg-[#0a1f44]/25 hover:bg-[#0a1f44]/50"}`}
                       />
                     ))}
                   </div>
-                  <button onClick={nextSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Next">
+                  <button onClick={nextSlide} className="h-8 w-8 rounded-full border border-[#0a1f44]/20 hover:bg-[#0a1f44]/5 flex items-center justify-center transition-colors" aria-label="Next">
                     <ChevronRight className="h-4 w-4" />
                   </button>
-                  <span className="ml-auto font-mono text-white/70">
+                  <span className="ml-auto font-mono">
                     {String(heroSlide + 1).padStart(2, "0")} / {String(HERO_SLIDES.length).padStart(2, "0")}
                   </span>
                 </div>
-
               </div>
 
-
-              {/* Right: students with orbiting icons */}
-              <div className="relative h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px]">
-                {/* Dashed orbit circles */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="h-[280px] w-[280px] sm:h-[360px] sm:w-[360px] md:h-[440px] md:w-[440px] lg:h-[500px] lg:w-[500px] rounded-full border border-dashed border-white/25" />
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="h-[220px] w-[220px] sm:h-[290px] sm:w-[290px] md:h-[360px] md:w-[360px] lg:h-[420px] lg:w-[420px] rounded-full border border-dashed border-white/15" />
-                </div>
-
-                {/* Students image */}
+              {/* Right: image + floating course-like cards (Coursera style) */}
+              <div className="relative h-[340px] sm:h-[420px] md:h-[480px] lg:h-[540px]">
                 <img
                   src={heroStudents}
-                  alt="Indian students with laptop using Techrola AI career platform"
+                  alt="Indian students using Techrola AI career platform"
                   width={1024}
                   height={1024}
-                  className="absolute inset-0 m-auto h-full w-auto object-contain drop-shadow-2xl"
+                  className="absolute inset-0 m-auto h-full w-auto object-contain drop-shadow-xl"
                 />
 
-                {/* Floating orbit badges */}
-                <div className="absolute top-2 right-6 md:top-4 md:right-10 h-12 w-12 md:h-16 md:w-16 rounded-full bg-white shadow-xl flex items-center justify-center">
-                  <Landmark className="h-5 w-5 md:h-7 md:w-7 text-violet-700" />
+                {/* Floating stat card top-right */}
+                <div className="absolute top-4 right-2 md:right-4 bg-white rounded-2xl shadow-xl border border-border/60 p-3 md:p-4 w-[160px] md:w-[200px]">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <div className="h-8 w-8 rounded-full bg-[#0056d2]/10 flex items-center justify-center">
+                      <GraduationCap className="h-4 w-4 text-[#0056d2]" />
+                    </div>
+                    <div className="text-[10px] font-bold text-[#0a1f44]/60 uppercase tracking-wide">Students</div>
+                  </div>
+                  <div className="text-lg md:text-xl font-extrabold text-[#0a1f44]">50,000+</div>
+                  <div className="text-[10px] text-muted-foreground">learning on Techrola</div>
                 </div>
-                <div className="absolute top-1/3 left-2 md:left-0 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
-                  <IdCard className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+
+                {/* Floating card bottom-left — enrollment */}
+                <div className="absolute bottom-6 left-0 md:left-2 bg-white rounded-2xl shadow-xl border border-border/60 p-3 md:p-4 w-[170px] md:w-[220px]">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 text-emerald-600" />
+                    </div>
+                    <div className="text-[10px] font-bold text-[#0a1f44]/60 uppercase tracking-wide">AI Tools</div>
+                  </div>
+                  <div className="text-lg md:text-xl font-extrabold text-[#0a1f44]">20+ ready</div>
+                  <div className="text-[10px] text-muted-foreground">Resume, mock HR, reports</div>
                 </div>
-                <div className="absolute bottom-1/3 right-0 md:right-2 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
-                  <BookOpen className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
-                </div>
-                <div className="absolute bottom-6 left-8 md:bottom-10 md:left-16 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
-                  <Briefcase className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+
+                {/* Small badge middle */}
+                <div className="hidden md:flex absolute top-1/2 -translate-y-1/2 right-1/2 translate-x-[130%] bg-white rounded-full shadow-lg border border-border/60 px-3 py-1.5 items-center gap-2">
+                  <Landmark className="h-3.5 w-3.5 text-[#0056d2]" />
+                  <span className="text-[11px] font-semibold text-[#0a1f44]">2,500+ Schemes</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Floating 4 feature pills bar at bottom of hero */}
-          <div className="relative container mx-auto px-4 pb-8 md:pb-0 md:-mb-10 md:translate-y-1/2 z-20">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-4 bg-white rounded-2xl shadow-2xl border border-white/60 p-3 md:p-5">
+          {/* Feature strip — clean white cards, Coursera-style */}
+          <div className="container mx-auto px-4 pb-8 md:pb-10">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               {[
-                { icon: "📝", title: "Student Registration", desc: "Create your free Techrola account", to: "/signup", color: "bg-orange-100 text-orange-700" },
-                { icon: "🏫", title: "Search Colleges", desc: "Find the right college from 10,000+", to: "#colleges", color: "bg-blue-100 text-blue-700" },
-                { icon: "💼", title: "Find Internships", desc: "Verified internships from top companies", to: "/ai-tools", color: "bg-emerald-100 text-emerald-700" },
-                { icon: "🤖", title: "AI Career Tools", desc: "20+ AI tools to boost your career", to: "/ai-tools", color: "bg-violet-100 text-violet-700" },
+                { icon: "📝", title: "Student Registration", desc: "Free Techrola account", to: "/signup" },
+                { icon: "🏫", title: "Search Colleges", desc: "10,000+ institutes", to: "#colleges" },
+                { icon: "💼", title: "Find Internships", desc: "Verified opportunities", to: "/ai-tools" },
+                { icon: "🤖", title: "AI Career Tools", desc: "20+ tools ready", to: "/ai-tools" },
               ].map((f) => (
                 <a
                   key={f.title}
                   href={f.to}
-                  className="flex items-center gap-3 rounded-xl px-2.5 py-2 hover:bg-muted/60 transition-colors"
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 bg-white border border-border/60 hover:border-[#0056d2]/40 hover:shadow-md transition-all"
                 >
-                  <div className={`h-10 w-10 md:h-11 md:w-11 shrink-0 rounded-full ${f.color} flex items-center justify-center text-lg`}>
+                  <div className="h-10 w-10 md:h-11 md:w-11 shrink-0 rounded-full bg-[#f0f6ff] flex items-center justify-center text-lg">
                     {f.icon}
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[12px] md:text-[13px] font-bold text-foreground leading-tight">{f.title}</div>
-                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-2">{f.desc}</div>
+                    <div className="text-[12px] md:text-[13px] font-bold text-[#0a1f44] leading-tight">{f.title}</div>
+                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-1">{f.desc}</div>
                   </div>
                 </a>
               ))}
