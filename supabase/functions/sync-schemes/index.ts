@@ -197,8 +197,10 @@ Deno.serve(async (req) => {
     const ALL_CATEGORIES = ["scholarships","farmers","sc_st","minority","women_empowerment","housing","health","education","business","govt_jobs"];
     const PER_CATEGORY_TARGET = 12;
 
-    // For private_jobs focus, ignore the 30-cap and always try to add fresh listings
+    // For jobs focus, ignore the 30-cap and always try to add fresh listings
     const isPrivateJobsFocus = focus === "private_jobs";
+    const isGovtJobsFocus = focus === "govt_jobs";
+    const isJobsFocus = isPrivateJobsFocus || isGovtJobsFocus;
 
     // Per-category top-up mode: specific state, no focus → fill each category up to target
     if (targetState !== "all" && !focus) {
@@ -284,7 +286,7 @@ Deno.serve(async (req) => {
     }
 
     const statesToSync = targetState === "all"
-      ? ALL_STATES.filter(s => isPrivateJobsFocus || (stateCounts[s] || 0) < 30)
+      ? ALL_STATES.filter(s => isJobsFocus || (stateCounts[s] || 0) < 30)
       : [targetState];
 
     let totalAdded = 0;
@@ -297,12 +299,13 @@ Deno.serve(async (req) => {
     for (const state of statesToSync.slice(0, stateBatchLimit)) {
       const stateLabel = state.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       const currentCount = stateCounts[state] || 0;
-      if (!isPrivateJobsFocus && currentCount >= 30) {
+      if (!isJobsFocus && currentCount >= 30) {
         skipped.push(state);
         continue;
       }
 
-      const schemesToGenerate = isPrivateJobsFocus ? 10 : Math.min(10, 30 - currentCount);
+      // Govt jobs get a bigger batch (priority focus); private jobs 10; others fill to 30
+      const schemesToGenerate = isGovtJobsFocus ? 15 : isPrivateJobsFocus ? 10 : Math.min(10, 30 - currentCount);
       const existingForState = (existingSchemes || [])
         .filter((s: any) => s.state === state)
         .map((s: any) => s.title);
@@ -337,7 +340,7 @@ Deno.serve(async (req) => {
         })
         .map((s: SchemeData) => ({
           title: s.title,
-          category: isPrivateJobsFocus ? "private_jobs" : (s.category || "education"),
+          category: isPrivateJobsFocus ? "private_jobs" : isGovtJobsFocus ? "govt_jobs" : (s.category || "education"),
           state: state,
           description: s.description,
           eligibility: s.eligibility || null,
