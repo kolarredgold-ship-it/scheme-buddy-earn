@@ -340,7 +340,7 @@ Deno.serve(async (req) => {
         })
         .map((s: SchemeData) => ({
           title: s.title,
-          category: isPrivateJobsFocus ? "private_jobs" : (s.category || "education"),
+          category: isPrivateJobsFocus ? "private_jobs" : isGovtJobsFocus ? "govt_jobs" : (s.category || "education"),
           state: state,
           description: s.description,
           eligibility: s.eligibility || null,
