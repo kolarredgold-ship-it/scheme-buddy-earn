@@ -312,147 +312,156 @@ const Index = () => {
   return (
     <Layout>
       <div className="pb-24 md:pb-12 bg-background">
-        {/* HERO — Premier EdTech slider (madeeasy-inspired) */}
-        <section className="relative w-full overflow-hidden bg-[#003366]">
-          {/* Background image with ken-burns */}
-          <div className="absolute inset-0 opacity-40">
-            <img
-              src={heroStudents}
-              alt=""
-              aria-hidden="true"
-              className="w-full h-full object-cover scale-110"
-              style={{ animation: "ken-burns 12s ease-in-out infinite alternate" }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#003366] via-[#003366]/85 to-[#003366]/40" />
-          </div>
+        {/* HERO — ABC.gov.in inspired */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#1a1450] via-[#3b1d8a] to-[#6b2fb3]">
+          {/* Orange top accent */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400" />
 
-          <div className="relative max-w-7xl mx-auto px-4 md:px-6 min-h-[460px] md:min-h-[550px] flex flex-col justify-center py-14 md:py-20 text-white">
-            <div key={heroSlide} className="max-w-2xl animate-in fade-in slide-in-from-bottom-3 duration-500">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-600/90 text-[11px] font-bold uppercase tracking-widest rounded-sm mb-5">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
-                </span>
-                {HERO_SLIDES[heroSlide].accent}
-              </div>
-              <h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight drop-shadow-lg"
-                style={{ fontFamily: "Plus Jakarta Sans" }}
-              >
-                <span className="text-white">{HERO_SLIDES[heroSlide].title}</span>{" "}
-                <span className="text-[#FF9A3D]">{HERO_SLIDES[heroSlide].line2}</span>
-              </h1>
-              <p className="mt-5 text-base md:text-lg text-slate-100/95 max-w-xl leading-relaxed font-light">
-                {HERO_SLIDES[heroSlide].desc}
-              </p>
+          <div className="container mx-auto px-4 py-10 md:py-16 lg:py-20 relative">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-6 items-center">
+              {/* Left: copy */}
+              <div className="text-white relative z-10">
+                <div key={heroSlide} className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
+                      {HERO_SLIDES[heroSlide].accent}
+                    </span>
+                  </div>
+                  <h1
+                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
+                    style={{ fontFamily: "Plus Jakarta Sans" }}
+                  >
+                    <span className="text-white">{HERO_SLIDES[heroSlide].title}</span>
+                    <br />
+                    <span className="text-amber-400">{HERO_SLIDES[heroSlide].line2}</span>
+                  </h1>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                {HERO_SLIDES[heroSlide].to?.startsWith("#") ? (
-                  <a href={HERO_SLIDES[heroSlide].to}>
-                    <Button size="lg" className="px-8 py-6 bg-[#FF7F00] hover:bg-[#E67200] text-white font-bold text-sm uppercase tracking-wide rounded-sm shadow-lg hover:shadow-xl transition-all">
-                      {HERO_SLIDES[heroSlide].cta || "Get Started"}
+                  <p className="mt-5 text-sm md:text-base text-white/85 max-w-xl leading-relaxed">
+                    {HERO_SLIDES[heroSlide].desc}
+                  </p>
+                </div>
+
+
+                <div className="mt-7 flex flex-wrap gap-3">
+                  {HERO_SLIDES[heroSlide].to?.startsWith("#") ? (
+                    <a href={HERO_SLIDES[heroSlide].to}>
+                      <Button
+                        size="lg"
+                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
+                      >
+                        {HERO_SLIDES[heroSlide].cta || "Get Started"}
+                      </Button>
+                    </a>
+                  ) : (
+                    <Link to={HERO_SLIDES[heroSlide].to || (user ? "/dashboard" : "/signup")}>
+                      <Button
+                        size="lg"
+                        className="rounded-md bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-7 shadow-lg shadow-amber-900/30 border border-amber-400"
+                      >
+                        {HERO_SLIDES[heroSlide].cta || "Get Started"}
+                      </Button>
+                    </Link>
+                  )}
+                  <a href="#tools">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="rounded-md bg-white/10 hover:bg-white/20 text-white border-white/30 font-semibold backdrop-blur-sm"
+                    >
+                      <Sparkles className="h-4 w-4 mr-1.5" /> Explore AI Tools
                     </Button>
                   </a>
-                ) : (
-                  <Link to={HERO_SLIDES[heroSlide].to || (user ? "/dashboard" : "/signup")}>
-                    <Button size="lg" className="px-8 py-6 bg-[#FF7F00] hover:bg-[#E67200] text-white font-bold text-sm uppercase tracking-wide rounded-sm shadow-lg hover:shadow-xl transition-all">
-                      {HERO_SLIDES[heroSlide].cta || "Get Started"}
-                    </Button>
-                  </Link>
-                )}
-                <a href="#tools">
-                  <Button size="lg" variant="outline" className="px-8 py-6 bg-white hover:bg-slate-100 text-[#003366] border-white font-bold text-sm uppercase tracking-wide rounded-sm">
-                    <Sparkles className="h-4 w-4 mr-1.5" /> Explore AI Tools
-                  </Button>
+                </div>
+
+                {/* Prev/Next + dots + counter */}
+                <div className="mt-6 flex items-center gap-3 text-white/80 text-xs">
+                  <button onClick={prevSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Previous">
+                    <ChevronRight className="h-4 w-4 rotate-180" />
+                  </button>
+                  <div className="flex items-center gap-1.5 flex-wrap max-w-[260px]">
+                    {HERO_SLIDES.slice(0, 12).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setHeroSlide(i)}
+                        aria-label={`Slide ${i + 1}`}
+                        className={`h-1.5 rounded-full transition-all ${i === heroSlide ? "w-6 bg-amber-400" : "w-1.5 bg-white/40 hover:bg-white/60"}`}
+                      />
+                    ))}
+                  </div>
+                  <button onClick={nextSlide} className="h-8 w-8 rounded-full border border-white/30 hover:bg-white/10 flex items-center justify-center transition-colors" aria-label="Next">
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                  <span className="ml-auto font-mono text-white/70">
+                    {String(heroSlide + 1).padStart(2, "0")} / {String(HERO_SLIDES.length).padStart(2, "0")}
+                  </span>
+                </div>
+
+              </div>
+
+
+              {/* Right: students with orbiting icons */}
+              <div className="relative h-[320px] sm:h-[400px] md:h-[460px] lg:h-[520px]">
+                {/* Dashed orbit circles */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="h-[280px] w-[280px] sm:h-[360px] sm:w-[360px] md:h-[440px] md:w-[440px] lg:h-[500px] lg:w-[500px] rounded-full border border-dashed border-white/25" />
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="h-[220px] w-[220px] sm:h-[290px] sm:w-[290px] md:h-[360px] md:w-[360px] lg:h-[420px] lg:w-[420px] rounded-full border border-dashed border-white/15" />
+                </div>
+
+                {/* Students image */}
+                <img
+                  src={heroStudents}
+                  alt="Indian students with laptop using Techrola AI career platform"
+                  width={1024}
+                  height={1024}
+                  className="absolute inset-0 m-auto h-full w-auto object-contain drop-shadow-2xl"
+                />
+
+                {/* Floating orbit badges */}
+                <div className="absolute top-2 right-6 md:top-4 md:right-10 h-12 w-12 md:h-16 md:w-16 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <Landmark className="h-5 w-5 md:h-7 md:w-7 text-violet-700" />
+                </div>
+                <div className="absolute top-1/3 left-2 md:left-0 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <IdCard className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+                </div>
+                <div className="absolute bottom-1/3 right-0 md:right-2 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <BookOpen className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+                </div>
+                <div className="absolute bottom-6 left-8 md:bottom-10 md:left-16 h-10 w-10 md:h-14 md:w-14 rounded-full bg-white shadow-xl flex items-center justify-center">
+                  <Briefcase className="h-4 w-4 md:h-6 md:w-6 text-violet-700" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating 4 feature pills bar at bottom of hero */}
+          <div className="relative container mx-auto px-4 pb-8 md:pb-0 md:-mb-10 md:translate-y-1/2 z-20">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-4 bg-white rounded-2xl shadow-2xl border border-white/60 p-3 md:p-5">
+              {[
+                { icon: "📝", title: "Student Registration", desc: "Create your free Techrola account", to: "/signup", color: "bg-orange-100 text-orange-700" },
+                { icon: "🏫", title: "Search Colleges", desc: "Find the right college from 10,000+", to: "#colleges", color: "bg-blue-100 text-blue-700" },
+                { icon: "💼", title: "Find Internships", desc: "Verified internships from top companies", to: "/ai-tools", color: "bg-emerald-100 text-emerald-700" },
+                { icon: "🤖", title: "AI Career Tools", desc: "20+ AI tools to boost your career", to: "/ai-tools", color: "bg-violet-100 text-violet-700" },
+              ].map((f) => (
+                <a
+                  key={f.title}
+                  href={f.to}
+                  className="flex items-center gap-3 rounded-xl px-2.5 py-2 hover:bg-muted/60 transition-colors"
+                >
+                  <div className={`h-10 w-10 md:h-11 md:w-11 shrink-0 rounded-full ${f.color} flex items-center justify-center text-lg`}>
+                    {f.icon}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[12px] md:text-[13px] font-bold text-foreground leading-tight">{f.title}</div>
+                    <div className="text-[10px] md:text-[11px] text-muted-foreground leading-tight line-clamp-2">{f.desc}</div>
+                  </div>
                 </a>
-              </div>
-            </div>
-
-            {/* Slider controls */}
-            <div className="mt-10 flex items-center gap-3">
-              <button onClick={prevSlide} aria-label="Previous slide" className="h-9 w-9 rounded-full border border-white/40 hover:bg-white/10 flex items-center justify-center transition-colors">
-                <ChevronRight className="h-4 w-4 rotate-180" />
-              </button>
-              <div className="flex items-center gap-1.5 flex-wrap max-w-[300px]">
-                {HERO_SLIDES.slice(0, 10).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setHeroSlide(i)}
-                    aria-label={`Slide ${i + 1}`}
-                    className={`h-1 rounded-full transition-all ${i === heroSlide ? "w-10 bg-[#FF9A3D]" : "w-6 bg-white/30 hover:bg-white/60"}`}
-                  />
-                ))}
-              </div>
-              <button onClick={nextSlide} aria-label="Next slide" className="h-9 w-9 rounded-full border border-white/40 hover:bg-white/10 flex items-center justify-center transition-colors">
-                <ChevronRight className="h-4 w-4" />
-              </button>
-              <span className="ml-auto font-mono text-xs text-white/70">
-                {String(heroSlide + 1).padStart(2, "0")} / {String(HERO_SLIDES.length).padStart(2, "0")}
-              </span>
+              ))}
             </div>
           </div>
         </section>
-
-        {/* Twin action cards under hero */}
-        <section className="bg-slate-50 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-14 grid md:grid-cols-2 gap-5 md:gap-6">
-            <a href="#schemes" className="group bg-white rounded-lg border border-slate-200 p-6 md:p-8 shadow-sm hover:shadow-xl transition-all">
-              <div className="flex items-start gap-4">
-                <div className="h-14 w-14 rounded-lg bg-[#003366] text-white flex items-center justify-center shrink-0">
-                  <Landmark className="h-7 w-7" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1">Discover</div>
-                  <h3 className="text-xl md:text-2xl font-extrabold text-[#003366] mb-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    Government Schemes
-                  </h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    2,500+ central & state schemes with verified apply links — scholarships, jobs, welfare and more.
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 text-[#003366] font-bold text-sm uppercase border-b-2 border-[#FF7F00] pb-0.5 group-hover:gap-3 transition-all">
-                    Browse schemes <ArrowRight className="h-4 w-4" />
-                  </span>
-                </div>
-              </div>
-            </a>
-            <Link to="/ai-tools" className="group bg-white rounded-lg border border-slate-200 p-6 md:p-8 shadow-sm hover:shadow-xl transition-all">
-              <div className="flex items-start gap-4">
-                <div className="h-14 w-14 rounded-lg bg-[#FF7F00] text-white flex items-center justify-center shrink-0">
-                  <Sparkles className="h-7 w-7" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-xs font-bold uppercase tracking-widest text-[#FF7F00] mb-1">Career Boost</div>
-                  <h3 className="text-xl md:text-2xl font-extrabold text-[#003366] mb-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    Students AI Tools
-                  </h3>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    19+ AI tools — internship reports, resume builder, mock HR interviews and more. Unlock all with Pro.
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 text-[#003366] font-bold text-sm uppercase border-b-2 border-[#FF7F00] pb-0.5 group-hover:gap-3 transition-all">
-                    Explore tools <ArrowRight className="h-4 w-4" />
-                  </span>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </section>
-
-        {/* Trust ribbon */}
-        <div className="bg-[#003366] text-white">
-          <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {[
-              { k: "50,000+", v: "Students Empowered" },
-              { k: "2,500+", v: "Verified Schemes" },
-              { k: "19+", v: "AI Career Tools" },
-              { k: "1,200+", v: "Hiring Partners" },
-            ].map((s, i) => (
-              <div key={s.k} className={`text-center ${i < 3 ? "md:border-r md:border-white/15" : ""}`}>
-                <div className="text-2xl md:text-3xl font-extrabold text-[#FF9A3D]">{s.k}</div>
-                <div className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-white/80 mt-1">{s.v}</div>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Sliding tools strip — auto-marquee banner */}
         <div className="relative mt-16 md:mt-20 overflow-hidden border-y border-emerald-100/80 bg-emerald-50/50 backdrop-blur-sm">
