@@ -478,94 +478,148 @@ const Index = () => {
         </div>
 
 
-        {/* AI TOOLS — pure uniform grid */}
+        {/* AI TOOLS */}
         <section className="container mx-auto px-4 py-10 md:py-14">
-          <div className="flex items-end justify-between gap-4 mb-6">
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-indigo-700 bg-indigo-100 rounded-full px-2.5 py-1 mb-2">
-                <Sparkles className="h-3 w-3" /> AI Toolkit
-              </div>
-              <h2
-                className="text-xl md:text-3xl font-extrabold text-foreground"
-                style={{ fontFamily: "Plus Jakarta Sans" }}
-              >
-                AI tools built for your career
-              </h2>
-              <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                {aiStudentTools.length}+ tools to write, prepare, and grow — unlock all with Pro
-              </p>
-            </div>
-            <Link to="/ai-tools" className="hidden md:inline-flex">
-              <Button variant="outline" size="sm" className="rounded-xl gap-1.5">
-                View all <ArrowRight className="h-3.5 w-3.5" />
-              </Button>
-            </Link>
+          <div className="mb-5">
+            <h2
+              className="text-xl md:text-3xl font-extrabold text-foreground"
+              style={{ fontFamily: "Plus Jakarta Sans" }}
+            >
+              AI tools built for your career
+            </h2>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">
+              19+ tools to write, prepare, and grow — unlock all with Pro
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-            {aiStudentTools.map((t, i) => {
-              const featured = i === 0;
-              return (
-                <Link
-                  key={t.to}
-                  to={t.to}
-                  onClick={() => trackToolClick(t.to, "home-grid")}
-                  className={`group relative flex flex-col gap-2.5 p-4 rounded-2xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200`}
-                >
-                  {featured && (
-                    <span className="absolute top-2 right-2 text-[9px] font-bold bg-orange-500 text-white px-1.5 py-0.5 rounded-md">
-                      POPULAR
-                    </span>
-                  )}
-                  <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl bg-white dark:bg-white/10 border border-white/70 flex items-center justify-center text-2xl shadow-sm ring-1 ring-foreground/5 group-hover:scale-110 transition-transform">
-                    {t.icon}
+          {/* Featured hero tool — Internship Report Generator */}
+          {aiStudentTools[0] && (
+            <Link
+              to={aiStudentTools[0].to}
+              onClick={() => trackToolClick("internship-report-generator", "home-hero")}
+              className="block group mb-8 active:scale-[0.99] transition-transform"
+            >
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+                <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
+                <div className="relative flex items-start md:items-center gap-4 md:gap-6">
+                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
+                    📄
                   </div>
-                  <h3 className="text-[13px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
-                    {t.title.replace(/^AI\s+/, "")}
-                  </h3>
-                  <p className="text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
-                    {t.desc}
-                  </p>
-                  <span className="mt-auto inline-flex items-center gap-1 text-[11px] font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                    Open <ArrowRight className="h-3 w-3" />
-                  </span>
-                </Link>
-              );
-            })}
+                  <div className="flex-1 min-w-0 text-white">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="text-[10px] md:text-xs font-bold bg-orange-400 text-orange-950 px-2 py-0.5 rounded-full">
+                        Most popular
+                      </span>
+                      <span className="text-[10px] md:text-xs font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
+                        DOCX
+                      </span>
+                    </div>
+                    <h3
+                      className="font-extrabold text-lg md:text-2xl leading-tight mb-1"
+                      style={{ fontFamily: "Plus Jakarta Sans" }}
+                    >
+                      AI Internship Report Generator
+                    </h3>
+                    <p className="text-[12px] md:text-sm text-white/85 mb-3 max-w-xl">
+                      Generate professional reports instantly. Download-ready DOCX in 60 seconds.
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 bg-white text-indigo-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
+                      Generate now <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* Tool cards grid — improved spacing, hover/press states, descriptions */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+            {aiStudentTools.slice(1).map((t, i) => (
+              <Link
+                key={t.to}
+                to={t.to}
+                onClick={() => trackToolClick(t.to, "home-grid")}
+                className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+              >
+                <div className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-white dark:bg-white/10 border-2 border-white/80 flex items-center justify-center text-2xl shadow-md ring-1 ring-foreground/5 group-hover:scale-110 group-hover:ring-emerald-300 transition-all">
+                  {t.icon}
+                </div>
+                <h3 className="text-[13px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
+                  {t.title.replace(/^AI\s+/, "")}
+                </h3>
+                <p className="text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
+                  {t.desc}
+                </p>
+                <span className="mt-auto inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  Open <ArrowRight className="h-3 w-3" />
+                </span>
+              </Link>
+            ))}
           </div>
 
-          <div className="flex justify-center mt-6 md:hidden">
+          <div className="flex justify-center mt-8">
             <Link to="/ai-tools" onClick={() => trackToolClick("view-all", "home")}>
-              <Button variant="outline" className="rounded-xl font-semibold gap-2">
-                <Sparkles className="h-4 w-4" /> View all AI tools
+              <Button
+                variant="outline"
+                className="rounded-xl border-foreground/15 font-semibold gap-2 px-5"
+              >
+                <Sparkles className="h-4 w-4" /> View all AI tools on Techrola
               </Button>
             </Link>
           </div>
         </section>
 
 
-
         {/* SCHEMES */}
         <section id="schemes" className="bg-stone-50/70 border-y border-border/40">
           <div className="container mx-auto px-4 py-10 md:py-14">
-            <div className="flex items-end justify-between gap-4 mb-6">
-              <div>
-                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-100 rounded-full px-2.5 py-1 mb-2">
-                  <Landmark className="h-3 w-3" /> Government Schemes
-                </div>
-                <h2
-                  className="text-xl md:text-3xl font-extrabold text-foreground"
-                  style={{ fontFamily: "Plus Jakarta Sans" }}
-                >
-                  Explore government schemes
-                </h2>
-                <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                  2,500+ free to browse — no sign-up needed
-                </p>
-              </div>
+            <div className="mb-5">
+              <h2
+                className="text-xl md:text-3xl font-extrabold text-foreground"
+                style={{ fontFamily: "Plus Jakarta Sans" }}
+              >
+                Explore government schemes
+              </h2>
+              <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                2,500+ free to browse — no sign-up needed
+              </p>
             </div>
 
-
+            {/* Featured schemes sliding strip */}
+            {schemes.length > 0 && (
+              <div className="relative -mx-4 mb-6 overflow-hidden group">
+                <div
+                  className="flex gap-3 py-2 px-4 w-max group-hover:[animation-play-state:paused]"
+                  style={{ animation: "ticker 60s linear infinite" }}
+                >
+                  {[...schemes.slice(0, 12), ...schemes.slice(0, 12)].map((s, i) => (
+                    <Link
+                      key={`${s.id}-${i}`}
+                      to={`/scheme/${s.slug}`}
+                      className="shrink-0 w-[260px] rounded-2xl border border-emerald-200/70 bg-white p-4 hover:shadow-md hover:border-emerald-400 transition-all flex flex-col gap-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
+                          {prettyCategory(s.category)}
+                        </span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
+                          {prettyState(s.state) || "Central"}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-foreground line-clamp-2 leading-snug">
+                        {s.title}
+                      </h3>
+                      <span className="mt-auto text-[11px] font-semibold text-emerald-700 inline-flex items-center gap-1">
+                        View details <ChevronRight className="h-3 w-3" />
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-stone-50/90 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-stone-50/90 to-transparent" />
+              </div>
+            )}
 
             {/* Search */}
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
