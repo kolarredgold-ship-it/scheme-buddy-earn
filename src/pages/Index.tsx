@@ -369,7 +369,7 @@ const Index = () => {
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-7 md:p-10 min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-7 md:p-10 min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
@@ -484,8 +484,8 @@ const Index = () => {
                 { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-emerald-50 border-emerald-200" },
                 { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-violet-50 border-violet-200" },
               ].map((f) => (
-                <a key={f.title} href={f.to} className={`flex items-center gap-3 rounded-2xl border ${f.tint} px-3 py-2.5 hover:shadow-sm transition-all`}>
-                  <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-lg shadow-sm shrink-0">{f.icon}</div>
+                <a key={f.title} href={f.to} className={`flex items-center gap-3 rounded-xl border ${f.tint} px-3 py-2.5 hover:shadow-sm transition-all`}>
+                  <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center text-lg shadow-sm shrink-0">{f.icon}</div>
                   <div className="text-[12px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
                 </a>
               ))}
