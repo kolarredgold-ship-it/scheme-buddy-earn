@@ -186,7 +186,7 @@ const Index = () => {
   const [aiSummary, setAiSummary] = useState("");
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
-  const [heroSlide, setHeroSlide] = useState(0);
+  const [heroSlide, setHeroSlide] = useState(3);
   const [techTab, setTechTab] = useState(0);
 
   // Build hero slides: brand intros + one slide per AI tool
