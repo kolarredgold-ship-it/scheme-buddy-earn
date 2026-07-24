@@ -202,9 +202,16 @@ const Index = () => {
     })),
   ];
 
-  // Auto-advance hero slider
+  // Auto-advance hero AI tools slider (indices 3..N match HERO_SLIDES after intro slides)
   useEffect(() => {
-    const id = setInterval(() => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
+    const first = 3;
+    const last = HERO_SLIDES.length - 1;
+    const id = setInterval(() => {
+      setHeroSlide((s) => {
+        const current = s < first ? first : s;
+        return current >= last ? first : current + 1;
+      });
+    }, 5000);
     return () => clearInterval(id);
   }, [HERO_SLIDES.length]);
 
