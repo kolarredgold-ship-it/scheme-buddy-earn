@@ -335,7 +335,7 @@ const Index = () => {
                       setAiSummary("");
                     }
                   }}
-                  onKeyDown={(e) => e.key === "Enter" && { handleSearch }.handleSearch()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   className="w-full h-12 pl-11 pr-14 rounded-full bg-background border border-border shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
                 />
                 <button
