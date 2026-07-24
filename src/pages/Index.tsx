@@ -215,8 +215,18 @@ const Index = () => {
     return () => clearInterval(id);
   }, [HERO_SLIDES.length]);
 
-  const prevSlide = () => setHeroSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  const nextSlide = () => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length);
+  const prevSlide = () => setHeroSlide((s) => {
+    const first = 3;
+    const last = HERO_SLIDES.length - 1;
+    const current = s < first ? first : s;
+    return current <= first ? last : current - 1;
+  });
+  const nextSlide = () => setHeroSlide((s) => {
+    const first = 3;
+    const last = HERO_SLIDES.length - 1;
+    const current = s < first ? first : s;
+    return current >= last ? first : current + 1;
+  });
 
 
   // College finder
