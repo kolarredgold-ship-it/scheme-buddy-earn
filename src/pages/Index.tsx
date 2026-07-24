@@ -186,7 +186,7 @@ const Index = () => {
   const [aiSummary, setAiSummary] = useState("");
   const [searching, setSearching] = useState(false);
   const [prefsOpen, setPrefsOpen] = useState(false);
-  const [heroSlide, setHeroSlide] = useState(0);
+  const [heroSlide, setHeroSlide] = useState(3);
   const [techTab, setTechTab] = useState(0);
 
   // Build hero slides: brand intros + one slide per AI tool
@@ -202,14 +202,31 @@ const Index = () => {
     })),
   ];
 
-  // Auto-advance hero slider
+  // Auto-advance hero AI tools slider (indices 3..N match HERO_SLIDES after intro slides)
   useEffect(() => {
-    const id = setInterval(() => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
+    const first = 3;
+    const last = HERO_SLIDES.length - 1;
+    const id = setInterval(() => {
+      setHeroSlide((s) => {
+        const current = s < first ? first : s;
+        return current >= last ? first : current + 1;
+      });
+    }, 5000);
     return () => clearInterval(id);
   }, [HERO_SLIDES.length]);
 
-  const prevSlide = () => setHeroSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  const nextSlide = () => setHeroSlide((s) => (s + 1) % HERO_SLIDES.length);
+  const prevSlide = () => setHeroSlide((s) => {
+    const first = 3;
+    const last = HERO_SLIDES.length - 1;
+    const current = s < first ? first : s;
+    return current <= first ? last : current - 1;
+  });
+  const nextSlide = () => setHeroSlide((s) => {
+    const first = 3;
+    const last = HERO_SLIDES.length - 1;
+    const current = s < first ? first : s;
+    return current >= last ? first : current + 1;
+  });
 
 
   // College finder
@@ -352,7 +369,7 @@ const Index = () => {
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-7 md:p-10 min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-7 md:p-10 min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
@@ -376,42 +393,85 @@ const Index = () => {
                 />
               </div>
 
-              {/* Right card — For businesses / EMP partners */}
-              <div className="relative overflow-hidden rounded-3xl bg-muted/70 border border-border p-7 md:p-10 min-h-[300px] md:min-h-[380px]">
-                <div className="relative z-10 max-w-md">
-                  <h2 className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    Build your career, earn while you learn
-                  </h2>
-                  <p className="mt-4 text-sm md:text-base text-muted-foreground">
-                    Join the Techrola Career Program — get certified, promote schemes, and unlock real hiring opportunities.
-                  </p>
-                  <Link to="/career-program">
-                    <Button size="lg" className="mt-6 rounded-full bg-foreground text-background hover:bg-foreground/90 font-bold px-6 gap-2">
-                      Explore Career Program
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm">
-                    <div>
-                      <div className="text-xl md:text-2xl font-extrabold text-foreground">2,500+</div>
-                      <div className="text-[11px] md:text-xs text-muted-foreground">Schemes</div>
-                    </div>
-                    <div>
-                      <div className="text-xl md:text-2xl font-extrabold text-foreground">20+</div>
-                      <div className="text-[11px] md:text-xs text-muted-foreground">AI Tools</div>
-                    </div>
-                    <div>
-                      <div className="text-xl md:text-2xl font-extrabold text-foreground">₹999</div>
-                      <div className="text-[11px] md:text-xs text-muted-foreground">Pro / year</div>
+              {/* Right card — Hero AI tools slider */}
+              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-6 md:p-8 min-h-[300px] md:min-h-[380px] flex flex-col">
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-md">
+                      <Sparkles className="h-3 w-3" /> AI Tools Spotlight
+                    </span>
+                    <div className="flex gap-1.5">
+                      {HERO_SLIDES.slice(3).slice(0, 6).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setHeroSlide(i + 3)}
+                          className={`h-1.5 rounded-full transition-all ${heroSlide - 3 === i ? 'w-5 bg-primary' : 'w-1.5 bg-primary/30'}`}
+                        />
+                      ))}
                     </div>
                   </div>
-                </div>
-                <div className="hidden md:grid absolute right-6 top-1/2 -translate-y-1/2 grid-cols-2 gap-2 opacity-90">
-                  {aiStudentTools.slice(0, 6).map((t) => (
-                    <div key={t.to} className="h-14 w-14 rounded-2xl bg-card border border-border shadow-sm flex items-center justify-center text-2xl">
-                      {t.icon}
+
+                  <div className="flex-1 relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50/80 to-violet-50/80 border border-indigo-100/80 p-5 md:p-6">
+                    {HERO_SLIDES.slice(3).slice(0, 6).map((slide, i) => {
+                      const active = heroSlide === i + 3;
+                      const tool = aiStudentTools[i];
+                      return (
+                        <div
+                          key={i}
+                          className={`absolute inset-0 p-5 md:p-6 transition-all duration-500 flex flex-col ${
+                            active ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
+                          }`}
+                        >
+                          <div className="flex items-start gap-4 mb-3">
+                            <div className="h-14 w-14 md:h-16 md:w-16 rounded-xl bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-3xl md:text-4xl shrink-0">
+                              {tool?.icon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="inline-block text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-md mb-1.5">
+                                {slide.line2}
+                              </span>
+                              <h3 className="font-extrabold text-base md:text-lg text-foreground leading-tight line-clamp-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                                {slide.title}
+                              </h3>
+                            </div>
+                          </div>
+                          <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+                            {slide.desc}
+                          </p>
+                          <Link to={slide.to} className="mt-auto">
+                            <Button size="sm" className="rounded-lg bg-primary text-primary-foreground font-bold gap-1.5 group">
+                              {slide.cta} <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                            </Button>
+                          </Link>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <div className="text-xl md:text-2xl font-extrabold text-foreground">2,500+</div>
+                        <div className="text-[11px] md:text-xs text-muted-foreground">Schemes</div>
+                      </div>
+                      <div>
+                        <div className="text-xl md:text-2xl font-extrabold text-foreground">20+</div>
+                        <div className="text-[11px] md:text-xs text-muted-foreground">AI Tools</div>
+                      </div>
+                      <div>
+                        <div className="text-xl md:text-2xl font-extrabold text-foreground">₹999</div>
+                        <div className="text-[11px] md:text-xs text-muted-foreground">Pro / year</div>
+                      </div>
                     </div>
-                  ))}
+                    <div className="flex gap-2">
+                      <button onClick={prevSlide} className="h-8 w-8 rounded-lg border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
+                        <ChevronRight className="h-4 w-4 rotate-180" />
+                      </button>
+                      <button onClick={nextSlide} className="h-8 w-8 rounded-lg border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -424,8 +484,8 @@ const Index = () => {
                 { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-emerald-50 border-emerald-200" },
                 { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-violet-50 border-violet-200" },
               ].map((f) => (
-                <a key={f.title} href={f.to} className={`flex items-center gap-3 rounded-2xl border ${f.tint} px-3 py-2.5 hover:shadow-sm transition-all`}>
-                  <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-lg shadow-sm shrink-0">{f.icon}</div>
+                <a key={f.title} href={f.to} className={`flex items-center gap-3 rounded-xl border ${f.tint} px-3 py-2.5 hover:shadow-sm transition-all`}>
+                  <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center text-lg shadow-sm shrink-0">{f.icon}</div>
                   <div className="text-[12px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
                 </a>
               ))}
@@ -478,11 +538,11 @@ const Index = () => {
               onClick={() => trackToolClick("internship-report-generator", "home-hero")}
               className="block group mb-8 active:scale-[0.99] transition-transform"
             >
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
                 <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
                 <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
                 <div className="relative flex items-start md:items-center gap-4 md:gap-6">
-                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
+                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
                     📄
                   </div>
                   <div className="flex-1 min-w-0 text-white">
@@ -519,7 +579,7 @@ const Index = () => {
                 key={t.to}
                 to={t.to}
                 onClick={() => trackToolClick(t.to, "home-grid")}
-                className={`group relative flex flex-col items-start gap-2 p-4 rounded-2xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+                className={`group relative flex flex-col items-start gap-2 p-4 rounded-xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
               >
                 <div className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-white dark:bg-white/10 border-2 border-white/80 flex items-center justify-center text-2xl shadow-md ring-1 ring-foreground/5 group-hover:scale-110 group-hover:ring-emerald-300 transition-all">
                   {t.icon}
@@ -576,7 +636,7 @@ const Index = () => {
                     <Link
                       key={`${s.id}-${i}`}
                       to={`/scheme/${s.slug}`}
-                      className="shrink-0 w-[260px] rounded-2xl border border-emerald-200/70 bg-white p-4 hover:shadow-md hover:border-emerald-400 transition-all flex flex-col gap-2"
+                      className="shrink-0 w-[260px] rounded-xl border border-emerald-200/70 bg-white p-4 hover:shadow-md hover:border-emerald-400 transition-all flex flex-col gap-2"
                     >
                       <div className="flex items-center gap-2">
                         <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
@@ -664,7 +724,7 @@ const Index = () => {
                   <button
                     key={c.key}
                     onClick={() => setActiveCategory(c.key)}
-                    className={`relative flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 rounded-2xl border-2 transition-all ${
+                    className={`relative flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 rounded-xl border-2 transition-all ${
                       active
                         ? `bg-gradient-to-br ${c.color} text-white border-transparent shadow-lg scale-[1.03]`
                         : `${c.bg} text-foreground/80`
@@ -711,7 +771,7 @@ const Index = () => {
                       <Link
                         key={s.id}
                         to={`/scheme/${s.slug}`}
-                        className={`group relative rounded-2xl border ${p.bg} ${p.border} ${p.hover} p-4 transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3 min-h-[130px]`}
+                        className={`group relative rounded-xl border ${p.bg} ${p.border} ${p.hover} p-4 transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3 min-h-[130px]`}
                       >
                         <div className="flex items-start gap-2">
                           <span className={`h-2.5 w-2.5 rounded-full ${p.dot} shrink-0 mt-1.5`} />
@@ -739,7 +799,7 @@ const Index = () => {
                 </div>
 
                 {/* Mobile: compact list */}
-                <div className="md:hidden bg-background rounded-2xl border border-border/60 divide-y divide-border/60 overflow-hidden">
+                <div className="md:hidden bg-background rounded-xl border border-border/60 divide-y divide-border/60 overflow-hidden">
                   {visible.slice(0, 15).map((s) => (
                     <Link
                       key={s.id}
@@ -817,7 +877,7 @@ const Index = () => {
               </div>
 
               <div className="relative">
-                <div className="rounded-3xl bg-gradient-to-br from-violet-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
+                <div className="rounded-xl bg-gradient-to-br from-violet-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
                   <div className="flex items-center gap-4">
                     <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl">
                       👩‍🎓
@@ -868,7 +928,7 @@ const Index = () => {
               <div className="mt-6 max-w-2xl mx-auto">
                 <div
                   key={techTab}
-                  className="rounded-2xl border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
+                  className="rounded-xl border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
                 >
                   <h4 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
                     {TECHROLA_TABS[techTab].title}
@@ -925,7 +985,7 @@ const Index = () => {
                   { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-violet-400 to-purple-600" },
                 ].map((s) => (
                   <div key={s.n} className="group relative">
-                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
+                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
                       {/* Step number badge */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#1a1450]">
                         STEP {s.n}
@@ -1002,7 +1062,7 @@ const Index = () => {
                 ].map((c) => (
                   <div
                     key={c.k}
-                    className={`rounded-2xl border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
+                    className={`rounded-xl border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
                   >
                     <div className="h-10 w-10 rounded-full bg-white shadow flex items-center justify-center text-xl mb-3">
                       {c.icon}
@@ -1037,7 +1097,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 gap-4 md:gap-5 max-w-4xl">
             {/* Free */}
-            <div className="rounded-2xl border border-border bg-card p-6">
+            <div className="rounded-xl border border-border bg-card p-6">
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Free
               </div>
@@ -1066,7 +1126,7 @@ const Index = () => {
             </div>
 
             {/* Pro */}
-            <div className="relative rounded-2xl border-2 border-emerald-500 bg-card p-6 shadow-lg shadow-emerald-500/10">
+            <div className="relative rounded-xl border-2 border-emerald-500 bg-card p-6 shadow-lg shadow-emerald-500/10">
               <span className="absolute -top-3 left-6 text-[11px] font-bold bg-emerald-600 text-white px-2.5 py-1 rounded-full">
                 Most popular
               </span>
@@ -1108,7 +1168,7 @@ const Index = () => {
 
         {/* COLLEGE & SCHOOL FINDER */}
         <section className="container mx-auto px-4 py-10 md:py-14">
-          <div className="rounded-3xl border border-border/60 bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 p-5 md:p-8">
+          <div className="rounded-xl border border-border/60 bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 p-5 md:p-8">
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-full">
                 <GraduationCap className="h-3.5 w-3.5" /> College & School Finder
