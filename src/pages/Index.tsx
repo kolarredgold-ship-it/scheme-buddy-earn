@@ -376,42 +376,85 @@ const Index = () => {
                 />
               </div>
 
-              {/* Right card — For businesses / EMP partners */}
-              <div className="relative overflow-hidden rounded-3xl bg-muted/70 border border-border p-7 md:p-10 min-h-[300px] md:min-h-[380px]">
-                <div className="relative z-10 max-w-md">
-                  <h2 className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    Build your career, earn while you learn
-                  </h2>
-                  <p className="mt-4 text-sm md:text-base text-muted-foreground">
-                    Join the Techrola Career Program — get certified, promote schemes, and unlock real hiring opportunities.
-                  </p>
-                  <Link to="/career-program">
-                    <Button size="lg" className="mt-6 rounded-full bg-foreground text-background hover:bg-foreground/90 font-bold px-6 gap-2">
-                      Explore Career Program
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm">
-                    <div>
-                      <div className="text-xl md:text-2xl font-extrabold text-foreground">2,500+</div>
-                      <div className="text-[11px] md:text-xs text-muted-foreground">Schemes</div>
-                    </div>
-                    <div>
-                      <div className="text-xl md:text-2xl font-extrabold text-foreground">20+</div>
-                      <div className="text-[11px] md:text-xs text-muted-foreground">AI Tools</div>
-                    </div>
-                    <div>
-                      <div className="text-xl md:text-2xl font-extrabold text-foreground">₹999</div>
-                      <div className="text-[11px] md:text-xs text-muted-foreground">Pro / year</div>
+              {/* Right card — Hero AI tools slider */}
+              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-6 md:p-8 min-h-[300px] md:min-h-[380px] flex flex-col">
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-md">
+                      <Sparkles className="h-3 w-3" /> AI Tools Spotlight
+                    </span>
+                    <div className="flex gap-1.5">
+                      {HERO_SLIDES.slice(3).slice(0, 6).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setHeroSlide(i + 3)}
+                          className={`h-1.5 rounded-full transition-all ${heroSlide - 3 === i ? 'w-5 bg-primary' : 'w-1.5 bg-primary/30'}`}
+                        />
+                      ))}
                     </div>
                   </div>
-                </div>
-                <div className="hidden md:grid absolute right-6 top-1/2 -translate-y-1/2 grid-cols-2 gap-2 opacity-90">
-                  {aiStudentTools.slice(0, 6).map((t) => (
-                    <div key={t.to} className="h-14 w-14 rounded-2xl bg-card border border-border shadow-sm flex items-center justify-center text-2xl">
-                      {t.icon}
+
+                  <div className="flex-1 relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50/80 to-violet-50/80 border border-indigo-100/80 p-5 md:p-6">
+                    {HERO_SLIDES.slice(3).slice(0, 6).map((slide, i) => {
+                      const active = heroSlide === i + 3;
+                      const tool = aiStudentTools[i];
+                      return (
+                        <div
+                          key={i}
+                          className={`absolute inset-0 p-5 md:p-6 transition-all duration-500 flex flex-col ${
+                            active ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
+                          }`}
+                        >
+                          <div className="flex items-start gap-4 mb-3">
+                            <div className="h-14 w-14 md:h-16 md:w-16 rounded-xl bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-3xl md:text-4xl shrink-0">
+                              {tool?.icon}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="inline-block text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-md mb-1.5">
+                                {slide.line2}
+                              </span>
+                              <h3 className="font-extrabold text-base md:text-lg text-foreground leading-tight line-clamp-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                                {slide.title}
+                              </h3>
+                            </div>
+                          </div>
+                          <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+                            {slide.desc}
+                          </p>
+                          <Link to={slide.to} className="mt-auto">
+                            <Button size="sm" className="rounded-lg bg-primary text-primary-foreground font-bold gap-1.5 group">
+                              {slide.cta} <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                            </Button>
+                          </Link>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <div className="text-xl md:text-2xl font-extrabold text-foreground">2,500+</div>
+                        <div className="text-[11px] md:text-xs text-muted-foreground">Schemes</div>
+                      </div>
+                      <div>
+                        <div className="text-xl md:text-2xl font-extrabold text-foreground">20+</div>
+                        <div className="text-[11px] md:text-xs text-muted-foreground">AI Tools</div>
+                      </div>
+                      <div>
+                        <div className="text-xl md:text-2xl font-extrabold text-foreground">₹999</div>
+                        <div className="text-[11px] md:text-xs text-muted-foreground">Pro / year</div>
+                      </div>
                     </div>
-                  ))}
+                    <div className="flex gap-2">
+                      <button onClick={prevSlide} className="h-8 w-8 rounded-lg border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
+                        <ChevronRight className="h-4 w-4 rotate-180" />
+                      </button>
+                      <button onClick={nextSlide} className="h-8 w-8 rounded-lg border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
