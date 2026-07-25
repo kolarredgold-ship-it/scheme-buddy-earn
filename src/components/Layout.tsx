@@ -252,7 +252,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Mobile Bottom Nav - always visible */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong safe-area-bottom border-t border-border/40">
-        <div className="flex justify-around py-1.5 px-1">
+        <div className="flex justify-around items-center py-1.5 px-1">
           {bottomNavItems.map((item, idx) => {
             const active = isActive(item.path);
             const isAITools = item.path === "/ai-tools";
@@ -260,16 +260,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Link
                 key={idx}
                 to={item.path}
-                className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[60px]"
+                className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl min-w-[52px] flex-1"
               >
                 <div className={`p-1.5 rounded-xl transition-all duration-200 ${
                   active ? "bg-primary/10" : ""
                 } ${isAITools ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20" : ""}`}>
-                  <item.icon className={`h-5 w-5 transition-transform duration-200 ${
+                  <item.icon className={`h-[18px] w-[18px] transition-transform duration-200 ${
                     active ? "scale-110 text-primary" : "text-muted-foreground"
                   } ${isAITools ? "text-purple-600 dark:text-purple-300" : ""}`} />
                 </div>
-                <span className={`text-[10px] font-medium ${
+                <span className={`text-[9px] sm:text-[10px] font-medium text-center leading-none ${
                   active ? "text-primary" : "text-muted-foreground"
                 } ${isAITools ? "text-purple-600 dark:text-purple-300 font-semibold" : ""}`}>{item.label}</span>
               </Link>
