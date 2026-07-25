@@ -188,7 +188,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Career Program CTA - Above Footer */}
       <div className="container mx-auto px-3 md:px-4 mt-10 mb-2">
         <Link to="/career-program" className="block group">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[hsl(220,90%,45%)] via-[hsl(260,80%,50%)] to-[hsl(320,70%,50%)] p-6 md:p-8 transition-all duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] hover:scale-[1.01]">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[hsl(220,90%,45%)] via-[hsl(260,80%,50%)] to-[hsl(320,70%,50%)] p-5 sm:p-6 md:p-8 transition-all duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] hover:scale-[1.01]">
             {/* Animated background shapes */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
