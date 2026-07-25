@@ -958,7 +958,7 @@ const Index = () => {
         <section className="relative overflow-hidden bg-gradient-to-br from-[#0f0a3d] via-[#2a1670] to-[#5b21b6]">
           <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
 
-          <div className="container mx-auto px-4 py-14 md:py-20 relative">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-14 md:py-20 relative">
             <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
               <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/40 text-amber-300 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Your Career Roadmap
@@ -1024,7 +1024,7 @@ const Index = () => {
 
         {/* ABOUT TECHROLA */}
         <section className="bg-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div>
                 <div className="text-xs md:text-sm font-bold text-violet-700 tracking-widest uppercase mb-3">
@@ -1085,7 +1085,7 @@ const Index = () => {
         </section>
 
         {/* PRICING */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
+        <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
 
           <div className="mb-6">
             <h2
@@ -1171,7 +1171,7 @@ const Index = () => {
 
 
         {/* COLLEGE & SCHOOL FINDER */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
+        <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
           <div className="rounded-xl border border-border/60 bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 p-5 md:p-8">
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-full">
