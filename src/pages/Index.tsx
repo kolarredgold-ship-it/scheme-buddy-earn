@@ -522,7 +522,7 @@ const Index = () => {
 
 
         {/* AI TOOLS */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
+        <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
           <div className="mb-5">
             <h2
               className="text-xl md:text-3xl font-extrabold text-foreground"
@@ -616,7 +616,7 @@ const Index = () => {
 
         {/* SCHEMES */}
         <section id="schemes" className="bg-stone-50/70 border-y border-border/40">
-          <div className="container mx-auto px-4 py-10 md:py-14">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
             <div className="mb-5">
               <h2
                 className="text-xl md:text-3xl font-extrabold text-foreground"
@@ -834,7 +834,7 @@ const Index = () => {
 
         {/* STATS BAR — dark blue band */}
         <section className="bg-gradient-to-r from-[#0c1a4d] via-[#142166] to-[#1a2a7a] text-white">
-          <div className="container mx-auto px-4 py-10 md:py-12">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
                 { v: "50,000+", l: "STUDENTS REGISTERED" },
@@ -857,7 +857,7 @@ const Index = () => {
 
         {/* INTRODUCING TECHROLA — One Nation, One APP */}
         <section className="bg-gradient-to-br from-amber-50 via-orange-50/40 to-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h2
