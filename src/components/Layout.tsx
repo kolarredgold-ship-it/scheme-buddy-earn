@@ -41,9 +41,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const bottomNavItems = [
     { type: "link" as const, path: "/", icon: Home, label: "Home" },
-    { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "Students AI Tools" },
+    { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "AI Tools" },
     { type: "link" as const, path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { type: "link" as const, path: "/install", icon: Download, label: "Install App" },
+    { type: "link" as const, path: "/install", icon: Download, label: "Install" },
   ];
 
   return (
