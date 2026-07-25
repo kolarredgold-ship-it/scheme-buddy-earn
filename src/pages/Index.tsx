@@ -346,7 +346,7 @@ const Index = () => {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="What do you want to learn or apply for?"
+                  placeholder="Search schemes, jobs, AI tools..."
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
@@ -356,15 +356,15 @@ const Index = () => {
                     }
                   }}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full h-12 pl-11 pr-14 rounded-full bg-background border border-border shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                  className="w-full h-12 pl-11 pr-28 rounded-full bg-background border border-border shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
                 />
                 <button
                   onClick={handleSearch}
                   disabled={searching || searchQuery.trim().length < 3}
                   aria-label="Search"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 hover:opacity-90 transition-opacity"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3 sm:px-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center gap-1.5 disabled:opacity-40 hover:opacity-90 transition-opacity text-sm font-semibold"
                 >
-                  {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                  {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /><span className="hidden sm:inline">Search</span></>}
                 </button>
               </div>
             </div>
