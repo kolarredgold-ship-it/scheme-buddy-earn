@@ -203,7 +203,10 @@ const Index = () => {
   ];
 
   // Auto-advance hero AI tools slider (indices 3..N match HERO_SLIDES after intro slides)
+  // Disabled when user prefers reduced motion.
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
     const first = 3;
     const last = HERO_SLIDES.length - 1;
     const id = setInterval(() => {
