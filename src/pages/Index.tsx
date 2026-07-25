@@ -372,18 +372,18 @@ const Index = () => {
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-7 md:p-10 min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
-                  <h1 className="text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                  <h1 className="text-[1.6rem] sm:text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
                     Start, switch, or advance your career
                   </h1>
-                  <p className="mt-4 text-sm md:text-base text-white/85">
+                  <p className="mt-3 sm:mt-4 text-sm md:text-base text-white/85">
                     Grow with 2,500+ government schemes, AI tools and career programs — built for Bharat.
                   </p>
                   <Link to={user ? "/dashboard" : "/signup"}>
-                    <Button size="lg" className="mt-6 rounded-full bg-white text-[hsl(215_90%_42%)] hover:bg-white/95 font-bold px-6 shadow-md gap-2">
+                    <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(215_90%_42%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
                       {user ? "Go to dashboard" : "Join for Free"}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
