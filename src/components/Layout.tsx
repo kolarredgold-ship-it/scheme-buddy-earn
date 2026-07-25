@@ -41,9 +41,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const bottomNavItems = [
     { type: "link" as const, path: "/", icon: Home, label: "Home" },
-    { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "Students AI Tools" },
+    { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "AI Tools" },
     { type: "link" as const, path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-    { type: "link" as const, path: "/install", icon: Download, label: "Install App" },
+    { type: "link" as const, path: "/install", icon: Download, label: "Install" },
   ];
 
   return (
@@ -188,7 +188,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Career Program CTA - Above Footer */}
       <div className="container mx-auto px-3 md:px-4 mt-10 mb-2">
         <Link to="/career-program" className="block group">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[hsl(220,90%,45%)] via-[hsl(260,80%,50%)] to-[hsl(320,70%,50%)] p-6 md:p-8 transition-all duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] hover:scale-[1.01]">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[hsl(220,90%,45%)] via-[hsl(260,80%,50%)] to-[hsl(320,70%,50%)] p-5 sm:p-6 md:p-8 transition-all duration-500 hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] hover:scale-[1.01]">
             {/* Animated background shapes */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
@@ -252,7 +252,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Mobile Bottom Nav - always visible */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong safe-area-bottom border-t border-border/40">
-        <div className="flex justify-around py-1.5 px-1">
+        <div className="flex justify-around items-center py-1.5 px-1">
           {bottomNavItems.map((item, idx) => {
             const active = isActive(item.path);
             const isAITools = item.path === "/ai-tools";
@@ -260,16 +260,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Link
                 key={idx}
                 to={item.path}
-                className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl min-w-[60px]"
+                className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl min-w-[52px] flex-1"
               >
                 <div className={`p-1.5 rounded-xl transition-all duration-200 ${
                   active ? "bg-primary/10" : ""
                 } ${isAITools ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20" : ""}`}>
-                  <item.icon className={`h-5 w-5 transition-transform duration-200 ${
+                  <item.icon className={`h-[18px] w-[18px] transition-transform duration-200 ${
                     active ? "scale-110 text-primary" : "text-muted-foreground"
                   } ${isAITools ? "text-purple-600 dark:text-purple-300" : ""}`} />
                 </div>
-                <span className={`text-[10px] font-medium ${
+                <span className={`text-[9px] sm:text-[10px] font-medium text-center leading-none ${
                   active ? "text-primary" : "text-muted-foreground"
                 } ${isAITools ? "text-purple-600 dark:text-purple-300 font-semibold" : ""}`}>{item.label}</span>
               </Link>

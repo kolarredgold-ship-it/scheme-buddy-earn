@@ -346,7 +346,7 @@ const Index = () => {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="What do you want to learn or apply for?"
+                  placeholder="Search schemes, jobs, AI tools..."
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
@@ -356,15 +356,15 @@ const Index = () => {
                     }
                   }}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full h-12 pl-11 pr-14 rounded-full bg-background border border-border shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                  className="w-full h-12 pl-11 pr-28 rounded-full bg-background border border-border shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
                 />
                 <button
                   onClick={handleSearch}
                   disabled={searching || searchQuery.trim().length < 3}
                   aria-label="Search"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40 hover:opacity-90 transition-opacity"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3 sm:px-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center gap-1.5 disabled:opacity-40 hover:opacity-90 transition-opacity text-sm font-semibold"
                 >
-                  {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
+                  {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /><span className="hidden sm:inline">Search</span></>}
                 </button>
               </div>
             </div>
@@ -372,18 +372,18 @@ const Index = () => {
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-7 md:p-10 min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
-                  <h1 className="text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                  <h1 className="text-[1.6rem] sm:text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
                     Start, switch, or advance your career
                   </h1>
-                  <p className="mt-4 text-sm md:text-base text-white/85">
+                  <p className="mt-3 sm:mt-4 text-sm md:text-base text-white/85">
                     Grow with 2,500+ government schemes, AI tools and career programs — built for Bharat.
                   </p>
                   <Link to={user ? "/dashboard" : "/signup"}>
-                    <Button size="lg" className="mt-6 rounded-full bg-white text-[hsl(215_90%_42%)] hover:bg-white/95 font-bold px-6 shadow-md gap-2">
+                    <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(215_90%_42%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
                       {user ? "Go to dashboard" : "Join for Free"}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -397,11 +397,11 @@ const Index = () => {
               </div>
 
               {/* Right card — Hero AI tools slider */}
-              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-4 md:p-6 min-h-[260px] md:min-h-[340px] flex flex-col">
+              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-3.5 sm:p-4 md:p-6 min-h-[240px] sm:min-h-[260px] md:min-h-[340px] flex flex-col">
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex items-center justify-between gap-3 mb-3">
+                  <div className="flex items-center justify-between gap-2 mb-2.5 md:mb-3">
                     <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md">
-                      <Sparkles className="h-3 w-3" /> AI Tools Spotlight
+                      <Sparkles className="h-3 w-3" /> AI Tools
                     </span>
                     <div className="flex gap-1">
                       {HERO_SLIDES.slice(3).slice(0, 6).map((_, i) => (
@@ -415,31 +415,31 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <div className="flex-1 relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50/80 to-violet-50/80 border border-indigo-100/80 p-4 md:p-5">
+                  <div className="flex-1 relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50/80 to-violet-50/80 border border-indigo-100/80 p-3.5 sm:p-4 md:p-5">
                     {HERO_SLIDES.slice(3).slice(0, 6).map((slide, i) => {
                       const active = heroSlide === i + 3;
                       const tool = aiStudentTools[i];
                       return (
                         <div
                           key={i}
-                          className={`absolute inset-0 p-4 md:p-5 transition-all duration-500 flex flex-col ${
+                          className={`absolute inset-0 p-3.5 sm:p-4 md:p-5 transition-all duration-500 flex flex-col ${
                             active ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
                           }`}
                         >
-                          <div className="flex items-start gap-3 md:gap-4 mb-2.5 md:mb-3">
-                            <div className="h-11 w-11 md:h-14 md:w-14 rounded-lg bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-2xl md:text-3xl shrink-0">
+                          <div className="flex items-start gap-2.5 md:gap-4 mb-2 md:mb-3">
+                            <div className="h-10 w-10 sm:h-11 sm:w-11 md:h-14 md:w-14 rounded-lg bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-xl sm:text-2xl md:text-3xl shrink-0">
                               {tool?.icon}
                             </div>
                             <div className="flex-1 min-w-0">
                               <span className="inline-block text-[10px] font-bold bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-md mb-1">
                                 {slide.line2}
                               </span>
-                              <h3 className="font-extrabold text-sm md:text-base text-foreground leading-tight line-clamp-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                              <h3 className="font-extrabold text-[13px] sm:text-sm md:text-base text-foreground leading-tight line-clamp-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
                                 {slide.title}
                               </h3>
                             </div>
                           </div>
-                          <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed line-clamp-2 mb-3">
+                          <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed line-clamp-3 md:line-clamp-2 mb-2 md:mb-3">
                             {slide.desc}
                           </p>
                           <Link to={slide.to} className="mt-auto">
@@ -452,19 +452,19 @@ const Index = () => {
                     })}
                   </div>
 
-                  <div className="mt-3 md:mt-4 flex items-center justify-between">
+                  <div className="mt-2.5 md:mt-4 flex items-center justify-between">
                     <div className="grid grid-cols-3 gap-3 md:gap-4">
                       <div>
-                        <div className="text-base md:text-xl font-extrabold text-foreground">2,500+</div>
-                        <div className="text-[10px] md:text-[11px] text-muted-foreground">Schemes</div>
+                        <div className="text-sm sm:text-base md:text-xl font-extrabold text-foreground">2,500+</div>
+                        <div className="text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground">Schemes</div>
                       </div>
                       <div>
-                        <div className="text-base md:text-xl font-extrabold text-foreground">20+</div>
-                        <div className="text-[10px] md:text-[11px] text-muted-foreground">AI Tools</div>
+                        <div className="text-sm sm:text-base md:text-xl font-extrabold text-foreground">20+</div>
+                        <div className="text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground">AI Tools</div>
                       </div>
                       <div>
-                        <div className="text-base md:text-xl font-extrabold text-foreground">₹999</div>
-                        <div className="text-[10px] md:text-[11px] text-muted-foreground">Pro / year</div>
+                        <div className="text-sm sm:text-base md:text-xl font-extrabold text-foreground">₹999</div>
+                        <div className="text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground">Pro / year</div>
                       </div>
                     </div>
                     <div className="flex gap-1.5">
