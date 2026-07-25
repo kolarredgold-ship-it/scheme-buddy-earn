@@ -203,7 +203,10 @@ const Index = () => {
   ];
 
   // Auto-advance hero AI tools slider (indices 3..N match HERO_SLIDES after intro slides)
+  // Disabled when user prefers reduced motion.
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
     const first = 3;
     const last = HERO_SLIDES.length - 1;
     const id = setInterval(() => {
@@ -331,7 +334,7 @@ const Index = () => {
       <div className="pb-24 md:pb-12 bg-background">
         {/* HERO — Coursera inspired: search bar + dual promo cards */}
         <section className="bg-background border-b border-border/50">
-          <div className="container mx-auto px-4 pt-6 md:pt-10 pb-8 md:pb-14">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 pt-6 md:pt-10 pb-8 md:pb-14">
             {/* Top search bar (Coursera-style) */}
             <div className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
               <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground shrink-0">
@@ -394,53 +397,54 @@ const Index = () => {
               </div>
 
               {/* Right card — Hero AI tools slider */}
-              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-6 md:p-8 min-h-[300px] md:min-h-[380px] flex flex-col">
+              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-4 md:p-6 min-h-[260px] md:min-h-[340px] flex flex-col">
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-md">
+                  <div className="flex items-center justify-between gap-3 mb-3">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md">
                       <Sparkles className="h-3 w-3" /> AI Tools Spotlight
                     </span>
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-1">
                       {HERO_SLIDES.slice(3).slice(0, 6).map((_, i) => (
                         <button
                           key={i}
                           onClick={() => setHeroSlide(i + 3)}
-                          className={`h-1.5 rounded-full transition-all ${heroSlide - 3 === i ? 'w-5 bg-primary' : 'w-1.5 bg-primary/30'}`}
+                          aria-label={`Go to slide ${i + 1}`}
+                          className={`h-1 rounded-full transition-all ${heroSlide - 3 === i ? 'w-4 bg-primary' : 'w-1 bg-primary/30'}`}
                         />
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex-1 relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50/80 to-violet-50/80 border border-indigo-100/80 p-5 md:p-6">
+                  <div className="flex-1 relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50/80 to-violet-50/80 border border-indigo-100/80 p-4 md:p-5">
                     {HERO_SLIDES.slice(3).slice(0, 6).map((slide, i) => {
                       const active = heroSlide === i + 3;
                       const tool = aiStudentTools[i];
                       return (
                         <div
                           key={i}
-                          className={`absolute inset-0 p-5 md:p-6 transition-all duration-500 flex flex-col ${
+                          className={`absolute inset-0 p-4 md:p-5 transition-all duration-500 flex flex-col ${
                             active ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
                           }`}
                         >
-                          <div className="flex items-start gap-4 mb-3">
-                            <div className="h-14 w-14 md:h-16 md:w-16 rounded-xl bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-3xl md:text-4xl shrink-0">
+                          <div className="flex items-start gap-3 md:gap-4 mb-2.5 md:mb-3">
+                            <div className="h-11 w-11 md:h-14 md:w-14 rounded-lg bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-2xl md:text-3xl shrink-0">
                               {tool?.icon}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="inline-block text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-md mb-1.5">
+                              <span className="inline-block text-[10px] font-bold bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-md mb-1">
                                 {slide.line2}
                               </span>
-                              <h3 className="font-extrabold text-base md:text-lg text-foreground leading-tight line-clamp-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                              <h3 className="font-extrabold text-sm md:text-base text-foreground leading-tight line-clamp-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
                                 {slide.title}
                               </h3>
                             </div>
                           </div>
-                          <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">
+                          <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed line-clamp-2 mb-3">
                             {slide.desc}
                           </p>
                           <Link to={slide.to} className="mt-auto">
-                            <Button size="sm" className="rounded-lg bg-primary text-primary-foreground font-bold gap-1.5 group">
-                              {slide.cta} <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                            <Button size="sm" className="h-8 rounded-lg bg-primary text-primary-foreground text-xs font-bold gap-1.5 group">
+                              {slide.cta} <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
                             </Button>
                           </Link>
                         </div>
@@ -448,27 +452,27 @@ const Index = () => {
                     })}
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="grid grid-cols-3 gap-4">
+                  <div className="mt-3 md:mt-4 flex items-center justify-between">
+                    <div className="grid grid-cols-3 gap-3 md:gap-4">
                       <div>
-                        <div className="text-xl md:text-2xl font-extrabold text-foreground">2,500+</div>
-                        <div className="text-[11px] md:text-xs text-muted-foreground">Schemes</div>
+                        <div className="text-base md:text-xl font-extrabold text-foreground">2,500+</div>
+                        <div className="text-[10px] md:text-[11px] text-muted-foreground">Schemes</div>
                       </div>
                       <div>
-                        <div className="text-xl md:text-2xl font-extrabold text-foreground">20+</div>
-                        <div className="text-[11px] md:text-xs text-muted-foreground">AI Tools</div>
+                        <div className="text-base md:text-xl font-extrabold text-foreground">20+</div>
+                        <div className="text-[10px] md:text-[11px] text-muted-foreground">AI Tools</div>
                       </div>
                       <div>
-                        <div className="text-xl md:text-2xl font-extrabold text-foreground">₹999</div>
-                        <div className="text-[11px] md:text-xs text-muted-foreground">Pro / year</div>
+                        <div className="text-base md:text-xl font-extrabold text-foreground">₹999</div>
+                        <div className="text-[10px] md:text-[11px] text-muted-foreground">Pro / year</div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <button onClick={prevSlide} className="h-8 w-8 rounded-lg border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
-                        <ChevronRight className="h-4 w-4 rotate-180" />
+                    <div className="flex gap-1.5">
+                      <button onClick={prevSlide} aria-label="Previous slide" className="h-6 w-6 md:h-7 md:w-7 rounded-md border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
+                        <ChevronRight className="h-3.5 w-3.5 rotate-180" />
                       </button>
-                      <button onClick={nextSlide} className="h-8 w-8 rounded-lg border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
-                        <ChevronRight className="h-4 w-4" />
+                      <button onClick={nextSlide} aria-label="Next slide" className="h-6 w-6 md:h-7 md:w-7 rounded-md border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
+                        <ChevronRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>
@@ -518,7 +522,7 @@ const Index = () => {
 
 
         {/* AI TOOLS */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
+        <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
           <div className="mb-5">
             <h2
               className="text-xl md:text-3xl font-extrabold text-foreground"
@@ -612,7 +616,7 @@ const Index = () => {
 
         {/* SCHEMES */}
         <section id="schemes" className="bg-stone-50/70 border-y border-border/40">
-          <div className="container mx-auto px-4 py-10 md:py-14">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
             <div className="mb-5">
               <h2
                 className="text-xl md:text-3xl font-extrabold text-foreground"
@@ -830,7 +834,7 @@ const Index = () => {
 
         {/* STATS BAR — dark blue band */}
         <section className="bg-gradient-to-r from-[#0c1a4d] via-[#142166] to-[#1a2a7a] text-white">
-          <div className="container mx-auto px-4 py-10 md:py-12">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
                 { v: "50,000+", l: "STUDENTS REGISTERED" },
@@ -853,7 +857,7 @@ const Index = () => {
 
         {/* INTRODUCING TECHROLA — One Nation, One APP */}
         <section className="bg-gradient-to-br from-amber-50 via-orange-50/40 to-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h2
@@ -954,7 +958,7 @@ const Index = () => {
         <section className="relative overflow-hidden bg-gradient-to-br from-[#0f0a3d] via-[#2a1670] to-[#5b21b6]">
           <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
 
-          <div className="container mx-auto px-4 py-14 md:py-20 relative">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-14 md:py-20 relative">
             <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
               <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/40 text-amber-300 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
                 <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Your Career Roadmap
@@ -1020,7 +1024,7 @@ const Index = () => {
 
         {/* ABOUT TECHROLA */}
         <section className="bg-background">
-          <div className="container mx-auto px-4 py-12 md:py-16">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div>
                 <div className="text-xs md:text-sm font-bold text-violet-700 tracking-widest uppercase mb-3">
@@ -1081,7 +1085,7 @@ const Index = () => {
         </section>
 
         {/* PRICING */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
+        <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
 
           <div className="mb-6">
             <h2
@@ -1167,7 +1171,7 @@ const Index = () => {
 
 
         {/* COLLEGE & SCHOOL FINDER */}
-        <section className="container mx-auto px-4 py-10 md:py-14">
+        <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
           <div className="rounded-xl border border-border/60 bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 p-5 md:p-8">
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-full">
