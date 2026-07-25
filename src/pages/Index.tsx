@@ -334,7 +334,7 @@ const Index = () => {
       <div className="pb-24 md:pb-12 bg-background">
         {/* HERO — Coursera inspired: search bar + dual promo cards */}
         <section className="bg-background border-b border-border/50">
-          <div className="container mx-auto px-4 pt-6 md:pt-10 pb-8 md:pb-14">
+          <div className="container mx-auto px-5 md:px-8 lg:px-12 pt-6 md:pt-10 pb-8 md:pb-14">
             {/* Top search bar (Coursera-style) */}
             <div className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
               <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground shrink-0">
