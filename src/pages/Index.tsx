@@ -577,29 +577,30 @@ const Index = () => {
           )}
 
           {/* Tool cards grid — improved spacing, hover/press states, descriptions */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
             {aiStudentTools.slice(1).map((t, i) => (
               <Link
                 key={t.to}
                 to={t.to}
                 onClick={() => trackToolClick(t.to, "home-grid")}
-                className={`group relative flex flex-col items-start gap-2 p-4 rounded-xl border bg-card ${TOOL_TINTS[i % TOOL_TINTS.length]} hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+                className="group relative flex flex-col items-start gap-2 p-3.5 md:p-4 rounded-xl border border-border/70 bg-card hover:border-emerald-300 hover:shadow-[0_10px_28px_-14px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200"
               >
-                <div className="h-12 w-12 md:h-14 md:w-14 rounded-full bg-white dark:bg-white/10 border-2 border-white/80 flex items-center justify-center text-2xl shadow-md ring-1 ring-foreground/5 group-hover:scale-110 group-hover:ring-emerald-300 transition-all">
+                <div className={`h-11 w-11 md:h-12 md:w-12 rounded-full flex items-center justify-center text-xl md:text-2xl ${TOOL_TINTS[i % TOOL_TINTS.length]} group-hover:scale-105 transition-transform`}>
                   {t.icon}
                 </div>
-                <h3 className="text-[13px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
+                <h3 className="text-[12.5px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
                   {t.title.replace(/^AI\s+/, "")}
                 </h3>
                 <p className="text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
                   {t.desc}
                 </p>
-                <span className="mt-auto inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                  Open <ArrowRight className="h-3 w-3" />
+                <span className="mt-auto pt-1 inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-emerald-700">
+                  Open <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </Link>
             ))}
           </div>
+
 
           <div className="flex justify-center mt-8">
             <Link to="/ai-tools" onClick={() => trackToolClick("view-all", "home")}>
