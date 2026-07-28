@@ -180,6 +180,9 @@ const Index = () => {
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const catRailRef = useRef<HTMLDivElement>(null);
+  const scrollCatRail = (dir: -1 | 1) =>
+    catRailRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
