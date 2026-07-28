@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronRight, MapPin, Filter, GraduationCap, School, ExternalLink } from "lucide-react";
+import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronLeft, ChevronRight, MapPin, Filter, GraduationCap, School, ExternalLink } from "lucide-react";
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
@@ -180,6 +180,9 @@ const Index = () => {
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const catRailRef = useRef<HTMLDivElement>(null);
+  const scrollCatRail = (dir: -1 | 1) =>
+    catRailRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedState, setSelectedState] = useState("all");
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
@@ -721,39 +724,61 @@ const Index = () => {
               </Select>
             </div>
 
-            {/* Category cards grid — myScheme style tiles */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3 mb-6">
-              {CATEGORY_CHIPS.map((c) => {
-                const active = activeCategory === c.key;
-                return (
-                  <button
-                    key={c.key}
-                    onClick={() => setActiveCategory(c.key)}
-                    aria-pressed={active}
-                    className={`group relative flex flex-col items-center justify-start gap-2 px-1.5 py-3 sm:py-4 rounded-xl border bg-card transition-all duration-200 active:scale-[0.97] ${
-                      active
-                        ? "border-emerald-500 ring-2 ring-emerald-500/25 shadow-md"
-                        : "border-border/70 hover:border-emerald-300 hover:shadow-sm hover:-translate-y-0.5"
-                    }`}
-                  >
-                    <span
-                      className={`h-11 w-11 sm:h-12 sm:w-12 rounded-full flex items-center justify-center text-xl sm:text-2xl transition-colors ${
-                        active ? "bg-emerald-500 text-white shadow-sm" : `${c.bg} group-hover:brightness-95`
+            {/* Category cards — horizontal slider */}
+            <div className="relative mb-6 group/rail">
+              <div
+                ref={catRailRef}
+                className="flex gap-2 sm:gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 -mx-1 px-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              >
+                {CATEGORY_CHIPS.map((c) => {
+                  const active = activeCategory === c.key;
+                  return (
+                    <button
+                      key={c.key}
+                      onClick={() => setActiveCategory(c.key)}
+                      aria-pressed={active}
+                      className={`group snap-start shrink-0 w-[104px] sm:w-[124px] relative flex flex-col items-center justify-start gap-2 px-1.5 py-3 sm:py-4 rounded-xl border bg-card transition-all duration-200 active:scale-[0.97] ${
+                        active
+                          ? "border-emerald-500 ring-2 ring-emerald-500/25 shadow-md"
+                          : "border-border/70 hover:border-emerald-300 hover:shadow-sm hover:-translate-y-0.5"
                       }`}
                     >
-                      {c.icon}
-                    </span>
-                    <span
-                      className={`text-[10.5px] sm:text-xs font-semibold text-center leading-tight line-clamp-2 ${
-                        active ? "text-emerald-700" : "text-foreground/75"
-                      }`}
-                    >
-                      {c.label}
-                    </span>
-                  </button>
-                );
-              })}
+                      <span
+                        className={`h-11 w-11 sm:h-12 sm:w-12 rounded-full flex items-center justify-center text-xl sm:text-2xl transition-colors ${
+                          active ? "bg-emerald-500 text-white shadow-sm" : `${c.bg} group-hover:brightness-95`
+                        }`}
+                      >
+                        {c.icon}
+                      </span>
+                      <span
+                        className={`text-[10.5px] sm:text-xs font-semibold text-center leading-tight line-clamp-2 ${
+                          active ? "text-emerald-700" : "text-foreground/75"
+                        }`}
+                      >
+                        {c.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => scrollCatRail(-1)}
+                aria-label="Scroll categories left"
+                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 h-8 w-8 items-center justify-center rounded-full border border-border bg-white shadow-md opacity-0 group-hover/rail:opacity-100 transition-opacity"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => scrollCatRail(1)}
+                aria-label="Scroll categories right"
+                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 h-8 w-8 items-center justify-center rounded-full border border-border bg-white shadow-md opacity-0 group-hover/rail:opacity-100 transition-opacity"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
+
+
 
 
 
