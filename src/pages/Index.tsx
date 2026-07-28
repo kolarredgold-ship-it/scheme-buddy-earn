@@ -720,28 +720,40 @@ const Index = () => {
               </Select>
             </div>
 
-            {/* Category cards grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-8 gap-2.5 md:gap-3 mb-6">
+            {/* Category cards grid — myScheme style tiles */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3 mb-6">
               {CATEGORY_CHIPS.map((c) => {
                 const active = activeCategory === c.key;
                 return (
                   <button
                     key={c.key}
                     onClick={() => setActiveCategory(c.key)}
-                    className={`relative flex flex-col items-center justify-center gap-1.5 p-3 md:p-4 rounded-xl border-2 transition-all ${
+                    aria-pressed={active}
+                    className={`group relative flex flex-col items-center justify-start gap-2 px-1.5 py-3 sm:py-4 rounded-xl border bg-card transition-all duration-200 active:scale-[0.97] ${
                       active
-                        ? `bg-gradient-to-br ${c.color} text-white border-transparent shadow-lg scale-[1.03]`
-                        : `${c.bg} text-foreground/80`
+                        ? "border-emerald-500 ring-2 ring-emerald-500/25 shadow-md"
+                        : "border-border/70 hover:border-emerald-300 hover:shadow-sm hover:-translate-y-0.5"
                     }`}
                   >
-                    <span className="text-2xl md:text-3xl leading-none">{c.icon}</span>
-                    <span className={`text-[11px] md:text-xs font-semibold text-center leading-tight ${active ? "text-white" : ""}`}>
+                    <span
+                      className={`h-11 w-11 sm:h-12 sm:w-12 rounded-full flex items-center justify-center text-xl sm:text-2xl transition-colors ${
+                        active ? "bg-emerald-500 text-white shadow-sm" : `${c.bg} group-hover:brightness-95`
+                      }`}
+                    >
+                      {c.icon}
+                    </span>
+                    <span
+                      className={`text-[10.5px] sm:text-xs font-semibold text-center leading-tight line-clamp-2 ${
+                        active ? "text-emerald-700" : "text-foreground/75"
+                      }`}
+                    >
                       {c.label}
                     </span>
                   </button>
                 );
               })}
             </div>
+
 
 
             {/* Scheme list */}
@@ -757,44 +769,32 @@ const Index = () => {
                     <p className="text-xs text-foreground/80">{aiSummary}</p>
                   </div>
                 )}
-                {/* Desktop: colorful grid cards */}
+                {/* Desktop: clean scheme cards */}
                 <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-4">
-                  {visible.slice(0, 12).map((s, i) => {
-                    const palettes = [
-                      { bg: "bg-rose-50", border: "border-rose-200", dot: "bg-rose-500", hover: "hover:border-rose-400" },
-                      { bg: "bg-amber-50", border: "border-amber-200", dot: "bg-amber-500", hover: "hover:border-amber-400" },
-                      { bg: "bg-emerald-50", border: "border-emerald-200", dot: "bg-emerald-500", hover: "hover:border-emerald-400" },
-                      { bg: "bg-sky-50", border: "border-sky-200", dot: "bg-sky-500", hover: "hover:border-sky-400" },
-                      { bg: "bg-violet-50", border: "border-violet-200", dot: "bg-violet-500", hover: "hover:border-violet-400" },
-                      { bg: "bg-fuchsia-50", border: "border-fuchsia-200", dot: "bg-fuchsia-500", hover: "hover:border-fuchsia-400" },
-                      { bg: "bg-teal-50", border: "border-teal-200", dot: "bg-teal-500", hover: "hover:border-teal-400" },
-                      { bg: "bg-orange-50", border: "border-orange-200", dot: "bg-orange-500", hover: "hover:border-orange-400" },
-                    ];
-                    const p = palettes[i % palettes.length];
-                    return (
-                      <Link
-                        key={s.id}
-                        to={`/scheme/${s.slug}`}
-                        className={`group relative rounded-xl border ${p.bg} ${p.border} ${p.hover} p-4 transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3 min-h-[130px]`}
-                      >
-                        <div className="flex items-start gap-2">
-                          <span className={`h-2.5 w-2.5 rounded-full ${p.dot} shrink-0 mt-1.5`} />
-                          <h3 className="font-bold text-sm text-foreground line-clamp-2 group-hover:text-emerald-700">
-                            {s.title}
-                          </h3>
-                        </div>
-                        <div className="flex items-center gap-1.5 flex-wrap mt-auto">
-                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
-                            {prettyCategory(s.category)}
-                          </span>
-                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
-                            {prettyState(s.state) || "Central"}
-                          </span>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground/60 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all ml-auto" />
-                        </div>
-                      </Link>
-                    );
-                  })}
+                  {visible.slice(0, 12).map((s) => (
+                    <Link
+                      key={s.id}
+                      to={`/scheme/${s.slug}`}
+                      className="group relative rounded-xl border border-border/70 bg-card p-5 pl-6 transition-all hover:shadow-[0_10px_30px_-12px_rgba(16,185,129,0.35)] hover:border-emerald-400 hover:-translate-y-0.5 flex flex-col gap-3 min-h-[150px] overflow-hidden"
+                    >
+                      <span className="absolute left-0 top-0 h-full w-1 bg-emerald-500/70 group-hover:bg-emerald-600 transition-colors" />
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
+                          {prettyCategory(s.category)}
+                        </span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
+                          {prettyState(s.state) || "Central"}
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-[15px] text-foreground line-clamp-3 leading-snug group-hover:text-emerald-700 transition-colors">
+                        {s.title}
+                      </h3>
+                      <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
+                        View details
+                        <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </span>
+                    </Link>
+                  ))}
                   {visible.length === 0 && (
                     <div className="col-span-full py-12 text-center text-sm text-muted-foreground">
                       No schemes match your filters.
@@ -802,23 +802,29 @@ const Index = () => {
                   )}
                 </div>
 
-                {/* Mobile: compact list */}
-                <div className="md:hidden bg-background rounded-xl border border-border/60 divide-y divide-border/60 overflow-hidden">
+                {/* Mobile: card list */}
+                <div className="md:hidden space-y-2.5">
                   {visible.slice(0, 15).map((s) => (
                     <Link
                       key={s.id}
                       to={`/scheme/${s.slug}`}
-                      className="flex items-center gap-3 px-4 py-3.5 hover:bg-muted/40 transition-colors group"
+                      className="relative flex items-start gap-3 rounded-xl border border-border/70 bg-card p-3.5 pl-4 overflow-hidden active:scale-[0.99] transition-transform"
                     >
-                      <span className="h-2 w-2 rounded-full bg-orange-400 shrink-0" />
-                      <span className="font-semibold text-sm text-foreground group-hover:text-emerald-700 truncate">
-                        {s.title}
-                      </span>
-                      <span className="flex items-center gap-1.5 flex-wrap ml-auto shrink-0">
-                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
-                          {prettyCategory(s.category)}
-                        </span>
-                      </span>
+                      <span className="absolute left-0 top-0 h-full w-1 bg-emerald-500/70" />
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-semibold text-[13.5px] text-foreground leading-snug line-clamp-2">
+                          {s.title}
+                        </h3>
+                        <div className="flex items-center gap-1.5 flex-wrap mt-1.5">
+                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
+                            {prettyCategory(s.category)}
+                          </span>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${s.state === "central" ? CENTRAL_TAG : STATE_TAG}`}>
+                            {prettyState(s.state) || "Central"}
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
                     </Link>
                   ))}
                   {visible.length === 0 && (
@@ -827,6 +833,7 @@ const Index = () => {
                     </div>
                   )}
                 </div>
+
               </>
             )}
           </div>
