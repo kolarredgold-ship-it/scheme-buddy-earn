@@ -866,7 +866,7 @@ const Index = () => {
 
                 {/* Mobile: card list */}
                 <div className="md:hidden space-y-2.5">
-                  {visible.slice(0, 15).map((s) => (
+                  {visible.slice(0, 8).map((s) => (
                     <Link
                       key={s.id}
                       to={`/scheme/${s.slug}`}
@@ -894,7 +894,15 @@ const Index = () => {
                       No schemes match your filters.
                     </div>
                   )}
+                  {visible.length > 8 && (
+                    <Link to="/schemes" className="block">
+                      <Button variant="outline" className="w-full h-11 rounded-xl border-foreground/15 font-semibold gap-2 mt-1">
+                        Browse all schemes <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                  )}
                 </div>
+
 
               </>
             )}
