@@ -522,7 +522,7 @@ const Index = () => {
         </section>
 
         {/* Sliding tools strip — auto-marquee banner */}
-        <div className="relative mt-16 md:mt-20 overflow-hidden border-y border-emerald-100/80 bg-emerald-50/50 backdrop-blur-sm">
+        <div className="relative mt-0 md:mt-20 overflow-hidden border-y border-emerald-100/80 bg-emerald-50/50 backdrop-blur-sm">
           <div
             className="flex gap-3 py-3 w-max"
             style={{ animation: "ticker 40s linear infinite" }}
