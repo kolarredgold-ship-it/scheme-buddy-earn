@@ -191,6 +191,8 @@ const Index = () => {
   const [prefsOpen, setPrefsOpen] = useState(false);
   const [heroSlide, setHeroSlide] = useState(3);
   const [techTab, setTechTab] = useState(0);
+  const [showAllTools, setShowAllTools] = useState(false);
+
 
   // Build hero slides: brand intros + one slide per AI tool
   const HERO_SLIDES = [
