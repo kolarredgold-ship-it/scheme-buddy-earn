@@ -192,6 +192,7 @@ const Index = () => {
   const [heroSlide, setHeroSlide] = useState(3);
   const [techTab, setTechTab] = useState(0);
   const [showAllTools, setShowAllTools] = useState(false);
+  const [showAllSchemes, setShowAllSchemes] = useState(false);
 
 
   // Build hero slides: brand intros + one slide per AI tool
@@ -866,7 +867,7 @@ const Index = () => {
 
                 {/* Mobile: card list */}
                 <div className="md:hidden space-y-2.5">
-                  {visible.slice(0, 8).map((s) => (
+                  {visible.slice(0, showAllSchemes ? 20 : 8).map((s) => (
                     <Link
                       key={s.id}
                       to={`/scheme/${s.slug}`}
@@ -895,11 +896,14 @@ const Index = () => {
                     </div>
                   )}
                   {visible.length > 8 && (
-                    <Link to="/schemes" className="block">
-                      <Button variant="outline" className="w-full h-11 rounded-xl border-foreground/15 font-semibold gap-2 mt-1">
-                        Browse all schemes <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </Link>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowAllSchemes((v) => !v)}
+                      className="w-full h-11 rounded-xl border-foreground/15 font-semibold gap-2 mt-1"
+                    >
+                      {showAllSchemes ? "Show less" : "Show more schemes"}
+                      <ChevronRight className={`h-4 w-4 transition-transform ${showAllSchemes ? "-rotate-90" : "rotate-90"}`} />
+                    </Button>
                   )}
                 </div>
 
