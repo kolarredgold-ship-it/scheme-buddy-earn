@@ -278,16 +278,31 @@ const Index = () => {
       });
   }, [user]);
 
+  // Server-side filtered + capped fetch — the table has thousands of rows and
+  // the homepage only ever renders the first 15, so never pull the whole table.
   useEffect(() => {
-    supabase
+    let cancelled = false;
+    setLoading(true);
+    let q = supabase
       .from("schemes")
       .select("id, title, category, description, image_url, created_at, state, slug")
       .order("created_at", { ascending: false })
-      .then(({ data }) => {
-        if (data) setSchemes(data as unknown as Scheme[]);
-        setLoading(false);
-      });
-  }, []);
+      .limit(60);
+
+    if (selectedState !== "all") q = q.in("state", [selectedState, "central"]);
+    if (activeCategory === "employment") q = q.in("category", ["govt_jobs", "private_jobs"]);
+    else if (activeCategory !== "all") q = q.eq("category", activeCategory);
+
+    q.then(({ data }) => {
+      if (cancelled) return;
+      setSchemes((data as unknown as Scheme[]) ?? []);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCategory, selectedState]);
+
 
   const handleSearch = async () => {
     const q = searchQuery.trim();
@@ -319,18 +334,9 @@ const Index = () => {
     setAiSummary("");
   };
 
-  const stateFiltered =
-    selectedState === "all"
-      ? schemes
-      : schemes.filter((s) => s.state === selectedState || s.state === "central");
+  // Filtering now happens server-side in the fetch above.
+  const visible = aiResults ?? schemes;
 
-  const visible = aiResults
-    ? aiResults
-    : activeCategory === "all"
-      ? stateFiltered
-      : activeCategory === "employment"
-        ? stateFiltered.filter((s) => s.category === "govt_jobs" || s.category === "private_jobs")
-        : stateFiltered.filter((s) => s.category === activeCategory);
 
   return (
     <Layout>
