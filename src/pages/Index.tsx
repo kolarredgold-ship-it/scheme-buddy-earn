@@ -406,7 +406,7 @@ const Index = () => {
               </div>
 
               {/* Right card — Hero AI tools slider */}
-              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-3.5 sm:p-4 md:p-6 min-h-[240px] sm:min-h-[260px] md:min-h-[340px] flex flex-col">
+              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-3.5 sm:p-4 md:p-6 min-h-[240px] sm:min-h-[260px] md:min-h-[340px] hidden md:flex flex-col">
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-center justify-between gap-2 mb-2.5 md:mb-3">
                     <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md">
