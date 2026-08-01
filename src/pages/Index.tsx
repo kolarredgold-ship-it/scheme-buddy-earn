@@ -489,20 +489,35 @@ const Index = () => {
               </div>
             </div>
 
+            {/* Mobile-only compact stats strip */}
+            <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-xl border border-border bg-card px-3 py-3">
+              {[
+                { v: "2,500+", l: "Schemes" },
+                { v: "20+", l: "AI Tools" },
+                { v: "₹999", l: "Pro / year" },
+              ].map((s) => (
+                <div key={s.l} className="text-center">
+                  <div className="text-base font-extrabold text-foreground leading-none">{s.v}</div>
+                  <div className="text-[10px] text-muted-foreground mt-1">{s.l}</div>
+                </div>
+              ))}
+            </div>
+
             {/* Quick action pills */}
-            <div className="mt-6 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+            <div className="mt-4 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
               {[
                 { icon: "📝", title: "Student Registration", to: "/signup", tint: "bg-orange-50 border-orange-200" },
                 { icon: "🏫", title: "Search Colleges", to: "#colleges", tint: "bg-blue-50 border-blue-200" },
                 { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-emerald-50 border-emerald-200" },
                 { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-violet-50 border-violet-200" },
               ].map((f) => (
-                <a key={f.title} href={f.to} className={`flex items-center gap-3 rounded-xl border ${f.tint} px-3 py-2.5 hover:shadow-sm transition-all`}>
-                  <div className="h-10 w-10 rounded-lg bg-white flex items-center justify-center text-lg shadow-sm shrink-0">{f.icon}</div>
-                  <div className="text-[12px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
+                <a key={f.title} href={f.to} className={`flex items-center gap-2.5 md:gap-3 rounded-xl border ${f.tint} px-2.5 md:px-3 py-2.5 min-h-[56px] active:scale-[0.98] hover:shadow-sm transition-all`}>
+                  <div className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-white flex items-center justify-center text-base md:text-lg shadow-sm shrink-0">{f.icon}</div>
+                  <div className="text-[11.5px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
                 </a>
               ))}
             </div>
+
           </div>
         </section>
 
