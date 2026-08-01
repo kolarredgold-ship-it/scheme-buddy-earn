@@ -602,22 +602,22 @@ const Index = () => {
             </Link>
           )}
 
-          {/* Tool cards grid — improved spacing, hover/press states, descriptions */}
+          {/* Tool cards grid — compact on mobile, expandable */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
             {aiStudentTools.slice(1).map((t, i) => (
               <Link
                 key={t.to}
                 to={t.to}
                 onClick={() => trackToolClick(t.to, "home-grid")}
-                className="group relative flex flex-col items-start gap-2 p-3.5 md:p-4 rounded-xl border border-border/70 bg-card hover:border-emerald-300 hover:shadow-[0_10px_28px_-14px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200"
+                className={`group relative ${i >= 6 && !showAllTools ? "hidden md:flex" : "flex"} flex-col items-start gap-1.5 md:gap-2 p-3 md:p-4 rounded-xl border border-border/70 bg-card hover:border-emerald-300 hover:shadow-[0_10px_28px_-14px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
               >
-                <div className={`h-11 w-11 md:h-12 md:w-12 rounded-full flex items-center justify-center text-xl md:text-2xl ${TOOL_TINTS[i % TOOL_TINTS.length]} group-hover:scale-105 transition-transform`}>
+                <div className={`h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center text-lg md:text-2xl ${TOOL_TINTS[i % TOOL_TINTS.length]} group-hover:scale-105 transition-transform`}>
                   {t.icon}
                 </div>
                 <h3 className="text-[12.5px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
                   {t.title.replace(/^AI\s+/, "")}
                 </h3>
-                <p className="text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
+                <p className="hidden md:block text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
                   {t.desc}
                 </p>
                 <span className="mt-auto pt-1 inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-emerald-700">
@@ -627,8 +627,20 @@ const Index = () => {
             ))}
           </div>
 
+          {aiStudentTools.length > 7 && (
+            <div className="md:hidden mt-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowAllTools((v) => !v)}
+                className="w-full h-11 rounded-xl border-foreground/15 font-semibold gap-2"
+              >
+                {showAllTools ? "Show less" : `Show all ${aiStudentTools.length - 1} tools`}
+                <ChevronRight className={`h-4 w-4 transition-transform ${showAllTools ? "-rotate-90" : "rotate-90"}`} />
+              </Button>
+            </div>
+          )}
 
-          <div className="flex justify-center mt-8">
+          <div className="hidden md:flex justify-center mt-8">
             <Link to="/ai-tools" onClick={() => trackToolClick("view-all", "home")}>
               <Button
                 variant="outline"
@@ -638,6 +650,7 @@ const Index = () => {
               </Button>
             </Link>
           </div>
+
         </section>
 
 
