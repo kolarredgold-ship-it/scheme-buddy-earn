@@ -334,18 +334,9 @@ const Index = () => {
     setAiSummary("");
   };
 
-  const stateFiltered =
-    selectedState === "all"
-      ? schemes
-      : schemes.filter((s) => s.state === selectedState || s.state === "central");
+  // Filtering now happens server-side in the fetch above.
+  const visible = aiResults ?? schemes;
 
-  const visible = aiResults
-    ? aiResults
-    : activeCategory === "all"
-      ? stateFiltered
-      : activeCategory === "employment"
-        ? stateFiltered.filter((s) => s.category === "govt_jobs" || s.category === "private_jobs")
-        : stateFiltered.filter((s) => s.category === activeCategory);
 
   return (
     <Layout>
