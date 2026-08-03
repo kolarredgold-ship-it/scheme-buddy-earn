@@ -218,6 +218,94 @@ const Index = () => {
     return () => clearInterval(id);
   }, []);
 
+  // AI tools image slider — shared by mobile and desktop hero
+  const renderToolSlider = (variant: "mobile" | "desktop") => {
+    const desktop = variant === "desktop";
+    return (
+      <div className={desktop ? "flex h-full flex-col" : ""}>
+        <div
+          className={`relative overflow-hidden rounded-xl border border-border shadow-sm ${
+            desktop ? "flex-1 min-h-[340px] lg:min-h-[380px]" : "h-[210px]"
+          }`}
+        >
+          {MOBILE_HERO_SLIDES.map((s, i) => (
+            <Link
+              key={s.to}
+              to={s.to}
+              aria-hidden={mSlide !== i}
+              tabIndex={mSlide === i ? 0 : -1}
+              className={`absolute inset-0 block transition-opacity duration-700 ${
+                mSlide === i ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <img
+                src={s.img}
+                alt={s.title}
+                loading={i === 0 ? "eager" : "lazy"}
+                width={960}
+                height={640}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/55 to-slate-950/10" />
+              <div className={`absolute inset-0 flex flex-col justify-end ${desktop ? "p-6 lg:p-8" : "p-4"}`}>
+                <span className="self-start inline-flex items-center gap-1 rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                  <Sparkles className="h-3 w-3" /> {s.tag}
+                </span>
+                <h2
+                  className={`mt-2 font-extrabold leading-tight text-white ${desktop ? "text-2xl lg:text-3xl" : "text-[17px]"}`}
+                  style={{ fontFamily: "Plus Jakarta Sans" }}
+                >
+                  {s.title}
+                </h2>
+                <p className={`mt-1 leading-snug text-white/80 line-clamp-2 ${desktop ? "text-sm lg:text-base max-w-md" : "text-[12px]"}`}>
+                  {s.desc}
+                </p>
+                <span
+                  className={`mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-white font-bold text-slate-900 ${
+                    desktop ? "px-5 py-2.5 text-sm" : "px-3.5 py-1.5 text-[12px]"
+                  }`}
+                >
+                  Try free <ArrowRight className="h-4 w-4" />
+                </span>
+              </div>
+            </Link>
+          ))}
+
+          {desktop && (
+            <div className="absolute right-4 top-4 flex gap-2">
+              <button
+                onClick={() => setMSlide((s) => (s - 1 + MOBILE_HERO_SLIDES.length) % MOBILE_HERO_SLIDES.length)}
+                aria-label="Previous AI tool"
+                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors"
+              >
+                <ChevronLeft className="h-4 w-4 text-slate-900" />
+              </button>
+              <button
+                onClick={() => setMSlide((s) => (s + 1) % MOBILE_HERO_SLIDES.length)}
+                aria-label="Next AI tool"
+                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors"
+              >
+                <ChevronRight className="h-4 w-4 text-slate-900" />
+              </button>
+            </div>
+          )}
+        </div>
+        <div className={`mt-2 flex justify-center gap-1.5 ${desktop ? "md:mt-3" : ""}`}>
+          {MOBILE_HERO_SLIDES.map((s, i) => (
+            <button
+              key={s.to}
+              onClick={() => setMSlide(i)}
+              aria-label={`Show ${s.title}`}
+              className={`h-1.5 rounded-full transition-all ${mSlide === i ? "w-5 bg-primary" : "w-1.5 bg-primary/25"}`}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+
+
 
   // Build hero slides: brand intros + one slide per AI tool
   const HERO_SLIDES = [
@@ -432,136 +520,12 @@ const Index = () => {
                 />
               </div>
 
-              {/* Right card — Hero AI tools slider */}
-              <div className="relative overflow-hidden rounded-xl bg-muted/70 border border-border p-3.5 sm:p-4 md:p-6 min-h-[240px] sm:min-h-[260px] md:min-h-[340px] hidden md:flex flex-col">
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex items-center justify-between gap-2 mb-2.5 md:mb-3">
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md">
-                      <Sparkles className="h-3 w-3" /> AI Tools
-                    </span>
-                    <div className="flex gap-1">
-                      {HERO_SLIDES.slice(3).slice(0, 6).map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setHeroSlide(i + 3)}
-                          aria-label={`Go to slide ${i + 1}`}
-                          className={`h-1 rounded-full transition-all ${heroSlide - 3 === i ? 'w-4 bg-primary' : 'w-1 bg-primary/30'}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex-1 relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50/80 to-violet-50/80 border border-indigo-100/80 p-3.5 sm:p-4 md:p-5">
-                    {HERO_SLIDES.slice(3).slice(0, 6).map((slide, i) => {
-                      const active = heroSlide === i + 3;
-                      const tool = aiStudentTools[i];
-                      return (
-                        <div
-                          key={i}
-                          className={`absolute inset-0 p-3.5 sm:p-4 md:p-5 transition-all duration-500 flex flex-col ${
-                            active ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8 pointer-events-none'
-                          }`}
-                        >
-                          <div className="flex items-start gap-2.5 md:gap-4 mb-2 md:mb-3">
-                            <div className="h-10 w-10 sm:h-11 sm:w-11 md:h-14 md:w-14 rounded-lg bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-xl sm:text-2xl md:text-3xl shrink-0">
-                              {tool?.icon}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <span className="inline-block text-[10px] font-bold bg-violet-100 text-violet-700 px-1.5 py-0.5 rounded-md mb-1">
-                                {slide.line2}
-                              </span>
-                              <h3 className="font-extrabold text-[13px] sm:text-sm md:text-base text-foreground leading-tight line-clamp-2" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                                {slide.title}
-                              </h3>
-                            </div>
-                          </div>
-                          <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed line-clamp-3 md:line-clamp-2 mb-2 md:mb-3">
-                            {slide.desc}
-                          </p>
-                          <Link to={slide.to} className="mt-auto">
-                            <Button size="sm" className="h-8 rounded-lg bg-primary text-primary-foreground text-xs font-bold gap-1.5 group">
-                              {slide.cta} <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
-                            </Button>
-                          </Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="mt-2.5 md:mt-4 flex items-center justify-between">
-                    <div className="grid grid-cols-3 gap-3 md:gap-4">
-                      <div>
-                        <div className="text-sm sm:text-base md:text-xl font-extrabold text-foreground">2,500+</div>
-                        <div className="text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground">Schemes</div>
-                      </div>
-                      <div>
-                        <div className="text-sm sm:text-base md:text-xl font-extrabold text-foreground">20+</div>
-                        <div className="text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground">AI Tools</div>
-                      </div>
-                      <div>
-                        <div className="text-sm sm:text-base md:text-xl font-extrabold text-foreground">₹999</div>
-                        <div className="text-[9px] sm:text-[10px] md:text-[11px] text-muted-foreground">Pro / year</div>
-                      </div>
-                    </div>
-                    <div className="flex gap-1.5">
-                      <button onClick={prevSlide} aria-label="Previous slide" className="h-6 w-6 md:h-7 md:w-7 rounded-md border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
-                        <ChevronRight className="h-3.5 w-3.5 rotate-180" />
-                      </button>
-                      <button onClick={nextSlide} aria-label="Next slide" className="h-6 w-6 md:h-7 md:w-7 rounded-md border border-border bg-card flex items-center justify-center hover:bg-muted transition-colors">
-                        <ChevronRight className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Right card — AI tools image slider (desktop) */}
+              <div className="hidden md:block">{renderToolSlider("desktop")}</div>
             </div>
 
-            {/* Mobile-only AI tools hero slider with background images */}
-            <div className="md:hidden mt-3">
-              <div className="relative h-[210px] overflow-hidden rounded-xl border border-border shadow-sm">
-                {MOBILE_HERO_SLIDES.map((s, i) => (
-                  <Link
-                    key={s.to}
-                    to={s.to}
-                    aria-hidden={mSlide !== i}
-                    tabIndex={mSlide === i ? 0 : -1}
-                    className={`absolute inset-0 block transition-opacity duration-700 ${mSlide === i ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-                  >
-                    <img
-                      src={s.img}
-                      alt={s.title}
-                      loading={i === 0 ? "eager" : "lazy"}
-                      width={960}
-                      height={640}
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/55 to-slate-950/10" />
-                    <div className="absolute inset-0 flex flex-col justify-end p-4">
-                      <span className="self-start inline-flex items-center gap-1 rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
-                        <Sparkles className="h-3 w-3" /> {s.tag}
-                      </span>
-                      <h2 className="mt-2 text-[17px] font-extrabold leading-tight text-white" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                        {s.title}
-                      </h2>
-                      <p className="mt-1 text-[12px] leading-snug text-white/80 line-clamp-2">{s.desc}</p>
-                      <span className="mt-2.5 inline-flex items-center gap-1.5 self-start rounded-full bg-white px-3.5 py-1.5 text-[12px] font-bold text-slate-900">
-                        Try free <ArrowRight className="h-3.5 w-3.5" />
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-              <div className="mt-2 flex justify-center gap-1.5">
-                {MOBILE_HERO_SLIDES.map((s, i) => (
-                  <button
-                    key={s.to}
-                    onClick={() => setMSlide(i)}
-                    aria-label={`Show ${s.title}`}
-                    className={`h-1.5 rounded-full transition-all ${mSlide === i ? "w-5 bg-primary" : "w-1.5 bg-primary/25"}`}
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Mobile AI tools hero slider with background images */}
+            <div className="md:hidden mt-3">{renderToolSlider("mobile")}</div>
 
             {/* Mobile-only compact stats strip */}
             <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-xl border border-border bg-card px-3 py-3">
