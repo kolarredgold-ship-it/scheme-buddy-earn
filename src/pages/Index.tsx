@@ -209,6 +209,14 @@ const Index = () => {
   const [techTab, setTechTab] = useState(0);
   const [showAllTools, setShowAllTools] = useState(false);
   const [showAllSchemes, setShowAllSchemes] = useState(false);
+  const [mSlide, setMSlide] = useState(0);
+
+  // Mobile hero auto-advance (respects reduced motion)
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => setMSlide((s) => (s + 1) % MOBILE_HERO_SLIDES.length), 4500);
+    return () => clearInterval(id);
+  }, []);
 
 
   // Build hero slides: brand intros + one slide per AI tool
