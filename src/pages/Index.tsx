@@ -524,52 +524,8 @@ const Index = () => {
               <div className="hidden md:block">{renderToolSlider("desktop")}</div>
             </div>
 
-            {/* Mobile-only AI tools hero slider with background images */}
-            <div className="md:hidden mt-3">
-              <div className="relative h-[210px] overflow-hidden rounded-xl border border-border shadow-sm">
-                {MOBILE_HERO_SLIDES.map((s, i) => (
-                  <Link
-                    key={s.to}
-                    to={s.to}
-                    aria-hidden={mSlide !== i}
-                    tabIndex={mSlide === i ? 0 : -1}
-                    className={`absolute inset-0 block transition-opacity duration-700 ${mSlide === i ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-                  >
-                    <img
-                      src={s.img}
-                      alt={s.title}
-                      loading={i === 0 ? "eager" : "lazy"}
-                      width={960}
-                      height={640}
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/55 to-slate-950/10" />
-                    <div className="absolute inset-0 flex flex-col justify-end p-4">
-                      <span className="self-start inline-flex items-center gap-1 rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
-                        <Sparkles className="h-3 w-3" /> {s.tag}
-                      </span>
-                      <h2 className="mt-2 text-[17px] font-extrabold leading-tight text-white" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                        {s.title}
-                      </h2>
-                      <p className="mt-1 text-[12px] leading-snug text-white/80 line-clamp-2">{s.desc}</p>
-                      <span className="mt-2.5 inline-flex items-center gap-1.5 self-start rounded-full bg-white px-3.5 py-1.5 text-[12px] font-bold text-slate-900">
-                        Try free <ArrowRight className="h-3.5 w-3.5" />
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-              <div className="mt-2 flex justify-center gap-1.5">
-                {MOBILE_HERO_SLIDES.map((s, i) => (
-                  <button
-                    key={s.to}
-                    onClick={() => setMSlide(i)}
-                    aria-label={`Show ${s.title}`}
-                    className={`h-1.5 rounded-full transition-all ${mSlide === i ? "w-5 bg-primary" : "w-1.5 bg-primary/25"}`}
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Mobile AI tools hero slider with background images */}
+            <div className="md:hidden mt-3">{renderToolSlider("mobile")}</div>
 
             {/* Mobile-only compact stats strip */}
             <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-xl border border-border bg-card px-3 py-3">
