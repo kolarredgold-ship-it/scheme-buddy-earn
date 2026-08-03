@@ -11,6 +11,22 @@ import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
 import heroStudents from "@/assets/hero-students.png";
+import heroReport from "@/assets/hero-report.jpg";
+import heroAiInterview from "@/assets/hero-ai-interview.jpg";
+import toolResume from "@/assets/tool-resume.jpg";
+import toolNotes from "@/assets/tool-notes.jpg";
+import toolRoadmap from "@/assets/tool-roadmap.jpg";
+import toolEmail from "@/assets/tool-email.jpg";
+
+// Mobile hero slides — AI tools with related background imagery
+const MOBILE_HERO_SLIDES = [
+  { img: heroReport, tag: "Most used", title: "AI Internship Report Generator", desc: "Complete internship report in minutes — download as DOCX.", to: "/create-report" },
+  { img: heroAiInterview, tag: "Practice", title: "AI Mock Interview", desc: "Real interview questions with instant AI feedback.", to: "/mock-interview" },
+  { img: toolResume, tag: "Get hired", title: "AI Resume Builder", desc: "A clean one-page resume recruiters actually read.", to: "/student-tool/resume" },
+  { img: toolNotes, tag: "Exam ready", title: "AI Study Notes Maker", desc: "Turn any topic into crisp revision notes and questions.", to: "/student-tool/study-notes" },
+  { img: toolRoadmap, tag: "Plan", title: "AI 6-Month Career Roadmap", desc: "Month-by-month plan to become job-ready.", to: "/student-tool/roadmap" },
+  { img: toolEmail, tag: "Quick", title: "AI Email & Cover Letter", desc: "Professional emails and cover letters in one tap.", to: "/student-tool/email-writer" },
+];
 import { Landmark, IdCard, BookOpen, Briefcase } from "lucide-react";
 import HomeBlogSection from "@/components/HomeBlogSection";
 
