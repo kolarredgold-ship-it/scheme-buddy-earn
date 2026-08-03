@@ -11,6 +11,22 @@ import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
 import heroStudents from "@/assets/hero-students.png";
+import heroReport from "@/assets/hero-report.jpg";
+import heroAiInterview from "@/assets/hero-ai-interview.jpg";
+import toolResume from "@/assets/tool-resume.jpg";
+import toolNotes from "@/assets/tool-notes.jpg";
+import toolRoadmap from "@/assets/tool-roadmap.jpg";
+import toolEmail from "@/assets/tool-email.jpg";
+
+// Mobile hero slides — AI tools with related background imagery
+const MOBILE_HERO_SLIDES = [
+  { img: heroReport, tag: "Most used", title: "AI Internship Report Generator", desc: "Complete internship report in minutes — download as DOCX.", to: "/create-report" },
+  { img: heroAiInterview, tag: "Practice", title: "AI Mock Interview", desc: "Real interview questions with instant AI feedback.", to: "/mock-interview" },
+  { img: toolResume, tag: "Get hired", title: "AI Resume Builder", desc: "A clean one-page resume recruiters actually read.", to: "/student-tool/resume" },
+  { img: toolNotes, tag: "Exam ready", title: "AI Study Notes Maker", desc: "Turn any topic into crisp revision notes and questions.", to: "/student-tool/study-notes" },
+  { img: toolRoadmap, tag: "Plan", title: "AI 6-Month Career Roadmap", desc: "Month-by-month plan to become job-ready.", to: "/student-tool/roadmap" },
+  { img: toolEmail, tag: "Quick", title: "AI Email & Cover Letter", desc: "Professional emails and cover letters in one tap.", to: "/student-tool/email-writer" },
+];
 import { Landmark, IdCard, BookOpen, Briefcase } from "lucide-react";
 import HomeBlogSection from "@/components/HomeBlogSection";
 
@@ -193,6 +209,14 @@ const Index = () => {
   const [techTab, setTechTab] = useState(0);
   const [showAllTools, setShowAllTools] = useState(false);
   const [showAllSchemes, setShowAllSchemes] = useState(false);
+  const [mSlide, setMSlide] = useState(0);
+
+  // Mobile hero auto-advance (respects reduced motion)
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => setMSlide((s) => (s + 1) % MOBILE_HERO_SLIDES.length), 4500);
+    return () => clearInterval(id);
+  }, []);
 
 
   // Build hero slides: brand intros + one slide per AI tool
@@ -489,6 +513,53 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Mobile-only AI tools hero slider with background images */}
+            <div className="md:hidden mt-3">
+              <div className="relative h-[210px] overflow-hidden rounded-xl border border-border shadow-sm">
+                {MOBILE_HERO_SLIDES.map((s, i) => (
+                  <Link
+                    key={s.to}
+                    to={s.to}
+                    aria-hidden={mSlide !== i}
+                    tabIndex={mSlide === i ? 0 : -1}
+                    className={`absolute inset-0 block transition-opacity duration-700 ${mSlide === i ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                  >
+                    <img
+                      src={s.img}
+                      alt={s.title}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      width={960}
+                      height={640}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/55 to-slate-950/10" />
+                    <div className="absolute inset-0 flex flex-col justify-end p-4">
+                      <span className="self-start inline-flex items-center gap-1 rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+                        <Sparkles className="h-3 w-3" /> {s.tag}
+                      </span>
+                      <h2 className="mt-2 text-[17px] font-extrabold leading-tight text-white" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                        {s.title}
+                      </h2>
+                      <p className="mt-1 text-[12px] leading-snug text-white/80 line-clamp-2">{s.desc}</p>
+                      <span className="mt-2.5 inline-flex items-center gap-1.5 self-start rounded-full bg-white px-3.5 py-1.5 text-[12px] font-bold text-slate-900">
+                        Try free <ArrowRight className="h-3.5 w-3.5" />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-2 flex justify-center gap-1.5">
+                {MOBILE_HERO_SLIDES.map((s, i) => (
+                  <button
+                    key={s.to}
+                    onClick={() => setMSlide(i)}
+                    aria-label={`Show ${s.title}`}
+                    className={`h-1.5 rounded-full transition-all ${mSlide === i ? "w-5 bg-primary" : "w-1.5 bg-primary/25"}`}
+                  />
+                ))}
               </div>
             </div>
 
