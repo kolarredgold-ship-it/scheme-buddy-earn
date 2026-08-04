@@ -451,6 +451,25 @@ const Index = () => {
     }
   };
 
+  // Persist the chosen state locally + to the user's account (when signed in)
+  const persistState = useCallback(
+    (value: string) => {
+      setSelectedState(value);
+      try {
+        localStorage.setItem(STATE_PREF_KEY, value);
+      } catch {
+        /* storage unavailable */
+      }
+      if (user) {
+        supabase
+          .from("user_preferences")
+          .upsert({ user_id: user.id, preferred_state: value }, { onConflict: "user_id" })
+          .then(() => {});
+      }
+    },
+    [user]
+  );
+
   useEffect(() => {
     if (!user) return;
     supabase
@@ -459,13 +478,36 @@ const Index = () => {
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
-        if (data?.preferred_state && data.preferred_state !== "all") {
+        if (data?.preferred_state) {
+          // Saved account preference always wins on login
           setSelectedState(data.preferred_state);
-        } else if (!data) {
-          setPrefsOpen(true);
+          try {
+            localStorage.setItem(STATE_PREF_KEY, data.preferred_state);
+          } catch {
+            /* storage unavailable */
+          }
+        } else {
+          // First login: carry over whatever the guest picked before signing in
+          const local = (() => {
+            try {
+              return localStorage.getItem(STATE_PREF_KEY);
+            } catch {
+              return null;
+            }
+          })();
+          if (local && local !== "all") {
+            supabase
+              .from("user_preferences")
+              .upsert({ user_id: user.id, preferred_state: local }, { onConflict: "user_id" })
+              .then(() => {});
+            setSelectedState(local);
+          } else if (!data) {
+            setPrefsOpen(true);
+          }
         }
       });
   }, [user]);
+
 
   // Server-side filtered + capped fetch — the table has thousands of rows and
   // the homepage only ever renders the first 15, so never pull the whole table.
