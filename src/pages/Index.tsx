@@ -19,6 +19,7 @@ import toolRoadmap from "@/assets/tool-roadmap.jpg";
 import toolEmail from "@/assets/tool-email.jpg";
 
 // Mobile hero slides — AI tools with related background imagery
+const STATE_PREF_KEY = "techrola_preferred_state";
 const MOBILE_HERO_SLIDES = [
   { img: heroReport, tag: "Most used", title: "AI Internship Report Generator", desc: "Complete internship report in minutes — download as DOCX.", to: "/create-report" },
   { img: heroAiInterview, tag: "Practice", title: "AI Mock Interview", desc: "Real interview questions with instant AI feedback.", to: "/mock-interview" },
@@ -200,7 +201,13 @@ const Index = () => {
   const scrollCatRail = (dir: -1 | 1) =>
     catRailRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedState, setSelectedState] = useState("all");
+  const [selectedState, setSelectedState] = useState(() => {
+    try {
+      return localStorage.getItem(STATE_PREF_KEY) || "all";
+    } catch {
+      return "all";
+    }
+  });
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
   const [aiSummary, setAiSummary] = useState("");
   const [searching, setSearching] = useState(false);
@@ -451,6 +458,25 @@ const Index = () => {
     }
   };
 
+  // Persist the chosen state locally + to the user's account (when signed in)
+  const persistState = useCallback(
+    (value: string) => {
+      setSelectedState(value);
+      try {
+        localStorage.setItem(STATE_PREF_KEY, value);
+      } catch {
+        /* storage unavailable */
+      }
+      if (user) {
+        supabase
+          .from("user_preferences")
+          .upsert({ user_id: user.id, preferred_state: value }, { onConflict: "user_id" })
+          .then(() => {});
+      }
+    },
+    [user]
+  );
+
   useEffect(() => {
     if (!user) return;
     supabase
@@ -459,13 +485,36 @@ const Index = () => {
       .eq("user_id", user.id)
       .maybeSingle()
       .then(({ data }) => {
-        if (data?.preferred_state && data.preferred_state !== "all") {
+        if (data?.preferred_state) {
+          // Saved account preference always wins on login
           setSelectedState(data.preferred_state);
-        } else if (!data) {
-          setPrefsOpen(true);
+          try {
+            localStorage.setItem(STATE_PREF_KEY, data.preferred_state);
+          } catch {
+            /* storage unavailable */
+          }
+        } else {
+          // First login: carry over whatever the guest picked before signing in
+          const local = (() => {
+            try {
+              return localStorage.getItem(STATE_PREF_KEY);
+            } catch {
+              return null;
+            }
+          })();
+          if (local && local !== "all") {
+            supabase
+              .from("user_preferences")
+              .upsert({ user_id: user.id, preferred_state: local }, { onConflict: "user_id" })
+              .then(() => {});
+            setSelectedState(local);
+          } else if (!data) {
+            setPrefsOpen(true);
+          }
         }
       });
   }, [user]);
+
 
   // Server-side filtered + capped fetch — the table has thousands of rows and
   // the homepage only ever renders the first 15, so never pull the whole table.
@@ -855,7 +904,7 @@ const Index = () => {
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1.5">
                 <Filter className="h-3.5 w-3.5" /> Filter by state
               </div>
-              <Select value={selectedState} onValueChange={setSelectedState}>
+              <Select value={selectedState} onValueChange={persistState}>
                 <SelectTrigger className="w-full sm:w-[320px] h-11 rounded-xl bg-background">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <SelectValue />
@@ -1464,7 +1513,7 @@ const Index = () => {
         <HomeBlogSection />
 
         {prefsOpen && (
-          <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
+          <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} onPreferencesSaved={(st) => persistState(st)} />
         )}
       </div>
     </Layout>
