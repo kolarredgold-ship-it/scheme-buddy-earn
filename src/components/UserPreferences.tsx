@@ -108,6 +108,7 @@ const UserPreferences = ({ onPreferencesSaved, open: externalOpen, onOpenChange:
       toast.error("Failed to save preferences");
     } else {
       toast.success("Preferences saved! Your feed is now personalized.");
+      try { localStorage.setItem("techrola_preferred_state", preferredState); } catch { /* ignore */ }
       onPreferencesSaved?.(preferredState, selectedCategories);
       setOpen(false);
     }
