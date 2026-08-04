@@ -201,7 +201,13 @@ const Index = () => {
   const scrollCatRail = (dir: -1 | 1) =>
     catRailRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedState, setSelectedState] = useState("all");
+  const [selectedState, setSelectedState] = useState(() => {
+    try {
+      return localStorage.getItem(STATE_PREF_KEY) || "all";
+    } catch {
+      return "all";
+    }
+  });
   const [aiResults, setAiResults] = useState<Scheme[] | null>(null);
   const [aiSummary, setAiSummary] = useState("");
   const [searching, setSearching] = useState(false);
