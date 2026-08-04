@@ -904,7 +904,7 @@ const Index = () => {
               <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1.5">
                 <Filter className="h-3.5 w-3.5" /> Filter by state
               </div>
-              <Select value={selectedState} onValueChange={setSelectedState}>
+              <Select value={selectedState} onValueChange={persistState}>
                 <SelectTrigger className="w-full sm:w-[320px] h-11 rounded-xl bg-background">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <SelectValue />
@@ -1513,7 +1513,7 @@ const Index = () => {
         <HomeBlogSection />
 
         {prefsOpen && (
-          <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
+          <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} onPreferencesSaved={(st) => persistState(st)} />
         )}
       </div>
     </Layout>
