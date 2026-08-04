@@ -19,6 +19,7 @@ import toolRoadmap from "@/assets/tool-roadmap.jpg";
 import toolEmail from "@/assets/tool-email.jpg";
 
 // Mobile hero slides — AI tools with related background imagery
+const STATE_PREF_KEY = "techrola_preferred_state";
 const MOBILE_HERO_SLIDES = [
   { img: heroReport, tag: "Most used", title: "AI Internship Report Generator", desc: "Complete internship report in minutes — download as DOCX.", to: "/create-report" },
   { img: heroAiInterview, tag: "Practice", title: "AI Mock Interview", desc: "Real interview questions with instant AI feedback.", to: "/mock-interview" },
