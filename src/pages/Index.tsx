@@ -335,18 +335,14 @@ const Index = () => {
               <button
                 type="button"
                 onClick={() => goSlide(mSlide - 1, true)}
-                aria-label="Previous AI tool slide"
-                aria-controls="hero-tool-slider"
-                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                aria-label="Previous AI tool slide"                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >
                 <ChevronLeft className="h-4 w-4 text-slate-900" />
               </button>
               <button
                 type="button"
                 onClick={() => goSlide(mSlide + 1, true)}
-                aria-label="Next AI tool slide"
-                aria-controls="hero-tool-slider"
-                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                aria-label="Next AI tool slide"                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >
                 <ChevronRight className="h-4 w-4 text-slate-900" />
               </button>
