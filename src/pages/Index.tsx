@@ -210,13 +210,35 @@ const Index = () => {
   const [showAllTools, setShowAllTools] = useState(false);
   const [showAllSchemes, setShowAllSchemes] = useState(false);
   const [mSlide, setMSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchX = useRef<number | null>(null);
+  const touchY = useRef<number | null>(null);
+
+  const buzz = () => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate?.(10);
+  };
+  const goSlide = useCallback((next: number, haptic = false) => {
+    const len = MOBILE_HERO_SLIDES.length;
+    setMSlide(((next % len) + len) % len);
+    if (haptic) buzz();
+  }, []);
 
   // Mobile hero auto-advance (respects reduced motion)
   useEffect(() => {
+    if (paused) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(() => setMSlide((s) => (s + 1) % MOBILE_HERO_SLIDES.length), 4500);
     return () => clearInterval(id);
-  }, []);
+  }, [paused]);
+
+  // Prefetch neighbouring slide images so navigation stays instant on slow networks
+  useEffect(() => {
+    const len = MOBILE_HERO_SLIDES.length;
+    [(mSlide + 1) % len, (mSlide - 1 + len) % len].forEach((i) => {
+      const img = new Image();
+      img.src = MOBILE_HERO_SLIDES[i].img;
+    });
+  }, [mSlide]);
 
   // AI tools image slider — shared by mobile and desktop hero
   const renderToolSlider = (variant: "mobile" | "desktop") => {
@@ -224,31 +246,68 @@ const Index = () => {
     return (
       <div className={desktop ? "flex h-full flex-col" : ""}>
         <div
-          className={`relative overflow-hidden rounded-xl border border-border shadow-sm ${
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Featured AI tools"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight") { e.preventDefault(); goSlide(mSlide + 1); }
+            if (e.key === "ArrowLeft") { e.preventDefault(); goSlide(mSlide - 1); }
+            if (e.key === "Home") { e.preventDefault(); goSlide(0); }
+            if (e.key === "End") { e.preventDefault(); goSlide(MOBILE_HERO_SLIDES.length - 1); }
+          }}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={(e) => {
+            touchX.current = e.touches[0].clientX;
+            touchY.current = e.touches[0].clientY;
+            setPaused(true);
+          }}
+          onTouchEnd={(e) => {
+            const sx = touchX.current, sy = touchY.current;
+            touchX.current = null; touchY.current = null;
+            setPaused(false);
+            if (sx === null || sy === null) return;
+            const dx = e.changedTouches[0].clientX - sx;
+            const dy = e.changedTouches[0].clientY - sy;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) goSlide(mSlide + (dx < 0 ? 1 : -1), true);
+          }}
+          className={`relative overflow-hidden rounded-xl border border-border shadow-sm touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
             desktop ? "flex-1 min-h-[340px] lg:min-h-[380px]" : "h-[210px]"
           }`}
         >
+          <span className="sr-only" aria-live="polite">
+            Slide {mSlide + 1} of {MOBILE_HERO_SLIDES.length}: {MOBILE_HERO_SLIDES[mSlide].title}
+          </span>
           {MOBILE_HERO_SLIDES.map((s, i) => (
             <Link
               key={s.to}
               to={s.to}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${i + 1} of ${MOBILE_HERO_SLIDES.length}: ${s.title}`}
               aria-hidden={mSlide !== i}
               tabIndex={mSlide === i ? 0 : -1}
-              className={`absolute inset-0 block transition-opacity duration-700 ${
+              className={`absolute inset-0 block transition-opacity duration-700 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white ${
                 mSlide === i ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
               <img
                 src={s.img}
-                alt={s.title}
+                alt=""
+                aria-hidden="true"
                 loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                fetchPriority={i === 0 ? "high" : "low"}
                 width={960}
                 height={640}
                 className="absolute inset-0 h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/55 to-slate-950/10" />
-              <div className={`absolute inset-0 flex flex-col justify-end ${desktop ? "p-6 lg:p-8" : "p-4"}`}>
-                <span className="self-start inline-flex items-center gap-1 rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+              <div className={`absolute inset-0 flex flex-col items-start justify-end ${desktop ? "p-6 lg:p-8" : "p-4"}`}>
+                <span className="inline-flex items-center gap-1 rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
                   <Sparkles className="h-3 w-3" /> {s.tag}
                 </span>
                 <h2
@@ -261,11 +320,11 @@ const Index = () => {
                   {s.desc}
                 </p>
                 <span
-                  className={`mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-white font-bold text-slate-900 ${
+                  className={`mt-3 inline-flex items-center gap-1.5 rounded-full bg-white font-bold text-slate-900 ${
                     desktop ? "px-5 py-2.5 text-sm" : "px-3.5 py-1.5 text-[12px]"
                   }`}
                 >
-                  Try free <ArrowRight className="h-4 w-4" />
+                  Try free <ArrowRight className={desktop ? "h-4 w-4" : "h-3.5 w-3.5"} />
                 </span>
               </div>
             </Link>
@@ -274,30 +333,49 @@ const Index = () => {
           {desktop && (
             <div className="absolute right-4 top-4 flex gap-2">
               <button
-                onClick={() => setMSlide((s) => (s - 1 + MOBILE_HERO_SLIDES.length) % MOBILE_HERO_SLIDES.length)}
-                aria-label="Previous AI tool"
-                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors"
+                type="button"
+                onClick={() => goSlide(mSlide - 1, true)}
+                aria-label="Previous AI tool slide"
+                aria-controls="hero-tool-slider"
+                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >
                 <ChevronLeft className="h-4 w-4 text-slate-900" />
               </button>
               <button
-                onClick={() => setMSlide((s) => (s + 1) % MOBILE_HERO_SLIDES.length)}
-                aria-label="Next AI tool"
-                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors"
+                type="button"
+                onClick={() => goSlide(mSlide + 1, true)}
+                aria-label="Next AI tool slide"
+                aria-controls="hero-tool-slider"
+                className="h-8 w-8 rounded-full bg-white/85 flex items-center justify-center hover:bg-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >
                 <ChevronRight className="h-4 w-4 text-slate-900" />
               </button>
             </div>
           )}
         </div>
-        <div className={`mt-2 flex justify-center gap-1.5 ${desktop ? "md:mt-3" : ""}`}>
+        <div
+          role="tablist"
+          aria-label="AI tool slides"
+          className={`mt-2 flex items-center justify-center gap-1.5 ${desktop ? "md:mt-3" : ""}`}
+        >
           {MOBILE_HERO_SLIDES.map((s, i) => (
             <button
               key={s.to}
-              onClick={() => setMSlide(i)}
-              aria-label={`Show ${s.title}`}
-              className={`h-1.5 rounded-full transition-all ${mSlide === i ? "w-5 bg-primary" : "w-1.5 bg-primary/25"}`}
-            />
+              type="button"
+              role="tab"
+              aria-selected={mSlide === i}
+              onClick={() => goSlide(i, true)}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowRight") { e.preventDefault(); goSlide(mSlide + 1); }
+                if (e.key === "ArrowLeft") { e.preventDefault(); goSlide(mSlide - 1); }
+              }}
+              aria-label={`Show slide ${i + 1}: ${s.title}`}
+              className="group grid h-6 w-6 place-items-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span
+                className={`block h-1.5 rounded-full transition-all ${mSlide === i ? "w-5 bg-primary" : "w-1.5 bg-primary/25 group-hover:bg-primary/50"}`}
+              />
+            </button>
           ))}
         </div>
       </div>
