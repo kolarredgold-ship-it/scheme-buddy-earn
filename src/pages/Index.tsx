@@ -64,24 +64,24 @@ const CATEGORY_CHIPS = [
   { key: "scholarships", label: "Scholarships", icon: "🎓", color: "from-blue-500 to-blue-600", bg: "bg-blue-50 border-blue-200 hover:border-blue-400" },
   { key: "women_empowerment", label: "Women", icon: "👩", color: "from-pink-500 to-pink-600", bg: "bg-pink-50 border-pink-200 hover:border-pink-400" },
   { key: "farmers", label: "Farmers", icon: "🌾", color: "from-amber-500 to-amber-600", bg: "bg-amber-50 border-amber-200 hover:border-amber-400" },
-  { key: "employment", label: "Employment", icon: "💼", color: "from-emerald-500 to-emerald-600", bg: "bg-emerald-50 border-emerald-200 hover:border-emerald-400" },
+  { key: "employment", label: "Employment", icon: "💼", color: "from-blue-500 to-blue-600", bg: "bg-blue-50 border-blue-200 hover:border-blue-400" },
   { key: "housing", label: "Housing", icon: "🏠", color: "from-orange-500 to-orange-600", bg: "bg-orange-50 border-orange-200 hover:border-orange-400" },
   { key: "health", label: "Healthcare", icon: "🏥", color: "from-rose-500 to-rose-600", bg: "bg-rose-50 border-rose-200 hover:border-rose-400" },
-  { key: "business", label: "Entrepreneurs", icon: "🚀", color: "from-violet-500 to-violet-600", bg: "bg-violet-50 border-violet-200 hover:border-violet-400" },
+  { key: "business", label: "Entrepreneurs", icon: "🚀", color: "from-amber-500 to-amber-600", bg: "bg-amber-50 border-amber-200 hover:border-amber-400" },
 ];
 
 const TAG_COLORS: Record<string, string> = {
   scholarships: "bg-blue-100 text-blue-700",
   women_empowerment: "bg-pink-100 text-pink-700",
   farmers: "bg-amber-100 text-amber-800",
-  employment: "bg-emerald-100 text-emerald-700",
+  employment: "bg-blue-100 text-blue-700",
   housing: "bg-orange-100 text-orange-700",
   health: "bg-rose-100 text-rose-700",
-  business: "bg-violet-100 text-violet-700",
-  education: "bg-cyan-100 text-cyan-700",
-  sc_st: "bg-purple-100 text-purple-700",
+  business: "bg-amber-100 text-amber-700",
+  education: "bg-sky-100 text-sky-700",
+  sc_st: "bg-amber-100 text-amber-700",
   minority: "bg-fuchsia-100 text-fuchsia-700",
-  govt_jobs: "bg-indigo-100 text-indigo-700",
+  govt_jobs: "bg-blue-100 text-blue-700",
 };
 
 const STATE_TAG = "bg-amber-100 text-amber-800";
@@ -126,18 +126,18 @@ const prettyCategory = (c: string) => {
 };
 
 const TOOL_TINTS = [
-  "bg-violet-50 border-violet-200",
+  "bg-amber-50 border-amber-200",
   "bg-rose-50 border-rose-200",
   "bg-amber-50 border-amber-200",
-  "bg-emerald-50 border-emerald-200",
+  "bg-blue-50 border-blue-200",
   "bg-sky-50 border-sky-200",
   "bg-orange-50 border-orange-200",
   "bg-pink-50 border-pink-200",
   "bg-lime-50 border-lime-200",
-  "bg-cyan-50 border-cyan-200",
+  "bg-sky-50 border-sky-200",
   "bg-fuchsia-50 border-fuchsia-200",
-  "bg-teal-50 border-teal-200",
-  "bg-indigo-50 border-indigo-200",
+  "bg-sky-50 border-sky-200",
+  "bg-blue-50 border-blue-200",
 ];
 
 const INTRO_SLIDES = [
@@ -619,7 +619,7 @@ const Index = () => {
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(210_95%_48%)] via-[hsl(215_90%_42%)] to-[hsl(220_85%_36%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
@@ -630,7 +630,7 @@ const Index = () => {
                     Grow with 2,500+ government schemes, AI tools and career programs — built for Bharat.
                   </p>
                   <Link to={user ? "/dashboard" : "/signup"}>
-                    <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(215_90%_42%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
+                    <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(212_75%_31%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
                       {user ? "Go to dashboard" : "Join for Free"}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -669,8 +669,8 @@ const Index = () => {
               {[
                 { icon: "📝", title: "Student Registration", to: "/signup", tint: "bg-orange-50 border-orange-200" },
                 { icon: "🏫", title: "Search Colleges", to: "#colleges", tint: "bg-blue-50 border-blue-200" },
-                { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-emerald-50 border-emerald-200" },
-                { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-violet-50 border-violet-200" },
+                { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-blue-50 border-blue-200" },
+                { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-amber-50 border-amber-200" },
               ].map((f) => (
                 <a key={f.title} href={f.to} className={`flex items-center gap-2.5 md:gap-3 rounded-xl border ${f.tint} px-2.5 md:px-3 py-2.5 min-h-[56px] active:scale-[0.98] hover:shadow-sm transition-all`}>
                   <div className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-white flex items-center justify-center text-base md:text-lg shadow-sm shrink-0">{f.icon}</div>
@@ -683,7 +683,7 @@ const Index = () => {
         </section>
 
         {/* Sliding tools strip — auto-marquee banner */}
-        <div className="relative mt-0 md:mt-20 overflow-hidden border-y border-emerald-100/80 bg-emerald-50/50 backdrop-blur-sm">
+        <div className="relative mt-0 md:mt-20 overflow-hidden border-y border-blue-100/80 bg-blue-50/50 backdrop-blur-sm">
           <div
             className="flex gap-3 py-3 w-max"
             style={{ animation: "ticker 40s linear infinite" }}
@@ -692,7 +692,7 @@ const Index = () => {
               <Link
                 key={`${t.to}-${i}`}
                 to={t.to}
-                className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-emerald-200/70 px-3.5 py-1.5 hover:border-emerald-400 hover:shadow-sm transition-all"
+                className="flex items-center gap-2 shrink-0 rounded-full bg-white border border-blue-200/70 px-3.5 py-1.5 hover:border-blue-400 hover:shadow-sm transition-all"
               >
                 <span className="text-base leading-none">{t.icon}</span>
                 <span className="text-xs font-semibold text-foreground whitespace-nowrap">
@@ -701,8 +701,8 @@ const Index = () => {
               </Link>
             ))}
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-emerald-50 to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-emerald-50 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-blue-50 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-blue-50 to-transparent" />
         </div>
 
 
@@ -727,9 +727,9 @@ const Index = () => {
               onClick={() => trackToolClick("internship-report-generator", "home-hero")}
               className="block group mb-8 active:scale-[0.99] transition-transform"
             >
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 via-amber-600 to-amber-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
                 <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-cyan-400/15 blur-3xl" />
+                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-sky-400/15 blur-3xl" />
                 <div className="relative flex items-start md:items-center gap-4 md:gap-6">
                   <div className="h-14 w-14 md:h-20 md:w-20 rounded-xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
                     📄
@@ -752,7 +752,7 @@ const Index = () => {
                     <p className="text-[12px] md:text-sm text-white/85 mb-3 max-w-xl">
                       Generate professional reports instantly. Download-ready DOCX in 60 seconds.
                     </p>
-                    <span className="inline-flex items-center gap-1.5 bg-white text-indigo-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
+                    <span className="inline-flex items-center gap-1.5 bg-white text-blue-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
                       Generate now <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </div>
@@ -768,7 +768,7 @@ const Index = () => {
                 key={t.to}
                 to={t.to}
                 onClick={() => trackToolClick(t.to, "home-grid")}
-                className={`group relative ${i >= 6 && !showAllTools ? "hidden md:flex" : "flex"} flex-col items-start gap-1.5 md:gap-2 p-3 md:p-4 rounded-xl border border-border/70 bg-card hover:border-emerald-300 hover:shadow-[0_10px_28px_-14px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+                className={`group relative ${i >= 6 && !showAllTools ? "hidden md:flex" : "flex"} flex-col items-start gap-1.5 md:gap-2 p-3 md:p-4 rounded-xl border border-border/70 bg-card hover:border-blue-300 hover:shadow-[0_10px_28px_-14px_rgba(31,95,169,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
               >
                 <div className={`h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center text-lg md:text-2xl ${TOOL_TINTS[i % TOOL_TINTS.length]} group-hover:scale-105 transition-transform`}>
                   {t.icon}
@@ -779,7 +779,7 @@ const Index = () => {
                 <p className="hidden md:block text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
                   {t.desc}
                 </p>
-                <span className="mt-auto pt-1 inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-emerald-700">
+                <span className="mt-auto pt-1 inline-flex items-center gap-1 text-[11px] md:text-xs font-semibold text-blue-700">
                   Open <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform" />
                 </span>
               </Link>
@@ -839,7 +839,7 @@ const Index = () => {
                     <Link
                       key={`${s.id}-${i}`}
                       to={`/scheme/${s.slug}`}
-                      className="shrink-0 w-[260px] rounded-xl border border-emerald-200/70 bg-white p-4 hover:shadow-md hover:border-emerald-400 transition-all flex flex-col gap-2"
+                      className="shrink-0 w-[260px] rounded-xl border border-blue-200/70 bg-white p-4 hover:shadow-md hover:border-blue-400 transition-all flex flex-col gap-2"
                     >
                       <div className="flex items-center gap-2">
                         <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
@@ -852,7 +852,7 @@ const Index = () => {
                       <h3 className="text-sm font-bold text-foreground line-clamp-2 leading-snug">
                         {s.title}
                       </h3>
-                      <span className="mt-auto text-[11px] font-semibold text-emerald-700 inline-flex items-center gap-1">
+                      <span className="mt-auto text-[11px] font-semibold text-blue-700 inline-flex items-center gap-1">
                         View details <ChevronRight className="h-3 w-3" />
                       </span>
                     </Link>
@@ -879,7 +879,7 @@ const Index = () => {
                     }
                   }}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full h-11 pl-9 pr-20 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                  className="w-full h-11 pl-9 pr-20 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
                 />
                 {searchQuery && (
                   <button
@@ -892,7 +892,7 @@ const Index = () => {
                 <button
                   onClick={handleSearch}
                   disabled={searching || searchQuery.trim().length < 3}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1 disabled:opacity-40"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1 disabled:opacity-40"
                 >
                   {searching ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Search"}
                 </button>
@@ -934,20 +934,20 @@ const Index = () => {
                       aria-pressed={active}
                       className={`group snap-start shrink-0 w-[104px] sm:w-[124px] relative flex flex-col items-center justify-start gap-2 px-1.5 py-3 sm:py-4 rounded-xl border bg-card transition-all duration-200 active:scale-[0.97] ${
                         active
-                          ? "border-emerald-500 ring-2 ring-emerald-500/25 shadow-md"
-                          : "border-border/70 hover:border-emerald-300 hover:shadow-sm hover:-translate-y-0.5"
+                          ? "border-blue-500 ring-2 ring-blue-500/25 shadow-md"
+                          : "border-border/70 hover:border-blue-300 hover:shadow-sm hover:-translate-y-0.5"
                       }`}
                     >
                       <span
                         className={`h-11 w-11 sm:h-12 sm:w-12 rounded-full flex items-center justify-center text-xl sm:text-2xl transition-colors ${
-                          active ? "bg-emerald-500 text-white shadow-sm" : `${c.bg} group-hover:brightness-95`
+                          active ? "bg-blue-500 text-white shadow-sm" : `${c.bg} group-hover:brightness-95`
                         }`}
                       >
                         {c.icon}
                       </span>
                       <span
                         className={`text-[10.5px] sm:text-xs font-semibold text-center leading-tight line-clamp-2 ${
-                          active ? "text-emerald-700" : "text-foreground/75"
+                          active ? "text-blue-700" : "text-foreground/75"
                         }`}
                       >
                         {c.label}
@@ -980,13 +980,13 @@ const Index = () => {
             {/* Scheme list */}
             {loading ? (
               <div className="flex justify-center py-16">
-                <Loader2 className="h-7 w-7 text-emerald-600 animate-spin" />
+                <Loader2 className="h-7 w-7 text-blue-600 animate-spin" />
               </div>
             ) : (
               <>
                 {aiSummary && (
-                  <div className="flex items-start gap-2 p-3 rounded-xl bg-emerald-50 border border-emerald-200 mb-4">
-                    <Sparkles className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-2 p-3 rounded-xl bg-blue-50 border border-blue-200 mb-4">
+                    <Sparkles className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                     <p className="text-xs text-foreground/80">{aiSummary}</p>
                   </div>
                 )}
@@ -996,9 +996,9 @@ const Index = () => {
                     <Link
                       key={s.id}
                       to={`/scheme/${s.slug}`}
-                      className="group relative rounded-xl border border-border/70 bg-card p-5 pl-6 transition-all hover:shadow-[0_10px_30px_-12px_rgba(16,185,129,0.35)] hover:border-emerald-400 hover:-translate-y-0.5 flex flex-col gap-3 min-h-[150px] overflow-hidden"
+                      className="group relative rounded-xl border border-border/70 bg-card p-5 pl-6 transition-all hover:shadow-[0_10px_30px_-12px_rgba(31,95,169,0.35)] hover:border-blue-400 hover:-translate-y-0.5 flex flex-col gap-3 min-h-[150px] overflow-hidden"
                     >
-                      <span className="absolute left-0 top-0 h-full w-1 bg-emerald-500/70 group-hover:bg-emerald-600 transition-colors" />
+                      <span className="absolute left-0 top-0 h-full w-1 bg-blue-500/70 group-hover:bg-blue-600 transition-colors" />
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
                           {prettyCategory(s.category)}
@@ -1007,10 +1007,10 @@ const Index = () => {
                           {prettyState(s.state) || "Central"}
                         </span>
                       </div>
-                      <h3 className="font-bold text-[15px] text-foreground line-clamp-3 leading-snug group-hover:text-emerald-700 transition-colors">
+                      <h3 className="font-bold text-[15px] text-foreground line-clamp-3 leading-snug group-hover:text-blue-700 transition-colors">
                         {s.title}
                       </h3>
-                      <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
+                      <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-blue-700">
                         View details
                         <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </span>
@@ -1031,7 +1031,7 @@ const Index = () => {
                       to={`/scheme/${s.slug}`}
                       className="relative flex items-start gap-3 rounded-xl border border-border/70 bg-card p-3.5 pl-4 overflow-hidden active:scale-[0.99] transition-transform"
                     >
-                      <span className="absolute left-0 top-0 h-full w-1 bg-emerald-500/70" />
+                      <span className="absolute left-0 top-0 h-full w-1 bg-blue-500/70" />
                       <div className="min-w-0 flex-1">
                         <h3 className="font-semibold text-[13.5px] text-foreground leading-snug line-clamp-2">
                           {s.title}
@@ -1072,7 +1072,7 @@ const Index = () => {
         </section>
 
         {/* STATS BAR — dark blue band */}
-        <section className="bg-gradient-to-r from-[#0c1a4d] via-[#142166] to-[#1a2a7a] text-white">
+        <section className="bg-gradient-to-r from-[#0b3d75] via-[#14508f] to-[#1f5fa9] text-white">
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
@@ -1103,7 +1103,7 @@ const Index = () => {
                   className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
                   style={{ fontFamily: "Plus Jakarta Sans" }}
                 >
-                  Introducing <span className="text-violet-700">TECHROLA</span> —<br />
+                  Introducing <span className="text-amber-700">TECHROLA</span> —<br />
                   One Nation, One APP
                 </h2>
                 <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
@@ -1120,7 +1120,7 @@ const Index = () => {
               </div>
 
               <div className="relative">
-                <div className="rounded-xl bg-gradient-to-br from-violet-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
+                <div className="rounded-xl bg-gradient-to-br from-amber-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
                   <div className="flex items-center gap-4">
                     <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl">
                       👩‍🎓
@@ -1150,7 +1150,7 @@ const Index = () => {
                 className="text-xl md:text-3xl font-extrabold text-foreground"
                 style={{ fontFamily: "Plus Jakarta Sans" }}
               >
-                Get Started with <span className="text-violet-700">TECHROLA</span> — Create Yours Today!
+                Get Started with <span className="text-amber-700">TECHROLA</span> — Create Yours Today!
               </h3>
               <div className="mt-5 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white border border-border shadow-sm max-w-full overflow-x-auto">
                 {TECHROLA_TABS.map((t, i) => (
@@ -1181,8 +1181,8 @@ const Index = () => {
                   </p>
                   <ul className="mt-4 grid sm:grid-cols-3 gap-2">
                     {TECHROLA_TABS[techTab].bullets.map((b) => (
-                      <li key={b} className="flex items-center gap-2 text-xs md:text-sm font-medium text-foreground/80 bg-violet-50 border border-violet-100 rounded-lg px-3 py-2">
-                        <Check className="h-4 w-4 text-violet-600 shrink-0" /> {b}
+                      <li key={b} className="flex items-center gap-2 text-xs md:text-sm font-medium text-foreground/80 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
+                        <Check className="h-4 w-4 text-amber-600 shrink-0" /> {b}
                       </li>
                     ))}
                   </ul>
@@ -1194,7 +1194,7 @@ const Index = () => {
         </section>
 
         {/* 6 EASY STEPS TO A BETTER CAREER — redesigned */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#0f0a3d] via-[#2a1670] to-[#5b21b6]">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#08315e] via-[#0b3d75] to-[#1f5fa9]">
           <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
 
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-14 md:py-20 relative">
@@ -1223,14 +1223,14 @@ const Index = () => {
                   { n: 1, t: "Register", d: "Create your free account in seconds", color: "from-rose-400 to-pink-500" },
                   { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", color: "from-amber-400 to-orange-500" },
                   { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", color: "from-yellow-400 to-amber-500" },
-                  { n: 4, t: "Promote", d: "Share Techrola with your network", color: "from-emerald-400 to-teal-500" },
-                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", color: "from-sky-400 to-indigo-500" },
-                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-violet-400 to-purple-600" },
+                  { n: 4, t: "Promote", d: "Share Techrola with your network", color: "from-blue-400 to-sky-500" },
+                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", color: "from-sky-400 to-blue-500" },
+                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-amber-400 to-amber-600" },
                 ].map((s) => (
                   <div key={s.n} className="group relative">
                     <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
                       {/* Step number badge */}
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#1a1450]">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#0b3d75]">
                         STEP {s.n}
                       </div>
 
@@ -1266,7 +1266,7 @@ const Index = () => {
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div>
-                <div className="text-xs md:text-sm font-bold text-violet-700 tracking-widest uppercase mb-3">
+                <div className="text-xs md:text-sm font-bold text-amber-700 tracking-widest uppercase mb-3">
                   About Techrola
                 </div>
                 <h2
@@ -1289,7 +1289,7 @@ const Index = () => {
                     "Government Schemes direct apply link",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2 text-sm md:text-base text-foreground">
-                      <Check className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                      <Check className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -1298,9 +1298,9 @@ const Index = () => {
 
               <div className="grid grid-cols-2 gap-3 md:gap-4">
                 {[
-                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-emerald-50 to-emerald-100 border-emerald-200" },
+                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-blue-50 to-blue-100 border-blue-200" },
                   { icon: "🏆", k: "RECOGNITION", v: "Top Ed-Tech 2025", color: "from-amber-50 to-amber-100 border-amber-200" },
-                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-violet-50 to-violet-100 border-violet-200" },
+                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-amber-50 to-amber-100 border-amber-200" },
                   { icon: "🎓", k: "COLLEGES LISTED", v: "10,000+ institutes", color: "from-sky-50 to-sky-100 border-sky-200" },
                 ].map((c) => (
                   <div
@@ -1369,18 +1369,18 @@ const Index = () => {
             </div>
 
             {/* Pro */}
-            <div className="relative rounded-xl border-2 border-emerald-500 bg-card p-6 shadow-lg shadow-emerald-500/10">
-              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-emerald-600 text-white px-2.5 py-1 rounded-full">
+            <div className="relative rounded-xl border-2 border-blue-500 bg-card p-6 shadow-lg shadow-blue-500/10">
+              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-blue-600 text-white px-2.5 py-1 rounded-full">
                 Most popular
               </span>
-              <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wide">
+              <div className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
                 Pro
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-4xl font-extrabold">₹999</span>
                 <span className="text-sm text-muted-foreground">/ year</span>
               </div>
-              <div className="text-xs text-emerald-700 font-semibold mt-1">Just ₹83/month</div>
+              <div className="text-xs text-blue-700 font-semibold mt-1">Just ₹83/month</div>
               <ul className="mt-5 space-y-2.5 text-sm">
                 {[
                   "Browse 2,500+ schemes",
@@ -1391,12 +1391,12 @@ const Index = () => {
                   "Priority support",
                 ].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-foreground">
-                    <Check className="h-4 w-4 text-emerald-600" /> {f}
+                    <Check className="h-4 w-4 text-blue-600" /> {f}
                   </li>
                 ))}
               </ul>
               <Link to="/subscription" className="block mt-6">
-                <Button className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+                <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
                   Get Pro — ₹999/year
                 </Button>
               </Link>
@@ -1411,9 +1411,9 @@ const Index = () => {
 
         {/* COLLEGE & SCHOOL FINDER */}
         <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
-          <div className="rounded-xl border border-border/60 bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 p-5 md:p-8">
+          <div className="rounded-xl border border-border/60 bg-gradient-to-br from-blue-50 via-sky-50 to-blue-50 p-5 md:p-8">
             <div className="flex items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-indigo-200 text-indigo-700 px-2.5 py-1 rounded-full">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-blue-200 text-blue-700 px-2.5 py-1 rounded-full">
                 <GraduationCap className="h-3.5 w-3.5" /> College & School Finder
               </span>
             </div>
@@ -1448,7 +1448,7 @@ const Index = () => {
               <Button
                 onClick={handleCollegeFinder}
                 disabled={cfLoading || cfLocation.trim().length < 2}
-                className="h-11 px-5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+                className="h-11 px-5 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
               >
                 {cfLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4 mr-1.5" /> Search</>}
               </Button>
@@ -1469,12 +1469,12 @@ const Index = () => {
                   return (
                     <div key={i} className="rounded-xl bg-white border border-border/60 p-4 hover:shadow-md transition-shadow">
                       <div className="flex items-start gap-3">
-                        <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${isSchool ? "bg-amber-100 text-amber-700" : "bg-indigo-100 text-indigo-700"}`}>
+                        <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${isSchool ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}>
                           {isSchool ? <School className="h-5 w-5" /> : <GraduationCap className="h-5 w-5" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${isSchool ? "bg-amber-100 text-amber-800" : "bg-indigo-100 text-indigo-800"}`}>
+                            <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${isSchool ? "bg-amber-100 text-amber-800" : "bg-blue-100 text-blue-800"}`}>
                               {isSchool ? "School" : "College"}
                             </span>
                             {it.category && (
@@ -1495,7 +1495,7 @@ const Index = () => {
                               href={it.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-700 mt-2 font-medium"
+                              className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 mt-2 font-medium"
                             >
                               Visit website <ExternalLink className="h-3 w-3" />
                             </a>
