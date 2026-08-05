@@ -317,7 +317,7 @@ const CareerProgram = () => {
             <Input placeholder="College Name" value={formData.college} onChange={e => setFormData({...formData, college: e.target.value})} required />
             <div className="space-y-1">
               <Input placeholder="Referral Code (optional)" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
-              <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹999 instead of ₹2999!</p>
+              <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹83.25/m instead of ₹249.92/m!</p>
             </div>
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
@@ -345,7 +345,7 @@ const CareerProgram = () => {
             </div>
             <Link to="/subscription">
               <Button className="w-full gap-2">
-                <CreditCard className="h-4 w-4" /> Subscribe Now — ₹999
+                <CreditCard className="h-4 w-4" /> Subscribe Now — ₹83.25/m
               </Button>
             </Link>
           </div>
@@ -541,7 +541,7 @@ const CareerProgram = () => {
               <ol className="space-y-2">
                 {[
                   "Register with your name, college, course and phone number below (Step 1).",
-                  "Activate your Techrola Pro subscription — ₹999 with a referral code, or ₹2999 without (Step 2).",
+                  "Activate your Techrola Pro subscription — ₹83.25/m with a referral code, or ₹249.92/m without (Step 2).",
                   "Copy your unique referral code and share link from Step 3.",
                   "Promote daily on WhatsApp, Instagram and college groups — minimum 3 real promotions per day.",
                   "Track streak, referrals and earnings in the Employee Dashboard (/emp).",

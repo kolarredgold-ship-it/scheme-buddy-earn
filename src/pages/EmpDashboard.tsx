@@ -91,7 +91,7 @@ const EmpDashboard = () => {
   const sendWhatsAppMessage = (lead: Lead) => {
     const name = lead.name || "there";
     const message = encodeURIComponent(
-      `Hi ${name}! 👋\n\nI noticed you signed up on Techrola but haven't activated your premium subscription yet.\n\n🎯 With Premium, you get:\n✅ Direct Apply links for 800+ govt schemes\n✅ AI Mock Interviews\n✅ AI Report Generator\n✅ Career Program access\n\n💰 Use code *${profile.referral_code}* to get it at just ₹999 (instead of ₹2,999)!\n\n👉 ${referralLink}\n\nDon't miss out! 🚀`
+      `Hi ${name}! 👋\n\nI noticed you signed up on Techrola but haven't activated your premium subscription yet.\n\n🎯 With Premium, you get:\n✅ Direct Apply links for 800+ govt schemes\n✅ AI Mock Interviews\n✅ AI Report Generator\n✅ Career Program access\n\n💰 Use code *${profile.referral_code}* to get it at just ₹83.25/m (instead of ₹249.92/m)!\n\n👉 ${referralLink}\n\nDon't miss out! 🚀`
     );
     const phone = lead.mobile?.replace(/[^0-9]/g, "") || "";
     const url = phone
@@ -102,7 +102,7 @@ const EmpDashboard = () => {
 
   const shareOnWhatsApp = () => {
     const message = encodeURIComponent(
-      `🚀 Join Techrola - India's #1 Government Schemes Platform!\n\n✅ 800+ Schemes across all states\n✅ AI-powered search & tools\n✅ Career program with earning opportunities\n\n💰 Use my referral code *${profile.referral_code}* to get Premium at ₹999!\n\n👉 ${referralLink}`
+      `🚀 Join Techrola - India's #1 Government Schemes Platform!\n\n✅ 800+ Schemes across all states\n✅ AI-powered search & tools\n✅ Career program with earning opportunities\n\n💰 Use my referral code *${profile.referral_code}* to get Premium at ₹83.25/m!\n\n👉 ${referralLink}`
     );
     window.open(`https://wa.me/?text=${message}`, "_blank");
   };
