@@ -50,27 +50,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "glass-strong shadow-sm"
-            : "bg-transparent"
+        className={`sticky top-0 z-50 bg-card border-b border-border transition-shadow duration-300 ${
+          scrolled ? "shadow-[0_2px_10px_-4px_rgba(15,42,74,0.25)]" : ""
         }`}
       >
+        {/* Tricolour brand strip */}
+        <div className="h-1 w-full bg-gradient-to-r from-accent via-primary to-[hsl(140_60%_35%)]" aria-hidden="true" />
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center group">
             <img src={techrolaLogo} alt="Techrola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1 bg-muted/50 rounded-xl p-1">
+          <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors duration-200 border-b-2 ${
                   isActive(item.path)
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "text-primary border-primary"
+                    : "text-muted-foreground border-transparent hover:text-primary hover:border-primary/40"
                 }`}
               >
                 {item.label}
@@ -81,35 +81,36 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-3">
-                <Button aria-label="Personalize feed" variant="ghost" size="icon" onClick={() => setPrefsOpen(true)} className="rounded-xl h-9 w-9 hover:bg-primary/10 hover:text-primary" title="Personalize">
+                <Button aria-label="Personalize feed" variant="ghost" size="icon" onClick={() => setPrefsOpen(true)} className="rounded-md h-9 w-9 hover:bg-primary/10 hover:text-primary" title="Personalize">
                   <Settings2 className="h-4 w-4" />
                 </Button>
                 <NotificationBell />
-                <Link to="/dashboard" className="flex items-center gap-1.5 bg-accent/10 rounded-xl px-3 py-1.5 hover:bg-accent/20 transition-colors">
+                <Link to="/dashboard" className="flex items-center gap-1.5 bg-accent/15 rounded-md px-3 py-1.5 hover:bg-accent/25 transition-colors">
                   <Wallet className="h-3.5 w-3.5 text-accent" />
                   <span className="text-sm font-bold">₹{profile?.wallet_balance?.toFixed(0) || '0'}</span>
                 </Link>
-                <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-1.5">
-                  <div className="h-7 w-7 rounded-lg bg-gradient-primary flex items-center justify-center">
+                <div className="flex items-center gap-2 bg-muted rounded-md px-3 py-1.5">
+                  <div className="h-7 w-7 rounded-md bg-primary flex items-center justify-center">
                     <User className="h-3.5 w-3.5 text-primary-foreground" />
                   </div>
                   <span className="text-sm font-medium max-w-[120px] truncate">{profile?.name || 'User'}</span>
                 </div>
-                <Button aria-label="Log out" variant="ghost" size="icon" onClick={signOut} className="rounded-xl h-9 w-9 hover:bg-destructive/10 hover:text-destructive">
+                <Button aria-label="Log out" variant="ghost" size="icon" onClick={signOut} className="rounded-md h-9 w-9 hover:bg-destructive/10 hover:text-destructive">
                   <LogOut className="h-4 w-4" />
                 </Button>
               </div>
             ) : (
               <div className="flex gap-2">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm" className="rounded-xl font-medium">Login</Button>
+                  <Button variant="outline" size="sm" className="rounded-md font-semibold border-primary/40 text-primary hover:bg-primary/10">Login</Button>
                 </Link>
                 <Link to="/subscription">
-                  <Button size="sm" className="rounded-xl font-semibold bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">Sign Up</Button>
+                  <Button size="sm" className="rounded-md font-semibold bg-primary hover:bg-primary/90 text-primary-foreground">Sign Up</Button>
                 </Link>
               </div>
             )}
           </div>
+
 
           {/* Mobile: wallet + menu toggle */}
           <div className="md:hidden flex items-center gap-2">
