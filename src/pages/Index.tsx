@@ -281,7 +281,7 @@ const Index = () => {
             const dy = e.changedTouches[0].clientY - sy;
             if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) goSlide(mSlide + (dx < 0 ? 1 : -1), true);
           }}
-          className={`relative overflow-hidden rounded-xl border border-border shadow-sm touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+          className={`relative overflow-hidden rounded-lg border border-border shadow-sm touch-pan-y outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
             desktop ? "flex-1 min-h-[340px] lg:min-h-[380px]" : "h-[210px]"
           }`}
         >
@@ -619,7 +619,7 @@ const Index = () => {
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
@@ -651,7 +651,7 @@ const Index = () => {
             <div className="md:hidden mt-3">{renderToolSlider("mobile")}</div>
 
             {/* Mobile-only compact stats strip */}
-            <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-xl border border-border bg-card px-3 py-3">
+            <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-lg border border-border bg-card px-3 py-3">
               {[
                 { v: "2,500+", l: "Schemes" },
                 { v: "20+", l: "AI Tools" },
@@ -672,7 +672,7 @@ const Index = () => {
                 { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-blue-50 border-blue-200" },
                 { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-amber-50 border-amber-200" },
               ].map((f) => (
-                <a key={f.title} href={f.to} className={`flex items-center gap-2.5 md:gap-3 rounded-xl border ${f.tint} px-2.5 md:px-3 py-2.5 min-h-[56px] active:scale-[0.98] hover:shadow-sm transition-all`}>
+                <a key={f.title} href={f.to} className={`flex items-center gap-2.5 md:gap-3 rounded-lg border ${f.tint} px-2.5 md:px-3 py-2.5 min-h-[56px] active:scale-[0.98] hover:shadow-sm transition-all`}>
                   <div className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-white flex items-center justify-center text-base md:text-lg shadow-sm shrink-0">{f.icon}</div>
                   <div className="text-[11.5px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
                 </a>
@@ -727,11 +727,11 @@ const Index = () => {
               onClick={() => trackToolClick("internship-report-generator", "home-hero")}
               className="block group mb-8 active:scale-[0.99] transition-transform"
             >
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 via-amber-600 to-amber-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-600 via-amber-600 to-amber-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
                 <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
                 <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-sky-400/15 blur-3xl" />
                 <div className="relative flex items-start md:items-center gap-4 md:gap-6">
-                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-xl bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
+                  <div className="h-14 w-14 md:h-20 md:w-20 rounded-lg bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
                     📄
                   </div>
                   <div className="flex-1 min-w-0 text-white">
@@ -768,7 +768,7 @@ const Index = () => {
                 key={t.to}
                 to={t.to}
                 onClick={() => trackToolClick(t.to, "home-grid")}
-                className={`group relative ${i >= 6 && !showAllTools ? "hidden md:flex" : "flex"} flex-col items-start gap-1.5 md:gap-2 p-3 md:p-4 rounded-xl border border-border/70 bg-card hover:border-blue-300 hover:shadow-[0_10px_28px_-14px_rgba(31,95,169,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+                className={`group relative ${i >= 6 && !showAllTools ? "hidden md:flex" : "flex"} flex-col items-start gap-1.5 md:gap-2 p-3 md:p-4 rounded-lg border border-border/70 bg-card hover:border-blue-300 hover:shadow-[0_10px_28px_-14px_rgba(31,95,169,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
               >
                 <div className={`h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center text-lg md:text-2xl ${TOOL_TINTS[i % TOOL_TINTS.length]} group-hover:scale-105 transition-transform`}>
                   {t.icon}
@@ -791,7 +791,7 @@ const Index = () => {
               <Button
                 variant="outline"
                 onClick={() => setShowAllTools((v) => !v)}
-                className="w-full h-11 rounded-xl border-foreground/15 font-semibold gap-2"
+                className="w-full h-11 rounded-lg border-foreground/15 font-semibold gap-2"
               >
                 {showAllTools ? "Show less" : `Show all ${aiStudentTools.length - 1} tools`}
                 <ChevronRight className={`h-4 w-4 transition-transform ${showAllTools ? "-rotate-90" : "rotate-90"}`} />
@@ -803,7 +803,7 @@ const Index = () => {
             <Link to="/ai-tools" onClick={() => trackToolClick("view-all", "home")}>
               <Button
                 variant="outline"
-                className="rounded-xl border-foreground/15 font-semibold gap-2 px-5"
+                className="rounded-lg border-foreground/15 font-semibold gap-2 px-5"
               >
                 <Sparkles className="h-4 w-4" /> View all AI tools on Techrola
               </Button>
@@ -839,7 +839,7 @@ const Index = () => {
                     <Link
                       key={`${s.id}-${i}`}
                       to={`/scheme/${s.slug}`}
-                      className="shrink-0 w-[260px] rounded-xl border border-blue-200/70 bg-white p-4 hover:shadow-md hover:border-blue-400 transition-all flex flex-col gap-2"
+                      className="shrink-0 w-[260px] rounded-lg border border-blue-200/70 bg-white p-4 hover:shadow-md hover:border-blue-400 transition-all flex flex-col gap-2"
                     >
                       <div className="flex items-center gap-2">
                         <span className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${TAG_COLORS[s.category] || "bg-slate-100 text-slate-700"}`}>
@@ -879,7 +879,7 @@ const Index = () => {
                     }
                   }}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full h-11 pl-9 pr-20 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="w-full h-11 pl-9 pr-20 rounded-lg bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
                 />
                 {searchQuery && (
                   <button
@@ -905,7 +905,7 @@ const Index = () => {
                 <Filter className="h-3.5 w-3.5" /> Filter by state
               </div>
               <Select value={selectedState} onValueChange={persistState}>
-                <SelectTrigger className="w-full sm:w-[320px] h-11 rounded-xl bg-background">
+                <SelectTrigger className="w-full sm:w-[320px] h-11 rounded-lg bg-background">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <SelectValue />
                 </SelectTrigger>
@@ -932,7 +932,7 @@ const Index = () => {
                       key={c.key}
                       onClick={() => setActiveCategory(c.key)}
                       aria-pressed={active}
-                      className={`group snap-start shrink-0 w-[104px] sm:w-[124px] relative flex flex-col items-center justify-start gap-2 px-1.5 py-3 sm:py-4 rounded-xl border bg-card transition-all duration-200 active:scale-[0.97] ${
+                      className={`group snap-start shrink-0 w-[104px] sm:w-[124px] relative flex flex-col items-center justify-start gap-2 px-1.5 py-3 sm:py-4 rounded-lg border bg-card transition-all duration-200 active:scale-[0.97] ${
                         active
                           ? "border-blue-500 ring-2 ring-blue-500/25 shadow-md"
                           : "border-border/70 hover:border-blue-300 hover:shadow-sm hover:-translate-y-0.5"
@@ -985,7 +985,7 @@ const Index = () => {
             ) : (
               <>
                 {aiSummary && (
-                  <div className="flex items-start gap-2 p-3 rounded-xl bg-blue-50 border border-blue-200 mb-4">
+                  <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-200 mb-4">
                     <Sparkles className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
                     <p className="text-xs text-foreground/80">{aiSummary}</p>
                   </div>
@@ -996,7 +996,7 @@ const Index = () => {
                     <Link
                       key={s.id}
                       to={`/scheme/${s.slug}`}
-                      className="group relative rounded-xl border border-border/70 bg-card p-5 pl-6 transition-all hover:shadow-[0_10px_30px_-12px_rgba(31,95,169,0.35)] hover:border-blue-400 hover:-translate-y-0.5 flex flex-col gap-3 min-h-[150px] overflow-hidden"
+                      className="group relative rounded-lg border border-border/70 bg-card p-5 pl-6 transition-all hover:shadow-[0_10px_30px_-12px_rgba(31,95,169,0.35)] hover:border-blue-400 hover:-translate-y-0.5 flex flex-col gap-3 min-h-[150px] overflow-hidden"
                     >
                       <span className="absolute left-0 top-0 h-full w-1 bg-blue-500/70 group-hover:bg-blue-600 transition-colors" />
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -1029,7 +1029,7 @@ const Index = () => {
                     <Link
                       key={s.id}
                       to={`/scheme/${s.slug}`}
-                      className="relative flex items-start gap-3 rounded-xl border border-border/70 bg-card p-3.5 pl-4 overflow-hidden active:scale-[0.99] transition-transform"
+                      className="relative flex items-start gap-3 rounded-lg border border-border/70 bg-card p-3.5 pl-4 overflow-hidden active:scale-[0.99] transition-transform"
                     >
                       <span className="absolute left-0 top-0 h-full w-1 bg-blue-500/70" />
                       <div className="min-w-0 flex-1">
@@ -1057,7 +1057,7 @@ const Index = () => {
                     <Button
                       variant="outline"
                       onClick={() => setShowAllSchemes((v) => !v)}
-                      className="w-full h-11 rounded-xl border-foreground/15 font-semibold gap-2 mt-1"
+                      className="w-full h-11 rounded-lg border-foreground/15 font-semibold gap-2 mt-1"
                     >
                       {showAllSchemes ? "Show less" : "Show more schemes"}
                       <ChevronRight className={`h-4 w-4 transition-transform ${showAllSchemes ? "-rotate-90" : "rotate-90"}`} />
@@ -1120,7 +1120,7 @@ const Index = () => {
               </div>
 
               <div className="relative">
-                <div className="rounded-xl bg-gradient-to-br from-amber-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
+                <div className="rounded-lg bg-gradient-to-br from-amber-100 to-amber-100 p-6 md:p-8 shadow-xl border border-white">
                   <div className="flex items-center gap-4">
                     <div className="h-20 w-20 md:h-24 md:w-24 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl">
                       👩‍🎓
@@ -1136,7 +1136,7 @@ const Index = () => {
                   </div>
                   <div className="mt-5 grid grid-cols-3 gap-2 text-center">
                     {["📚", "🏆", "💼"].map((e, i) => (
-                      <div key={i} className="rounded-xl bg-white/70 py-3 text-2xl">
+                      <div key={i} className="rounded-lg bg-white/70 py-3 text-2xl">
                         {e}
                       </div>
                     ))}
@@ -1171,7 +1171,7 @@ const Index = () => {
               <div className="mt-6 max-w-2xl mx-auto">
                 <div
                   key={techTab}
-                  className="rounded-xl border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
+                  className="rounded-lg border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
                 >
                   <h4 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
                     {TECHROLA_TABS[techTab].title}
@@ -1228,7 +1228,7 @@ const Index = () => {
                   { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-amber-400 to-amber-600" },
                 ].map((s) => (
                   <div key={s.n} className="group relative">
-                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
+                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-lg p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
                       {/* Step number badge */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#0b3d75]">
                         STEP {s.n}
@@ -1305,7 +1305,7 @@ const Index = () => {
                 ].map((c) => (
                   <div
                     key={c.k}
-                    className={`rounded-xl border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
+                    className={`rounded-lg border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
                   >
                     <div className="h-10 w-10 rounded-full bg-white shadow flex items-center justify-center text-xl mb-3">
                       {c.icon}
@@ -1340,7 +1340,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 gap-4 md:gap-5 max-w-4xl">
             {/* Free */}
-            <div className="rounded-xl border border-border bg-card p-6">
+            <div className="rounded-lg border border-border bg-card p-6">
               <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Free
               </div>
@@ -1362,14 +1362,14 @@ const Index = () => {
                 ))}
               </ul>
               <Link to="/signup" className="block mt-6">
-                <Button variant="outline" className="w-full rounded-xl font-semibold">
+                <Button variant="outline" className="w-full rounded-lg font-semibold">
                   Get started free
                 </Button>
               </Link>
             </div>
 
             {/* Pro */}
-            <div className="relative rounded-xl border-2 border-blue-500 bg-card p-6 shadow-lg shadow-blue-500/10">
+            <div className="relative rounded-lg border-2 border-blue-500 bg-card p-6 shadow-lg shadow-blue-500/10">
               <span className="absolute -top-3 left-6 text-[11px] font-bold bg-blue-600 text-white px-2.5 py-1 rounded-full">
                 Most popular
               </span>
@@ -1396,7 +1396,7 @@ const Index = () => {
                 ))}
               </ul>
               <Link to="/subscription" className="block mt-6">
-                <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                <Button className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold">
                   Get Pro — ₹999/year
                 </Button>
               </Link>
@@ -1411,7 +1411,7 @@ const Index = () => {
 
         {/* COLLEGE & SCHOOL FINDER */}
         <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
-          <div className="rounded-xl border border-border/60 bg-gradient-to-br from-blue-50 via-sky-50 to-blue-50 p-5 md:p-8">
+          <div className="rounded-lg border border-border/60 bg-gradient-to-br from-blue-50 via-sky-50 to-blue-50 p-5 md:p-8">
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold bg-white border border-blue-200 text-blue-700 px-2.5 py-1 rounded-full">
                 <GraduationCap className="h-3.5 w-3.5" /> College & School Finder
@@ -1467,7 +1467,7 @@ const Index = () => {
                 {cfItems.map((it, i) => {
                   const isSchool = it.type === "school";
                   return (
-                    <div key={i} className="rounded-xl bg-white border border-border/60 p-4 hover:shadow-md transition-shadow">
+                    <div key={i} className="rounded-lg bg-white border border-border/60 p-4 hover:shadow-md transition-shadow">
                       <div className="flex items-start gap-3">
                         <div className={`h-10 w-10 rounded-lg flex items-center justify-center shrink-0 ${isSchool ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}>
                           {isSchool ? <School className="h-5 w-5" /> : <GraduationCap className="h-5 w-5" />}
