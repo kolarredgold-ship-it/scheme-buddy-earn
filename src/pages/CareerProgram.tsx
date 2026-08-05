@@ -541,7 +541,7 @@ const CareerProgram = () => {
               <ol className="space-y-2">
                 {[
                   "Register with your name, college, course and phone number below (Step 1).",
-                  "Activate your Techrola Pro subscription — ₹999 with a referral code, or ₹2999 without (Step 2).",
+                  "Activate your Techrola Pro subscription — ₹83.25/m with a referral code, or ₹249.92/m without (Step 2).",
                   "Copy your unique referral code and share link from Step 3.",
                   "Promote daily on WhatsApp, Instagram and college groups — minimum 3 real promotions per day.",
                   "Track streak, referrals and earnings in the Employee Dashboard (/emp).",
