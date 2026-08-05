@@ -655,7 +655,7 @@ const Index = () => {
               {[
                 { v: "2,500+", l: "Schemes" },
                 { v: "20+", l: "AI Tools" },
-                { v: "₹999", l: "Pro / year" },
+                { v: "₹83.25", l: "Pro / m" },
               ].map((s) => (
                 <div key={s.l} className="text-center">
                   <div className="text-base font-extrabold text-foreground leading-none">{s.v}</div>
@@ -1377,10 +1377,10 @@ const Index = () => {
                 Pro
               </div>
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold">₹999</span>
-                <span className="text-sm text-muted-foreground">/ year</span>
+                <span className="text-4xl font-extrabold">₹83.25</span>
+                <span className="text-sm text-muted-foreground">/ month</span>
               </div>
-              <div className="text-xs text-blue-700 font-semibold mt-1">Just ₹83/month</div>
+              <div className="text-xs text-blue-700 font-semibold mt-1">Billed annually at ₹999</div>
               <ul className="mt-5 space-y-2.5 text-sm">
                 {[
                   "Browse 2,500+ schemes",
@@ -1397,7 +1397,7 @@ const Index = () => {
               </ul>
               <Link to="/subscription" className="block mt-6">
                 <Button className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                  Get Pro — ₹999/year
+                  Get Pro — ₹83.25/m
                 </Button>
               </Link>
               <p className="mt-3 text-[11px] text-muted-foreground text-center inline-flex items-center justify-center gap-1.5 w-full">
