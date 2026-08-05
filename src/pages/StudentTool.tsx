@@ -728,7 +728,7 @@ const StudentTool = () => {
             </Button>
             {!isPro && (
               <Link to="/subscription" className="block text-center text-xs text-muted-foreground hover:text-primary">
-                <Crown className="h-3 w-3 inline mr-1" /> Upgrade to Pro ₹999 — 3 free generations in every tool
+                <Crown className="h-3 w-3 inline mr-1" /> Upgrade to Pro ₹83.25/m — 3 free generations in every tool
               </Link>
             )}
           </div>

@@ -183,7 +183,7 @@ const AIReportGenerator = () => {
                 {remainingFree === 0 && aiCredits > 0 && <span className="text-muted-foreground"> (top-up pool)</span>}
                 {!canGenerate && <span className="text-destructive font-semibold ml-1">No credits left</span>}
                 <span className="text-muted-foreground"> · {isPro ? 'Pro: 3 shared' : 'Free: 1 per tool'} · </span>
-                <Link to="/subscription" className="underline">Pro ₹999</Link>
+                <Link to="/subscription" className="underline">Pro ₹83.25/m</Link>
               </span>
             </div>
             <Button size="sm" variant="outline" className="gap-1" onClick={() => setShowTopup(true)}>

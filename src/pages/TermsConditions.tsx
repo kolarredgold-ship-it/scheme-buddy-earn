@@ -12,7 +12,7 @@ const TermsConditions = () => (
         <h2 className="text-lg font-semibold text-foreground">1. Acceptance of Terms</h2>
         <p>By using Techrola, you agree to these terms and conditions. If you do not agree, please do not use our services.</p>
         <h2 className="text-lg font-semibold text-foreground">2. Subscription</h2>
-        <p>Premium subscription is a one-time lifetime payment of ₹999 (with referral/promo code) or ₹2,999 (without discount). This is non-refundable once activated.</p>
+        <p>Premium subscription is a one-time lifetime payment of ₹83.25 per month, billed annually as ₹999 (with referral/promo code) or ₹249.92 per month, billed annually as ₹2,999 (without discount). This is non-refundable once activated.</p>
         <h2 className="text-lg font-semibold text-foreground">3. Referral Program</h2>
         <p>Users can earn through our 3-level referral system: ₹400 (Level 1), ₹100 (Level 2), ₹50 (Level 3) per successful referral subscription.</p>
         <h2 className="text-lg font-semibold text-foreground">4. Content Accuracy</h2>
