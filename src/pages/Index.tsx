@@ -1284,13 +1284,10 @@ const Index = () => {
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div>
-                <div className="text-xs md:text-sm font-bold text-amber-700 tracking-widest uppercase mb-3">
+                <div className="text-xs md:text-sm font-bold text-primary tracking-widest uppercase mb-3">
                   About Techrola
                 </div>
-                <h2
-                  className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
-                  style={{ fontFamily: "Plus Jakarta Sans" }}
-                >
+                <h2 className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight">
                   A trusted career companion for every student
                 </h2>
                 <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
@@ -1307,7 +1304,7 @@ const Index = () => {
                     "Government Schemes direct apply link",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2 text-sm md:text-base text-foreground">
-                      <Check className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                      <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -1316,16 +1313,16 @@ const Index = () => {
 
               <div className="grid grid-cols-2 gap-3 md:gap-4">
                 {[
-                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-blue-50 to-blue-100 border-blue-200" },
-                  { icon: "🏆", k: "RECOGNITION", v: "Top Ed-Tech 2025", color: "from-amber-50 to-amber-100 border-amber-200" },
-                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-amber-50 to-amber-100 border-amber-200" },
-                  { icon: "🎓", k: "COLLEGES LISTED", v: "10,000+ institutes", color: "from-sky-50 to-sky-100 border-sky-200" },
+                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-primary/5 to-primary/10 border-primary/20" },
+                  { icon: "🏆", k: "RECOGNITION", v: "Top Ed-Tech 2025", color: "from-accent/5 to-accent/10 border-accent/20" },
+                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-accent/5 to-accent/10 border-accent/20" },
+                  { icon: "🎓", k: "COLLEGES LISTED", v: "10,000+ institutes", color: "from-primary/5 to-primary/10 border-primary/20" },
                 ].map((c) => (
                   <div
                     key={c.k}
                     className={`rounded-lg border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
                   >
-                    <div className="h-10 w-10 rounded-full bg-white shadow flex items-center justify-center text-xl mb-3">
+                    <div className="h-10 w-10 rounded-full bg-card shadow flex items-center justify-center text-xl mb-3">
                       {c.icon}
                     </div>
                     <div className="text-[10px] md:text-xs font-bold tracking-wider text-muted-foreground">
@@ -1345,10 +1342,7 @@ const Index = () => {
         <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
 
           <div className="mb-6">
-            <h2
-              className="text-xl md:text-3xl font-extrabold text-foreground"
-              style={{ fontFamily: "Plus Jakarta Sans" }}
-            >
+            <h2 className="text-xl md:text-3xl font-extrabold text-foreground">
               Simple, honest pricing
             </h2>
             <p className="text-xs md:text-sm text-muted-foreground mt-1">
@@ -1380,25 +1374,25 @@ const Index = () => {
                 ))}
               </ul>
               <Link to="/signup" className="block mt-6">
-                <Button variant="outline" className="w-full rounded-lg font-semibold">
+                <Button variant="outline" className="w-full rounded-lg font-semibold border-foreground/15">
                   Get started free
                 </Button>
               </Link>
             </div>
 
             {/* Pro */}
-            <div className="relative rounded-lg border-2 border-blue-500 bg-card p-6 shadow-lg shadow-blue-500/10">
-              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-blue-600 text-white px-2.5 py-1 rounded-full">
+            <div className="relative rounded-lg border-2 border-primary bg-card p-6 shadow-lg shadow-primary/10">
+              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-primary text-primary-foreground px-2.5 py-1 rounded-full">
                 Most popular
               </span>
-              <div className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
+              <div className="text-xs font-semibold text-primary uppercase tracking-wide">
                 Pro
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-4xl font-extrabold">₹83.25</span>
                 <span className="text-sm text-muted-foreground">/ month</span>
               </div>
-              <div className="text-xs text-blue-700 font-semibold mt-1">Billed annually at ₹999</div>
+              <div className="text-xs text-primary font-semibold mt-1">Billed annually at ₹999</div>
               <ul className="mt-5 space-y-2.5 text-sm">
                 {[
                   "Browse 2,500+ schemes",
@@ -1409,18 +1403,18 @@ const Index = () => {
                   "Priority support",
                 ].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-foreground">
-                    <Check className="h-4 w-4 text-blue-600" /> {f}
+                    <Check className="h-4 w-4 text-primary" /> {f}
                   </li>
                 ))}
               </ul>
               <Link to="/subscription" className="block mt-6">
-                <Button className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                <Button className="w-full rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
                   Get Pro — ₹83.25/m
                 </Button>
               </Link>
               <p className="mt-3 text-[11px] text-muted-foreground text-center inline-flex items-center justify-center gap-1.5 w-full">
                 🔒 Secured payments by
-                <span className="font-bold text-[#072654] bg-white border border-border/60 px-1.5 py-0.5 rounded">Razorpay</span>
+                <span className="font-bold text-primary bg-card border border-border/60 px-1.5 py-0.5 rounded">Razorpay</span>
               </p>
             </div>
           </div>
