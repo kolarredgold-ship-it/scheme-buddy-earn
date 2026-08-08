@@ -1218,47 +1218,40 @@ const Index = () => {
           </div>
         </section>
 
-        {/* 6 EASY STEPS TO A BETTER CAREER — redesigned */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#08315e] via-[#0b3d75] to-[#1f5fa9]">
-          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
+        {/* 6 EASY STEPS TO A BETTER CAREER — Navy Trust */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent">
+          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.3) 0%, transparent 40%)" }} />
 
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-14 md:py-20 relative">
             <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
-              <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/40 text-amber-300 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Your Career Roadmap
+              <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
+                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" /> Your Career Roadmap
               </span>
-              <h2
-                className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight"
-                style={{ fontFamily: "Plus Jakarta Sans" }}
-              >
-                6 Easy Steps to a <span className="text-amber-400">Better Career</span>
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+                6 Easy Steps to a <span className="text-white/80">Better Career</span>
               </h2>
               <p className="mt-3 text-sm md:text-base text-white/70">
                 A simple, proven path from signup to your first job offer.
               </p>
             </div>
 
-            {/* Desktop: horizontal timeline; Mobile: vertical timeline */}
             <div className="relative">
-              {/* Desktop connecting line */}
-              <div className="hidden lg:block absolute top-12 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0" />
+              <div className="hidden lg:block absolute top-12 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-3 relative">
                 {[
-                  { n: 1, t: "Register", d: "Create your free account in seconds", color: "from-rose-400 to-pink-500" },
-                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", color: "from-amber-400 to-orange-500" },
-                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", color: "from-yellow-400 to-amber-500" },
-                  { n: 4, t: "Promote", d: "Share Techrola with your network", color: "from-blue-400 to-sky-500" },
-                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", color: "from-sky-400 to-blue-500" },
-                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-amber-400 to-amber-600" },
+                  { n: 1, t: "Register", d: "Create your free account in seconds" },
+                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly" },
+                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code" },
+                  { n: 4, t: "Promote", d: "Share Techrola with your network" },
+                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity" },
+                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers" },
                 ].map((s) => (
                   <div key={s.n} className="group relative">
-                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-lg p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
-                      {/* Step number badge */}
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#0b3d75]">
+                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/30 rounded-lg p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-white/5 h-full flex flex-col items-center text-center">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-white text-primary text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-primary">
                         STEP {s.n}
                       </div>
-
                       <h3 className="mt-3 text-sm md:text-base font-extrabold text-white tracking-tight">
                         {s.t}
                       </h3>
@@ -1275,7 +1268,7 @@ const Index = () => {
               <Link to={user ? "/career-program" : "/signup"}>
                 <Button
                   size="lg"
-                  className="rounded-full bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-8 shadow-lg shadow-amber-900/40"
+                  className="rounded-full bg-white text-primary hover:bg-white/90 font-bold px-8 shadow-lg shadow-primary/40"
                 >
                   Start your journey <ArrowRight className="h-4 w-4 ml-1.5" />
                 </Button>
