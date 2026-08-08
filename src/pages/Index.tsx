@@ -579,106 +579,134 @@ const Index = () => {
   return (
     <Layout>
       <div className="pb-24 md:pb-12 bg-background">
-        {/* HERO — Coursera inspired: search bar + dual promo cards */}
+        {/* HERO — Navy Trust Bento Grid */}
         <section className="bg-background border-b border-border/50">
           <div className="container mx-auto px-5 md:px-8 lg:px-12 pt-6 md:pt-10 pb-8 md:pb-14">
-            {/* Top search bar (Coursera-style) */}
-            <div className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
-              <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground shrink-0">
-                <a href="#tools" className="font-semibold text-foreground hover:text-primary transition-colors">Explore</a>
-                <a href="#schemes" className="hover:text-foreground transition-colors">Schemes</a>
-                <Link to="/career-program" className="hover:text-foreground transition-colors">Career</Link>
-              </div>
-              <div className="relative flex-1 max-w-2xl md:mx-auto w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search schemes, jobs, AI tools..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    if (e.target.value.trim().length < 3) {
-                      setAiResults(null);
-                      setAiSummary("");
-                    }
-                  }}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full h-12 pl-11 pr-28 rounded-full bg-background border border-border shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                />
-                <button
-                  onClick={handleSearch}
-                  disabled={searching || searchQuery.trim().length < 3}
-                  aria-label="Search"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3 sm:px-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center gap-1.5 disabled:opacity-40 hover:opacity-90 transition-opacity text-sm font-semibold"
-                >
-                  {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /><span className="hidden sm:inline">Search</span></>}
-                </button>
-              </div>
-            </div>
-
-            {/* Dual promo cards */}
-            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-              {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
-                <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
-                <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
-                <div className="relative z-10 max-w-sm text-white">
-                  <h1 className="text-[1.6rem] sm:text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    Start, switch, or advance your career
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 md:grid-rows-6 gap-4 md:h-[820px]">
+              {/* Hero / Main Search Section */}
+              <div className="md:col-span-8 md:row-span-3 bg-primary rounded-3xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden text-primary-foreground shadow-xl border border-secondary/30">
+                <div className="relative z-10">
+                  <span className="px-3 py-1 bg-accent/20 border border-accent/30 text-accent-foreground rounded-full text-xs font-semibold uppercase tracking-wider mb-4 inline-block">
+                    Official Platform
+                  </span>
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
+                    Empowering Bharat's <br />Digital Future.
                   </h1>
-                  <p className="mt-3 sm:mt-4 text-sm md:text-base text-white/85">
-                    Grow with 2,500+ government schemes, AI tools and career programs — built for Bharat.
+                  <p className="text-white/70 text-base md:text-lg mb-6 md:mb-8 max-w-lg">
+                    Access 2,500+ Central and State government schemes alongside AI-powered career guidance.
                   </p>
-                  <Link to={user ? "/dashboard" : "/signup"}>
-                    <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(212_75%_31%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
-                      {user ? "Go to dashboard" : "Join for Free"}
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                  <div className="flex w-full max-w-md bg-card rounded-xl p-1 shadow-inner">
+                    <input
+                      type="text"
+                      placeholder="Search schemes by keyword or eligibility..."
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        if (e.target.value.trim().length < 3) {
+                          setAiResults(null);
+                          setAiSummary("");
+                        }
+                      }}
+                      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                      className="flex-1 px-4 py-3 text-foreground placeholder-muted-foreground bg-transparent focus:outline-none"
+                    />
+                    <button
+                      onClick={handleSearch}
+                      disabled={searching || searchQuery.trim().length < 3}
+                      className="bg-accent hover:bg-accent/90 text-accent-foreground px-5 py-3 rounded-lg font-medium transition-colors text-sm disabled:opacity-40"
+                    >
+                      {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Search"}
+                    </button>
+                  </div>
                 </div>
-                <img
-                  src={heroStudents}
-                  alt="Techrola student"
-                  className="hidden sm:block absolute right-0 bottom-0 h-[85%] w-auto object-contain object-bottom drop-shadow-2xl pointer-events-none"
-                />
+                <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl" />
               </div>
 
-              {/* Right card — AI tools image slider (desktop) */}
-              <div className="hidden md:block">{renderToolSlider("desktop")}</div>
-            </div>
-
-            {/* Mobile AI tools hero slider with background images */}
-            <div className="md:hidden mt-3">{renderToolSlider("mobile")}</div>
-
-            {/* Mobile-only compact stats strip */}
-            <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-lg border border-border bg-card px-3 py-3">
-              {[
-                { v: "2,500+", l: "Schemes" },
-                { v: "20+", l: "AI Tools" },
-                { v: "₹83.25", l: "Pro / m" },
-              ].map((s) => (
-                <div key={s.l} className="text-center">
-                  <div className="text-base font-extrabold text-foreground leading-none">{s.v}</div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{s.l}</div>
+              {/* AI Career Compass */}
+              <div className="md:col-span-4 md:row-span-4 bg-card rounded-3xl p-5 md:p-6 shadow-sm border border-border flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div>
+                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-5">
+                    <Lightbulb className="h-6 w-6 text-primary" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-foreground mb-2">AI Career Tools</h2>
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-5">
+                    Map your skills to government initiatives and global market demands using AI-powered career guidance.
+                  </p>
+                  <div className="space-y-3">
+                    {[
+                      { label: "Skill Gap Analysis", color: "bg-emerald-500" },
+                      { label: "Interview Simulator", color: "bg-accent" },
+                      { label: "Career Roadmap Builder", color: "bg-indigo-500" },
+                    ].map((item) => (
+                      <div key={item.label} className="p-3 bg-muted rounded-xl border border-border flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${item.color}`} />
+                        <span className="text-sm text-foreground font-medium">{item.label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
+                <Link to="/ai-tools" className="mt-6 block">
+                  <Button variant="outline" className="w-full rounded-xl border-2 border-foreground/15 font-bold hover:bg-primary hover:text-primary-foreground transition-all">
+                    Open Dashboard
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Scheme Categories */}
+              <div className="md:col-span-4 md:row-span-3 bg-card rounded-3xl p-5 md:p-6 shadow-sm border border-border">
+                <div className="flex justify-between items-center mb-5">
+                  <h3 className="font-bold text-foreground text-lg">Top Categories</h3>
+                  <a href="#schemes" className="text-xs text-accent font-semibold hover:underline">View All</a>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {CATEGORY_CHIPS.slice(1, 5).map((c) => (
+                    <button
+                      key={c.key}
+                      onClick={() => { setActiveCategory(c.key); document.getElementById("schemes")?.scrollIntoView({ behavior: "smooth" }); }}
+                      className="p-4 rounded-2xl bg-muted border border-border text-center hover:bg-primary/5 hover:border-primary/30 transition-colors"
+                    >
+                      <div className="w-8 h-8 mx-auto rounded-lg bg-white shadow-sm flex items-center justify-center mb-2 text-lg">
+                        {c.icon}
+                      </div>
+                      <span className="text-xs font-semibold text-foreground">{c.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Blog / Latest Updates */}
+              <div className="md:col-span-4 md:row-span-3 bg-accent rounded-3xl p-5 md:p-6 shadow-sm text-accent-foreground flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                    <span className="text-xs font-medium uppercase tracking-widest text-white/80">News & Blogs</span>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3">Simplifying Career Growth with AI</h3>
+                  <p className="text-white/80 text-sm leading-relaxed mb-4">
+                    Learn how to combine government schemes with AI tools to build a stronger career profile and one-click applications.
+                  </p>
+                </div>
+                <Link to="/blog">
+                  <button className="bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors flex items-center gap-2 text-sm font-medium">
+                    Read more <ArrowRight className="h-4 w-4" />
+                  </button>
+                </Link>
+              </div>
+
+              {/* Quick Action / Eligibility */}
+              <Link to="/career-program" className="md:col-span-4 md:row-span-2 bg-muted rounded-3xl p-5 md:p-6 flex items-center justify-between border border-border hover:border-primary/30 hover:shadow-sm transition-all">
+                <div className="flex flex-col">
+                  <h4 className="font-bold text-foreground text-lg">Eligibility Check</h4>
+                  <p className="text-xs text-muted-foreground">Find what you qualify for in 30 seconds.</p>
+                </div>
+                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg">
+                  <ArrowRight className="h-5 w-5" />
+                </div>
+              </Link>
             </div>
 
-            {/* Quick action pills */}
-            <div className="mt-4 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
-              {[
-                { icon: "📝", title: "Student Registration", to: "/signup", tint: "bg-orange-50 border-orange-200" },
-                { icon: "🏫", title: "Search Colleges", to: "#colleges", tint: "bg-blue-50 border-blue-200" },
-                { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-blue-50 border-blue-200" },
-                { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-amber-50 border-amber-200" },
-              ].map((f) => (
-                <a key={f.title} href={f.to} className={`flex items-center gap-2.5 md:gap-3 rounded-lg border ${f.tint} px-2.5 md:px-3 py-2.5 min-h-[56px] active:scale-[0.98] hover:shadow-sm transition-all`}>
-                  <div className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-white flex items-center justify-center text-base md:text-lg shadow-sm shrink-0">{f.icon}</div>
-                  <div className="text-[11.5px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
-                </a>
-              ))}
-            </div>
-
+            {/* Mobile AI tools hero slider */}
+            <div className="md:hidden mt-4">{renderToolSlider("mobile")}</div>
           </div>
         </section>
 
