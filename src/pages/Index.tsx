@@ -1096,8 +1096,8 @@ const Index = () => {
           </div>
         </section>
 
-        {/* STATS BAR — dark blue band */}
-        <section className="bg-gradient-to-r from-[#0b3d75] via-[#14508f] to-[#1f5fa9] text-white">
+        {/* STATS BAR — Navy Trust */}
+        <section className="bg-gradient-to-r from-primary via-secondary to-accent text-white">
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
@@ -1107,10 +1107,10 @@ const Index = () => {
                 { v: "20+", l: "AI TOOLS AVAILABLE" },
               ].map((s) => (
                 <div key={s.l}>
-                  <div className="text-2xl md:text-4xl font-extrabold text-amber-400" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                  <div className="text-2xl md:text-4xl font-extrabold text-white/90">
                     {s.v}
                   </div>
-                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/80 mt-1">
+                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/70 mt-1">
                     {s.l}
                   </div>
                 </div>
