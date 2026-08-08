@@ -29,6 +29,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [referralCode, setReferralCode] = useState("");
+  const [referralSkipped, setReferralSkipped] = useState(false);
   const [referralError, setReferralError] = useState("");
   const [validatingRef, setValidatingRef] = useState(false);
   const [refValid, setRefValid] = useState(false);
@@ -199,24 +200,55 @@ const Signup = () => {
               )}
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Referral Code (optional)</label>
-              <Input
-                placeholder="e.g. TRABC123"
-                value={referralCode}
-                onChange={(e) => {
-                  setReferralCode(e.target.value.toUpperCase());
-                  setReferralError("");
-                  setRefValid(false);
-                }}
-                onBlur={() => referralCode.trim() && validateReferral(referralCode)}
-                className={referralError ? "border-red-500" : refValid ? "border-emerald-500" : ""}
-              />
-              {validatingRef && <p className="text-xs text-muted-foreground">Checking code…</p>}
-              {referralError && <p className="text-xs text-red-500 font-medium">{referralError}</p>}
-              {refValid && !referralError && (
-                <p className="text-xs text-emerald-600 font-medium">✓ Valid code — you'll get ₹2,000 off</p>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium">Referral Code (optional)</label>
+                {!referralSkipped && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReferralSkipped(true);
+                      setReferralCode("");
+                      setReferralError("");
+                      setRefValid(false);
+                    }}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    I don't have one
+                  </button>
+                )}
+              </div>
+              {referralSkipped ? (
+                <div className="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-3 py-2">
+                  <span className="text-sm text-muted-foreground">No referral code applied</span>
+                  <button
+                    type="button"
+                    onClick={() => setReferralSkipped(false)}
+                    className="text-xs text-primary font-medium hover:underline"
+                  >
+                    Add code
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <Input
+                    placeholder="e.g. TRABC123"
+                    value={referralCode}
+                    onChange={(e) => {
+                      setReferralCode(e.target.value.toUpperCase());
+                      setReferralError("");
+                      setRefValid(false);
+                    }}
+                    onBlur={() => referralCode.trim() && validateReferral(referralCode)}
+                    className={referralError ? "border-red-500" : refValid ? "border-emerald-500" : ""}
+                  />
+                  {validatingRef && <p className="text-xs text-muted-foreground">Checking code…</p>}
+                  {referralError && <p className="text-xs text-red-500 font-medium">{referralError}</p>}
+                  {refValid && !referralError && (
+                    <p className="text-xs text-emerald-600 font-medium">✓ Valid code — you'll get ₹2,000 off</p>
+                  )}
+                  <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹1000 instead of ₹2999!</p>
+                </>
               )}
-              <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹1000 instead of ₹2999!</p>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Creating account..." : "Sign Up"}
