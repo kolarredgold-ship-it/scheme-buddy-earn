@@ -317,8 +317,40 @@ const CareerProgram = () => {
             <Input placeholder="Course (e.g. B.Tech, MBA)" value={formData.course} onChange={e => setFormData({...formData, course: e.target.value})} required />
             <Input placeholder="College Name" value={formData.college} onChange={e => setFormData({...formData, college: e.target.value})} required />
             <div className="space-y-1">
-              <Input placeholder="Referral Code (optional)" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
-              <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹83.25/m instead of ₹249.92/m!</p>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-muted-foreground">Referral Code (optional)</label>
+                {!referralSkipped && !formData.referralCode && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReferralSkipped(true);
+                      setFormData(prev => ({ ...prev, referralCode: "" }));
+                    }}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    I don't have one
+                  </button>
+                )}
+              </div>
+              {referralSkipped || formData.referralCode ? (
+                <div className="flex items-center justify-between gap-2 rounded-md border border-border bg-muted px-3 py-2">
+                  <span className="text-sm text-muted-foreground">{formData.referralCode ? `Code: ${formData.referralCode}` : "No referral code applied"}</span>
+                  {!formData.referralCode && (
+                    <button
+                      type="button"
+                      onClick={() => setReferralSkipped(false)}
+                      className="text-xs text-primary font-medium hover:underline"
+                    >
+                      Add code
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <Input placeholder="Referral Code (optional)" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
+                  <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹83.25/m instead of ₹249.92/m!</p>
+                </>
+              )}
             </div>
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
