@@ -51,11 +51,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Header */}
       <header
         className={`sticky top-0 z-50 bg-card border-b border-border transition-shadow duration-300 ${
-          scrolled ? "shadow-[0_2px_10px_-4px_rgba(15,42,74,0.25)]" : ""
+          scrolled ? "shadow-[0_2px_10px_-4px_rgba(15,27,61,0.18)]" : ""
         }`}
       >
-        {/* Tricolour brand strip */}
-        <div className="h-1 w-full bg-gradient-to-r from-accent via-primary to-[hsl(140_60%_35%)]" aria-hidden="true" />
+        {/* Navy brand strip */}
+        <div className="h-1 w-full bg-primary" aria-hidden="true" />
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center group">
             <img src={techrolaLogo} alt="Techrola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
