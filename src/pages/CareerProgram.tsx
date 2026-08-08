@@ -347,7 +347,7 @@ const CareerProgram = () => {
                 </div>
               ) : (
                 <>
-                  <Input placeholder="Referral Code (optional)" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
+                  <Input placeholder="e.g. TRABC123" value={formData.referralCode} onChange={e => setFormData({...formData, referralCode: e.target.value.toUpperCase()})} />
                   <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹83.25/m instead of ₹249.92/m!</p>
                 </>
               )}
