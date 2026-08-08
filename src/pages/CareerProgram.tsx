@@ -56,6 +56,7 @@ const CareerProgram = () => {
   const [progress, setProgress] = useState<CareerProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", course: "", college: "", password: "", referralCode: searchParams.get("ref")?.toUpperCase() || "" });
+  const [referralSkipped, setReferralSkipped] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
