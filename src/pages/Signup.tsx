@@ -29,6 +29,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [referralCode, setReferralCode] = useState("");
+  const [referralSkipped, setReferralSkipped] = useState(false);
   const [referralError, setReferralError] = useState("");
   const [validatingRef, setValidatingRef] = useState(false);
   const [refValid, setRefValid] = useState(false);
