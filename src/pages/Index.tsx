@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronLeft, ChevronRight, MapPin, Filter, GraduationCap, School, ExternalLink, Lightbulb, Newspaper } from "lucide-react";
+import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronLeft, ChevronRight, MapPin, Filter, GraduationCap, School, ExternalLink } from "lucide-react";
 import Layout from "@/components/Layout";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
@@ -579,134 +579,106 @@ const Index = () => {
   return (
     <Layout>
       <div className="pb-24 md:pb-12 bg-background">
-        {/* HERO — Navy Trust Bento Grid */}
+        {/* HERO — Coursera inspired: search bar + dual promo cards */}
         <section className="bg-background border-b border-border/50">
           <div className="container mx-auto px-5 md:px-8 lg:px-12 pt-6 md:pt-10 pb-8 md:pb-14">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 md:grid-rows-6 gap-4 md:h-[820px]">
-              {/* Hero / Main Search Section */}
-              <div className="md:col-span-8 md:row-span-3 bg-primary rounded-3xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden text-primary-foreground shadow-xl border border-secondary/30">
-                <div className="relative z-10">
-                  <span className="px-3 py-1 bg-accent/20 border border-accent/30 text-accent-foreground rounded-full text-xs font-semibold uppercase tracking-wider mb-4 inline-block">
-                    Official Platform
-                  </span>
-                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 text-white">
-                    Empowering Bharat's <br />Digital Future.
-                  </h1>
-                  <p className="text-white/70 text-base md:text-lg mb-6 md:mb-8 max-w-lg">
-                    Access 2,500+ Central and State government schemes alongside AI-powered career guidance.
-                  </p>
-                  <div className="flex w-full max-w-md bg-card rounded-xl p-1 shadow-inner">
-                    <input
-                      type="text"
-                      placeholder="Search schemes by keyword or eligibility..."
-                      value={searchQuery}
-                      onChange={(e) => {
-                        setSearchQuery(e.target.value);
-                        if (e.target.value.trim().length < 3) {
-                          setAiResults(null);
-                          setAiSummary("");
-                        }
-                      }}
-                      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                      className="flex-1 px-4 py-3 text-foreground placeholder-muted-foreground bg-transparent focus:outline-none"
-                    />
-                    <button
-                      onClick={handleSearch}
-                      disabled={searching || searchQuery.trim().length < 3}
-                      className="bg-accent hover:bg-accent/90 text-accent-foreground px-5 py-3 rounded-lg font-medium transition-colors text-sm disabled:opacity-40"
-                    >
-                      {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : "Search"}
-                    </button>
-                  </div>
-                </div>
-                <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl" />
+            {/* Top search bar (Coursera-style) */}
+            <div className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-center gap-3 md:gap-6">
+              <div className="hidden md:flex items-center gap-6 text-sm text-muted-foreground shrink-0">
+                <a href="#tools" className="font-semibold text-foreground hover:text-primary transition-colors">Explore</a>
+                <a href="#schemes" className="hover:text-foreground transition-colors">Schemes</a>
+                <Link to="/career-program" className="hover:text-foreground transition-colors">Career</Link>
               </div>
-
-              {/* AI Career Compass */}
-              <div className="md:col-span-4 md:row-span-4 bg-card rounded-3xl p-5 md:p-6 shadow-sm border border-border flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div>
-                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-5">
-                    <Lightbulb className="h-6 w-6 text-primary" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-foreground mb-2">AI Career Tools</h2>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-5">
-                    Map your skills to government initiatives and global market demands using AI-powered career guidance.
-                  </p>
-                  <div className="space-y-3">
-                    {[
-                      { label: "Skill Gap Analysis", color: "bg-emerald-500" },
-                      { label: "Interview Simulator", color: "bg-accent" },
-                      { label: "Career Roadmap Builder", color: "bg-indigo-500" },
-                    ].map((item) => (
-                      <div key={item.label} className="p-3 bg-muted rounded-xl border border-border flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${item.color}`} />
-                        <span className="text-sm text-foreground font-medium">{item.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <Link to="/ai-tools" className="mt-6 block">
-                  <Button variant="outline" className="w-full rounded-xl border-2 border-foreground/15 font-bold hover:bg-primary hover:text-primary-foreground transition-all">
-                    Open Dashboard
-                  </Button>
-                </Link>
+              <div className="relative flex-1 max-w-2xl md:mx-auto w-full">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search schemes, jobs, AI tools..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (e.target.value.trim().length < 3) {
+                      setAiResults(null);
+                      setAiSummary("");
+                    }
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                  className="w-full h-12 pl-11 pr-28 rounded-full bg-background border border-border shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                />
+                <button
+                  onClick={handleSearch}
+                  disabled={searching || searchQuery.trim().length < 3}
+                  aria-label="Search"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 h-9 px-3 sm:px-4 rounded-full bg-primary text-primary-foreground flex items-center justify-center gap-1.5 disabled:opacity-40 hover:opacity-90 transition-opacity text-sm font-semibold"
+                >
+                  {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Search className="h-4 w-4" /><span className="hidden sm:inline">Search</span></>}
+                </button>
               </div>
-
-              {/* Scheme Categories */}
-              <div className="md:col-span-4 md:row-span-3 bg-card rounded-3xl p-5 md:p-6 shadow-sm border border-border">
-                <div className="flex justify-between items-center mb-5">
-                  <h3 className="font-bold text-foreground text-lg">Top Categories</h3>
-                  <a href="#schemes" className="text-xs text-accent font-semibold hover:underline">View All</a>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {CATEGORY_CHIPS.slice(1, 5).map((c) => (
-                    <button
-                      key={c.key}
-                      onClick={() => { setActiveCategory(c.key); document.getElementById("schemes")?.scrollIntoView({ behavior: "smooth" }); }}
-                      className="p-4 rounded-2xl bg-muted border border-border text-center hover:bg-primary/5 hover:border-primary/30 transition-colors"
-                    >
-                      <div className="w-8 h-8 mx-auto rounded-lg bg-white shadow-sm flex items-center justify-center mb-2 text-lg">
-                        {c.icon}
-                      </div>
-                      <span className="text-xs font-semibold text-foreground">{c.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Blog / Latest Updates */}
-              <div className="md:col-span-4 md:row-span-3 bg-accent rounded-3xl p-5 md:p-6 shadow-sm text-accent-foreground flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                    <span className="text-xs font-medium uppercase tracking-widest text-white/80">News & Blogs</span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-3">Simplifying Career Growth with AI</h3>
-                  <p className="text-white/80 text-sm leading-relaxed mb-4">
-                    Learn how to combine government schemes with AI tools to build a stronger career profile and one-click applications.
-                  </p>
-                </div>
-                <Link to="/blog">
-                  <button className="bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors flex items-center gap-2 text-sm font-medium">
-                    Read more <ArrowRight className="h-4 w-4" />
-                  </button>
-                </Link>
-              </div>
-
-              {/* Quick Action / Eligibility */}
-              <Link to="/career-program" className="md:col-span-4 md:row-span-2 bg-muted rounded-3xl p-5 md:p-6 flex items-center justify-between border border-border hover:border-primary/30 hover:shadow-sm transition-all">
-                <div className="flex flex-col">
-                  <h4 className="font-bold text-foreground text-lg">Eligibility Check</h4>
-                  <p className="text-xs text-muted-foreground">Find what you qualify for in 30 seconds.</p>
-                </div>
-                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg">
-                  <ArrowRight className="h-5 w-5" />
-                </div>
-              </Link>
             </div>
 
-            {/* Mobile AI tools hero slider */}
-            <div className="md:hidden mt-4">{renderToolSlider("mobile")}</div>
+            {/* Dual promo cards */}
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+              {/* Left card — For students / individuals */}
+              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
+                <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
+                <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
+                <div className="relative z-10 max-w-sm text-white">
+                  <h1 className="text-[1.6rem] sm:text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                    Start, switch, or advance your career
+                  </h1>
+                  <p className="mt-3 sm:mt-4 text-sm md:text-base text-white/85">
+                    Grow with 2,500+ government schemes, AI tools and career programs — built for Bharat.
+                  </p>
+                  <Link to={user ? "/dashboard" : "/signup"}>
+                    <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(212_75%_31%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
+                      {user ? "Go to dashboard" : "Join for Free"}
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+                <img
+                  src={heroStudents}
+                  alt="Techrola student"
+                  className="hidden sm:block absolute right-0 bottom-0 h-[85%] w-auto object-contain object-bottom drop-shadow-2xl pointer-events-none"
+                />
+              </div>
+
+              {/* Right card — AI tools image slider (desktop) */}
+              <div className="hidden md:block">{renderToolSlider("desktop")}</div>
+            </div>
+
+            {/* Mobile AI tools hero slider with background images */}
+            <div className="md:hidden mt-3">{renderToolSlider("mobile")}</div>
+
+            {/* Mobile-only compact stats strip */}
+            <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-lg border border-border bg-card px-3 py-3">
+              {[
+                { v: "2,500+", l: "Schemes" },
+                { v: "20+", l: "AI Tools" },
+                { v: "₹83.25", l: "Pro / m" },
+              ].map((s) => (
+                <div key={s.l} className="text-center">
+                  <div className="text-base font-extrabold text-foreground leading-none">{s.v}</div>
+                  <div className="text-[10px] text-muted-foreground mt-1">{s.l}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Quick action pills */}
+            <div className="mt-4 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
+              {[
+                { icon: "📝", title: "Student Registration", to: "/signup", tint: "bg-orange-50 border-orange-200" },
+                { icon: "🏫", title: "Search Colleges", to: "#colleges", tint: "bg-blue-50 border-blue-200" },
+                { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-blue-50 border-blue-200" },
+                { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-amber-50 border-amber-200" },
+              ].map((f) => (
+                <a key={f.title} href={f.to} className={`flex items-center gap-2.5 md:gap-3 rounded-lg border ${f.tint} px-2.5 md:px-3 py-2.5 min-h-[56px] active:scale-[0.98] hover:shadow-sm transition-all`}>
+                  <div className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-white flex items-center justify-center text-base md:text-lg shadow-sm shrink-0">{f.icon}</div>
+                  <div className="text-[11.5px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
+                </a>
+              ))}
+            </div>
+
           </div>
         </section>
 
@@ -755,29 +727,32 @@ const Index = () => {
               onClick={() => trackToolClick("internship-report-generator", "home-hero")}
               className="block group mb-8 active:scale-[0.99] transition-transform"
             >
-              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary via-secondary to-accent p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-600 via-amber-600 to-amber-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
                 <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-white/5 blur-3xl" />
+                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-sky-400/15 blur-3xl" />
                 <div className="relative flex items-start md:items-center gap-4 md:gap-6">
                   <div className="h-14 w-14 md:h-20 md:w-20 rounded-lg bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
                     📄
                   </div>
                   <div className="flex-1 min-w-0 text-white">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="text-[10px] md:text-xs font-bold bg-white/90 text-primary px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] md:text-xs font-bold bg-orange-400 text-orange-950 px-2 py-0.5 rounded-full">
                         Most popular
                       </span>
                       <span className="text-[10px] md:text-xs font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
                         DOCX
                       </span>
                     </div>
-                    <h3 className="font-extrabold text-lg md:text-2xl leading-tight mb-1">
+                    <h3
+                      className="font-extrabold text-lg md:text-2xl leading-tight mb-1"
+                      style={{ fontFamily: "Plus Jakarta Sans" }}
+                    >
                       AI Internship Report Generator
                     </h3>
                     <p className="text-[12px] md:text-sm text-white/85 mb-3 max-w-xl">
                       Generate professional reports instantly. Download-ready DOCX in 60 seconds.
                     </p>
-                    <span className="inline-flex items-center gap-1.5 bg-white text-primary px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
+                    <span className="inline-flex items-center gap-1.5 bg-white text-blue-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
                       Generate now <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </div>
@@ -1096,8 +1071,8 @@ const Index = () => {
           </div>
         </section>
 
-        {/* STATS BAR — Navy Trust */}
-        <section className="bg-gradient-to-r from-primary via-secondary to-accent text-white">
+        {/* STATS BAR — dark blue band */}
+        <section className="bg-gradient-to-r from-[#0b3d75] via-[#14508f] to-[#1f5fa9] text-white">
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {[
@@ -1107,10 +1082,10 @@ const Index = () => {
                 { v: "20+", l: "AI TOOLS AVAILABLE" },
               ].map((s) => (
                 <div key={s.l}>
-                  <div className="text-2xl md:text-4xl font-extrabold text-white/90">
+                  <div className="text-2xl md:text-4xl font-extrabold text-amber-400" style={{ fontFamily: "Plus Jakarta Sans" }}>
                     {s.v}
                   </div>
-                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/70 mt-1">
+                  <div className="text-[10px] md:text-xs font-bold tracking-wider text-white/80 mt-1">
                     {s.l}
                   </div>
                 </div>
@@ -1218,40 +1193,47 @@ const Index = () => {
           </div>
         </section>
 
-        {/* 6 EASY STEPS TO A BETTER CAREER — Navy Trust */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent">
-          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.3) 0%, transparent 40%)" }} />
+        {/* 6 EASY STEPS TO A BETTER CAREER — redesigned */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#08315e] via-[#0b3d75] to-[#1f5fa9]">
+          <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, rgba(251,191,36,0.4) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(99,102,241,0.4) 0%, transparent 40%)" }} />
 
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-14 md:py-20 relative">
             <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14">
-              <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
-                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" /> Your Career Roadmap
+              <span className="inline-flex items-center gap-2 bg-amber-400/15 border border-amber-400/40 text-amber-300 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-widest mb-4">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" /> Your Career Roadmap
               </span>
-              <h2 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
-                6 Easy Steps to a <span className="text-white/80">Better Career</span>
+              <h2
+                className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight"
+                style={{ fontFamily: "Plus Jakarta Sans" }}
+              >
+                6 Easy Steps to a <span className="text-amber-400">Better Career</span>
               </h2>
               <p className="mt-3 text-sm md:text-base text-white/70">
                 A simple, proven path from signup to your first job offer.
               </p>
             </div>
 
+            {/* Desktop: horizontal timeline; Mobile: vertical timeline */}
             <div className="relative">
-              <div className="hidden lg:block absolute top-12 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+              {/* Desktop connecting line */}
+              <div className="hidden lg:block absolute top-12 left-[8%] right-[8%] h-0.5 bg-gradient-to-r from-amber-400/0 via-amber-400/60 to-amber-400/0" />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-3 relative">
                 {[
-                  { n: 1, t: "Register", d: "Create your free account in seconds" },
-                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly" },
-                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code" },
-                  { n: 4, t: "Promote", d: "Share Techrola with your network" },
-                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity" },
-                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers" },
+                  { n: 1, t: "Register", d: "Create your free account in seconds", color: "from-rose-400 to-pink-500" },
+                  { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", color: "from-amber-400 to-orange-500" },
+                  { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", color: "from-yellow-400 to-amber-500" },
+                  { n: 4, t: "Promote", d: "Share Techrola with your network", color: "from-blue-400 to-sky-500" },
+                  { n: 5, t: "Build Streak", d: "Stay active and grow your activity", color: "from-sky-400 to-blue-500" },
+                  { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-amber-400 to-amber-600" },
                 ].map((s) => (
                   <div key={s.n} className="group relative">
-                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/30 rounded-lg p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-white/5 h-full flex flex-col items-center text-center">
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-white text-primary text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-primary">
+                    <div className="relative bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 hover:border-amber-400/40 rounded-lg p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 h-full flex flex-col items-center text-center">
+                      {/* Step number badge */}
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 h-7 px-3 rounded-full bg-amber-400 text-amber-950 text-[11px] font-extrabold flex items-center justify-center shadow-lg ring-4 ring-[#0b3d75]">
                         STEP {s.n}
                       </div>
+
                       <h3 className="mt-3 text-sm md:text-base font-extrabold text-white tracking-tight">
                         {s.t}
                       </h3>
@@ -1268,7 +1250,7 @@ const Index = () => {
               <Link to={user ? "/career-program" : "/signup"}>
                 <Button
                   size="lg"
-                  className="rounded-full bg-white text-primary hover:bg-white/90 font-bold px-8 shadow-lg shadow-primary/40"
+                  className="rounded-full bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-8 shadow-lg shadow-amber-900/40"
                 >
                   Start your journey <ArrowRight className="h-4 w-4 ml-1.5" />
                 </Button>
@@ -1284,10 +1266,13 @@ const Index = () => {
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div>
-                <div className="text-xs md:text-sm font-bold text-primary tracking-widest uppercase mb-3">
+                <div className="text-xs md:text-sm font-bold text-amber-700 tracking-widest uppercase mb-3">
                   About Techrola
                 </div>
-                <h2 className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight">
+                <h2
+                  className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
+                  style={{ fontFamily: "Plus Jakarta Sans" }}
+                >
                   A trusted career companion for every student
                 </h2>
                 <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
@@ -1304,7 +1289,7 @@ const Index = () => {
                     "Government Schemes direct apply link",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2 text-sm md:text-base text-foreground">
-                      <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                      <Check className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -1313,16 +1298,16 @@ const Index = () => {
 
               <div className="grid grid-cols-2 gap-3 md:gap-4">
                 {[
-                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-primary/5 to-primary/10 border-primary/20" },
-                  { icon: "🏆", k: "RECOGNITION", v: "Top Ed-Tech 2025", color: "from-accent/5 to-accent/10 border-accent/20" },
-                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-accent/5 to-accent/10 border-accent/20" },
-                  { icon: "🎓", k: "COLLEGES LISTED", v: "10,000+ institutes", color: "from-primary/5 to-primary/10 border-primary/20" },
+                  { icon: "👥", k: "ACTIVE COMMUNITY", v: "50K+ students", color: "from-blue-50 to-blue-100 border-blue-200" },
+                  { icon: "🏆", k: "RECOGNITION", v: "Top Ed-Tech 2025", color: "from-amber-50 to-amber-100 border-amber-200" },
+                  { icon: "🤝", k: "HIRING PARTNERS", v: "1,200+ companies", color: "from-amber-50 to-amber-100 border-amber-200" },
+                  { icon: "🎓", k: "COLLEGES LISTED", v: "10,000+ institutes", color: "from-sky-50 to-sky-100 border-sky-200" },
                 ].map((c) => (
                   <div
                     key={c.k}
                     className={`rounded-lg border bg-gradient-to-br ${c.color} p-4 md:p-5 shadow-sm`}
                   >
-                    <div className="h-10 w-10 rounded-full bg-card shadow flex items-center justify-center text-xl mb-3">
+                    <div className="h-10 w-10 rounded-full bg-white shadow flex items-center justify-center text-xl mb-3">
                       {c.icon}
                     </div>
                     <div className="text-[10px] md:text-xs font-bold tracking-wider text-muted-foreground">
@@ -1342,7 +1327,10 @@ const Index = () => {
         <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">
 
           <div className="mb-6">
-            <h2 className="text-xl md:text-3xl font-extrabold text-foreground">
+            <h2
+              className="text-xl md:text-3xl font-extrabold text-foreground"
+              style={{ fontFamily: "Plus Jakarta Sans" }}
+            >
               Simple, honest pricing
             </h2>
             <p className="text-xs md:text-sm text-muted-foreground mt-1">
@@ -1374,25 +1362,25 @@ const Index = () => {
                 ))}
               </ul>
               <Link to="/signup" className="block mt-6">
-                <Button variant="outline" className="w-full rounded-lg font-semibold border-foreground/15">
+                <Button variant="outline" className="w-full rounded-lg font-semibold">
                   Get started free
                 </Button>
               </Link>
             </div>
 
             {/* Pro */}
-            <div className="relative rounded-lg border-2 border-primary bg-card p-6 shadow-lg shadow-primary/10">
-              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-primary text-primary-foreground px-2.5 py-1 rounded-full">
+            <div className="relative rounded-lg border-2 border-blue-500 bg-card p-6 shadow-lg shadow-blue-500/10">
+              <span className="absolute -top-3 left-6 text-[11px] font-bold bg-blue-600 text-white px-2.5 py-1 rounded-full">
                 Most popular
               </span>
-              <div className="text-xs font-semibold text-primary uppercase tracking-wide">
+              <div className="text-xs font-semibold text-blue-700 uppercase tracking-wide">
                 Pro
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span className="text-4xl font-extrabold">₹83.25</span>
                 <span className="text-sm text-muted-foreground">/ month</span>
               </div>
-              <div className="text-xs text-primary font-semibold mt-1">Billed annually at ₹999</div>
+              <div className="text-xs text-blue-700 font-semibold mt-1">Billed annually at ₹999</div>
               <ul className="mt-5 space-y-2.5 text-sm">
                 {[
                   "Browse 2,500+ schemes",
@@ -1403,18 +1391,18 @@ const Index = () => {
                   "Priority support",
                 ].map((f) => (
                   <li key={f} className="flex items-center gap-2 text-foreground">
-                    <Check className="h-4 w-4 text-primary" /> {f}
+                    <Check className="h-4 w-4 text-blue-600" /> {f}
                   </li>
                 ))}
               </ul>
               <Link to="/subscription" className="block mt-6">
-                <Button className="w-full rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+                <Button className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold">
                   Get Pro — ₹83.25/m
                 </Button>
               </Link>
               <p className="mt-3 text-[11px] text-muted-foreground text-center inline-flex items-center justify-center gap-1.5 w-full">
                 🔒 Secured payments by
-                <span className="font-bold text-primary bg-card border border-border/60 px-1.5 py-0.5 rounded">Razorpay</span>
+                <span className="font-bold text-[#072654] bg-white border border-border/60 px-1.5 py-0.5 rounded">Razorpay</span>
               </p>
             </div>
           </div>

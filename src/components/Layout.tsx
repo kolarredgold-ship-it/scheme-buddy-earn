@@ -51,11 +51,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Header */}
       <header
         className={`sticky top-0 z-50 bg-card border-b border-border transition-shadow duration-300 ${
-          scrolled ? "shadow-[0_2px_10px_-4px_rgba(15,27,61,0.18)]" : ""
+          scrolled ? "shadow-[0_2px_10px_-4px_rgba(15,42,74,0.25)]" : ""
         }`}
       >
-        {/* Navy brand strip */}
-        <div className="h-1 w-full bg-primary" aria-hidden="true" />
+        {/* Tricolour brand strip */}
+        <div className="h-1 w-full bg-gradient-to-r from-accent via-primary to-[hsl(140_60%_35%)]" aria-hidden="true" />
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center group">
             <img src={techrolaLogo} alt="Techrola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
@@ -189,7 +189,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Career Program CTA - Above Footer */}
       <div className="container mx-auto px-3 md:px-4 mt-10 mb-2">
         <Link to="/career-program" className="block group">
-          <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary via-secondary to-[hsl(209,44%,43%)] p-5 sm:p-6 md:p-8 transition-all duration-500 hover:shadow-[0_0_40px_rgba(15,27,61,0.2)] hover:scale-[1.01]">
+          <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212,69%,39%)] via-[hsl(212,75%,31%)] to-[hsl(214,80%,20%)] p-5 sm:p-6 md:p-8 transition-all duration-500 hover:shadow-[0_0_40px_rgba(31,95,169,0.3)] hover:scale-[1.01]">
             {/* Animated background shapes */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
