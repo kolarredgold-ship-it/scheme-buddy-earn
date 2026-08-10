@@ -17,7 +17,6 @@ const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = 
   { path: "/create-report", priority: "0.7", changefreq: "monthly" },
   { path: "/dashboard", priority: "0.6", changefreq: "weekly" },
   { path: "/mock-interview", priority: "0.8", changefreq: "weekly" },
-  { path: "/plans", priority: "0.8", changefreq: "monthly" },
   { path: "/subscription", priority: "0.7", changefreq: "monthly" },
   { path: "/leaderboard", priority: "0.6", changefreq: "daily" },
   { path: "/install", priority: "0.5", changefreq: "monthly" },
@@ -37,6 +36,16 @@ const AI_TOOL_LANDING_SLUGS = [
   "viva-questions","ppt-outline","scholarship-essay","linkedin-bio","business-plan",
   "assignment-helper","essay-writer","speech-writer",
 ];
+const STUDENT_TOOL_SLUGS = [
+  "resume","cover-letter","sop","study-notes","roadmap","leave-letter","lor",
+  "project-report","email-writer","viva-questions","ppt-outline","scholarship-essay",
+  "linkedin-bio","business-plan","assignment","essay","speech",
+];
+for (const slug of STUDENT_TOOL_SLUGS) {
+  STATIC_ROUTES.push({ path: `/student-tool/${slug}`, priority: "0.8", changefreq: "monthly" });
+}
+STATIC_ROUTES.push({ path: "/live-hr-interview", priority: "0.8", changefreq: "monthly" });
+
 for (const slug of AI_TOOL_LANDING_SLUGS) {
   STATIC_ROUTES.push({ path: `/ai/${slug}`, priority: "0.8", changefreq: "monthly" });
 }

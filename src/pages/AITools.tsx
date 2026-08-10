@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { aiToolLandings } from "@/data/aiToolLandings";
+import Seo, { SITE_URL } from "@/components/Seo";
 
 // Map tool's actual path -> landing slug (when a landing exists)
 const TOOL_TO_LANDING: Record<string, string> = aiToolLandings.reduce(
@@ -253,8 +254,37 @@ export const tools = [
 ];
 
 const AITools = () => {
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Students AI Tools by Techrola",
+    itemListElement: tools.map((t, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: t.title,
+      description: t.desc,
+      url: `${SITE_URL}${t.to}`,
+    })),
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "AI Tools", item: `${SITE_URL}/ai-tools` },
+    ],
+  };
+
   return (
     <Layout>
+      <Seo
+        title="Students AI Tools — Free Resume, SOP & Report Generators | Techrola"
+        description="Free AI tools for Indian students: resume builder, cover letter, SOP, internship report, study notes, career roadmap and mock interview practice. Generate and download instantly."
+        path="/ai-tools"
+        keywords="students ai tools, ai resume builder india, sop generator, internship report generator, ai mock interview, study notes maker"
+        jsonLd={[itemListLd, breadcrumbLd]}
+      />
       <div className="container mx-auto px-3 md:px-4 py-6 md:py-10 pb-24">
         {/* Header */}
         <div className="mb-6 md:mb-8">

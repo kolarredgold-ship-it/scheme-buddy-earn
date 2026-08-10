@@ -13,6 +13,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToolCredits } from "@/hooks/useToolCredits";
 import TopupDialog from "@/components/TopupDialog";
 import ToolGateDialog from "@/components/ToolGateDialog";
+import Seo, { SITE_URL } from "@/components/Seo";
+import { aiToolLandings } from "@/data/aiToolLandings";
 
 import {
   Document,
@@ -661,9 +663,45 @@ const StudentTool = () => {
     toast.success("Copied to clipboard");
   };
 
+  const landing = aiToolLandings.find((l) => l.toolPath === `/student-tool/${slug}`);
+  const seoDescription = `${tool.desc} Free AI tool for Indian students by Techrola — no design skills needed.`;
+
   return (
     <Layout>
+      <Seo
+        title={`${tool.title} — Free Online AI Tool for Students | Techrola`}
+        description={seoDescription}
+        path={`/student-tool/${slug}`}
+        keywords={`${tool.title.toLowerCase()}, ai ${slug.replace(/-/g, " ")} generator, students ai tools india`}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: tool.title,
+            description: seoDescription,
+            applicationCategory: "EducationalApplication",
+            operatingSystem: "Web",
+            url: `${SITE_URL}/student-tool/${slug}`,
+            offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
+            provider: { "@type": "Organization", name: "Techrola", url: SITE_URL },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+              { "@type": "ListItem", position: 2, name: "AI Tools", item: `${SITE_URL}/ai-tools` },
+              { "@type": "ListItem", position: 3, name: tool.title, item: `${SITE_URL}/student-tool/${slug}` },
+            ],
+          },
+        ]}
+      />
       <div className="container mx-auto px-3 md:px-4 py-6 md:py-10 pb-24 max-w-4xl">
+        <nav className="text-xs text-muted-foreground mb-3" aria-label="Breadcrumb">
+          <Link to="/" className="hover:text-primary">Home</Link> {"/"}{" "}
+          <Link to="/ai-tools" className="hover:text-primary">AI Tools</Link> {"/"}{" "}
+          <span className="text-foreground">{tool.title}</span>
+        </nav>
         <Link to="/ai-tools" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-4">
           <ArrowLeft className="h-4 w-4" /> Back to Students AI Tools
         </Link>
@@ -676,6 +714,11 @@ const StudentTool = () => {
             <span className="mr-2">{tool.emoji}</span>{tool.title}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground mt-1">{tool.desc}</p>
+          {landing && (
+            <Link to={`/ai/${landing.slug}`} className="inline-block text-xs md:text-sm text-primary hover:underline mt-2">
+              Learn how the {tool.title} works →
+            </Link>
+          )}
         </div>
 
         <Card className="p-4 md:p-6 space-y-4">
