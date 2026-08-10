@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.student-ai-tool]
 verify_jwt = false
+
+[functions.college-finder]
+verify_jwt = false
