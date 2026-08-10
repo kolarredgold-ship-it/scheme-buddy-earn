@@ -11,6 +11,7 @@ const SUPABASE_ANON_KEY =
 
 const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/", priority: "1.0", changefreq: "daily" },
+  { path: "/blog", priority: "0.9", changefreq: "daily" },
   { path: "/career-program", priority: "0.9", changefreq: "weekly" },
   { path: "/ai-tools", priority: "0.9", changefreq: "weekly" },
   { path: "/ai-report", priority: "0.7", changefreq: "monthly" },
@@ -89,6 +90,35 @@ async function main() {
     console.warn(`[sitemap] schemes fetch error:`, e);
   }
 
+  let blogs: { slug: string; updated_at: string | null }[] = [];
+  try {
+    const pageSize = 1000;
+    for (let from = 0; from < 50000; from += pageSize) {
+      const to = from + pageSize - 1;
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/blogs?select=slug,updated_at&status=eq.published&slug=not.is.null&order=published_at.desc`,
+        {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Range: `${from}-${to}`,
+            "Range-Unit": "items",
+          },
+        },
+      );
+      if (!res.ok) {
+        console.warn(`[sitemap] blogs fetch failed at ${from}: ${res.status}`);
+        break;
+      }
+      const batch = (await res.json()) as { slug: string; updated_at: string | null }[];
+      blogs = blogs.concat(batch);
+      if (batch.length < pageSize) break;
+    }
+  } catch (e) {
+    console.warn(`[sitemap] blogs fetch error:`, e);
+  }
+
+
   const staticUrls = STATIC_ROUTES.map(
     (r) => `  <url>
     <loc>${SITE_URL}${r.path}</loc>
@@ -110,18 +140,32 @@ async function main() {
     })
     .join("\n");
 
+  const blogUrls = blogs
+    .map((b) => {
+      const lastmod = b.updated_at ? b.updated_at.split("T")[0] : today;
+      return `  <url>
+    <loc>${SITE_URL}/blog/${escapeXml(b.slug)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+    })
+    .join("\n");
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticUrls}
+${blogUrls}
 ${schemeUrls}
 </urlset>
 `;
+
 
   const __dirname = dirname(fileURLToPath(import.meta.url));
   const outPath = resolve(__dirname, "..", "public", "sitemap.xml");
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, xml, "utf8");
-  console.log(`[sitemap] wrote ${outPath} with ${schemes.length} scheme URLs`);
+  console.log(`[sitemap] wrote ${outPath} with ${schemes.length} scheme URLs and ${blogs.length} blog URLs`);
 }
 
 main().catch((e) => {
