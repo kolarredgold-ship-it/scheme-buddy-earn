@@ -172,6 +172,7 @@ Deno.serve(async (req) => {
 
     // Insert rows with unique slugs, stripping years
     let inserted = 0;
+    const publishedSlugs: string[] = [];
     const errors: string[] = [];
     for (const b of allBlogs) {
       try {
