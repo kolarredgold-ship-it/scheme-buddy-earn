@@ -11,6 +11,7 @@ const SUPABASE_ANON_KEY =
 
 const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/", priority: "1.0", changefreq: "daily" },
+  { path: "/blog", priority: "0.9", changefreq: "daily" },
   { path: "/career-program", priority: "0.9", changefreq: "weekly" },
   { path: "/ai-tools", priority: "0.9", changefreq: "weekly" },
   { path: "/ai-report", priority: "0.7", changefreq: "monthly" },
