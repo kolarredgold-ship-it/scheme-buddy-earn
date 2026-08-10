@@ -90,6 +90,35 @@ async function main() {
     console.warn(`[sitemap] schemes fetch error:`, e);
   }
 
+  let blogs: { slug: string; updated_at: string | null }[] = [];
+  try {
+    const pageSize = 1000;
+    for (let from = 0; from < 50000; from += pageSize) {
+      const to = from + pageSize - 1;
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/blogs?select=slug,updated_at&status=eq.published&slug=not.is.null&order=published_at.desc`,
+        {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Range: `${from}-${to}`,
+            "Range-Unit": "items",
+          },
+        },
+      );
+      if (!res.ok) {
+        console.warn(`[sitemap] blogs fetch failed at ${from}: ${res.status}`);
+        break;
+      }
+      const batch = (await res.json()) as { slug: string; updated_at: string | null }[];
+      blogs = blogs.concat(batch);
+      if (batch.length < pageSize) break;
+    }
+  } catch (e) {
+    console.warn(`[sitemap] blogs fetch error:`, e);
+  }
+
+
   const staticUrls = STATIC_ROUTES.map(
     (r) => `  <url>
     <loc>${SITE_URL}${r.path}</loc>
