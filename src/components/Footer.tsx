@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import techrolaLogo from "@/assets/techrola_logo.webp";
-import { Mail, Phone, MapPin, Download, ExternalLink, BookOpen, Briefcase, Wand2, GraduationCap, FileText, HelpCircle, Shield, CreditCard } from "lucide-react";
+import { aiToolLandings } from "@/data/aiToolLandings";
+import { Mail, Phone, MapPin, Download, ExternalLink, BookOpen, Briefcase, Wand2, GraduationCap, FileText, HelpCircle, Shield, CreditCard, Sparkles } from "lucide-react";
 
 const footerLinks = {
   explore: [
