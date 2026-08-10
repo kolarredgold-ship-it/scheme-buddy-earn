@@ -38,12 +38,9 @@ Deno.serve(async () => {
       supabase.from("blogs").select("slug, updated_at, published_at").eq("status", "published").order("published_at", { ascending: false }).limit(50000),
     ]);
 
-    const today = new Date().toISOString().split("T")[0];
-
     const staticUrls = STATIC_ROUTES.map(
       (r) => `  <url>
     <loc>${SITE_URL}${r.path}</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>${r.changefreq}</changefreq>
     <priority>${r.priority}</priority>
   </url>`,
@@ -51,10 +48,9 @@ Deno.serve(async () => {
 
     const schemeUrls = (schemes || [])
       .map((s: { slug: string; updated_at: string | null }) => {
-        const lastmod = s.updated_at ? s.updated_at.split("T")[0] : today;
+        const lastmod = s.updated_at ? s.updated_at.split("T")[0] : null;
         return `  <url>
-    <loc>${SITE_URL}/scheme/${escapeXml(s.slug)}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${SITE_URL}/scheme/${escapeXml(s.slug)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ""}
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`;
@@ -63,10 +59,9 @@ Deno.serve(async () => {
 
     const blogUrls = (blogs || [])
       .map((b: { slug: string; updated_at: string | null; published_at: string | null }) => {
-        const lastmod = (b.updated_at || b.published_at || "").split("T")[0] || today;
+        const lastmod = (b.updated_at || b.published_at || "").split("T")[0] || null;
         return `  <url>
-    <loc>${SITE_URL}/blog/${escapeXml(b.slug)}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${SITE_URL}/blog/${escapeXml(b.slug)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ""}
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>`;
