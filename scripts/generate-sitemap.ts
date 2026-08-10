@@ -165,7 +165,7 @@ ${schemeUrls}
   const outPath = resolve(__dirname, "..", "public", "sitemap.xml");
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, xml, "utf8");
-  console.log(`[sitemap] wrote ${outPath} with ${schemes.length} scheme URLs`);
+  console.log(`[sitemap] wrote ${outPath} with ${schemes.length} scheme URLs and ${blogs.length} blog URLs`);
 }
 
 main().catch((e) => {
