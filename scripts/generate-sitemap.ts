@@ -140,12 +140,26 @@ async function main() {
     })
     .join("\n");
 
+  const blogUrls = blogs
+    .map((b) => {
+      const lastmod = b.updated_at ? b.updated_at.split("T")[0] : today;
+      return `  <url>
+    <loc>${SITE_URL}/blog/${escapeXml(b.slug)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+    })
+    .join("\n");
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticUrls}
+${blogUrls}
 ${schemeUrls}
 </urlset>
 `;
+
 
   const __dirname = dirname(fileURLToPath(import.meta.url));
   const outPath = resolve(__dirname, "..", "public", "sitemap.xml");
