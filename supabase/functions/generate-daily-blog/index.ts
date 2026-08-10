@@ -172,6 +172,7 @@ Deno.serve(async (req) => {
 
     // Insert rows with unique slugs, stripping years
     let inserted = 0;
+    const publishedSlugs: string[] = [];
     const errors: string[] = [];
     for (const b of allBlogs) {
       try {
@@ -212,14 +213,33 @@ Deno.serve(async (req) => {
           published_at: new Date().toISOString(),
         });
         if (insErr) errors.push(insErr.message);
-        else inserted += 1;
+        else { inserted += 1; publishedSlugs.push(slug); }
       } catch (e) {
         errors.push((e as Error).message);
       }
     }
 
+    // Auto-submit the new posts to IndexNow (Bing/Yandex) + ping sitemaps.
+    if (publishedSlugs.length > 0) {
+      try {
+        const res = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/indexnow`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            urls: [
+              'https://techrola.in/blog',
+              ...publishedSlugs.map((s) => `https://techrola.in/blog/${s}`),
+            ],
+          }),
+        });
+        console.log('indexnow ping:', res.status, await res.text());
+      } catch (e) {
+        console.error('indexnow ping failed:', (e as Error).message);
+      }
+    }
+
     return new Response(JSON.stringify({
-      success: true, requested, generated: allBlogs.length, inserted, errors: errors.slice(0, 5),
+      success: true, requested, generated: allBlogs.length, inserted, submitted: publishedSlugs.length, errors: errors.slice(0, 5),
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
     console.error(e);
