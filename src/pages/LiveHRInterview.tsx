@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/Layout";
+import Seo, { SITE_URL } from "@/components/Seo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -336,6 +337,21 @@ const LiveHRInterview = () => {
 
   return (
     <Layout>
+      <Seo
+        title="AI Live HR Interview Simulator — Real-Time Practice | Techrola"
+        description="Face a real-time AI HR interviewer, answer live questions and get an instant verdict with detailed feedback on your communication and confidence."
+        path="/live-hr-interview"
+        keywords="live hr interview practice, ai interviewer, hr round questions, interview simulator india"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "AI Live HR Interview",
+          applicationCategory: "EducationalApplication",
+          operatingSystem: "Web",
+          url: `${SITE_URL}/live-hr-interview`,
+          provider: { "@type": "Organization", name: "Techrola", url: SITE_URL },
+        }}
+      />
       <div className="container mx-auto px-4 py-6 max-w-3xl">
         <Button variant="ghost" size="sm" onClick={() => navigate("/mock-interview")} className="mb-4">
           <ArrowLeft className="h-4 w-4 mr-1" /> Back

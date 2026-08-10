@@ -13,6 +13,7 @@ import { Progress } from '@/components/ui/progress';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, PageBreak, Header, Footer, PageNumber, Table, TableRow, TableCell, WidthType, BorderStyle, LevelFormat } from 'docx';
 import { saveAs } from 'file-saver';
 import Layout from '@/components/Layout';
+import Seo, { SITE_URL } from "@/components/Seo";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import TopupDialog from '@/components/TopupDialog';
 
@@ -496,6 +497,21 @@ const CreateReport = () => {
 
   return (
     <Layout>
+      <Seo
+        title="AI Internship Report Generator — Download DOCX Free | Techrola"
+        description="Generate a complete, college-ready internship report with AI in minutes and download it as an editable DOCX file. Made for Indian students and their university formats."
+        path="/create-report"
+        keywords="internship report generator, ai internship report, internship report format docx, college internship report india"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "AI Internship Report Generator",
+          applicationCategory: "EducationalApplication",
+          operatingSystem: "Web",
+          url: `${SITE_URL}/create-report`,
+          provider: { "@type": "Organization", name: "Techrola", url: SITE_URL },
+        }}
+      />
       <div className="container mx-auto px-4 py-6 max-w-5xl space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
