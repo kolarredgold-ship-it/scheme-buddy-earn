@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import techrolaLogo from "@/assets/techrola_logo.webp";
-import { Mail, Phone, MapPin, Download, ExternalLink, BookOpen, Briefcase, Wand2, GraduationCap, FileText, HelpCircle, Shield, CreditCard } from "lucide-react";
+import { aiToolLandings } from "@/data/aiToolLandings";
+import { Mail, Phone, MapPin, Download, ExternalLink, BookOpen, Briefcase, Wand2, GraduationCap, FileText, HelpCircle, Shield, CreditCard, Sparkles } from "lucide-react";
 
 const footerLinks = {
   explore: [
@@ -113,6 +114,43 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
+        {/* AI Tools SEO link hub */}
+        <nav aria-label="All AI tools" className="mt-10 pt-8 border-t border-slate-800">
+          <h3 className="font-semibold text-sm mb-4 text-white flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-orange-500" /> All AI Tools for Students &amp; Job-Seekers
+          </h3>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2.5">
+            {aiToolLandings.map((t) => (
+              <li key={t.slug}>
+                <Link
+                  to={`/ai/${t.slug}`}
+                  title={t.tagline}
+                  className="text-sm text-slate-300 hover:text-white hover:underline transition-colors"
+                >
+                  {t.h1}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                name: "Techrola AI Tools",
+                itemListElement: aiToolLandings.map((t, i) => ({
+                  "@type": "ListItem",
+                  position: i + 1,
+                  name: t.h1,
+                  description: t.metaDescription,
+                  url: `https://techrola.in/ai/${t.slug}`,
+                })),
+              }),
+            }}
+          />
+        </nav>
 
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-slate-800">
