@@ -727,16 +727,16 @@ const Index = () => {
               onClick={() => trackToolClick("internship-report-generator", "home-hero")}
               className="block group mb-8 active:scale-[0.99] transition-transform"
             >
-              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-600 via-amber-600 to-amber-600 p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
+              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[#1F5FA9] via-[#2563C8] to-[#1E4E8C] p-5 md:p-8 shadow-lg hover:shadow-xl transition-all">
                 <div className="absolute -top-12 -right-12 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
-                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-sky-400/15 blur-3xl" />
+                <div className="absolute -bottom-16 -left-12 h-52 w-52 rounded-full bg-sky-300/15 blur-3xl" />
                 <div className="relative flex items-start md:items-center gap-4 md:gap-6">
                   <div className="h-14 w-14 md:h-20 md:w-20 rounded-lg bg-white/15 border border-white/30 backdrop-blur-sm flex items-center justify-center shrink-0 text-3xl md:text-4xl">
                     📄
                   </div>
                   <div className="flex-1 min-w-0 text-white">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className="text-[10px] md:text-xs font-bold bg-orange-400 text-orange-950 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] md:text-xs font-bold bg-[#FF9933] text-white px-2 py-0.5 rounded-full">
                         Most popular
                       </span>
                       <span className="text-[10px] md:text-xs font-bold bg-white/20 text-white px-2 py-0.5 rounded-full">
@@ -749,10 +749,10 @@ const Index = () => {
                     >
                       AI Internship Report Generator
                     </h3>
-                    <p className="text-[12px] md:text-sm text-white/85 mb-3 max-w-xl">
+                    <p className="text-[12px] md:text-sm text-white/90 mb-3 max-w-xl">
                       Generate professional reports instantly. Download-ready DOCX in 60 seconds.
                     </p>
-                    <span className="inline-flex items-center gap-1.5 bg-white text-blue-700 px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
+                    <span className="inline-flex items-center gap-1.5 bg-white text-[#1F5FA9] px-3.5 py-1.5 rounded-lg font-bold text-xs md:text-sm group-hover:gap-2.5 transition-all">
                       Generate now <ArrowRight className="h-3.5 w-3.5" />
                     </span>
                   </div>
