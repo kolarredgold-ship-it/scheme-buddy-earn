@@ -117,6 +117,12 @@ const BlogDetail = () => {
     if (blog.featured_image_url) setMeta("og:image", blog.featured_image_url, "property");
     setMeta("twitter:card", "summary_large_image");
 
+    // Canonical: always the post's own slug URL (dedupes query-string / stale-slug variants)
+    const canonical = `https://techrola.in/blog/${blog.slug}`;
+    setCanonical(canonical);
+    setMeta("og:url", canonical, "property");
+    setMeta("robots", "index,follow");
+
     // FAQ schema JSON-LD
     document.querySelectorAll('script[data-blog-jsonld]').forEach((n) => n.remove());
     const scripts: any[] = [];
