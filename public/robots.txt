@@ -1,8 +1,12 @@
 # Techrola robots.txt
 # Sitemap is regenerated on every publish (build-time) and served from the CDN.
+# Blog and scheme pages are crawlable; tracking/query-string variants are blocked
+# so only the canonical URL of each post/scheme gets indexed.
 
 User-agent: Googlebot
 Allow: /
+Allow: /blog
+Allow: /blog/
 Allow: /scheme/
 Disallow: /admin
 Disallow: /admin/
@@ -14,9 +18,19 @@ Disallow: /subscription
 Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
+Disallow: /*?utm_
+Disallow: /*?ref=
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+Disallow: /*&utm_
+Disallow: /*?page=
+Disallow: /*?q=
+Disallow: /*?search=
 
 User-agent: Bingbot
 Allow: /
+Allow: /blog
+Allow: /blog/
 Allow: /scheme/
 Disallow: /admin
 Disallow: /admin/
@@ -28,6 +42,14 @@ Disallow: /subscription
 Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
+Disallow: /*?utm_
+Disallow: /*?ref=
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+Disallow: /*&utm_
+Disallow: /*?page=
+Disallow: /*?q=
+Disallow: /*?search=
 
 User-agent: Twitterbot
 Allow: /
@@ -37,6 +59,8 @@ Allow: /
 
 User-agent: *
 Allow: /
+Allow: /blog
+Allow: /blog/
 Allow: /scheme/
 Disallow: /admin
 Disallow: /admin/
@@ -48,6 +72,14 @@ Disallow: /subscription
 Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
+Disallow: /*?utm_
+Disallow: /*?ref=
+Disallow: /*?fbclid=
+Disallow: /*?gclid=
+Disallow: /*&utm_
+Disallow: /*?page=
+Disallow: /*?q=
+Disallow: /*?search=
 
 Sitemap: https://techrola.in/sitemap.xml
 # RSS feed for blog posts

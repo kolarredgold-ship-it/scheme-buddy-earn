@@ -37,6 +37,14 @@ const setMeta = (name: string, content: string, attr: "name" | "property" = "nam
   el.setAttribute("content", content);
 };
 
+/** Single self-referencing canonical, always pointing at the post's own slug URL. */
+const setCanonical = (href: string) => {
+  document.querySelectorAll('link[rel="canonical"]').forEach((n, i) => { if (i > 0) n.remove(); });
+  let el = document.querySelector('link[rel="canonical"]');
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", "canonical"); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+};
+
 // Normalize AI-generated markdown that arrives collapsed onto a single line.
 // The generator often writes headings ("## Title:") and bullets (" - **Item**")
 // inline without newlines. We reinsert paragraph breaks around them.
@@ -108,6 +116,12 @@ const BlogDetail = () => {
     setMeta("og:type", "article", "property");
     if (blog.featured_image_url) setMeta("og:image", blog.featured_image_url, "property");
     setMeta("twitter:card", "summary_large_image");
+
+    // Canonical: always the post's own slug URL (dedupes query-string / stale-slug variants)
+    const canonical = `https://techrola.in/blog/${blog.slug}`;
+    setCanonical(canonical);
+    setMeta("og:url", canonical, "property");
+    setMeta("robots", "index,follow");
 
     // FAQ schema JSON-LD
     document.querySelectorAll('script[data-blog-jsonld]').forEach((n) => n.remove());

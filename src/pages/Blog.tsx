@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import Seo from "@/components/Seo";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -75,6 +76,11 @@ const Blog = () => {
 
   return (
     <Layout>
+      <Seo
+        title="Techrola Blog — Government Schemes, Jobs & Career Guides"
+        description="Daily guides on government schemes, sarkari jobs, scholarships and AI career tools for students across India."
+        path="/blog"
+      />
       <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
         <header className="mb-8">
           <div className="flex flex-wrap items-center gap-3 mb-3">

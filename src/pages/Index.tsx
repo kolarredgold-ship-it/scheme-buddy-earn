@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronLeft, ChevronRight, MapPin, Filter, GraduationCap, School, ExternalLink } from "lucide-react";
 import Layout from "@/components/Layout";
+import Seo from "@/components/Seo";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
@@ -578,6 +579,11 @@ const Index = () => {
 
   return (
     <Layout>
+      <Seo
+        title="Techrola — Government Schemes, Jobs & AI Career Tools"
+        description="Find government schemes, sarkari and private jobs, scholarships and AI career tools for students across India — all in one place."
+        path="/"
+      />
       <div className="pb-24 md:pb-12 bg-background">
         {/* HERO — Coursera inspired: search bar + dual promo cards */}
         <section className="bg-background border-b border-border/50">
