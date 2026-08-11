@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowRight, Sparkles, Search, Loader2, X, Check, ChevronLeft, ChevronRight, MapPin, Filter, GraduationCap, School, ExternalLink } from "lucide-react";
 import Layout from "@/components/Layout";
+import Seo from "@/components/Seo";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
