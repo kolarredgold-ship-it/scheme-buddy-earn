@@ -74,13 +74,20 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Also nudge Google + Bing to re-read the sitemap.
-    await Promise.allSettled([
-      fetch(`https://www.google.com/ping?sitemap=${encodeURIComponent(`${SITE_URL}/sitemap.xml`)}`),
+    // Re-submit the sitemap to Google Search Console (and nudge Bing).
+    let sitemap: unknown = null;
+    const [gsc] = await Promise.allSettled([
+      fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/submit-sitemap`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sitemap_url: `${SITE_URL}/sitemap.xml` }),
+      }).then(async (r) => ({ status: r.status, body: await r.text() })),
       fetch(`https://www.bing.com/ping?sitemap=${encodeURIComponent(`${SITE_URL}/sitemap.xml`)}`),
     ]);
+    if (gsc.status === "fulfilled") sitemap = gsc.value;
+    console.log("sitemap resubmit:", JSON.stringify(sitemap));
 
-    return new Response(JSON.stringify({ success: true, submitted: urls.length, status: res.status }), {
+    return new Response(JSON.stringify({ success: true, submitted: urls.length, status: res.status, sitemap }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
