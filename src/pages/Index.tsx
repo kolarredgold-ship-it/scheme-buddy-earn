@@ -578,6 +578,11 @@ const Index = () => {
 
   return (
     <Layout>
+      <Seo
+        title="Techrola — Government Schemes, Jobs & AI Career Tools"
+        description="Find government schemes, sarkari and private jobs, scholarships and AI career tools for students across India — all in one place."
+        path="/"
+      />
       <div className="pb-24 md:pb-12 bg-background">
         {/* HERO — Coursera inspired: search bar + dual promo cards */}
         <section className="bg-background border-b border-border/50">
