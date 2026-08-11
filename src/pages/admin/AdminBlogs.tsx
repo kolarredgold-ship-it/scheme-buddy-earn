@@ -46,15 +46,32 @@ const AdminBlogs = () => {
     const { error } = await supabase.from("blogs").delete().eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Deleted");
+    refreshSearchIndex();
     load();
+  };
+
+  // Regenerate + re-submit the sitemap (and ping IndexNow) whenever
+  // content is published, unpublished or deleted.
+  const refreshSearchIndex = (urls?: string[]) => {
+    supabase.functions
+      .invoke("indexnow", { body: urls?.length ? { urls } : { since_hours: 1 } })
+      .catch((e) => console.error("search index refresh failed:", e));
   };
 
   const toggleStatus = async (id: string, current: string) => {
     const next = current === "published" ? "draft" : "published";
     const { error } = await supabase.from("blogs").update({ status: next }).eq("id", id);
     if (error) return toast.error(error.message);
+    const blog = blogs.find((b) => b.id === id);
+    refreshSearchIndex(
+      next === "published" && blog?.slug
+        ? ["https://techrola.in/blog", `https://techrola.in/blog/${blog.slug}`]
+        : ["https://techrola.in/blog"],
+    );
+    toast.success(next === "published" ? "Published — search engines notified" : "Unpublished — sitemap updated");
     load();
   };
+
 
   if (authLoading) return <Layout><div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div></Layout>;
   if (!isAdmin) return <Navigate to="/" />;
