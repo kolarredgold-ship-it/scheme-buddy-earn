@@ -11,6 +11,7 @@ interface Profile {
   referral_code: string;
   referred_by: string | null;
   subscription_status: "free" | "active" | "expired";
+  subscription_expires_at?: string | null;
   wallet_balance: number;
   report_credits?: number;
   ai_credits?: number;
