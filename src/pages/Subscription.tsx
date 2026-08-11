@@ -68,18 +68,79 @@ const Subscription = () => {
       </Layout>
     );
 
+  const expiresAt = profile?.subscription_expires_at ? new Date(profile.subscription_expires_at) : null;
+  const daysLeft = expiresAt
+    ? Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
+  const expiringSoon = daysLeft !== null && daysLeft <= 60;
+
   if (profile?.subscription_status === "active") {
     return (
       <Layout>
-        <div className="container mx-auto px-4 py-16 text-center max-w-md">
-          <div className="h-20 w-20 rounded-3xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary/30">
-            <Crown className="h-10 w-10 text-primary-foreground" />
+        <div className="container mx-auto px-4 py-10 md:py-16 max-w-lg">
+          <div className="text-center">
+            <div className="h-20 w-20 rounded-3xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center mx-auto mb-6 shadow-xl shadow-primary/30">
+              <Crown className="h-10 w-10 text-primary-foreground" />
+            </div>
+            <h1 className="text-3xl font-extrabold mb-2">You're Premium!</h1>
+            <p className="text-muted-foreground">Enjoy full access to all schemes & AI tools.</p>
           </div>
-          <h1 className="text-3xl font-extrabold mb-2">You're Premium!</h1>
-          <p className="text-muted-foreground mb-6">Enjoy full access to all schemes & AI tools.</p>
-          <Link to="/dashboard">
-            <Button size="lg" className="bg-gradient-to-r from-primary to-secondary">Go to Dashboard</Button>
-          </Link>
+
+          <Card className="mt-6 rounded-2xl border-2 border-primary/30">
+            <CardContent className="p-5 space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs text-muted-foreground">Plan valid until</p>
+                  <p className="text-lg font-bold">
+                    {expiresAt
+                      ? expiresAt.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
+                      : "—"}
+                  </p>
+                </div>
+                {daysLeft !== null && (
+                  <Badge
+                    className={
+                      expiringSoon
+                        ? "bg-amber-500 text-white border-0"
+                        : "bg-secondary/15 text-secondary border-0"
+                    }
+                  >
+                    <Clock className="h-3.5 w-3.5 mr-1" />
+                    {daysLeft > 0 ? `${daysLeft} days left` : "Expires today"}
+                  </Badge>
+                )}
+              </div>
+
+              <p className="text-xs text-muted-foreground">
+                Renew any time before expiry — the extra 12 months are added on top of your remaining days, so you never
+                lose time.
+              </p>
+
+              <RazorpayCheckoutButton
+                amount={ANNUAL_PRICE}
+                userId={user!.id}
+                paymentType="subscription"
+                description="Techrola Premium (Annual Renewal)"
+                prefill={{
+                  name: profile?.name || "",
+                  email: profile?.email || user?.email || "",
+                  contact: (profile?.mobile || "").replace(/\D/g, "").slice(-10),
+                }}
+                className="w-full text-base font-bold py-6 h-auto rounded-2xl bg-gradient-to-r from-primary via-primary to-secondary hover:opacity-95 shadow-lg shadow-primary/30"
+                onSuccess={async () => {
+                  await refreshProfile();
+                  toast.success("Renewed! Your plan has been extended by 12 months.");
+                }}
+              >
+                <Rocket className="h-5 w-5 mr-2" />
+                Renew for 12 months — ₹{ANNUAL_PRICE}
+              </RazorpayCheckoutButton>
+
+              <Link to="/dashboard" className="block">
+                <Button variant="outline" className="w-full rounded-2xl">Go to Dashboard</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </Layout>
     );
