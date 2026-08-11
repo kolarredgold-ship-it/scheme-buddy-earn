@@ -74,10 +74,29 @@ const Dashboard = () => {
                 </div>
                 <Wallet className="h-10 w-10 opacity-50" />
               </div>
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-wrap items-center gap-2">
                 <Badge className="bg-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/30">
-                  {profile?.subscription_status === "active" ? "✅ Active" : "Free Plan"}
+                  {profile?.subscription_status === "active"
+                    ? "✅ Active"
+                    : profile?.subscription_status === "expired"
+                    ? "⚠️ Expired"
+                    : "Free Plan"}
                 </Badge>
+                {profile?.subscription_status === "active" && profile?.subscription_expires_at && (
+                  <span className="text-xs opacity-90">
+                    Renews by{" "}
+                    {new Date(profile.subscription_expires_at).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                )}
+                {profile?.subscription_status !== "free" && (
+                  <Link to="/subscription" className="text-xs underline underline-offset-2 opacity-90">
+                    {profile?.subscription_status === "active" ? "Renew now" : "Reactivate"}
+                  </Link>
+                )}
               </div>
             </CardContent>
           </Card>
