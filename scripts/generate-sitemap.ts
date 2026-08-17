@@ -60,7 +60,7 @@ const escapeXml = (s: string) =>
     .replace(/'/g, "&apos;");
 
 async function main() {
-  const today = new Date().toISOString().split("T")[0];
+
 
   let schemes: { slug: string; updated_at: string | null }[] = [];
   try {
