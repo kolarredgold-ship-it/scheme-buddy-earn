@@ -60,7 +60,7 @@ const escapeXml = (s: string) =>
     .replace(/'/g, "&apos;");
 
 async function main() {
-  const today = new Date().toISOString().split("T")[0];
+
 
   let schemes: { slug: string; updated_at: string | null }[] = [];
   try {
@@ -122,7 +122,6 @@ async function main() {
   const staticUrls = STATIC_ROUTES.map(
     (r) => `  <url>
     <loc>${SITE_URL}${r.path}</loc>
-    <lastmod>${today}</lastmod>
     <changefreq>${r.changefreq}</changefreq>
     <priority>${r.priority}</priority>
   </url>`,
@@ -130,10 +129,9 @@ async function main() {
 
   const schemeUrls = schemes
     .map((s) => {
-      const lastmod = s.updated_at ? s.updated_at.split("T")[0] : today;
+      const lastmod = s.updated_at ? s.updated_at.split("T")[0] : null;
       return `  <url>
-    <loc>${SITE_URL}/scheme/${escapeXml(s.slug)}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${SITE_URL}/scheme/${escapeXml(s.slug)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ""}
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`;
@@ -142,15 +140,15 @@ async function main() {
 
   const blogUrls = blogs
     .map((b) => {
-      const lastmod = b.updated_at ? b.updated_at.split("T")[0] : today;
+      const lastmod = b.updated_at ? b.updated_at.split("T")[0] : null;
       return `  <url>
-    <loc>${SITE_URL}/blog/${escapeXml(b.slug)}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${SITE_URL}/blog/${escapeXml(b.slug)}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ""}
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
     })
     .join("\n");
+
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
