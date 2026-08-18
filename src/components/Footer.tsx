@@ -13,6 +13,8 @@ const footerLinks = {
   ],
   company: [
     { label: "About Us", to: "/about-us" },
+    { label: "Investors", to: "/investors" },
+
     { label: "Contact Us", to: "/contact-us" },
     { label: "Blog", to: "/blog" },
     { label: "Leaderboard", to: "/leaderboard" },
