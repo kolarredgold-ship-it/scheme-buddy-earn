@@ -181,6 +181,14 @@ const Investors = () => (
               across hundreds of government portals. Students in Tier 2 and Tier 3 India miss
               benefits simply because the information is fragmented, in English, and hard to act on.
             </p>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              At the same time, students and early professionals struggle to produce the documents
+              and materials that universities and employers demand — internship reports, resumes,
+              presentations, SOPs, cover letters and project documentation. They either spend
+              days learning formats from scratch, pay for expensive templates, or submit work that
+              does not reflect their real potential. There is no affordable, guided assistant built
+              for Indian students in their own language and context.
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -190,7 +198,9 @@ const Investors = () => (
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               One mobile-first platform that aggregates and updates schemes daily, explains
               eligibility in plain language, and pairs it with AI tools — internship reports,
-              resumes, SOPs, mock interviews — that students pay for at an affordable annual price.
+              resumes, SOPs, mock interviews, notes and PPTs — that students pay for at an
+              affordable annual price. Techrola turns scheme discovery and career preparation
+              from a weeks-long effort into a guided, minutes-long experience.
             </p>
           </CardContent>
         </Card>
