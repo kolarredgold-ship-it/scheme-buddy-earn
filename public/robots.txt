@@ -19,13 +19,19 @@ Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
 Disallow: /*?utm_
-Disallow: /*?ref=
-Disallow: /*?fbclid=
-Disallow: /*?gclid=
 Disallow: /*&utm_
+Disallow: /*?ref=
+Disallow: /*&ref=
+Disallow: /*?fbclid=
+Disallow: /*&fbclid=
+Disallow: /*?gclid=
+Disallow: /*&gclid=
 Disallow: /*?page=
+Disallow: /*&page=
 Disallow: /*?q=
+Disallow: /*&q=
 Disallow: /*?search=
+Disallow: /*&search=
 
 User-agent: Bingbot
 Allow: /
@@ -43,13 +49,19 @@ Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
 Disallow: /*?utm_
-Disallow: /*?ref=
-Disallow: /*?fbclid=
-Disallow: /*?gclid=
 Disallow: /*&utm_
+Disallow: /*?ref=
+Disallow: /*&ref=
+Disallow: /*?fbclid=
+Disallow: /*&fbclid=
+Disallow: /*?gclid=
+Disallow: /*&gclid=
 Disallow: /*?page=
+Disallow: /*&page=
 Disallow: /*?q=
+Disallow: /*&q=
 Disallow: /*?search=
+Disallow: /*&search=
 
 User-agent: Twitterbot
 Allow: /
@@ -73,13 +85,19 @@ Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
 Disallow: /*?utm_
-Disallow: /*?ref=
-Disallow: /*?fbclid=
-Disallow: /*?gclid=
 Disallow: /*&utm_
+Disallow: /*?ref=
+Disallow: /*&ref=
+Disallow: /*?fbclid=
+Disallow: /*&fbclid=
+Disallow: /*?gclid=
+Disallow: /*&gclid=
 Disallow: /*?page=
+Disallow: /*&page=
 Disallow: /*?q=
+Disallow: /*&q=
 Disallow: /*?search=
+Disallow: /*&search=
 
 Sitemap: https://techrola.in/sitemap.xml
 # RSS feed for blog posts
