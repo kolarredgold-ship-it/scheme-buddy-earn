@@ -112,10 +112,10 @@ const Signup = () => {
             <span className="text-primary-foreground font-bold text-2xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
           </div>
           <h2 className="text-4xl font-extrabold leading-tight max-w-md">Join Techrola in seconds.</h2>
-          <p className="mt-4 text-lg text-primary-foreground/85 max-w-md">Get 1 free AI generation per tool, browse 800+ government schemes, and earn ₹400 per Premium referral.</p>
+          <p className="mt-4 text-lg text-primary-foreground/85 max-w-md">Get 1 free AI generation per tool, browse 7,700+ government schemes &amp; jobs, and earn ₹400 per Premium referral.</p>
           <ul className="mt-8 space-y-3 text-primary-foreground/90 text-sm">
             <li className="flex items-center gap-2">✓ 1 free AI generation per tool</li>
-            <li className="flex items-center gap-2">✓ Unified referral code (works everywhere)</li>
+            <li className="flex items-center gap-2">✓ Premium at ₹83.25/month (billed annually)</li>
             <li className="flex items-center gap-2">✓ 3-level referral earnings up to ₹550</li>
           </ul>
         </div>
@@ -133,7 +133,7 @@ const Signup = () => {
             <span className="text-primary-foreground font-bold text-xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
           </div>
           <CardTitle className="text-2xl">Create Account</CardTitle>
-          <CardDescription>Join Techrola to access government schemes & earn rewards</CardDescription>
+          <CardDescription>Free to join — schemes, jobs &amp; AI student tools</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignup} className="space-y-4">
@@ -244,9 +244,9 @@ const Signup = () => {
                   {validatingRef && <p className="text-xs text-muted-foreground">Checking code…</p>}
                   {referralError && <p className="text-xs text-red-500 font-medium">{referralError}</p>}
                   {refValid && !referralError && (
-                    <p className="text-xs text-emerald-600 font-medium">✓ Valid code — you'll get ₹2,000 off</p>
+                    <p className="text-xs text-emerald-600 font-medium">✓ Valid code applied</p>
                   )}
-                  <p className="text-xs text-muted-foreground">Have a referral code? Get subscription at ₹1000 instead of ₹2999!</p>
+                  <p className="text-xs text-muted-foreground">Referred by a friend? Add their code so they earn rewards when you go Premium.</p>
                 </>
               )}
             </div>

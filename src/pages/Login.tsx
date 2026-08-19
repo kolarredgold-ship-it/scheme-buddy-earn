@@ -37,11 +37,11 @@ const Login = () => {
             <span className="text-primary-foreground font-bold text-2xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
           </div>
           <h2 className="text-4xl font-extrabold leading-tight max-w-md">Welcome back to Techrola.</h2>
-          <p className="mt-4 text-lg text-primary-foreground/80 max-w-md">Sign in to access 800+ government schemes, 19+ AI tools, and your referral earnings.</p>
+          <p className="mt-4 text-lg text-primary-foreground/80 max-w-md">Sign in to explore 7,700+ government schemes &amp; jobs, use AI student tools, and track your referral earnings.</p>
         </div>
         <div className="relative grid grid-cols-3 gap-4 max-w-md">
-          <div><p className="text-3xl font-extrabold">800+</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Schemes</p></div>
-          <div><p className="text-3xl font-extrabold">19+</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">AI Tools</p></div>
+          <div><p className="text-3xl font-extrabold">7,700+</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Schemes &amp; Jobs</p></div>
+          <div><p className="text-3xl font-extrabold">₹83.25</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Per Month</p></div>
           <div><p className="text-3xl font-extrabold">₹400</p><p className="text-xs text-primary-foreground/70 uppercase tracking-wider">Per Referral</p></div>
         </div>
       </div>
@@ -57,7 +57,7 @@ const Login = () => {
             <span className="text-primary-foreground font-bold text-xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
           </div>
           <CardTitle className="text-2xl">Welcome Back</CardTitle>
-          <CardDescription>Sign in to access government schemes & earn rewards</CardDescription>
+          <CardDescription>Sign in to access schemes, jobs &amp; AI student tools</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -87,7 +87,7 @@ const Login = () => {
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link to="/subscription" className="text-primary font-medium hover:underline">Sign Up</Link>
+            <Link to="/signup" className="text-primary font-medium hover:underline">Sign Up</Link>
           </p>
         </CardContent>
       </Card>
