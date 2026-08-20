@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 
 const getPasswordStrength = (password: string) => {
@@ -97,6 +98,7 @@ const Signup = () => {
       toast.error(error.message);
     } else {
       toast.success("Account created!");
+      void trackEvent("signup_completed", referralCode.trim() ? "referral" : "direct");
       navigate(redirectTo);
     }
     setLoading(false);

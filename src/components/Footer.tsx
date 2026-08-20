@@ -15,6 +15,7 @@ const footerLinks = {
     { label: "About Us", to: "/about-us" },
     { label: "Investors", to: "/investors" },
 
+    { label: "FAQ", to: "/faq" },
     { label: "Contact Us", to: "/contact-us" },
     { label: "Blog", to: "/blog" },
     { label: "Leaderboard", to: "/leaderboard" },
