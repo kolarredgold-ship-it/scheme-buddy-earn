@@ -4,22 +4,29 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, BookOpen, Wallet, Clock, IndianRupee, FileText } from "lucide-react";
+import { Users, BookOpen, Wallet, Clock, IndianRupee, FileText, UserPlus, CreditCard, Briefcase } from "lucide-react";
 
 const AdminDashboard = () => {
   const { isAdmin, loading: authLoading } = useAuth();
   const [stats, setStats] = useState({ users: 0, schemes: 0, pendingWithdrawals: 0, paidUsers: 0, pendingPayments: 0 });
+  const [events, setEvents] = useState({ signups: 0, payments: 0, investors: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isAdmin) return;
     const fetch = async () => {
-      const [users, schemes, withdrawals, paid, pendingPay] = await Promise.all([
+      const countEvent = (name: string) =>
+        supabase.from("site_events").select("id", { count: "exact", head: true }).eq("event_name", name);
+
+      const [users, schemes, withdrawals, paid, pendingPay, signupEv, payEv, invEv] = await Promise.all([
         supabase.from("profiles").select("id", { count: "exact", head: true }),
         supabase.from("schemes").select("id", { count: "exact", head: true }),
         supabase.from("withdrawals").select("id", { count: "exact", head: true }).eq("status", "pending"),
         supabase.from("profiles").select("id", { count: "exact", head: true }).eq("subscription_status", "active"),
         supabase.from("payments").select("id", { count: "exact", head: true }).eq("status", "pending"),
+        countEvent("signup_completed"),
+        countEvent("payment_completed"),
+        countEvent("investors_page_view"),
       ]);
       setStats({
         users: users.count || 0,
@@ -28,10 +35,16 @@ const AdminDashboard = () => {
         paidUsers: paid.count || 0,
         pendingPayments: pendingPay.count || 0,
       });
+      setEvents({
+        signups: signupEv.count || 0,
+        payments: payEv.count || 0,
+        investors: invEv.count || 0,
+      });
       setLoading(false);
     };
     fetch();
   }, [isAdmin]);
+
 
   if (authLoading) return <Layout><div className="flex justify-center py-20"><div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" /></div></Layout>;
   if (!isAdmin) return <Navigate to="/" />;
