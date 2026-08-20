@@ -21,3 +21,21 @@ export async function trackToolClick(
     /* analytics must never break UX */
   }
 }
+
+/**
+ * Fire-and-forget site event tracking (signups, payments, key page views).
+ * Writes to public.site_events; never throws.
+ */
+export async function trackEvent(eventName: string, source?: string) {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    await supabase.from("site_events").insert({
+      user_id: user?.id ?? null,
+      event_name: eventName,
+      source: source ?? null,
+      path: typeof window !== "undefined" ? window.location.pathname : null,
+    });
+  } catch {
+    /* analytics must never break UX */
+  }
+}
