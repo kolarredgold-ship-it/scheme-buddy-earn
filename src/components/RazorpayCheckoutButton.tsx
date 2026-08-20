@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
 
 declare global {
@@ -95,6 +96,7 @@ export default function RazorpayCheckoutButton({
             return;
           }
           toast.success("Payment successful — access unlocked!");
+          void trackEvent("payment_completed", paymentType);
           onSuccess?.({
             payment_id: response.razorpay_payment_id,
             order_id: response.razorpay_order_id,

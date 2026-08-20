@@ -39,6 +39,7 @@ const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const ContactUs = lazy(() => import("./pages/ContactUs"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Investors = lazy(() => import("./pages/Investors"));
+const Faq = lazy(() => import("./pages/Faq"));
 
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogDetail = lazy(() => import("./pages/BlogDetail"));
@@ -106,6 +107,7 @@ const App = () => {
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/investors" element={<Investors />} />
+              <Route path="/faq" element={<Faq />} />
 
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogDetail />} />

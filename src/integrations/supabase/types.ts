@@ -565,6 +565,33 @@ export type Database = {
         }
         Relationships: []
       }
+      site_events: {
+        Row: {
+          created_at: string
+          event_name: string
+          id: string
+          path: string | null
+          source: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_name: string
+          id?: string
+          path?: string | null
+          source?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_name?: string
+          id?: string
+          path?: string | null
+          source?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       tool_clicks: {
         Row: {
           created_at: string

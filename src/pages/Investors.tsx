@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import Layout from "@/components/Layout";
+import { trackEvent } from "@/lib/analytics";
 import Seo from "@/components/Seo";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -85,7 +87,12 @@ const revenue = [
   { title: "Career Program", body: "Guided work-from-home program with referral payouts that drives retention and virality." },
 ];
 
-const Investors = () => (
+const Investors = () => {
+  useEffect(() => {
+    void trackEvent("investors_page_view", document.referrer || "direct");
+  }, []);
+
+  return (
   <Layout>
     <Seo
       title="Investor Relations | Techrola — India's Schemes & AI Career Platform"
@@ -328,5 +335,6 @@ const Investors = () => (
     </div>
   </Layout>
 );
+};
 
 export default Investors;
