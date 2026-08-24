@@ -19,6 +19,7 @@ const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = 
   { path: "/about-us", priority: "0.4", changefreq: "yearly" },
   { path: "/contact-us", priority: "0.4", changefreq: "yearly" },
   { path: "/investors", priority: "0.6", changefreq: "monthly" },
+  { path: "/faq", priority: "0.6", changefreq: "monthly" },
   { path: "/privacy-policy", priority: "0.3", changefreq: "yearly" },
   { path: "/terms-conditions", priority: "0.3", changefreq: "yearly" },
   { path: "/refund-policy", priority: "0.3", changefreq: "yearly" },

@@ -76,6 +76,27 @@ const AdminDashboard = () => {
           ))}
         </div>
 
+        <section className="pt-2">
+          <h2 className="text-lg font-semibold mb-3">Visitor tracking</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { label: "Signups completed", value: events.signups, icon: UserPlus, color: "text-primary" },
+              { label: "Payments completed", value: events.payments, icon: CreditCard, color: "text-secondary" },
+              { label: "Investors page visits", value: events.investors, icon: Briefcase, color: "text-accent-foreground" },
+            ].map((c) => (
+              <Card key={c.label}>
+                <CardContent className="p-4">
+                  <c.icon className={`h-7 w-7 ${c.color} mb-2`} />
+                  <p className="text-2xl font-bold">{loading ? "..." : c.value}</p>
+                  <p className="text-xs text-muted-foreground">{c.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+
+
         <div className="grid md:grid-cols-4 gap-4 pt-4">
           <Link to="/admin/payments">
             <Card className="hover:shadow-md transition-shadow cursor-pointer p-6 text-center">

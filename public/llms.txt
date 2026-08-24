@@ -13,6 +13,7 @@
 - [Subscription](/subscription): Manage Pro subscription via WhatsApp.
 - [Leaderboard](/leaderboard): Top earners in the referral program.
 - [Install](/install): Install Techrola as a PWA on Android/iOS.
+- [FAQ](/faq): How schemes work, eligibility, application steps, plans and payment.
 - [About Us](/about-us): Mission and what we offer.
 - [Contact Us](/contact-us): Email, phone, and address.
 - [Privacy Policy](/privacy-policy): Data handling.
