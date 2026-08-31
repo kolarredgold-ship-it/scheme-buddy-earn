@@ -27,6 +27,12 @@ const TOPIC_POOL = [
   'Acquire a Revenue-Generating EdTech Business', 'Why Edu-Tech is a Smart Acquisition',
   'Small Business Acquisition Opportunities in India', 'Techrola Acquisition Opportunity',
   'Growth-Stage Startups Looking for Marketing Capital',
+  // Subscription-focused organic posts (push readers to /subscription)
+  'Techrola Pro Worth It at 83 Rupees a Month', 'Best Budget AI Tools Subscription for Students',
+  'Unlock Full Government Scheme Details Online', 'Affordable AI Career Tools Under 100 Rupees',
+  'Why Students Should Use AI for Internship Reports', 'One Subscription for Resumes SOPs and Mock Interviews',
+  'Cheapest Way to Practice Mock Interviews in India', 'How Pro Members Find Schemes Faster',
+  'AI Report Generator Saves Days of University Work', 'Student Subscription That Pays for Itself',
 ];
 
 const CATEGORIES = [
@@ -45,7 +51,8 @@ Rules:
 - Educational and honest tone. Warn against scams. Always cite realistic Indian examples.
 - EVERY article MUST include a section titled exactly "## Join the Techrola Career Program (Work from Home)" with 2-3 lines and a markdown link to https://techrola.in/career-program.
 - For investor/acquisition topics, ALSO include a section titled exactly "## Invest in or Acquire Techrola" with 2-3 honest lines: Techrola is open to acquisition or strategic investment; the product, payments and SEO engine are built and the founders are mainly looking for marketing capital to scale. Link to https://techrola.in/investors and mention contact email omlaytechnologies@gmail.com.
-- End every article with a short CTA to techrola.in, /career-program and /ai-tools.`;
+- MOST articles should end with a conversion-focused section titled exactly "## Go Pro with Techrola (₹83.25/Month)" with 3-4 honest lines: Pro unlocks full scheme details, all AI tools (internship reports, resumes, SOPs, mock interviews) and more credits — priced at ₹999/year (₹83.25/month equivalent). Link to https://techrola.in/subscription. This is the primary conversion goal; make it persuasive but honest.
+- End every article with a short CTA to techrola.in, /subscription and /ai-tools.`;
 
 const batchPrompt = (topics: string[], avoidTitles: string[]) => `Generate ${topics.length} SHORT SEO blog posts for Techrola.
 Assign each blog to one topic in order:
