@@ -95,10 +95,10 @@ const Investors = () => {
   return (
   <Layout>
     <Seo
-      title="Investor Relations | Techrola — India's Schemes & AI Career Platform"
-      description="Investor information for Techrola: business model, traction, growth strategy and use of funds, with the majority of capital allocated to marketing and user acquisition across India."
+      title="Techrola for Sale / Investment | Acquire an Edu-Tech Platform"
+      description="Techrola — India's schemes discovery & AI career platform — is open to acquisition or strategic investment. Proven product, SEO engine and revenue; the founders seek capital mainly for marketing."
       path="/investors"
-      keywords="Techrola investors, edu-tech investment India, invest in Techrola, startup funding marketing, government schemes platform investment"
+      keywords="Techrola for sale, acquire edu-tech startup India, buy edtech business India, Techrola investors, invest in Techrola, government schemes platform acquisition"
       jsonLd={[
         {
           "@context": "https://schema.org",
@@ -148,7 +148,7 @@ const Investors = () => {
 
       <div className="mt-6 flex flex-wrap gap-3">
         <Button asChild>
-          <a href={`mailto:${EMAIL}?subject=Investor%20enquiry%20-%20Techrola`}>
+          <a href={`mailto:${EMAIL}?subject=Acquisition%20or%20investment%20enquiry%20-%20Techrola`}>
             Request the investor deck <ArrowRight className="ml-1.5 h-4 w-4" />
           </a>
         </Button>
@@ -156,6 +156,36 @@ const Investors = () => {
           <a href={`tel:${PHONE_INTL}`}>Talk to the founders</a>
         </Button>
       </div>
+
+      {/* Acquisition banner */}
+      <section className="mt-8 rounded-xl border-2 border-primary/40 bg-primary/5 p-6">
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary">Acquisition opportunity</p>
+        <h2 className="mt-2 text-xl md:text-2xl font-semibold">Techrola is open to acquisition or strategic investment</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground max-w-3xl">
+          The product, payments, SEO engine and content pipeline are fully built and generating
+          revenue. The founders are looking for a buyer or strategic partner who can provide
+          <strong className="text-foreground"> the marketing capital and distribution muscle</strong> the
+          platform needs to scale nationally — marketing funding is the single bottleneck, not the
+          product or the market.
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground max-w-3xl">
+          If you are an investor, ed-tech company or digital business looking to acquire a
+          ready-made Indian edu-tech platform with daily-updated scheme data and AI career tools,
+          contact us to discuss a full acquisition, majority stake or structured buyout.
+        </p>
+        <div className="mt-4 flex flex-col sm:flex-row gap-3">
+          <Button asChild size="sm">
+            <a href={`mailto:${EMAIL}?subject=Acquisition%20enquiry%20-%20Techrola%20for%20sale`}>
+              <Mail className="mr-1.5 h-4 w-4" /> {EMAIL}
+            </a>
+          </Button>
+          <Button asChild size="sm" variant="outline">
+            <a href={`https://wa.me/${PHONE_INTL.replace("+", "")}?text=${encodeURIComponent("Hi, I'm interested in acquiring or investing in Techrola. Please share details.")}`} target="_blank" rel="noopener noreferrer">
+              <Phone className="mr-1.5 h-4 w-4" /> WhatsApp {PHONE}
+            </a>
+          </Button>
+        </div>
+      </section>
 
       {/* Snapshot */}
       <section className="mt-10">
