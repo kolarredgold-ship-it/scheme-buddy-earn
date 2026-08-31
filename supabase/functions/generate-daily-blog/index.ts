@@ -44,6 +44,7 @@ Rules:
 - Never describe Techrola as an MLM or a get-rich-quick platform.
 - Educational and honest tone. Warn against scams. Always cite realistic Indian examples.
 - EVERY article MUST include a section titled exactly "## Join the Techrola Career Program (Work from Home)" with 2-3 lines and a markdown link to https://techrola.in/career-program.
+- For investor/acquisition topics, ALSO include a section titled exactly "## Invest in or Acquire Techrola" with 2-3 honest lines: Techrola is open to acquisition or strategic investment; the product, payments and SEO engine are built and the founders are mainly looking for marketing capital to scale. Link to https://techrola.in/investors and mention contact email omlaytechnologies@gmail.com.
 - End every article with a short CTA to techrola.in, /career-program and /ai-tools.`;
 
 const batchPrompt = (topics: string[], avoidTitles: string[]) => `Generate ${topics.length} SHORT SEO blog posts for Techrola.
