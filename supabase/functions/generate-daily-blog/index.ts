@@ -22,6 +22,11 @@ const TOPIC_POOL = [
   'SSC Preparation Tips', 'Government Scholarship Application', 'Startup India Registration',
   'PMEGP Loan Guide', 'Mudra Loan for Students', 'Skill India Courses',
   'Digital India Benefits', 'NSP Scholarship Guide',
+  // Investor / acquisition-focused posts (link to /investors)
+  'Buying an Edu-Tech Startup in India', 'Investing in Indian Student Platforms',
+  'Acquire a Revenue-Generating EdTech Business', 'Why Edu-Tech is a Smart Acquisition',
+  'Small Business Acquisition Opportunities in India', 'Techrola Acquisition Opportunity',
+  'Growth-Stage Startups Looking for Marketing Capital',
 ];
 
 const CATEGORIES = [
