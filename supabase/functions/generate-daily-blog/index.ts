@@ -27,6 +27,12 @@ const TOPIC_POOL = [
   'Acquire a Revenue-Generating EdTech Business', 'Why Edu-Tech is a Smart Acquisition',
   'Small Business Acquisition Opportunities in India', 'Techrola Acquisition Opportunity',
   'Growth-Stage Startups Looking for Marketing Capital',
+  // Subscription-focused organic posts (push readers to /subscription)
+  'Techrola Pro Worth It at 83 Rupees a Month', 'Best Budget AI Tools Subscription for Students',
+  'Unlock Full Government Scheme Details Online', 'Affordable AI Career Tools Under 100 Rupees',
+  'Why Students Should Use AI for Internship Reports', 'One Subscription for Resumes SOPs and Mock Interviews',
+  'Cheapest Way to Practice Mock Interviews in India', 'How Pro Members Find Schemes Faster',
+  'AI Report Generator Saves Days of University Work', 'Student Subscription That Pays for Itself',
 ];
 
 const CATEGORIES = [
