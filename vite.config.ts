@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { spawnSync } from "node:child_process";
 import { componentTagger } from "lovable-tagger";
+import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 
 // Generates public/sitemap.xml before build so https://techrola.in/sitemap.xml
 // is served as a real static file (Lovable hosting doesn't support redirects).
@@ -37,6 +38,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react(),
+    mcpPlugin(),
     sitemapPlugin(),
     mode === "development" && componentTagger(),
   ].filter(Boolean),
