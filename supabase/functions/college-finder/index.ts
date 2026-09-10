@@ -15,12 +15,9 @@ Deno.serve(async (req) => {
     }
 
     const deepseekKey = Deno.env.get("DEEPSEEK_API_KEY");
-    const lovableKey = Deno.env.get("LOVABLE_API_KEY");
     const aiConfig = deepseekKey
       ? { url: "https://api.deepseek.com/chat/completions", key: deepseekKey, model: "deepseek-chat" }
-      : lovableKey
-        ? { url: "https://ai.gateway.lovable.dev/v1/chat/completions", key: lovableKey, model: "google/gemini-2.5-flash" }
-        : null;
+      : null;
 
     if (!aiConfig) {
       return new Response(JSON.stringify({ success: false, error: "AI not configured" }), {
@@ -40,9 +37,10 @@ Rules:
 - "website" should be the official site if known; otherwise empty string
 - Do not include words like "top", "best", "leading", "premier" anywhere`;
 
-    const aiHeaders: Record<string, string> = { "Content-Type": "application/json" };
-    if (aiConfig.url.includes("lovable.dev")) aiHeaders["Lovable-API-Key"] = aiConfig.key;
-    else aiHeaders["Authorization"] = `Bearer ${aiConfig.key}`;
+    const aiHeaders: Record<string, string> = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${aiConfig.key}`,
+    };
 
     const aiRes = await fetch(aiConfig.url, {
       method: "POST",
