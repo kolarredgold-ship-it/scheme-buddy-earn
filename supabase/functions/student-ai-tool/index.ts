@@ -226,13 +226,10 @@ serve(async (req) => {
     }
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    const aiUrl = DEEPSEEK_API_KEY
-      ? "https://api.deepseek.com/chat/completions"
-      : "https://ai-gateway.lovable.dev/chat/completions";
-    const aiKey = DEEPSEEK_API_KEY || LOVABLE_API_KEY;
-    const model = DEEPSEEK_API_KEY ? "deepseek-chat" : "google/gemini-2.5-flash";
-    if (!aiKey) throw new Error("No AI key configured");
+    const aiUrl = "https://api.deepseek.com/chat/completions";
+    const aiKey = DEEPSEEK_API_KEY;
+    const model = "deepseek-chat";
+    if (!aiKey) throw new Error("DEEPSEEK_API_KEY not configured");
 
     const response = await fetch(aiUrl, {
       method: "POST",

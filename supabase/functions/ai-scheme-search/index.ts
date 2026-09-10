@@ -39,13 +39,10 @@ Deno.serve(async (req) => {
 
     // Get AI config
     const deepseekKey = Deno.env.get("DEEPSEEK_API_KEY");
-    const lovableKey = Deno.env.get("LOVABLE_API_KEY");
-    
+
     const aiConfig = deepseekKey
       ? { url: "https://api.deepseek.com/chat/completions", key: deepseekKey, model: "deepseek-chat" }
-      : lovableKey
-        ? { url: "https://ai-gateway.lovable.dev/chat/completions", key: lovableKey, model: "google/gemini-2.5-flash" }
-        : null;
+      : null;
 
     // Step 1: Parse user intent locally (no AI call — saves time)
     const stateMap: Record<string, string> = {

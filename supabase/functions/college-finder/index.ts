@@ -15,12 +15,9 @@ Deno.serve(async (req) => {
     }
 
     const deepseekKey = Deno.env.get("DEEPSEEK_API_KEY");
-    const lovableKey = Deno.env.get("LOVABLE_API_KEY");
     const aiConfig = deepseekKey
       ? { url: "https://api.deepseek.com/chat/completions", key: deepseekKey, model: "deepseek-chat" }
-      : lovableKey
-        ? { url: "https://ai.gateway.lovable.dev/v1/chat/completions", key: lovableKey, model: "google/gemini-2.5-flash" }
-        : null;
+      : null;
 
     if (!aiConfig) {
       return new Response(JSON.stringify({ success: false, error: "AI not configured" }), {
