@@ -37,9 +37,10 @@ Rules:
 - "website" should be the official site if known; otherwise empty string
 - Do not include words like "top", "best", "leading", "premier" anywhere`;
 
-    const aiHeaders: Record<string, string> = { "Content-Type": "application/json" };
-    if (aiConfig.url.includes("lovable.dev")) aiHeaders["Lovable-API-Key"] = aiConfig.key;
-    else aiHeaders["Authorization"] = `Bearer ${aiConfig.key}`;
+    const aiHeaders: Record<string, string> = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${aiConfig.key}`,
+    };
 
     const aiRes = await fetch(aiConfig.url, {
       method: "POST",
