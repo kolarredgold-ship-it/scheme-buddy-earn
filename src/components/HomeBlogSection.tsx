@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
@@ -18,24 +19,43 @@ interface BlogRow {
 }
 
 const HomeBlogSection = () => {
-  const [blogs, setBlogs] = useState<BlogRow[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [nearViewport, setNearViewport] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    (async () => {
-      const { data } = await supabase
+    const element = sectionRef.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setNearViewport(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "400px" });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  const { data: blogs = [], isPending: loading, isError, refetch } = useQuery({
+    queryKey: ["home-latest-blogs"],
+    enabled: nearViewport,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      const { data, error } = await supabase
         .from("blogs")
         .select("id, slug, title, excerpt, category, featured_image_url, reading_time, published_at")
         .eq("status", "published")
         .order("published_at", { ascending: false })
-        .limit(3);
-      setBlogs((data as BlogRow[]) ?? []);
-      setLoading(false);
-    })();
-  }, []);
+        .limit(3)
+        .abortSignal(AbortSignal.timeout(8000));
+      if (error) throw error;
+      return (data as BlogRow[]) ?? [];
+    },
+  });
 
-  if (!loading && blogs.length === 0) return null;
+  if (!loading && !isError && blogs.length === 0) return null;
 
   const scrollBy = (dir: 1 | -1) => {
     const el = trackRef.current;
@@ -45,7 +65,7 @@ const HomeBlogSection = () => {
   };
 
   return (
-    <section className="container mx-auto px-4 py-10 md:py-14">
+    <section ref={sectionRef} className="container mx-auto px-4 py-10 md:py-14">
       <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-bold text-amber-700 bg-amber-100 rounded-full px-3 py-1 mb-2">
@@ -72,7 +92,12 @@ const HomeBlogSection = () => {
         </div>
       </div>
 
-      {loading ? (
+      {isError ? (
+        <div role="alert" className="py-6 text-center space-y-3">
+          <p className="text-sm text-muted-foreground">Blogs are temporarily unavailable. Please try again shortly.</p>
+          <Button variant="outline" onClick={() => refetch()}>Try again</Button>
+        </div>
+      ) : loading ? (
         <div className="grid md:grid-cols-3 gap-4">
           {[0, 1, 2].map((i) => (
             <div key={i} className="h-56 rounded-lg bg-muted animate-pulse" />
