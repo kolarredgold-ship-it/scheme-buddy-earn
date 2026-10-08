@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,9 +12,9 @@ import Seo from "@/components/Seo";
 import UserPreferences from "@/components/UserPreferences";
 import { tools as aiStudentTools } from "@/pages/AITools";
 import { trackToolClick } from "@/lib/analytics";
-import heroStudents from "@/assets/hero-students.png";
-import heroReport from "@/assets/hero-report.jpg";
-import heroAiInterview from "@/assets/hero-ai-interview.jpg";
+import heroStudents from "@/assets/hero-students.webp";
+import heroReport from "@/assets/hero-report.webp";
+import heroAiInterview from "@/assets/hero-ai-interview.webp";
 import toolResume from "@/assets/tool-resume.jpg";
 import toolNotes from "@/assets/tool-notes.jpg";
 import toolRoadmap from "@/assets/tool-roadmap.jpg";
@@ -195,8 +196,6 @@ const TECHROLA_TABS = [
 
 const Index = () => {
   const { user } = useAuth();
-  const [schemes, setSchemes] = useState<Scheme[]>([]);
-  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const catRailRef = useRef<HTMLDivElement>(null);
   const scrollCatRail = (dir: -1 | 1) =>
@@ -238,15 +237,6 @@ const Index = () => {
     const id = setInterval(() => setMSlide((s) => (s + 1) % MOBILE_HERO_SLIDES.length), 4500);
     return () => clearInterval(id);
   }, [paused]);
-
-  // Prefetch neighbouring slide images so navigation stays instant on slow networks
-  useEffect(() => {
-    const len = MOBILE_HERO_SLIDES.length;
-    [(mSlide + 1) % len, (mSlide - 1 + len) % len].forEach((i) => {
-      const img = new Image();
-      img.src = MOBILE_HERO_SLIDES[i].img;
-    });
-  }, [mSlide]);
 
   // AI tools image slider — shared by mobile and desktop hero
   const renderToolSlider = (variant: "mobile" | "desktop") => {
@@ -302,17 +292,17 @@ const Index = () => {
                 mSlide === i ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             >
-              <img
+              {mSlide === i && <img
                 src={s.img}
                 alt=""
                 aria-hidden="true"
-                loading={i === 0 ? "eager" : "lazy"}
+                loading="eager"
                 decoding="async"
-                fetchPriority={i === 0 ? "high" : "low"}
+                fetchPriority={i === 0 ? "high" : "auto"}
                 width={960}
                 height={640}
                 className="absolute inset-0 h-full w-full object-cover"
-              />
+              />}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/55 to-slate-950/10" />
               <div className={`absolute inset-0 flex flex-col items-start justify-end ${desktop ? "p-6 lg:p-8" : "p-4"}`}>
                 <span className="inline-flex items-center gap-1 rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
@@ -519,28 +509,25 @@ const Index = () => {
 
   // Server-side filtered + capped fetch — the table has thousands of rows and
   // the homepage only ever renders the first 15, so never pull the whole table.
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    let q = supabase
-      .from("schemes")
-      .select("id, title, category, description, image_url, created_at, state, slug")
-      .order("created_at", { ascending: false })
-      .limit(60);
-
-    if (selectedState !== "all") q = q.in("state", [selectedState, "central"]);
-    if (activeCategory === "employment") q = q.in("category", ["govt_jobs", "private_jobs"]);
-    else if (activeCategory !== "all") q = q.eq("category", activeCategory);
-
-    q.then(({ data }) => {
-      if (cancelled) return;
-      setSchemes((data as unknown as Scheme[]) ?? []);
-      setLoading(false);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeCategory, selectedState]);
+  const { data: schemes = [], isPending: loading, isError: schemesFailed, refetch: retrySchemes } = useQuery({
+    queryKey: ["home-schemes", activeCategory, selectedState],
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      let q = supabase
+        .from("schemes")
+        .select("id, title, category, description, image_url, created_at, state, slug")
+        .order("created_at", { ascending: false })
+        .limit(60);
+      if (selectedState !== "all") q = q.in("state", [selectedState, "central"]);
+      if (activeCategory === "employment") q = q.in("category", ["govt_jobs", "private_jobs"]);
+      else if (activeCategory !== "all") q = q.eq("category", activeCategory);
+      const { data, error } = await q.abortSignal(AbortSignal.timeout(8000));
+      if (error) throw error;
+      return (data as unknown as Scheme[]) ?? [];
+    },
+  });
 
 
   const handleSearch = async () => {
@@ -987,6 +974,11 @@ const Index = () => {
             {loading ? (
               <div className="flex justify-center py-16">
                 <Loader2 className="h-7 w-7 text-blue-600 animate-spin" />
+              </div>
+            ) : schemesFailed ? (
+              <div role="alert" className="py-10 text-center space-y-3">
+                <p className="text-sm text-muted-foreground">Schemes are temporarily unavailable. Please try again shortly.</p>
+                <Button variant="outline" onClick={() => retrySchemes()}>Try again</Button>
               </div>
             ) : (
               <>

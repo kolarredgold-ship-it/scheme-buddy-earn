@@ -283,7 +283,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className="md:hidden h-16" aria-hidden="true" />
 
       {/* Personalize Preferences Popup */}
-      {user && (
+      {user && prefsOpen && (
         <UserPreferences open={prefsOpen} onOpenChange={setPrefsOpen} />
       )}
     </div>
