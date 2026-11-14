@@ -338,7 +338,7 @@ const LiveHRInterview = () => {
   return (
     <Layout>
       <Seo
-        title="AI Live HR Interview Simulator — Real-Time Practice | Techrola"
+        title="AI Live HR Interview Simulator — Real-Time Practice | Smartlio"
         description="Face a real-time AI HR interviewer, answer live questions and get an instant verdict with detailed feedback on your communication and confidence."
         path="/live-hr-interview"
         keywords="live hr interview practice, ai interviewer, hr round questions, interview simulator india"
@@ -349,7 +349,7 @@ const LiveHRInterview = () => {
           applicationCategory: "EducationalApplication",
           operatingSystem: "Web",
           url: `${SITE_URL}/live-hr-interview`,
-          provider: { "@type": "Organization", name: "Techrola", url: SITE_URL },
+          provider: { "@type": "Organization", name: "Smartlio", url: SITE_URL },
         }}
       />
       <div className="container mx-auto px-4 py-6 max-w-3xl">

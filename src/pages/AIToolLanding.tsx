@@ -24,7 +24,7 @@ const AIToolLanding = () => {
     operatingSystem: "Web",
     url: canonical,
     offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-    provider: { "@type": "Organization", name: "Techrola", url: SITE_URL },
+    provider: { "@type": "Organization", name: "Smartlio", url: SITE_URL },
   };
 
   const faqLd = {

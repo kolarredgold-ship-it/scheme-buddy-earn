@@ -31,7 +31,7 @@ export default function ToolGateDialog({ reason, onOpenChange, onUpgrade, onTopu
                 <Rocket className="h-5 w-5 text-primary" /> 🚀 Create Your Free Account
               </DialogTitle>
               <DialogDescription>
-                Sign up to unlock your free AI generation and start using Techrola AI tools.
+                Sign up to unlock your free AI generation and start using Smartlio AI tools.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex-col sm:flex-row gap-2">

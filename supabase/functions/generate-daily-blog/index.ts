@@ -25,10 +25,10 @@ const TOPIC_POOL = [
   // Investor / acquisition-focused posts (link to /investors)
   'Buying an Edu-Tech Startup in India', 'Investing in Indian Student Platforms',
   'Acquire a Revenue-Generating EdTech Business', 'Why Edu-Tech is a Smart Acquisition',
-  'Small Business Acquisition Opportunities in India', 'Techrola Acquisition Opportunity',
+  'Small Business Acquisition Opportunities in India', 'Smartlio Acquisition Opportunity',
   'Growth-Stage Startups Looking for Marketing Capital',
   // Subscription-focused organic posts (push readers to /subscription)
-  'Techrola Pro Worth It at 83 Rupees a Month', 'Best Budget AI Tools Subscription for Students',
+  'Smartlio Pro Worth It at 83 Rupees a Month', 'Best Budget AI Tools Subscription for Students',
   'Unlock Full Government Scheme Details Online', 'Affordable AI Career Tools Under 100 Rupees',
   'Why Students Should Use AI for Internship Reports', 'One Subscription for Resumes SOPs and Mock Interviews',
   'Cheapest Way to Practice Mock Interviews in India', 'How Pro Members Find Schemes Faster',
@@ -40,21 +40,21 @@ const CATEGORIES = [
   'Interview Prep', 'Skill Development', 'Student Life',
 ] as const;
 
-const CAREER_CTA_HEADING = '## Join the Techrola Career Program (Work from Home)';
-const CAREER_CTA_BLOCK = `\n\n${CAREER_CTA_HEADING}\n\nWork from home with Techrola's Career Program — earn while you learn, get AI career tools, and grow with a verified network of Indian students. **[Join the Techrola Career Program →](https://techrola.in/career-program)**\n`;
+const CAREER_CTA_HEADING = '## Join the Smartlio Career Program (Work from Home)';
+const CAREER_CTA_BLOCK = `\n\n${CAREER_CTA_HEADING}\n\nWork from home with Smartlio's Career Program — earn while you learn, get AI career tools, and grow with a verified network of Indian students. **[Join the Smartlio Career Program →](https://techrola.in/career-program)**\n`;
 
-const SYSTEM_PROMPT = `You are the AI Content Writer for Techrola — India's AI-powered Career & Student Platform.
+const SYSTEM_PROMPT = `You are the AI Content Writer for Smartlio — India's AI-powered Career & Student Platform.
 You write SHORT, punchy, SEO-optimized blogs (500-800 words each) for Indian students and job seekers.
 Rules:
 - Never mention any specific year (do NOT include 2024, 2025, 2026, 2027 etc. in titles, slugs or body).
-- Never describe Techrola as an MLM or a get-rich-quick platform.
+- Never describe Smartlio as an MLM or a get-rich-quick platform.
 - Educational and honest tone. Warn against scams. Always cite realistic Indian examples.
-- EVERY article MUST include a section titled exactly "## Join the Techrola Career Program (Work from Home)" with 2-3 lines and a markdown link to https://techrola.in/career-program.
-- For investor/acquisition topics, ALSO include a section titled exactly "## Invest in or Acquire Techrola" with 2-3 honest lines: Techrola is open to acquisition or strategic investment; the product, payments and SEO engine are built and the founders are mainly looking for marketing capital to scale. Link to https://techrola.in/investors and mention contact email omlaytechnologies@gmail.com.
-- MOST articles should end with a conversion-focused section titled exactly "## Go Pro with Techrola (₹83.25/Month)" with 3-4 honest lines: Pro unlocks full scheme details, all AI tools (internship reports, resumes, SOPs, mock interviews) and more credits — priced at ₹999/year (₹83.25/month equivalent). Link to https://techrola.in/subscription. This is the primary conversion goal; make it persuasive but honest.
+- EVERY article MUST include a section titled exactly "## Join the Smartlio Career Program (Work from Home)" with 2-3 lines and a markdown link to https://techrola.in/career-program.
+- For investor/acquisition topics, ALSO include a section titled exactly "## Invest in or Acquire Smartlio" with 2-3 honest lines: Smartlio is open to acquisition or strategic investment; the product, payments and SEO engine are built and the founders are mainly looking for marketing capital to scale. Link to https://techrola.in/investors and mention contact email omlaytechnologies@gmail.com.
+- MOST articles should end with a conversion-focused section titled exactly "## Go Pro with Smartlio (₹83.25/Month)" with 3-4 honest lines: Pro unlocks full scheme details, all AI tools (internship reports, resumes, SOPs, mock interviews) and more credits — priced at ₹999/year (₹83.25/month equivalent). Link to https://techrola.in/subscription. This is the primary conversion goal; make it persuasive but honest.
 - End every article with a short CTA to techrola.in, /subscription and /ai-tools.`;
 
-const batchPrompt = (topics: string[], avoidTitles: string[]) => `Generate ${topics.length} SHORT SEO blog posts for Techrola.
+const batchPrompt = (topics: string[], avoidTitles: string[]) => `Generate ${topics.length} SHORT SEO blog posts for Smartlio.
 Assign each blog to one topic in order:
 ${topics.map((t, i) => `${i + 1}. ${t}`).join('\n')}
 
@@ -74,7 +74,7 @@ Return STRICT JSON only (no markdown fences) matching this exact shape:
       "reading_time": 4,
       "hook": "one strong opening line (emoji ok)",
       "excerpt": "2 sentence teaser, 180 chars max, no year",
-      "body_markdown": "500-800 word markdown article. Must include: H2 intro, 2-3 H2 sections with bullets, a small markdown comparison table, a '## Why Techrola?' 3-bullet section, and a closing '## Next Steps' CTA linking to https://techrola.in, https://techrola.in/career-program and https://techrola.in/ai-tools. Never mention a year.",
+      "body_markdown": "500-800 word markdown article. Must include: H2 intro, 2-3 H2 sections with bullets, a small markdown comparison table, a '## Why Smartlio?' 3-bullet section, and a closing '## Next Steps' CTA linking to https://techrola.in, https://techrola.in/career-program and https://techrola.in/ai-tools. Never mention a year.",
       "faq": [{"q":"...","a":"..."}, {"q":"...","a":"..."}, {"q":"...","a":"..."}]
     }
   ]
@@ -216,7 +216,7 @@ Deno.serve(async (req) => {
           excerpt: stripYear(b.excerpt),
           body_markdown: (() => {
             const md = stripYear(b.body_markdown) || '';
-            return md.includes('Techrola Career Program (Work from Home)') ? md : md + CAREER_CTA_BLOCK;
+            return md.includes('Smartlio Career Program (Work from Home)') ? md : md + CAREER_CTA_BLOCK;
           })(),
           faq: Array.isArray(b.faq) ? b.faq : [],
           social_captions: {},

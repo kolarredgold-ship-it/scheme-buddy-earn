@@ -257,7 +257,7 @@ const AITools = () => {
   const itemListLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Students AI Tools by Techrola",
+    name: "Students AI Tools by Smartlio",
     itemListElement: tools.map((t, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -279,7 +279,7 @@ const AITools = () => {
   return (
     <Layout>
       <Seo
-        title="Students AI Tools — Free Resume, SOP & Report Generators | Techrola"
+        title="Students AI Tools — Free Resume, SOP & Report Generators | Smartlio"
         description="Free AI tools for Indian students: resume builder, cover letter, SOP, internship report, study notes, career roadmap and mock interview practice. Generate and download instantly."
         path="/ai-tools"
         keywords="students ai tools, ai resume builder india, sop generator, internship report generator, ai mock interview, study notes maker"

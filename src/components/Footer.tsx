@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import techrolaLogo from "@/assets/techrola_logo.webp";
+const techrolaLogo = "/smartlio_logo.png";
 import { aiToolLandings } from "@/data/aiToolLandings";
 import { Mail, Phone, MapPin, Download, ExternalLink, BookOpen, Briefcase, Wand2, GraduationCap, FileText, HelpCircle, Shield, CreditCard, Sparkles } from "lucide-react";
 
@@ -41,8 +41,8 @@ const Footer = () => {
           {/* Brand + About */}
           <div className="lg:col-span-4 space-y-4">
             <Link to="/" className="inline-flex items-center gap-2">
-              <img src={techrolaLogo} alt="Techrola Logo" className="h-9 w-auto bg-white rounded-md px-1.5 py-1" />
-              <span className="text-xl font-bold text-white tracking-tight">Techrola</span>
+              <img src={techrolaLogo} alt="Smartlio Logo" className="h-9 w-auto bg-white rounded-md px-1.5 py-1" />
+              <span className="text-xl font-bold text-white tracking-tight">Smartlio</span>
             </Link>
             <p className="text-sm text-slate-300 leading-relaxed max-w-sm">
               India's trusted edu-tech platform for AI-powered career tools, government schemes, and skill-building programs. Free to explore, powerful with Pro.
@@ -106,7 +106,7 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <div className="bg-slate-800/60 border border-slate-700 rounded-lg p-4">
               <h4 className="font-semibold text-sm mb-2 text-white flex items-center gap-2">
-                <Download className="h-4 w-4 text-orange-500" /> Get Techrola App
+                <Download className="h-4 w-4 text-orange-500" /> Get Smartlio App
               </h4>
               <p className="text-xs text-slate-300 mb-3">Access schemes, AI tools & career programs on the go.</p>
               <Link to="/install">
@@ -142,7 +142,7 @@ const Footer = () => {
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "ItemList",
-                name: "Techrola AI Tools",
+                name: "Smartlio AI Tools",
                 itemListElement: aiToolLandings.map((t, i) => ({
                   "@type": "ListItem",
                   position: i + 1,
@@ -159,7 +159,7 @@ const Footer = () => {
         <div className="mt-10 pt-6 border-t border-slate-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-xs text-slate-400 text-center md:text-left">
-              © {year} Techrola. All rights reserved.
+              © {year} Smartlio. All rights reserved.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6">

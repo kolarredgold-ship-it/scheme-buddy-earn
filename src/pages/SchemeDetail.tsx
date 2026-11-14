@@ -39,7 +39,7 @@ const SchemeDetail = () => {
 
   if (!scheme) return (
     <Layout>
-      <Seo title="Scheme not found — Techrola" description="This scheme is no longer available." path={`/scheme/${slug ?? ""}`} noindex />
+      <Seo title="Scheme not found — Smartlio" description="This scheme is no longer available." path={`/scheme/${slug ?? ""}`} noindex />
       <div className="container mx-auto px-4 py-20 text-center">
         <Sparkles className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
         <p className="text-lg text-muted-foreground mb-4">Scheme not found</p>
@@ -66,7 +66,7 @@ const SchemeDetail = () => {
           serviceType: scheme.category,
           areaServed: scheme.state || "India",
           url: `https://techrola.in/scheme/${scheme.slug}`,
-          provider: { "@type": "Organization", name: "Techrola", url: "https://techrola.in" },
+          provider: { "@type": "Organization", name: "Smartlio", url: "https://techrola.in" },
         }}
       />
       <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 pb-24 md:pb-10 max-w-3xl lg:max-w-5xl animate-fade-in">
@@ -100,7 +100,7 @@ const SchemeDetail = () => {
             <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
-              <img src={techrolaIcon} alt="Techrola" className="h-20 w-20 opacity-20" />
+              <img src={techrolaIcon} alt="Smartlio" className="h-20 w-20 opacity-20" />
             </div>
           )}
         </div>

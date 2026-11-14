@@ -133,8 +133,8 @@ const BlogDetail = () => {
       description: blog.meta_description ?? blog.excerpt,
       image: blog.featured_image_url ? [blog.featured_image_url] : [],
       datePublished: blog.published_at,
-      author: { "@type": "Organization", name: blog.author ?? "Techrola Editorial" },
-      publisher: { "@type": "Organization", name: "Techrola", url: "https://techrola.in" },
+      author: { "@type": "Organization", name: blog.author ?? "Smartlio Editorial" },
+      publisher: { "@type": "Organization", name: "Smartlio", url: "https://techrola.in" },
       mainEntityOfPage: `https://techrola.in/blog/${blog.slug}`,
     });
     if (blog.faq?.length) {
@@ -190,7 +190,7 @@ const BlogDetail = () => {
           )}
 
           <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-muted-foreground border-t border-b py-3 sm:py-4">
-            <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Techrola Editorial"}</span>
+            <span className="flex items-center gap-1.5"><User className="h-4 w-4" />{blog.author ?? "Smartlio Editorial"}</span>
             <span className="flex items-center gap-1.5"><Clock className="h-4 w-4" />{blog.reading_time ?? 8} min read</span>
             <Button size="sm" variant="ghost" onClick={share} className="ml-auto h-8"><Share2 className="h-4 w-4 mr-1.5" />Share</Button>
           </div>
@@ -251,7 +251,7 @@ const BlogDetail = () => {
 
         <Card className="mt-12 sm:mt-16 bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 border-primary/30 overflow-hidden">
           <CardContent className="p-6 sm:p-10 text-center">
-            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">Join the Techrola Career Program</h3>
+            <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">Join the Smartlio Career Program</h3>
             <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">25+ AI tools, internships, job portal, government schemes & referral rewards.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg"><Link to="/career-program">Join Career Program <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>

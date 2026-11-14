@@ -23,7 +23,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "internship-report-generator",
     toolPath: "/create-report",
-    title: "AI Internship Report Generator — Free DOCX Download | Techrola",
+    title: "AI Internship Report Generator — Free DOCX Download | Smartlio",
     metaDescription:
       "Generate a professional internship report in minutes with AI. Auto-formatted DOCX download for college submissions. Free to start.",
     h1: "AI Internship Report Generator for Indian Students",
@@ -61,7 +61,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "mock-interview",
     toolPath: "/mock-interview",
-    title: "AI Mock Interview Practice — Instant Feedback | Techrola",
+    title: "AI Mock Interview Practice — Instant Feedback | Smartlio",
     metaDescription:
       "Practice job interviews with AI. Role-specific questions, instant feedback and 3400+ flashcards. Free mock interview rounds.",
     h1: "AI Mock Interview Practice for Freshers & Job-Seekers",
@@ -99,7 +99,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "live-hr-interview",
     toolPath: "/live-hr-interview",
-    title: "AI Live HR Interview Simulator — Voice + Verdict | Techrola",
+    title: "AI Live HR Interview Simulator — Voice + Verdict | Smartlio",
     metaDescription:
       "Live, voice-based HR interview with an AI recruiter. Real-time questions, verdict and detailed feedback after the round.",
     h1: "AI Live HR Interview Simulator",
@@ -137,7 +137,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "resume-builder",
     toolPath: "/student-tool/resume",
-    title: "AI Resume Builder — Free One-Page Resume DOCX | Techrola",
+    title: "AI Resume Builder — Free One-Page Resume DOCX | Smartlio",
     metaDescription:
       "Build a professional one-page resume with AI. ATS-friendly, downloadable as DOCX. Perfect for freshers and Indian job seekers.",
     h1: "AI Resume Builder for Freshers & Professionals",
@@ -175,7 +175,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "cover-letter-generator",
     toolPath: "/student-tool/cover-letter",
-    title: "AI Cover Letter Generator — Tailored & Free | Techrola",
+    title: "AI Cover Letter Generator — Tailored & Free | Smartlio",
     metaDescription:
       "Generate a job-winning cover letter tailored to the role and company. Free, fast, downloadable.",
     h1: "AI Cover Letter Generator",
@@ -212,7 +212,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "sop-generator",
     toolPath: "/student-tool/sop",
-    title: "AI SOP Generator — Statement of Purpose for MS/MBA | Techrola",
+    title: "AI SOP Generator — Statement of Purpose for MS/MBA | Smartlio",
     metaDescription:
       "Write a powerful 700–900 word Statement of Purpose for MS, MBA and PhD applications. AI-drafted, you-personalised.",
     h1: "AI Statement of Purpose (SOP) Generator",
@@ -249,7 +249,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "study-notes-maker",
     toolPath: "/student-tool/study-notes",
-    title: "AI Study Notes Maker — Exam Revision Notes | Techrola",
+    title: "AI Study Notes Maker — Exam Revision Notes | Smartlio",
     metaDescription:
       "Turn any topic into clean revision notes plus likely exam questions. Perfect for school, college and competitive exams.",
     h1: "AI Study Notes Maker",
@@ -286,7 +286,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "career-roadmap",
     toolPath: "/student-tool/roadmap",
-    title: "AI 6-Month Career Roadmap — Personalised Plan | Techrola",
+    title: "AI 6-Month Career Roadmap — Personalised Plan | Smartlio",
     metaDescription:
       "Get a month-by-month, personalised 6-month career roadmap to become job-ready. Skills, projects, certifications, timeline.",
     h1: "AI 6-Month Career Roadmap Builder",
@@ -323,7 +323,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "leave-letter",
     toolPath: "/student-tool/leave-letter",
-    title: "AI Leave Letter Generator — School, College, Office | Techrola",
+    title: "AI Leave Letter Generator — School, College, Office | Smartlio",
     metaDescription:
       "Write a formal leave application letter in seconds. School, college, office formats — fully customisable.",
     h1: "AI Leave Application Letter Generator",
@@ -360,7 +360,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "letter-of-recommendation",
     toolPath: "/student-tool/lor",
-    title: "AI Letter of Recommendation (LOR) Generator | Techrola",
+    title: "AI Letter of Recommendation (LOR) Generator | Smartlio",
     metaDescription:
       "Draft a professor- or manager-style Letter of Recommendation for MS, MBA, PhD or job applications.",
     h1: "AI Letter of Recommendation Generator",
@@ -397,7 +397,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "project-report",
     toolPath: "/student-tool/project-report",
-    title: "AI Mini Project Report Generator — DOCX | Techrola",
+    title: "AI Mini Project Report Generator — DOCX | Smartlio",
     metaDescription:
       "Generate a full academic-format mini project report with abstract, modules, methodology and conclusion. DOCX download.",
     h1: "AI Mini Project Report Generator",
@@ -434,7 +434,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "professional-email-writer",
     toolPath: "/student-tool/email-writer",
-    title: "AI Professional Email Writer — HR, Professor, Recruiter | Techrola",
+    title: "AI Professional Email Writer — HR, Professor, Recruiter | Smartlio",
     metaDescription:
       "Write polished professional emails to professors, HRs and recruiters in seconds. Right tone, right length, every time.",
     h1: "AI Professional Email Writer",
@@ -471,7 +471,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "viva-questions",
     toolPath: "/student-tool/viva-questions",
-    title: "AI Viva Questions Generator — With Model Answers | Techrola",
+    title: "AI Viva Questions Generator — With Model Answers | Smartlio",
     metaDescription:
       "Predict 20+ viva and interview questions for any topic, with model answers. Perfect for project viva and last-minute prep.",
     h1: "AI Viva / Interview Questions Generator",
@@ -508,7 +508,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "ppt-outline",
     toolPath: "/student-tool/ppt-outline",
-    title: "AI Presentation (PPT) Outline Generator | Techrola",
+    title: "AI Presentation (PPT) Outline Generator | Smartlio",
     metaDescription:
       "Slide-by-slide PowerPoint outline with titles, bullet points and speaker notes. Build any presentation in minutes.",
     h1: "AI PPT Outline Generator",
@@ -545,7 +545,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "scholarship-essay",
     toolPath: "/student-tool/scholarship-essay",
-    title: "AI Scholarship Essay Writer — Free Draft | Techrola",
+    title: "AI Scholarship Essay Writer — Free Draft | Smartlio",
     metaDescription:
       "Write a compelling scholarship essay tailored to your story. Free AI essay draft for Indian and global scholarships.",
     h1: "AI Scholarship Essay Writer",
@@ -582,7 +582,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "linkedin-bio",
     toolPath: "/student-tool/linkedin-bio",
-    title: "AI LinkedIn Bio & Headline Generator | Techrola",
+    title: "AI LinkedIn Bio & Headline Generator | Smartlio",
     metaDescription:
       "Magnetic LinkedIn About section plus 3 headline options. Free AI generator for students and professionals.",
     h1: "AI LinkedIn Bio & Headline Generator",
@@ -619,7 +619,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "business-plan",
     toolPath: "/student-tool/business-plan",
-    title: "AI Startup / Business Plan Generator | Techrola",
+    title: "AI Startup / Business Plan Generator | Smartlio",
     metaDescription:
       "Generate a lean startup business plan with problem, solution, market, GTM and revenue. Great for student pitches and grants.",
     h1: "AI Startup / Business Plan Generator",
@@ -656,7 +656,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "assignment-helper",
     toolPath: "/student-tool/assignment",
-    title: "AI Assignment Helper — College Assignments | Techrola",
+    title: "AI Assignment Helper — College Assignments | Smartlio",
     metaDescription:
       "Well-structured college assignments with citations placeholders. Save hours, learn faster.",
     h1: "AI Assignment Helper",
@@ -693,7 +693,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "essay-writer",
     toolPath: "/student-tool/essay",
-    title: "AI Essay Writer — Structured Essays on Any Topic | Techrola",
+    title: "AI Essay Writer — Structured Essays on Any Topic | Smartlio",
     metaDescription:
       "Structured essay on any topic with introduction, body and conclusion. School, college, competitive exams.",
     h1: "AI Essay Writer",
@@ -730,7 +730,7 @@ export const aiToolLandings: AIToolLanding[] = [
   {
     slug: "speech-writer",
     toolPath: "/student-tool/speech",
-    title: "AI Speech Writer — Events, Debates, Functions | Techrola",
+    title: "AI Speech Writer — Events, Debates, Functions | Smartlio",
     metaDescription:
       "Powerful speeches for events, debates and college functions. AI-drafted with hooks, story and a strong close.",
     h1: "AI Speech Writer",

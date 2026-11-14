@@ -12,18 +12,18 @@ const PHONE_INTL = "+917899666679";
 const ContactUs = () => (
   <Layout>
     <Seo
-      title="Contact Techrola | Support for Schemes, AI Tools & Payments"
-      description="Reach the Techrola support team in Bengaluru by email, phone or WhatsApp for help with government schemes, AI tools, subscriptions and refunds."
+      title="Contact Smartlio | Support for Schemes, AI Tools & Payments"
+      description="Reach the Smartlio support team in Bengaluru by email, phone or WhatsApp for help with government schemes, AI tools, subscriptions and refunds."
       path="/contact-us"
-      keywords="Techrola contact, Techrola support, customer care, Omlay Technologies Bengaluru"
+      keywords="Smartlio contact, Smartlio support, customer care, Omlay Technologies Bengaluru"
       jsonLd={{
         "@context": "https://schema.org",
         "@type": "ContactPage",
-        name: "Contact Techrola",
+        name: "Contact Smartlio",
         url: "https://techrola.in/contact-us",
         mainEntity: {
           "@type": "Organization",
-          name: "Techrola",
+          name: "Smartlio",
           url: "https://techrola.in",
           email: EMAIL,
           telephone: PHONE_INTL,
@@ -50,7 +50,7 @@ const ContactUs = () => (
 
     <div className="container mx-auto px-4 py-8 pb-20 md:pb-12 max-w-4xl">
       <p className="text-xs font-semibold uppercase tracking-wider text-primary">Contact</p>
-      <h1 className="mt-2 text-2xl md:text-4xl font-bold tracking-tight">Contact Techrola support</h1>
+      <h1 className="mt-2 text-2xl md:text-4xl font-bold tracking-tight">Contact Smartlio support</h1>
       <p className="mt-3 text-base leading-relaxed text-muted-foreground">
         Questions about a scheme, an AI tool, your subscription or a refund? Our Bengaluru team is here
         to help and usually replies within one working day.
@@ -150,7 +150,7 @@ const ContactUs = () => (
             <Link to="/subscription">Subscription & pricing</Link>
           </Button>
           <Button asChild variant="outline" className="justify-start">
-            <Link to="/about-us">About Techrola</Link>
+            <Link to="/about-us">About Smartlio</Link>
           </Button>
         </div>
       </section>
@@ -158,7 +158,7 @@ const ContactUs = () => (
       <div className="mt-8 flex items-start gap-3 rounded-lg border p-4">
         <LifeBuoy className="h-5 w-5 text-primary shrink-0 mt-0.5" />
         <p className="text-sm text-muted-foreground">
-          Techrola is not a government body. We never ask for OTPs, bank passwords or fees for a
+          Smartlio is not a government body. We never ask for OTPs, bank passwords or fees for a
           government application. Always verify scheme details on the official government website
           before applying.
         </p>

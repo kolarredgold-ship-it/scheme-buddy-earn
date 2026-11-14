@@ -39,7 +39,7 @@ const Blog = () => {
   const [category, setCategory] = useState<string>("All");
 
   useEffect(() => {
-    document.title = "Career & Money Blog for Indian Students | Techrola";
+    document.title = "Career & Money Blog for Indian Students | Smartlio";
     const desc = "Fresh short SEO blogs — earn online safely, discover government schemes, ace interviews, use AI tools — updated daily.";
     let m = document.querySelector('meta[name="description"]');
     if (!m) { m = document.createElement("meta"); m.setAttribute("name", "description"); document.head.appendChild(m); }
@@ -77,7 +77,7 @@ const Blog = () => {
   return (
     <Layout>
       <Seo
-        title="Techrola Blog — Government Schemes, Jobs & Career Guides"
+        title="Smartlio Blog — Government Schemes, Jobs & Career Guides"
         description="Daily guides on government schemes, sarkari jobs, scholarships and AI career tools for students across India."
         path="/blog"
       />
@@ -94,7 +94,7 @@ const Blog = () => {
               Sitemap
             </a>
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">The Techrola Blog</h1>
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">The Smartlio Blog</h1>
           <p className="mt-3 text-muted-foreground max-w-2xl">
             Short, honest SEO guides for Indian students & job seekers — earn safely, build skills, land jobs.
           </p>

@@ -90,7 +90,7 @@ export default function OAuthConsent() {
             {error
               ? "We couldn't load this authorization request."
               : details
-                ? `Connect ${clientName} to your Techrola account`
+                ? `Connect ${clientName} to your Smartlio account`
                 : "Checking this authorization request…"}
           </CardDescription>
         </CardHeader>
@@ -104,7 +104,7 @@ export default function OAuthConsent() {
           {!error && details && (
             <>
               <p className="text-sm text-muted-foreground">
-                {clientName} will be able to search schemes and articles and read your Techrola account details
+                {clientName} will be able to search schemes and articles and read your Smartlio account details
                 (subscription, referral code and AI tool credits) as you. You can revoke access at any time.
               </p>
               <div className="flex gap-3">

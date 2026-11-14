@@ -113,7 +113,7 @@ const Signup = () => {
           <div className="h-14 w-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center mb-8">
             <span className="text-primary-foreground font-bold text-2xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
           </div>
-          <h2 className="text-4xl font-extrabold leading-tight max-w-md">Join Techrola in seconds.</h2>
+          <h2 className="text-4xl font-extrabold leading-tight max-w-md">Join Smartlio in seconds.</h2>
           <p className="mt-4 text-lg text-primary-foreground/85 max-w-md">Get 1 free AI generation per tool, browse 7,700+ government schemes &amp; jobs, and earn ₹400 per Premium referral.</p>
           <ul className="mt-8 space-y-3 text-primary-foreground/90 text-sm">
             <li className="flex items-center gap-2">✓ 1 free AI generation per tool</li>
@@ -121,7 +121,7 @@ const Signup = () => {
             <li className="flex items-center gap-2">✓ 3-level referral earnings up to ₹550</li>
           </ul>
         </div>
-        <p className="relative text-xs text-primary-foreground/60">© Techrola · Secure sign-up</p>
+        <p className="relative text-xs text-primary-foreground/60">© Smartlio · Secure sign-up</p>
       </div>
 
       {/* Form panel */}

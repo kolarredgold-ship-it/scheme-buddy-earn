@@ -3,9 +3,9 @@ import { supabaseForUser } from "../supabase";
 
 export default defineTool({
   name: "get_my_account",
-  title: "Get my Techrola account",
+  title: "Get my Smartlio account",
   description:
-    "Return the signed-in user's Techrola account summary: subscription status and expiry, referral code, wallet balance and remaining AI tool credits.",
+    "Return the signed-in user's Smartlio account summary: subscription status and expiry, referral code, wallet balance and remaining AI tool credits.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx) => {
@@ -26,7 +26,7 @@ export default defineTool({
 
     if (profileError) return { content: [{ type: "text", text: profileError.message }], isError: true };
     if (creditsError) return { content: [{ type: "text", text: creditsError.message }], isError: true };
-    if (!profile) return { content: [{ type: "text", text: "No Techrola profile found for this account." }], isError: true };
+    if (!profile) return { content: [{ type: "text", text: "No Smartlio profile found for this account." }], isError: true };
 
     const account = { ...profile, tool_credits: credits ?? [] };
     return {

@@ -4,8 +4,8 @@ import { SITE_URL, supabaseForUser } from "../supabase";
 
 export default defineTool({
   name: "get_blog",
-  title: "Read a Techrola article",
-  description: "Fetch the full markdown body of one published Techrola article by slug.",
+  title: "Read a Smartlio article",
+  description: "Fetch the full markdown body of one published Smartlio article by slug.",
   inputSchema: {
     slug: z.string().trim().min(1).describe("Article slug, as returned by search_blogs."),
   },

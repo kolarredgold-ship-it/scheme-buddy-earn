@@ -1,0 +1,16 @@
+ALTER TABLE public.reports
+  ADD COLUMN IF NOT EXISTS student_name text,
+  ADD COLUMN IF NOT EXISTS register_number text,
+  ADD COLUMN IF NOT EXISTS course text,
+  ADD COLUMN IF NOT EXISTS college_name text,
+  ADD COLUMN IF NOT EXISTS university text,
+  ADD COLUMN IF NOT EXISTS guide_name text,
+  ADD COLUMN IF NOT EXISTS internship_title text,
+  ADD COLUMN IF NOT EXISTS company_name text,
+  ADD COLUMN IF NOT EXISTS company_location text,
+  ADD COLUMN IF NOT EXISTS internship_duration text,
+  ADD COLUMN IF NOT EXISTS academic_year text,
+  ADD COLUMN IF NOT EXISTS topic_specialization text,
+  ADD COLUMN IF NOT EXISTS pages_count integer,
+  ADD COLUMN IF NOT EXISTS report_kind text NOT NULL DEFAULT 'internship',
+  ADD COLUMN IF NOT EXISTS report_content text;

@@ -286,7 +286,7 @@ const PaymentModal = ({
               variant="outline"
               className="w-full"
               onClick={() => {
-                const msg = `Hi, I just submitted my Techrola Pro payment of ₹${amount}.%0ATxn: ${formData.transactionNumber}%0AName: ${formData.payerName}`;
+                const msg = `Hi, I just submitted my Smartlio Pro payment of ₹${amount}.%0ATxn: ${formData.transactionNumber}%0AName: ${formData.payerName}`;
                 window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
               }}
             >

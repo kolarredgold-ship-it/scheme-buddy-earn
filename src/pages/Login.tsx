@@ -36,7 +36,7 @@ const Login = () => {
           <div className="h-14 w-14 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center mb-8">
             <span className="text-primary-foreground font-bold text-2xl" style={{ fontFamily: 'Space Grotesk' }}>T</span>
           </div>
-          <h2 className="text-4xl font-extrabold leading-tight max-w-md">Welcome back to Techrola.</h2>
+          <h2 className="text-4xl font-extrabold leading-tight max-w-md">Welcome back to Smartlio.</h2>
           <p className="mt-4 text-lg text-primary-foreground/80 max-w-md">Sign in to explore 7,700+ government schemes &amp; jobs, use AI student tools, and track your referral earnings.</p>
         </div>
         <div className="relative grid grid-cols-3 gap-4 max-w-md">

@@ -4,8 +4,8 @@ import { SITE_URL, supabaseForUser } from "../supabase";
 
 export default defineTool({
   name: "search_blogs",
-  title: "Search Techrola articles",
-  description: "Search published Techrola blog articles about schemes, jobs, careers and AI student tools.",
+  title: "Search Smartlio articles",
+  description: "Search published Smartlio blog articles about schemes, jobs, careers and AI student tools.",
   inputSchema: {
     query: z.string().trim().min(1).optional().describe("Keyword to match in the article title or excerpt."),
     limit: z.number().int().min(1).max(25).default(10).describe("Maximum number of articles (1-25)."),

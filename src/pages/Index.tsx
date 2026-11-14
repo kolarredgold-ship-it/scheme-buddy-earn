@@ -147,7 +147,7 @@ const INTRO_SLIDES = [
     accent: "Empowering",
     title: "All Learners:",
     line2: "Academic and Beyond",
-    desc: "Techrola brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
+    desc: "Smartlio brings together AI tools, college discovery, internships, interview prep, and jobs — so every student can build a future they're proud of.",
     cta: "Get Started",
     to: "/signup",
   },
@@ -567,7 +567,7 @@ const Index = () => {
   return (
     <Layout>
       <Seo
-        title="Techrola — Government Schemes, Jobs & AI Career Tools"
+        title="Smartlio — Government Schemes, Jobs & AI Career Tools"
         description="Find government schemes, sarkari and private jobs, scholarships and AI career tools for students across India — all in one place."
         path="/"
       />
@@ -631,7 +631,7 @@ const Index = () => {
                 </div>
                 <img
                   src={heroStudents}
-                  alt="Techrola student"
+                  alt="Smartlio student"
                   className="hidden sm:block absolute right-0 bottom-0 h-[85%] w-auto object-contain object-bottom drop-shadow-2xl pointer-events-none"
                 />
               </div>
@@ -798,7 +798,7 @@ const Index = () => {
                 variant="outline"
                 className="rounded-lg border-foreground/15 font-semibold gap-2 px-5"
               >
-                <Sparkles className="h-4 w-4" /> View all AI tools on Techrola
+                <Sparkles className="h-4 w-4" /> View all AI tools on Smartlio
               </Button>
             </Link>
           </div>
@@ -1092,7 +1092,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* INTRODUCING TECHROLA — One Nation, One APP */}
+        {/* INTRODUCING SMARTLIO — One Nation, One APP */}
         <section className="bg-gradient-to-br from-amber-50 via-orange-50/40 to-background">
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 items-center">
@@ -1101,11 +1101,11 @@ const Index = () => {
                   className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
                   style={{ fontFamily: "Plus Jakarta Sans" }}
                 >
-                  Introducing <span className="text-amber-700">TECHROLA</span> —<br />
+                  Introducing <span className="text-amber-700">SMARTLIO</span> —<br />
                   One Nation, One APP
                 </h2>
                 <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
-                  The TECHROLA app is a one-of-a-kind identifier that simplifies the way you
+                  The SMARTLIO app is a one-of-a-kind identifier that simplifies the way you
                   track and manage your academic and skill-based achievements. It consolidates
                   all your educational records in one place, making it easy to accumulate,
                   transfer, and access your job profile across different learning pathways.
@@ -1128,7 +1128,7 @@ const Index = () => {
                         Tanvi Sharma
                       </div>
                       <div className="text-xs md:text-sm text-muted-foreground">
-                        I am a registered TECHROLA ID holder.
+                        I am a registered SMARTLIO ID holder.
                       </div>
                     </div>
                   </div>
@@ -1148,7 +1148,7 @@ const Index = () => {
                 className="text-xl md:text-3xl font-extrabold text-foreground"
                 style={{ fontFamily: "Plus Jakarta Sans" }}
               >
-                Get Started with <span className="text-amber-700">TECHROLA</span> — Create Yours Today!
+                Get Started with <span className="text-amber-700">SMARTLIO</span> — Create Yours Today!
               </h3>
               <div className="mt-5 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white border border-border shadow-sm max-w-full overflow-x-auto">
                 {TECHROLA_TABS.map((t, i) => (
@@ -1221,7 +1221,7 @@ const Index = () => {
                   { n: 1, t: "Register", d: "Create your free account in seconds", color: "from-rose-400 to-pink-500" },
                   { n: 2, t: "Subscribe", d: "Unlock all premium features instantly", color: "from-amber-400 to-orange-500" },
                   { n: 3, t: "Get EMP Code", d: "Receive your unique referral code", color: "from-yellow-400 to-amber-500" },
-                  { n: 4, t: "Promote", d: "Share Techrola with your network", color: "from-blue-400 to-sky-500" },
+                  { n: 4, t: "Promote", d: "Share Smartlio with your network", color: "from-blue-400 to-sky-500" },
                   { n: 5, t: "Build Streak", d: "Stay active and grow your activity", color: "from-sky-400 to-blue-500" },
                   { n: 6, t: "Get Hired", d: "Unlock internships & top job offers", color: "from-amber-400 to-amber-600" },
                 ].map((s) => (
@@ -1259,13 +1259,13 @@ const Index = () => {
 
 
 
-        {/* ABOUT TECHROLA */}
+        {/* ABOUT SMARTLIO */}
         <section className="bg-background">
           <div className="container mx-auto px-5 md:px-8 lg:px-12 py-12 md:py-16">
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               <div>
                 <div className="text-xs md:text-sm font-bold text-amber-700 tracking-widest uppercase mb-3">
-                  About Techrola
+                  About Smartlio
                 </div>
                 <h2
                   className="text-2xl md:text-4xl font-extrabold text-foreground leading-tight"
@@ -1274,7 +1274,7 @@ const Index = () => {
                   A trusted career companion for every student
                 </h2>
                 <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
-                  Techrola AI is a student-first platform that brings opportunities, guidance and
+                  Smartlio AI is a student-first platform that brings opportunities, guidance and
                   AI-powered tools under one trusted portal — helping learners across India go
                   from classroom to career with confidence.
                 </p>

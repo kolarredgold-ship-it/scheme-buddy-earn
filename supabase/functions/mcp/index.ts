@@ -63,7 +63,7 @@ var SITE_URL = "https://techrola.in";
 var search_schemes_default = defineTool({
   name: "search_schemes",
   title: "Search government schemes and jobs",
-  description: "Search Techrola's catalogue of Indian government schemes, scholarships and job notifications by keyword, category and state.",
+  description: "Search Smartlio's catalogue of Indian government schemes, scholarships and job notifications by keyword, category and state.",
   inputSchema: {
     query: z.string().trim().min(1).optional().describe("Keyword to match in the title or description."),
     category: z.string().trim().min(1).optional().describe("Category filter, e.g. Education, Employment, Agriculture."),
@@ -103,7 +103,7 @@ import { z as z2 } from "npm:zod@^3.25.76";
 var get_scheme_default = defineTool2({
   name: "get_scheme",
   title: "Get scheme details",
-  description: "Fetch the full details of one Techrola scheme or job listing by its slug, including eligibility, documents and the official apply link.",
+  description: "Fetch the full details of one Smartlio scheme or job listing by its slug, including eligibility, documents and the official apply link.",
   inputSchema: {
     slug: z2.string().trim().min(1).describe("Scheme slug, as returned by search_schemes.")
   },
@@ -129,8 +129,8 @@ import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.28.0";
 import { z as z3 } from "npm:zod@^3.25.76";
 var search_blogs_default = defineTool3({
   name: "search_blogs",
-  title: "Search Techrola articles",
-  description: "Search published Techrola blog articles about schemes, jobs, careers and AI student tools.",
+  title: "Search Smartlio articles",
+  description: "Search published Smartlio blog articles about schemes, jobs, careers and AI student tools.",
   inputSchema: {
     query: z3.string().trim().min(1).optional().describe("Keyword to match in the article title or excerpt."),
     limit: z3.number().int().min(1).max(25).default(10).describe("Maximum number of articles (1-25).")
@@ -164,8 +164,8 @@ import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.28.0";
 import { z as z4 } from "npm:zod@^3.25.76";
 var get_blog_default = defineTool4({
   name: "get_blog",
-  title: "Read a Techrola article",
-  description: "Fetch the full markdown body of one published Techrola article by slug.",
+  title: "Read a Smartlio article",
+  description: "Fetch the full markdown body of one published Smartlio article by slug.",
   inputSchema: {
     slug: z4.string().trim().min(1).describe("Article slug, as returned by search_blogs.")
   },
@@ -194,8 +194,8 @@ Source: ${article.url}` }],
 import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.28.0";
 var get_my_account_default = defineTool5({
   name: "get_my_account",
-  title: "Get my Techrola account",
-  description: "Return the signed-in user's Techrola account summary: subscription status and expiry, referral code, wallet balance and remaining AI tool credits.",
+  title: "Get my Smartlio account",
+  description: "Return the signed-in user's Smartlio account summary: subscription status and expiry, referral code, wallet balance and remaining AI tool credits.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx) => {
@@ -210,7 +210,7 @@ var get_my_account_default = defineTool5({
     ]);
     if (profileError) return { content: [{ type: "text", text: profileError.message }], isError: true };
     if (creditsError) return { content: [{ type: "text", text: creditsError.message }], isError: true };
-    if (!profile) return { content: [{ type: "text", text: "No Techrola profile found for this account." }], isError: true };
+    if (!profile) return { content: [{ type: "text", text: "No Smartlio profile found for this account." }], isError: true };
     const account = { ...profile, tool_credits: credits ?? [] };
     return {
       content: [{ type: "text", text: JSON.stringify(account, null, 2) }],
@@ -225,7 +225,7 @@ var mcp_default = defineMcp({
   name: "scheme-wealth",
   title: "Scheme Wealth",
   version: "0.1.0",
-  instructions: "Tools for Techrola (techrola.in): search Indian government schemes, scholarships and job notifications, read Techrola career articles, and check the signed-in user's subscription, referral code and AI tool credits. Use search_schemes then get_scheme for full eligibility and apply links.",
+  instructions: "Tools for Smartlio (techrola.in): search Indian government schemes, scholarships and job notifications, read Smartlio career articles, and check the signed-in user's subscription, referral code and AI tool credits. Use search_schemes then get_scheme for full eligibility and apply links.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated"

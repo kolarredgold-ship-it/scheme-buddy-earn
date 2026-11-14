@@ -6,7 +6,7 @@ export default defineTool({
   name: "search_schemes",
   title: "Search government schemes and jobs",
   description:
-    "Search Techrola's catalogue of Indian government schemes, scholarships and job notifications by keyword, category and state.",
+    "Search Smartlio's catalogue of Indian government schemes, scholarships and job notifications by keyword, category and state.",
   inputSchema: {
     query: z.string().trim().min(1).optional().describe("Keyword to match in the title or description."),
     category: z.string().trim().min(1).optional().describe("Category filter, e.g. Education, Employment, Agriculture."),

@@ -439,32 +439,77 @@ export type Database = {
       }
       reports: {
         Row: {
+          academic_year: string | null
           chapter_content: Json
+          college_name: string | null
+          company_location: string | null
+          company_name: string | null
+          course: string | null
           created_at: string
           form_data: Json
+          guide_name: string | null
           id: string
+          internship_duration: string | null
+          internship_title: string | null
+          pages_count: number | null
+          register_number: string | null
+          report_content: string | null
+          report_kind: string
           report_type: string
           status: string
+          student_name: string | null
+          topic_specialization: string | null
+          university: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          academic_year?: string | null
           chapter_content?: Json
+          college_name?: string | null
+          company_location?: string | null
+          company_name?: string | null
+          course?: string | null
           created_at?: string
           form_data?: Json
+          guide_name?: string | null
           id?: string
+          internship_duration?: string | null
+          internship_title?: string | null
+          pages_count?: number | null
+          register_number?: string | null
+          report_content?: string | null
+          report_kind?: string
           report_type?: string
           status?: string
+          student_name?: string | null
+          topic_specialization?: string | null
+          university?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          academic_year?: string | null
           chapter_content?: Json
+          college_name?: string | null
+          company_location?: string | null
+          company_name?: string | null
+          course?: string | null
           created_at?: string
           form_data?: Json
+          guide_name?: string | null
           id?: string
+          internship_duration?: string | null
+          internship_title?: string | null
+          pages_count?: number | null
+          register_number?: string | null
+          report_content?: string | null
+          report_kind?: string
           report_type?: string
           status?: string
+          student_name?: string | null
+          topic_specialization?: string | null
+          university?: string | null
           updated_at?: string
           user_id?: string
         }

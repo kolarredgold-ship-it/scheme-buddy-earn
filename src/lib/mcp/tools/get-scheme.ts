@@ -6,7 +6,7 @@ export default defineTool({
   name: "get_scheme",
   title: "Get scheme details",
   description:
-    "Fetch the full details of one Techrola scheme or job listing by its slug, including eligibility, documents and the official apply link.",
+    "Fetch the full details of one Smartlio scheme or job listing by its slug, including eligibility, documents and the official apply link.",
   inputSchema: {
     slug: z.string().trim().min(1).describe("Scheme slug, as returned by search_schemes."),
   },

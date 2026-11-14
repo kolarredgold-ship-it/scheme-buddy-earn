@@ -73,7 +73,7 @@ const marketingPlan = [
   },
   {
     title: "Campus & referral growth",
-    body: "Student referral rewards and campus promoters through the Techrola Career Program convert word-of-mouth into measurable signups.",
+    body: "Student referral rewards and campus promoters through the Smartlio Career Program convert word-of-mouth into measurable signups.",
   },
   {
     title: "Regional language expansion",
@@ -95,21 +95,21 @@ const Investors = () => {
   return (
   <Layout>
     <Seo
-      title="Techrola for Sale / Investment | Acquire an Edu-Tech Platform"
-      description="Techrola — India's schemes discovery & AI career platform — is open to acquisition or strategic investment. Proven product, SEO engine and revenue; the founders seek capital mainly for marketing."
+      title="Smartlio for Sale / Investment | Acquire an Edu-Tech Platform"
+      description="Smartlio — India's schemes discovery & AI career platform — is open to acquisition or strategic investment. Proven product, SEO engine and revenue; the founders seek capital mainly for marketing."
       path="/investors"
-      keywords="Techrola for sale, acquire edu-tech startup India, buy edtech business India, Techrola investors, invest in Techrola, government schemes platform acquisition"
+      keywords="Smartlio for sale, acquire edu-tech startup India, buy edtech business India, Smartlio investors, invest in Smartlio, government schemes platform acquisition"
       jsonLd={[
         {
           "@context": "https://schema.org",
           "@type": "InvestorRelationsWebPage",
-          name: "Techrola Investor Relations",
+          name: "Smartlio Investor Relations",
           url: "https://techrola.in/investors",
           description:
-            "Business model, traction, growth strategy and use of funds for Techrola, an Indian edu-tech platform for government schemes and AI career tools.",
+            "Business model, traction, growth strategy and use of funds for Smartlio, an Indian edu-tech platform for government schemes and AI career tools.",
           about: {
             "@type": "Organization",
-            name: "Techrola",
+            name: "Smartlio",
             legalName: "Omlay Technologies",
             url: "https://techrola.in",
             email: EMAIL,
@@ -137,10 +137,10 @@ const Investors = () => {
       {/* Hero */}
       <p className="text-xs font-semibold uppercase tracking-wider text-primary">Investor Relations</p>
       <h1 className="mt-2 text-2xl md:text-4xl font-bold tracking-tight">
-        Invest in Techrola — India's schemes discovery and AI career platform
+        Invest in Smartlio — India's schemes discovery and AI career platform
       </h1>
       <p className="mt-3 text-base leading-relaxed text-muted-foreground max-w-3xl">
-        Techrola (operated by Omlay Technologies, Bengaluru) helps Indian students and citizens
+        Smartlio (operated by Omlay Technologies, Bengaluru) helps Indian students and citizens
         discover government schemes and build careers with AI tools. We are raising growth capital,
         with the majority of it directed at marketing and user acquisition to convert an already
         working product and SEO base into national scale.
@@ -148,7 +148,7 @@ const Investors = () => {
 
       <div className="mt-6 flex flex-wrap gap-3">
         <Button asChild>
-          <a href={`mailto:${EMAIL}?subject=Acquisition%20or%20investment%20enquiry%20-%20Techrola`}>
+          <a href={`mailto:${EMAIL}?subject=Acquisition%20or%20investment%20enquiry%20-%20Smartlio`}>
             Request the investor deck <ArrowRight className="ml-1.5 h-4 w-4" />
           </a>
         </Button>
@@ -160,7 +160,7 @@ const Investors = () => {
       {/* Acquisition banner */}
       <section className="mt-8 rounded-xl border-2 border-primary/40 bg-primary/5 p-6">
         <p className="text-xs font-semibold uppercase tracking-wider text-primary">Acquisition opportunity</p>
-        <h2 className="mt-2 text-xl md:text-2xl font-semibold">Techrola is open to acquisition or strategic investment</h2>
+        <h2 className="mt-2 text-xl md:text-2xl font-semibold">Smartlio is open to acquisition or strategic investment</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground max-w-3xl">
           The product, payments, SEO engine and content pipeline are fully built and generating
           revenue. The founders are looking for a buyer or strategic partner who can provide
@@ -175,12 +175,12 @@ const Investors = () => {
         </p>
         <div className="mt-4 flex flex-col sm:flex-row gap-3">
           <Button asChild size="sm">
-            <a href={`mailto:${EMAIL}?subject=Acquisition%20enquiry%20-%20Techrola%20for%20sale`}>
+            <a href={`mailto:${EMAIL}?subject=Acquisition%20enquiry%20-%20Smartlio%20for%20sale`}>
               <Mail className="mr-1.5 h-4 w-4" /> {EMAIL}
             </a>
           </Button>
           <Button asChild size="sm" variant="outline">
-            <a href={`https://wa.me/${PHONE_INTL.replace("+", "")}?text=${encodeURIComponent("Hi, I'm interested in acquiring or investing in Techrola. Please share details.")}`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://wa.me/${PHONE_INTL.replace("+", "")}?text=${encodeURIComponent("Hi, I'm interested in acquiring or investing in Smartlio. Please share details.")}`} target="_blank" rel="noopener noreferrer">
               <Phone className="mr-1.5 h-4 w-4" /> WhatsApp {PHONE}
             </a>
           </Button>
@@ -236,7 +236,7 @@ const Investors = () => {
               One mobile-first platform that aggregates and updates schemes daily, explains
               eligibility in plain language, and pairs it with AI tools — internship reports,
               resumes, SOPs, mock interviews, notes and PPTs — that students pay for at an
-              affordable annual price. Techrola turns scheme discovery and career preparation
+              affordable annual price. Smartlio turns scheme discovery and career preparation
               from a weeks-long effort into a guided, minutes-long experience.
             </p>
           </CardContent>
@@ -332,7 +332,7 @@ const Investors = () => {
           <li>• Operated by Omlay Technologies, Bengaluru, Karnataka, India.</li>
           <li>• Monthly investor reporting on traffic, signups, subscriptions, CAC and runway.</li>
           <li>• Marketing spend reported channel-by-channel with attribution data.</li>
-          <li>• Techrola is an independent private platform and is not a government body; scheme information is aggregated from public sources with a verification disclaimer.</li>
+          <li>• Smartlio is an independent private platform and is not a government body; scheme information is aggregated from public sources with a verification disclaimer.</li>
           <li>
             • Policies:{" "}
             <Link to="/privacy-policy" className="text-primary hover:underline">Privacy</Link>,{" "}
@@ -350,7 +350,7 @@ const Investors = () => {
           within one working day.
         </p>
         <div className="mt-4 flex flex-col sm:flex-row gap-3">
-          <a href={`mailto:${EMAIL}?subject=Investor%20enquiry%20-%20Techrola`} className="flex items-center gap-2 text-sm text-primary hover:underline">
+          <a href={`mailto:${EMAIL}?subject=Investor%20enquiry%20-%20Smartlio`} className="flex items-center gap-2 text-sm text-primary hover:underline">
             <Mail className="h-4 w-4" /> {EMAIL}
           </a>
           <a href={`tel:${PHONE_INTL}`} className="flex items-center gap-2 text-sm text-primary hover:underline">

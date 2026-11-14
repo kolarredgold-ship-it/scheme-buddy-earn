@@ -16,20 +16,20 @@ type Faq = { q: string; a: string };
 const sections: { id: string; title: string; icon: typeof Landmark; items: Faq[] }[] = [
   {
     id: "how-schemes-work",
-    title: "How government schemes work on Techrola",
+    title: "How government schemes work on Smartlio",
     icon: Landmark,
     items: [
       {
-        q: "What is Techrola and what does it do with government schemes?",
-        a: "Techrola is an Indian edu-tech platform that collects central and state government schemes, scholarships and welfare programmes into one searchable place. Each listing summarises the benefit, who it is meant for, the documents usually asked for, and where to apply on the official government website.",
+        q: "What is Smartlio and what does it do with government schemes?",
+        a: "Smartlio is an Indian edu-tech platform that collects central and state government schemes, scholarships and welfare programmes into one searchable place. Each listing summarises the benefit, who it is meant for, the documents usually asked for, and where to apply on the official government website.",
       },
       {
         q: "Where does the scheme information come from?",
         a: "Listings are compiled from public government sources and refreshed daily. Scheme summaries are AI-assisted, so always confirm the final details on the official government portal linked on the scheme page before you apply.",
       },
       {
-        q: "Does Techrola process my scheme application or pay the benefit?",
-        a: "No. Techrola is an information and career-tools platform. Applications are submitted on the official government portal, and the benefit is paid by the concerned government department directly to you. Techrola never asks for money on behalf of a government scheme.",
+        q: "Does Smartlio process my scheme application or pay the benefit?",
+        a: "No. Smartlio is an information and career-tools platform. Applications are submitted on the official government portal, and the benefit is paid by the concerned government department directly to you. Smartlio never asks for money on behalf of a government scheme.",
       },
       {
         q: "How do I find schemes for my state?",
@@ -56,7 +56,7 @@ const sections: { id: string; title: string; icon: typeof Landmark; items: Faq[]
       },
       {
         q: "Are there schemes for students, farmers and women specifically?",
-        a: "Yes. Techrola groups schemes by category — students and scholarships, farmers and agriculture, women and girl child, employment and jobs, health, housing, business loans and senior citizens — so you can browse only what fits you.",
+        a: "Yes. Smartlio groups schemes by category — students and scholarships, farmers and agriculture, women and girl child, employment and jobs, health, housing, business loans and senior citizens — so you can browse only what fits you.",
       },
     ],
   },
@@ -71,7 +71,7 @@ const sections: { id: string; title: string; icon: typeof Landmark; items: Faq[]
       },
       {
         q: "How long does approval take?",
-        a: "It depends entirely on the department and the scheme — some scholarships are processed within a few weeks of the closing date, while housing or loan schemes can take a few months. Techrola cannot influence or speed up approval.",
+        a: "It depends entirely on the department and the scheme — some scholarships are processed within a few weeks of the closing date, while housing or loan schemes can take a few months. Smartlio cannot influence or speed up approval.",
       },
       {
         q: "My application was rejected. What should I do?",
@@ -89,7 +89,7 @@ const sections: { id: string; title: string; icon: typeof Landmark; items: Faq[]
     icon: CreditCard,
     items: [
       {
-        q: "Is Techrola free to use?",
+        q: "Is Smartlio free to use?",
         a: "Browsing and searching schemes is free. Every AI tool also includes one free generation so you can try it. Pro unlocks full scheme details and higher AI usage limits.",
       },
       {
@@ -98,7 +98,7 @@ const sections: { id: string; title: string; icon: typeof Landmark; items: Faq[]
       },
       {
         q: "How do I pay, and is it secure?",
-        a: "Payments are handled by Razorpay, which supports UPI, cards, net banking and wallets. Techrola never sees or stores your card or UPI credentials, and Pro access is unlocked automatically the moment the payment is verified.",
+        a: "Payments are handled by Razorpay, which supports UPI, cards, net banking and wallets. Smartlio never sees or stores your card or UPI credentials, and Pro access is unlocked automatically the moment the payment is verified.",
       },
       {
         q: "When does my subscription expire and how do I renew?",
@@ -137,10 +137,10 @@ const jsonLd = [
 const Faq = () => (
   <Layout>
     <Seo
-      title="Techrola FAQ: Schemes, Eligibility, Applying & Payment"
-      description="Answers on how government schemes work on Techrola, who is eligible, the step-by-step application process, Pro pricing at ₹83.25/month and secure Razorpay payments."
+      title="Smartlio FAQ: Schemes, Eligibility, Applying & Payment"
+      description="Answers on how government schemes work on Smartlio, who is eligible, the step-by-step application process, Pro pricing at ₹83.25/month and secure Razorpay payments."
       path="/faq"
-      keywords="government scheme FAQ, scheme eligibility India, how to apply for government scheme, Techrola pricing, Techrola refund"
+      keywords="government scheme FAQ, scheme eligibility India, how to apply for government scheme, Smartlio pricing, Smartlio refund"
       jsonLd={jsonLd}
     />
 
@@ -153,7 +153,7 @@ const Faq = () => (
           Frequently asked questions
         </h1>
         <p className="mt-3 text-muted-foreground leading-relaxed">
-          Everything about how government schemes work on Techrola, how to check your eligibility,
+          Everything about how government schemes work on Smartlio, how to check your eligibility,
           the steps to apply, and how plans and payments are handled.
         </p>
         <nav className="mt-5 flex flex-wrap gap-2">

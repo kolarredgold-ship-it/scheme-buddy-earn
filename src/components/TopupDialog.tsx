@@ -34,7 +34,7 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
             <CreditCard className="h-5 w-5 text-primary" /> Top-up AI Credits
           </DialogTitle>
           <DialogDescription>
-            Instantly unlock 3 more AI generations across every Techrola tool.
+            Instantly unlock 3 more AI generations across every Smartlio tool.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -53,7 +53,7 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
               amount={499}
               userId={user.id}
               paymentType="topup"
-              description="Techrola AI Credits Top-up (+3 generations)"
+              description="Smartlio AI Credits Top-up (+3 generations)"
               prefill={{
                 name: profile?.name || "",
                 email: profile?.email || user.email || "",
@@ -74,7 +74,7 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
                 <Lock className="h-4 w-4" /> Sign in required
               </div>
               <p className="text-xs text-muted-foreground">
-                You need a Techrola account to purchase AI credits.
+                You need a Smartlio account to purchase AI credits.
               </p>
               <div className="flex gap-2">
                 <Button

@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2, Sparkles, Download } from "lucide-react";
 import UserPreferences from "@/components/UserPreferences";
 import NotificationBell from "@/components/NotificationBell";
-import techrolaLogo from "@/assets/techrola_logo.webp";
+const techrolaLogo = "/smartlio_logo.png";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
@@ -58,7 +58,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="h-1 w-full bg-gradient-to-r from-accent via-primary to-[hsl(140_60%_35%)]" aria-hidden="true" />
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center group">
-            <img src={techrolaLogo} alt="Techrola - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
+            <img src={techrolaLogo} alt="Smartlio - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
@@ -213,7 +213,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 </div>
                 <div>
                   <h3 className="text-xl md:text-2xl font-extrabold text-white leading-tight" >
-                    Techrola Career Program
+                    Smartlio Career Program
                   </h3>
                   <p className="text-white/70 text-[11px] md:text-xs font-medium">Work · Learn · Get Hired</p>
                 </div>
@@ -221,7 +221,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Description */}
               <p className="text-white/90 text-xs md:text-sm mb-5 max-w-lg leading-relaxed">
-                Start as a promoter, grow into a professional, and build your career with Techrola. 
+                Start as a promoter, grow into a professional, and build your career with Smartlio. 
                 Earn rewards, get certified, and land real opportunities!
               </p>
 

@@ -31,14 +31,14 @@ const offerings = [
 const AboutUs = () => (
   <Layout>
     <Seo
-      title="About Techrola | Government Schemes & AI Career Tools for India"
-      description="Techrola is an Indian edu-tech platform helping students and citizens discover 2500+ government schemes and use AI tools for resumes, reports, interviews and careers."
+      title="About Smartlio | Government Schemes & AI Career Tools for India"
+      description="Smartlio is an Indian edu-tech platform helping students and citizens discover 2500+ government schemes and use AI tools for resumes, reports, interviews and careers."
       path="/about-us"
-      keywords="about Techrola, government schemes platform India, AI tools for students, career program"
+      keywords="about Smartlio, government schemes platform India, AI tools for students, career program"
       jsonLd={{
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "Techrola",
+        name: "Smartlio",
         url: "https://techrola.in",
         description:
           "Indian edu-tech platform for government scheme discovery, AI student tools and career training.",
@@ -56,10 +56,10 @@ const AboutUs = () => (
     <div className="container mx-auto px-4 py-8 pb-20 md:pb-12 max-w-4xl">
       <p className="text-xs font-semibold uppercase tracking-wider text-primary">About us</p>
       <h1 className="mt-2 text-2xl md:text-4xl font-bold tracking-tight">
-        Techrola — government schemes and AI career tools for India
+        Smartlio — government schemes and AI career tools for India
       </h1>
       <p className="mt-4 text-base md:text-lg leading-relaxed text-muted-foreground">
-        Techrola is an Indian edu-tech platform operated by Omlay Technologies, Bengaluru. We help
+        Smartlio is an Indian edu-tech platform operated by Omlay Technologies, Bengaluru. We help
         students, job-seekers, farmers, women and every citizen find the government benefits they are
         entitled to — and give them the AI tools they need to build a career.
       </p>
@@ -91,7 +91,7 @@ const AboutUs = () => (
       </section>
 
       <section className="mt-10">
-        <h2 className="text-xl md:text-2xl font-semibold">How Techrola works</h2>
+        <h2 className="text-xl md:text-2xl font-semibold">How Smartlio works</h2>
         <ol className="mt-4 space-y-3 text-muted-foreground">
           <li className="flex gap-3">
             <span className="h-6 w-6 shrink-0 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">1</span>
@@ -119,7 +119,7 @@ const AboutUs = () => (
           <p className="text-sm leading-relaxed text-muted-foreground">
             Scheme information is aggregated from public government sources and enriched with AI.
             Note: This is AI-generated updates. Please verify details from official government
-            websites before applying. Payments are processed securely by Razorpay. Techrola is not a
+            websites before applying. Payments are processed securely by Razorpay. Smartlio is not a
             government body and never charges for a government application.
           </p>
         </div>

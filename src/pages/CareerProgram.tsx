@@ -401,7 +401,7 @@ const CareerProgram = () => {
                 <Input value={link} readOnly className="text-xs" />
                 <Button size="sm" variant="outline" onClick={() => {
                   if (navigator.share) {
-                    navigator.share({ title: "Join Techrola Career Program", text: `Use my code ${code} to join!`, url: link });
+                    navigator.share({ title: "Join Smartlio Career Program", text: `Use my code ${code} to join!`, url: link });
                   } else {
                     navigator.clipboard.writeText(link);
                     toast.success("Link copied!");
@@ -530,7 +530,7 @@ const CareerProgram = () => {
           <Badge className="mb-3 bg-primary/10 text-primary border-primary/20">
             <Trophy className="h-3 w-3 mr-1" /> Career Program
           </Badge>
-          <h1 className="text-2xl md:text-3xl font-extrabold mb-2">Join Techrola Career Program</h1>
+          <h1 className="text-2xl md:text-3xl font-extrabold mb-2">Join Smartlio Career Program</h1>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
             Work, Learn, and Get Hired Based on Your Performance
           </p>
@@ -545,7 +545,7 @@ const CareerProgram = () => {
           </CardHeader>
           <CardContent className="pt-0 space-y-4 text-sm leading-relaxed">
             <p className="text-muted-foreground">
-              The <strong className="text-foreground">Techrola Career Program</strong> is a
+              The <strong className="text-foreground">Smartlio Career Program</strong> is a
               performance-based work-from-home opportunity for students and graduates.
               Promote government schemes and AI career tools in your college / community,
               earn per referral, and unlock a paid internship, job or completion
@@ -574,7 +574,7 @@ const CareerProgram = () => {
               <ol className="space-y-2">
                 {[
                   "Register with your name, college, course and phone number below (Step 1).",
-                  "Activate your Techrola Pro subscription — ₹83.25/m with a referral code, or ₹249.92/m without (Step 2).",
+                  "Activate your Smartlio Pro subscription — ₹83.25/m with a referral code, or ₹249.92/m without (Step 2).",
                   "Copy your unique referral code and share link from Step 3.",
                   "Promote daily on WhatsApp, Instagram and college groups — minimum 3 real promotions per day.",
                   "Track streak, referrals and earnings in the Employee Dashboard (/emp).",
@@ -673,7 +673,7 @@ const CareerProgram = () => {
         {/* Final CTA */}
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground italic">
-            "Start as a promoter, grow into a professional, and build your career with Techrola."
+            "Start as a promoter, grow into a professional, and build your career with Smartlio."
           </p>
         </div>
       </div>

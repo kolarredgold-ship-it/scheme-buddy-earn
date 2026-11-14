@@ -293,7 +293,7 @@ const MockInterview = () => {
   return (
     <Layout>
       <Seo
-        title="AI Mock Interview Practice — Free Online Interview Training | Techrola"
+        title="AI Mock Interview Practice — Free Online Interview Training | Smartlio"
         description="Practice job interviews with AI. Get real interview questions, instant feedback and scoring across technical, HR and aptitude rounds — built for Indian students and freshers."
         path="/mock-interview"
         keywords="ai mock interview, online interview practice, hr interview questions, fresher interview preparation india"
@@ -305,7 +305,7 @@ const MockInterview = () => {
           operatingSystem: "Web",
           url: `${SITE_URL}/mock-interview`,
           offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-          provider: { "@type": "Organization", name: "Techrola", url: SITE_URL },
+          provider: { "@type": "Organization", name: "Smartlio", url: SITE_URL },
         }}
       />
       <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 max-w-5xl">

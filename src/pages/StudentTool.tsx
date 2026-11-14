@@ -639,7 +639,7 @@ const StudentTool = () => {
           );
         }
 
-        slide.addText("Techrola • Students AI Tools", {
+        slide.addText("Smartlio • Students AI Tools", {
           x: 0.5, y: 7.05, w: 12.3, h: 0.3,
           fontSize: 10, color: MUTED, fontFace: "Calibri", align: "right",
         });
@@ -664,12 +664,12 @@ const StudentTool = () => {
   };
 
   const landing = aiToolLandings.find((l) => l.toolPath === `/student-tool/${slug}`);
-  const seoDescription = `${tool.desc} Free AI tool for Indian students by Techrola — no design skills needed.`;
+  const seoDescription = `${tool.desc} Free AI tool for Indian students by Smartlio — no design skills needed.`;
 
   return (
     <Layout>
       <Seo
-        title={`${tool.title} — Free Online AI Tool for Students | Techrola`}
+        title={`${tool.title} — Free Online AI Tool for Students | Smartlio`}
         description={seoDescription}
         path={`/student-tool/${slug}`}
         keywords={`${tool.title.toLowerCase()}, ai ${slug.replace(/-/g, " ")} generator, students ai tools india`}
@@ -683,7 +683,7 @@ const StudentTool = () => {
             operatingSystem: "Web",
             url: `${SITE_URL}/student-tool/${slug}`,
             offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-            provider: { "@type": "Organization", name: "Techrola", url: SITE_URL },
+            provider: { "@type": "Organization", name: "Smartlio", url: SITE_URL },
           },
           {
             "@context": "https://schema.org",

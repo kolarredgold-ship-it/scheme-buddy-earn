@@ -120,7 +120,7 @@ const Subscription = () => {
                 amount={ANNUAL_PRICE}
                 userId={user!.id}
                 paymentType="subscription"
-                description="Techrola Premium (Annual Renewal)"
+                description="Smartlio Premium (Annual Renewal)"
                 prefill={{
                   name: profile?.name || "",
                   email: profile?.email || user?.email || "",
@@ -270,7 +270,7 @@ const Subscription = () => {
               amount={ANNUAL_PRICE}
               userId={user.id}
               paymentType="subscription"
-              description="Techrola Premium (Annual)"
+              description="Smartlio Premium (Annual)"
               prefill={{
                 name: profile?.name || "",
                 email: profile?.email || user.email || "",
@@ -291,7 +291,7 @@ const Subscription = () => {
               size="sm"
               className="w-full text-muted-foreground"
               onClick={() => {
-                const msg = `Hi, I need help paying for Techrola Premium (₹${ANNUAL_PRICE}).%0AName: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}`;
+                const msg = `Hi, I need help paying for Smartlio Premium (₹${ANNUAL_PRICE}).%0AName: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}`;
                 window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
               }}
             >

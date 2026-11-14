@@ -72,7 +72,7 @@ const HomeBlogSection = () => {
             <Newspaper className="h-3.5 w-3.5" /> Latest Blogs
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            From the Techrola Blog
+            From the Smartlio Blog
           </h2>
           <p className="text-sm text-muted-foreground mt-1 max-w-xl">
             Fresh SEO guides — earn safely, discover schemes, ace interviews.

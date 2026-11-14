@@ -42,7 +42,7 @@ export default function RazorpayCheckoutButton({
   amount,
   currency = "INR",
   receipt,
-  name = "Techrola",
+  name = "Smartlio",
   description = "Payment",
   prefill,
   userId,

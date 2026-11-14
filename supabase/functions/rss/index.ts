@@ -1,4 +1,4 @@
-// Public RSS 2.0 feed for Techrola blogs.
+// Public RSS 2.0 feed for Smartlio blogs.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const SITE_URL = "https://techrola.in";
@@ -35,7 +35,7 @@ Deno.serve(async () => {
       <guid isPermaLink="true">${escapeXml(link)}</guid>
       <pubDate>${pub}</pubDate>
       <category>${cdata(b.category || "Career Tips")}</category>
-      <author>noreply@techrola.in (${escapeXml(b.author || "Techrola Editorial")})</author>
+      <author>noreply@techrola.in (${escapeXml(b.author || "Smartlio Editorial")})</author>
       <description>${cdata(b.excerpt || "")}</description>
       ${img}
     </item>`;
@@ -44,7 +44,7 @@ Deno.serve(async () => {
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Techrola Blog — Career, Schemes &amp; AI Tools for Indian Students</title>
+    <title>Smartlio Blog — Career, Schemes &amp; AI Tools for Indian Students</title>
     <link>${SITE_URL}/blog</link>
     <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
     <description>Daily fresh, honest SEO blogs on earning online, government schemes, career tips, resumes, interviews and AI tools — for Indian students and job seekers.</description>
