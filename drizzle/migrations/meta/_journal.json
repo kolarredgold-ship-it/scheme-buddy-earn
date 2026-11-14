@@ -8,6 +8,13 @@
       "when": 1792040246510,
       "tag": "0000_require_registered_profile_for_interview_bank",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794640836228,
+      "tag": "0001_tighten_notifications_and_site_events",
+      "breakpoints": true
     }
   ]
 }
