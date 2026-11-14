@@ -19,7 +19,7 @@
       {
         "name": "search_schemes",
         "title": "Search government schemes and jobs",
-        "description": "Search Techrola's catalogue of Indian government schemes, scholarships and job notifications by keyword, category and state.",
+        "description": "Search Smartlio's catalogue of Indian government schemes, scholarships and job notifications by keyword, category and state.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -59,7 +59,7 @@
       {
         "name": "get_scheme",
         "title": "Get scheme details",
-        "description": "Fetch the full details of one Techrola scheme or job listing by its slug, including eligibility, documents and the official apply link.",
+        "description": "Fetch the full details of one Smartlio scheme or job listing by its slug, including eligibility, documents and the official apply link.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -84,8 +84,8 @@
       },
       {
         "name": "search_blogs",
-        "title": "Search Techrola articles",
-        "description": "Search published Techrola blog articles about schemes, jobs, careers and AI student tools.",
+        "title": "Search Smartlio articles",
+        "description": "Search published Smartlio blog articles about schemes, jobs, careers and AI student tools.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -114,8 +114,8 @@
       },
       {
         "name": "get_blog",
-        "title": "Read a Techrola article",
-        "description": "Fetch the full markdown body of one published Techrola article by slug.",
+        "title": "Read a Smartlio article",
+        "description": "Fetch the full markdown body of one published Smartlio article by slug.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -140,8 +140,8 @@
       },
       {
         "name": "get_my_account",
-        "title": "Get my Techrola account",
-        "description": "Return the signed-in user's Techrola account summary: subscription status and expiry, referral code, wallet balance and remaining AI tool credits.",
+        "title": "Get my Smartlio account",
+        "description": "Return the signed-in user's Smartlio account summary: subscription status and expiry, referral code, wallet balance and remaining AI tool credits.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
