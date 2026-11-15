@@ -643,34 +643,6 @@ const Index = () => {
             {/* Mobile AI tools hero slider with background images */}
             <div className="md:hidden mt-3">{renderToolSlider("mobile")}</div>
 
-            {/* Mobile-only compact stats strip */}
-            <div className="md:hidden mt-3 grid grid-cols-3 gap-2 rounded-lg border border-border bg-card px-3 py-3">
-              {[
-                { v: "2,500+", l: "Schemes" },
-                { v: "20+", l: "AI Tools" },
-                { v: "₹83.25", l: "Pro / m" },
-              ].map((s) => (
-                <div key={s.l} className="text-center">
-                  <div className="text-base font-extrabold text-foreground leading-none">{s.v}</div>
-                  <div className="text-[10px] text-muted-foreground mt-1">{s.l}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Quick action pills */}
-            <div className="mt-4 md:mt-8 grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
-              {[
-                { icon: "📝", title: "Student Registration", to: "/signup", tint: "bg-orange-50 border-orange-200" },
-                { icon: "🏫", title: "Search Colleges", to: "#colleges", tint: "bg-blue-50 border-blue-200" },
-                { icon: "💼", title: "Find Internships", to: "/ai-tools", tint: "bg-blue-50 border-blue-200" },
-                { icon: "🤖", title: "AI Career Tools", to: "/ai-tools", tint: "bg-amber-50 border-amber-200" },
-              ].map((f) => (
-                <a key={f.title} href={f.to} className={`flex items-center gap-2.5 md:gap-3 rounded-lg border ${f.tint} px-2.5 md:px-3 py-2.5 min-h-[56px] active:scale-[0.98] hover:shadow-sm transition-all`}>
-                  <div className="h-9 w-9 md:h-10 md:w-10 rounded-lg bg-white flex items-center justify-center text-base md:text-lg shadow-sm shrink-0">{f.icon}</div>
-                  <div className="text-[11.5px] md:text-sm font-bold text-foreground leading-tight">{f.title}</div>
-                </a>
-              ))}
-            </div>
 
           </div>
         </section>
@@ -755,18 +727,18 @@ const Index = () => {
           )}
 
           {/* Tool cards grid — compact on mobile, expandable */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4">
             {aiStudentTools.slice(1).map((t, i) => (
               <Link
                 key={t.to}
                 to={t.to}
                 onClick={() => trackToolClick(t.to, "home-grid")}
-                className={`group relative ${i >= 6 && !showAllTools ? "hidden md:flex" : "flex"} flex-col items-start gap-1.5 md:gap-2 p-3 md:p-4 rounded-lg border border-border/70 bg-card hover:border-blue-300 hover:shadow-[0_10px_28px_-14px_rgba(31,95,169,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
+                className={`group relative flex flex-col items-start gap-1.5 md:gap-2 p-2 md:p-4 rounded-lg border border-border/70 bg-card hover:border-blue-300 hover:shadow-[0_10px_28px_-14px_rgba(31,95,169,0.4)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200`}
               >
-                <div className={`h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center text-lg md:text-2xl ${TOOL_TINTS[i % TOOL_TINTS.length]} group-hover:scale-105 transition-transform`}>
+                <div className={`h-8 w-8 md:h-12 md:w-12 rounded-full flex items-center justify-center text-base md:text-2xl ${TOOL_TINTS[i % TOOL_TINTS.length]} group-hover:scale-105 transition-transform`}>
                   {t.icon}
                 </div>
-                <h3 className="text-[12.5px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
+                <h3 className="text-[11px] md:text-sm font-bold text-foreground leading-tight line-clamp-2">
                   {t.title.replace(/^AI\s+/, "")}
                 </h3>
                 <p className="hidden md:block text-[11px] md:text-xs text-muted-foreground leading-snug line-clamp-2">
@@ -779,7 +751,7 @@ const Index = () => {
             ))}
           </div>
 
-          {aiStudentTools.length > 7 && (
+          {false && (
             <div className="md:hidden mt-4">
               <Button
                 variant="outline"

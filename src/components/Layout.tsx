@@ -58,7 +58,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="h-1 w-full bg-gradient-to-r from-accent via-primary to-[hsl(140_60%_35%)]" aria-hidden="true" />
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center group">
-            <img src={techrolaLogo} alt="Smartlio - Empowering Public & Students" className="h-9 md:h-10 w-auto" />
+            <img src={techrolaLogo} alt="Smartlio - Empowering Public & Students" className="h-6 md:h-7 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
