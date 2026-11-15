@@ -988,6 +988,12 @@ Signature of Candidate: _______________`
         if (!response.ok) {
           const errorText = await response.text();
           console.error("DeepSeek API error:", response.status, errorText);
+          if (response.status === 402 || /insufficient/i.test(errorText)) {
+            return new Response(
+              JSON.stringify({ error: "Report writing is temporarily unavailable. Please try again later.", code: "ai_unavailable" }),
+              { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+          }
           throw new Error(`DeepSeek API error: ${response.status}`);
         }
  

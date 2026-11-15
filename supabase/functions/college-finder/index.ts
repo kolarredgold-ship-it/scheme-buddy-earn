@@ -58,8 +58,10 @@ Rules:
 
     if (!aiRes.ok) {
       const t = await aiRes.text();
-      return new Response(JSON.stringify({ success: false, error: `AI error: ${t.slice(0, 200)}` }), {
-        status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      console.error("AI error:", aiRes.status, t.slice(0, 300));
+      const unavailable = aiRes.status === 402 || /insufficient/i.test(t);
+      return new Response(JSON.stringify({ success: false, error: unavailable ? "College search is temporarily unavailable. Please try again later." : "Could not load results. Please try again." }), {
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 

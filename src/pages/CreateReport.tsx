@@ -611,6 +611,10 @@ const CreateReport = () => {
         setIsApiCalling(false); // Stop thinking timer
         
         if (error) throw error;
+        if (data?.code === 'ai_unavailable') {
+          toast({ title: 'Temporarily unavailable', description: data.error, variant: 'destructive' });
+          return null;
+        }
         return data?.content || null;
       } catch (error: any) {
         setIsApiCalling(false); // Stop thinking timer on error
@@ -731,6 +735,7 @@ const CreateReport = () => {
         setIsApiCalling(false); // Stop thinking timer
         
         if (error) throw error;
+        if (data?.code === 'ai_unavailable') return null;
         if (data?.content) {
           contents.push(data.content);
           
