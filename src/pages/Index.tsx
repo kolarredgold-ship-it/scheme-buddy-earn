@@ -679,10 +679,10 @@ const Index = () => {
                     <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                     <div className="relative z-10 max-w-sm text-white">
                       <h1 className="text-[1.6rem] sm:text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                        Start, switch, or advance your career
+                        Looking for Job, Start, switch, or advance your career
                       </h1>
                       <p className="mt-3 sm:mt-4 text-sm md:text-base text-white/85">
-                        Grow with 2,500+ government schemes, AI tools and career programs — built for Bharat.
+                        Grow with SmartLio AI tools and career programs — built for Bharat.
                       </p>
                       <Link to={user ? "/dashboard" : "/signup"}>
                         <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(212_75%_31%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
