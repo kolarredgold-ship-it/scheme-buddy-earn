@@ -615,7 +615,7 @@ const Index = () => {
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="md:order-2 relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="hidden md:block md:order-2 relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
@@ -671,6 +671,33 @@ const Index = () => {
           <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-blue-50 to-transparent" />
         </div>
 
+
+        {/* Mobile career card — below sliding strip */}
+        <div className="md:hidden container mx-auto px-5 pt-5">
+                  <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
+                    <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
+                    <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
+                    <div className="relative z-10 max-w-sm text-white">
+                      <h1 className="text-[1.6rem] sm:text-3xl md:text-5xl font-extrabold leading-[1.05] tracking-tight" style={{ fontFamily: "Plus Jakarta Sans" }}>
+                        Start, switch, or advance your career
+                      </h1>
+                      <p className="mt-3 sm:mt-4 text-sm md:text-base text-white/85">
+                        Grow with 2,500+ government schemes, AI tools and career programs — built for Bharat.
+                      </p>
+                      <Link to={user ? "/dashboard" : "/signup"}>
+                        <Button size="lg" className="mt-5 sm:mt-6 rounded-full bg-white text-[hsl(212_75%_31%)] hover:bg-white/95 font-bold px-5 sm:px-6 shadow-md gap-2">
+                          {user ? "Go to dashboard" : "Join for Free"}
+                          <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                    <img
+                      src={heroStudents}
+                      alt="Smartlio student"
+                      className="hidden sm:block absolute right-0 bottom-0 h-[85%] w-auto object-contain object-bottom drop-shadow-2xl pointer-events-none"
+                    />
+                  </div>
+        </div>
 
         {/* AI TOOLS */}
         <section className="container mx-auto px-5 md:px-8 lg:px-12 py-10 md:py-14">

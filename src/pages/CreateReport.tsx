@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -305,6 +305,17 @@ const CreateReport = () => {
       checkForResumableReport();
     }
   }, [user]);
+
+  // Prefill from course shortcuts (?kind=&course=)
+  const location = useLocation();
+  useEffect(() => {
+    const sp = new URLSearchParams(location.search);
+    const k = sp.get('kind');
+    if (k === 'internship' || k === 'project' || k === 'thesis') setReportKind(k);
+    const c = sp.get('course');
+    if (c) setFormData(prev => ({ ...prev, course: c }));
+    if (k || c) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location.search]);
 
   // Prefill from Generate wizard (sessionStorage handoff)
   useEffect(() => {
@@ -1691,7 +1702,7 @@ const CreateReport = () => {
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
               <KindIcon className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-xl">InternReport.in</span>
+            <img src="/smartlio_logo.png" alt="Smartlio" className="h-6 w-auto" />
           </div>
         </div>
       </header>
