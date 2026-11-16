@@ -609,10 +609,13 @@ const Index = () => {
               </div>
             </div>
 
+            {/* Mobile AI tools hero slider with background images */}
+            <div className="md:hidden mb-3">{renderToolSlider("mobile")}</div>
+
             {/* Dual promo cards */}
             <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Left card — For students / individuals */}
-              <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
+              <div className="md:order-2 relative overflow-hidden rounded-lg bg-gradient-to-br from-[hsl(212_69%_39%)] via-[hsl(212_75%_31%)] to-[hsl(214_80%_24%)] p-5 sm:p-7 md:p-10 min-h-[260px] sm:min-h-[300px] md:min-h-[380px] shadow-lg">
                 <div className="absolute -top-16 -right-10 h-64 w-64 rounded-full bg-pink-400/40 blur-2xl" />
                 <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-white/15" />
                 <div className="relative z-10 max-w-sm text-white">
@@ -637,11 +640,9 @@ const Index = () => {
               </div>
 
               {/* Right card — AI tools image slider (desktop) */}
-              <div className="hidden md:block">{renderToolSlider("desktop")}</div>
+              <div className="hidden md:block md:order-1">{renderToolSlider("desktop")}</div>
             </div>
 
-            {/* Mobile AI tools hero slider with background images */}
-            <div className="md:hidden mt-3">{renderToolSlider("mobile")}</div>
 
 
           </div>
