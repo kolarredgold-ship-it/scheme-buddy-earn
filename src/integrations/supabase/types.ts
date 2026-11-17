@@ -446,11 +446,13 @@ export type Database = {
           company_name: string | null
           course: string | null
           created_at: string
+          download_count: number
           form_data: Json
           guide_name: string | null
           id: string
           internship_duration: string | null
           internship_title: string | null
+          last_downloaded_at: string | null
           pages_count: number | null
           register_number: string | null
           report_content: string | null
@@ -471,11 +473,13 @@ export type Database = {
           company_name?: string | null
           course?: string | null
           created_at?: string
+          download_count?: number
           form_data?: Json
           guide_name?: string | null
           id?: string
           internship_duration?: string | null
           internship_title?: string | null
+          last_downloaded_at?: string | null
           pages_count?: number | null
           register_number?: string | null
           report_content?: string | null
@@ -496,11 +500,13 @@ export type Database = {
           company_name?: string | null
           course?: string | null
           created_at?: string
+          download_count?: number
           form_data?: Json
           guide_name?: string | null
           id?: string
           internship_duration?: string | null
           internship_title?: string | null
+          last_downloaded_at?: string | null
           pages_count?: number | null
           register_number?: string | null
           report_content?: string | null
@@ -870,6 +876,7 @@ export type Database = {
     }
     Functions: {
       canonical_tool_keys: { Args: never; Returns: string[] }
+      claim_report_generation: { Args: { _report_id: string }; Returns: Json }
       consume_tool_credit: {
         Args: { _meta?: Json; _tool_key: string }
         Returns: Json
@@ -884,6 +891,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      record_report_download: {
+        Args: { _report_id: string }
+        Returns: undefined
       }
       referral_code_exists: { Args: { _code: string }; Returns: boolean }
       verify_cron_secret: { Args: { _token: string }; Returns: boolean }

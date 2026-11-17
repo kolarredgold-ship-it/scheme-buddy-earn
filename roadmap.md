@@ -6,6 +6,7 @@
 - [x] Fix report course shortcuts + InternReport.in header.
 
 # InternReport.in feature transfer
+- [ ] Resolve the newly reported preview error from the uploaded screenshot.
 - [ ] Compare all non-digital-product features, forms and generation conditions.
 - [ ] Import missing report workflows while preserving Smartlio sign-in, payments and DeepSeek.
 - [ ] Test report rules and verify connected report workflows on mobile and desktop.
