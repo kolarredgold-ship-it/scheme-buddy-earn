@@ -30,8 +30,8 @@ const getMaxPagesCount = (kind: string) => kind === 'thesis' ? THESIS_MAX_PAGES_
        );
      }
  
-     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
+     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
      
      const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
        global: { headers: { Authorization: authHeader } }
@@ -73,14 +73,14 @@ const getMaxPagesCount = (kind: string) => kind === 'thesis' ? THESIS_MAX_PAGES_
      const isInternshipKind = !(body.reportKind === 'project' || body.reportKind === 'thesis');
      const requiredFields = [
        'studentName', 'registerNumber', 'course', 'collegeName',
-       'university', 'guideName', 'internshipTitle',
-       ...(isInternshipKind ? ['companyName', 'companyLocation', 'internshipDuration'] : []),
+       'university', ...(!isInternshipKind ? ['guideName'] : []), 'internshipTitle',
+       ...(isInternshipKind ? ['companyName', 'internshipDuration'] : []),
        'academicYear',
        'topicSpecialization', 'pagesCount'
      ];
 
      // Optional fields still validated for type/length when present
-     const optionalStringFields = isInternshipKind ? [] : ['companyName', 'companyLocation', 'internshipDuration'];
+     const optionalStringFields = isInternshipKind ? ['guideName', 'companyLocation'] : ['companyName', 'companyLocation', 'internshipDuration'];
      for (const field of optionalStringFields) {
        if (body[field] === undefined || body[field] === null) body[field] = '';
      }
@@ -168,28 +168,14 @@ const getMaxPagesCount = (kind: string) => kind === 'thesis' ? THESIS_MAX_PAGES_
   
       console.log("Input validation passed for user:", userId, "Kind:", reportKind, "Chapter:", chapter || "Full", "Part:", part || "Full");
  
-     // ========== BUSINESS LOGIC ==========
-     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-     const supabase = createClient(supabaseUrl, supabaseServiceKey);
- 
-     let newCount = 0;
-     // One credit per report: consumed when the first section (front matter) is generated.
-     if (!chapter || chapter === 'front') {
-       const { data: isAdmin } = await supabaseAuth.rpc('has_role', { _user_id: userId, _role: 'admin' });
-       if (!isAdmin) {
-         const { data: creditRes, error: creditErr } = await supabaseAuth.rpc('consume_tool_credit', {
-           _tool_key: 'full',
-           _meta: { source: 'generate-report', reportKind, chapter },
-         });
-         if (creditErr) throw new Error('Failed to verify generation limit');
-         if (!creditRes?.ok) {
-           return new Response(
-             JSON.stringify({ error: 'Generation limit reached. Upgrade or top up to continue.', reason: creditRes?.reason }),
-             { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-           );
-         }
-       }
+     const supabase = supabaseAuth;
+     const reportId = body.reportId;
+     if (typeof reportId !== 'string' || !/^[0-9a-f-]{36}$/i.test(reportId)) {
+       return new Response(JSON.stringify({ error: 'Save a report before generating.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
      }
+     const { data: ownedReport } = await supabase.from('reports').select('id').eq('id', reportId).eq('user_id', userId).maybeSingle();
+     if (!ownedReport) return new Response(JSON.stringify({ error: 'Report not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+     const newCount = 0;
 
       const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
       
@@ -974,7 +960,7 @@ Signature of Candidate: _______________`
               },
               {
                 role: "user",
-                content: chapterPrompt
+                content: chapterPrompt + (body.preferences?.includeAppendix === false ? "\nDo not add appendices." : "") + (Array.isArray(body.preferences?.customToc) ? "\nUse these report section titles and items: " + JSON.stringify(body.preferences.customToc).slice(0, 6000) : "")
               }
             ],
             max_tokens: 8000,
@@ -1022,6 +1008,11 @@ Signature of Candidate: _______________`
        throw new Error("No content generated");
      }
  
+     // Claim only after the provider succeeds; unavailable writing never spends an allowance.
+     const { data: creditRes, error: creditErr } = await supabase.rpc('claim_report_generation', { _report_id: reportId });
+     if (creditErr || !creditRes?.ok) return new Response(JSON.stringify({ error: 'Generation limit reached. Upgrade or top up to continue.', reason: creditRes?.reason }), { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+     if (creditRes.free && reportKind === 'internship' && chapter === '5') return new Response(JSON.stringify({ error: 'Bibliography requires Pro.' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+
      if (chapter) {
        console.log(`Chapter ${chapter} generated successfully for user:`, userId);
        return new Response(
@@ -1034,31 +1025,8 @@ Signature of Candidate: _______________`
        );
      }
  
-     const { data: report, error: reportError } = await supabase
-       .from("reports")
-       .insert({
-         user_id: userId,
-         student_name: studentName,
-         register_number: registerNumber,
-         course: course,
-         college_name: collegeName,
-         university: university,
-         guide_name: guideName,
-         internship_title: internshipTitle,
-         company_name: companyName,
-         company_location: companyLocation,
-         internship_duration: internshipDuration,
-         academic_year: academicYear,
-         topic_specialization: topicSpecialization,
-         pages_count: pagesCount,
-         report_content: generatedContent,
-         report_kind: reportKind,
-         report_type: "full",
-         status: "completed",
-       })
-       .select()
-       .single();
- 
+     const { data: report, error: reportError } = await supabase.from('reports').update({ report_content: generatedContent, report_kind: reportKind, status: 'completed' }).eq('id', reportId).eq('user_id', userId).select('id').single();
+
      if (reportError) {
        console.error("Report save error:", reportError);
        throw new Error("Failed to save report");

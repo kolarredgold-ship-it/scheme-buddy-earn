@@ -18,6 +18,7 @@ import { saveAs } from 'file-saver';
 import TopupDialog from '@/components/TopupDialog';
 import GenerateShortcuts from '@/components/GenerateShortcuts';
 import QualityGate from '@/components/QualityGate';
+import { parseReportChapters, reportChapterKeys, type ReportPreferences } from '@/lib/reportWorkflow';
 import { getReportKindTheme } from '@/lib/reportKindTheme';
 
 
@@ -188,6 +189,11 @@ const CreateReport = () => {
         };
 
 
+  const [preferences, setPreferences] = useState<ReportPreferences>({});
+  const reportIdRef = useRef<string | null>(null);
+  const stoppedRef = useRef(false);
+  const unavailableRef = useRef(false);
+
   const [qualityPassed, setQualityPassed] = useState(false);
 
   const [generating, setGenerating] = useState(false);
@@ -301,7 +307,7 @@ const CreateReport = () => {
 
   // Check for resumable reports on load
   useEffect(() => {
-    if (user) {
+    if (user && !new URLSearchParams(window.location.search).has('from')) {
       checkForResumableReport();
     }
   }, [user]);
@@ -323,6 +329,8 @@ const CreateReport = () => {
       const raw = sessionStorage.getItem('prefill_report_form');
       if (!raw) return;
       const p = JSON.parse(raw) || {};
+      setPreferences({ fontStyle: p.fontStyle, includeAppendix: p.includeAppendix, customToc: p.customToc });
+      setChapterContent({}); setCurrentReportId(null); reportIdRef.current = null;
       let kind: ReportKind = 'internship';
       if (p.reportKind === 'project' || p.reportKind === 'thesis' || p.reportKind === 'internship') {
         kind = p.reportKind;
@@ -352,64 +360,20 @@ const CreateReport = () => {
   }, []);
 
   const checkForResumableReport = async () => {
-    try {
-      // Find reports that have partial content saved
-      const { data: reports } = await supabase
-        .from('reports')
-        .select('id, report_content, report_kind, student_name, register_number, course, college_name, university, guide_name, internship_title, company_name, company_location, internship_duration, academic_year, topic_specialization, pages_count')
-        .eq('user_id', user?.id)
-        .eq('status', 'generating')
-        .order('updated_at', { ascending: false })
-        .limit(1);
-
-      if (reports && reports.length > 0) {
-        const report = reports[0];
-        if (report.report_content) {
-          try {
-            const savedContent = JSON.parse(report.report_content) as ChapterContent;
-            const completedCount = Object.keys(savedContent).filter(k => savedContent[k]).length;
-            
-            if (completedCount > 0 && completedCount < getChapters(report.internship_title).length) {
-              setResumingReport(true);
-              setCurrentReportId(report.id);
-              setChapterContent(savedContent);
-
-              const savedKind: ReportKind =
-                report.report_kind === 'project' || report.report_kind === 'thesis' || report.report_kind === 'internship'
-                  ? report.report_kind
-                  : 'internship';
-              setReportKind(savedKind);
-              
-              // Restore form data
-              setFormData({
-                studentName: report.student_name,
-                registerNumber: report.register_number,
-                course: report.course,
-                collegeName: report.college_name,
-                university: report.university,
-                guideName: report.guide_name,
-                internshipTitle: report.internship_title,
-                companyName: report.company_name,
-                companyLocation: report.company_location,
-                internshipDuration: report.internship_duration,
-                academicYear: report.academic_year,
-                topicSpecialization: report.topic_specialization,
-                pagesCount: clampPagesCount(report.pages_count, savedKind),
-              });
-
-              toast({
-                title: 'Resume available',
-                description: `Found incomplete report with ${completedCount}/${getChapters(report.internship_title).length} chapters. You can continue from where you left off.`,
-              });
-            }
-          } catch (e) {
-            console.error('Error parsing saved content:', e);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error checking for resumable reports:', error);
-    }
+    if (!user) return;
+    const params = new URLSearchParams(window.location.search);
+    const requestedId = params.get('reportId');
+    let query = supabase.from('reports').select('*').eq('user_id', user.id);
+    query = requestedId ? query.eq('id', requestedId) : query.eq('status', 'generating');
+    const { data, error } = await query.order('updated_at', { ascending: false }).limit(1).maybeSingle();
+    if (error || !data) return;
+    const kind: ReportKind = data.report_kind === 'thesis' || data.report_kind === 'project' ? data.report_kind : 'internship';
+    const saved = data.form_data && typeof data.form_data === 'object' && !Array.isArray(data.form_data) ? data.form_data : {};
+    setPreferences(saved as ReportPreferences);
+    setReportKind(kind); setCurrentReportId(data.id); reportIdRef.current = data.id;
+    setChapterContent(parseReportChapters(data.report_content, data.chapter_content));
+    setResumingReport(true);
+    setFormData({ studentName: data.student_name || '', registerNumber: data.register_number || '', course: data.course || '', collegeName: data.college_name || '', university: data.university || '', guideName: data.guide_name || '', internshipTitle: data.internship_title || '', companyName: data.company_name || '', companyLocation: data.company_location || '', internshipDuration: data.internship_duration || '', academicYear: data.academic_year || '', topicSpecialization: data.topic_specialization || '', pagesCount: clampPagesCount(data.pages_count, kind) });
   };
 
   // Save chapter content to database
@@ -419,6 +383,7 @@ const CreateReport = () => {
         .from('reports')
         .update({ 
           report_content: JSON.stringify(content),
+          chapter_content: content,
           updated_at: new Date().toISOString()
         })
         .eq('id', reportId);
@@ -457,7 +422,7 @@ const CreateReport = () => {
   const completedChapters = Object.keys(chapterContent).filter(k => chapterContent[k]);
   const hasAnyContent = completedChapters.length > 0;
   const allChapters = getChapters(formData.internshipTitle, reportKind);
-  const requiredChapters = hasApprovedPayment ? allChapters : allChapters.filter(ch => ch.key !== '5');
+  const requiredChapters = allChapters.filter(ch => reportChapterKeys(reportKind, !hasApprovedPayment, preferences).includes(ch.key));
   const hasAllContent = requiredChapters.every(ch => chapterContent[ch.key]);
 
   useEffect(() => {
@@ -473,6 +438,7 @@ const CreateReport = () => {
   }, [user]);
 
   const checkUserStatus = async () => {
+    if (!user) return;
     setCheckingStatus(true);
     try {
       const { data: isAdminData } = await supabase
@@ -484,19 +450,19 @@ const CreateReport = () => {
       const { data: prof } = await supabase
         .from('profiles')
         .select('subscription_status, subscription_expires_at')
-        .eq('user_id', user!.id)
+        .eq('user_id', user.id)
         .maybeSingle();
       const isPro = prof?.subscription_status === 'active' &&
         (!prof?.subscription_expires_at || new Date(prof.subscription_expires_at) > new Date());
       const { count: freeUsedCount } = await supabase
         .from('report_generations')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', user!.id)
+        .eq('user_id', user.id)
         .eq('report_type', 'full');
       const { data: credit } = await supabase
         .from('tool_credits')
         .select('credits')
-        .eq('user_id', user!.id)
+        .eq('user_id', user.id)
         .eq('tool_key', 'full')
         .maybeSingle();
       const paidCredits = credit ? credit.credits : (isPro ? 3 : 0);
@@ -527,9 +493,9 @@ const CreateReport = () => {
   const validateForm = () => {
     const requiredFields = [
       'studentName', 'registerNumber', 'course', 'collegeName', 
-      'university', 'guideName', 'internshipTitle',
+      'university', ...(reportKind === 'internship' ? [] : ['guideName']), 'internshipTitle',
       ...(reportKind === 'internship'
-        ? ['companyName', 'companyLocation', 'internshipDuration']
+        ? ['companyName', 'internshipDuration']
         : []),
       'academicYear', 'topicSpecialization'
     ];
@@ -615,6 +581,8 @@ const CreateReport = () => {
             ...getGenerationPayload(formData, reportKind),
             userId: user?.id,
             reportKind,
+            reportId: reportIdRef.current,
+            preferences,
             chapter: chapterKey,
           },
         });
@@ -623,6 +591,7 @@ const CreateReport = () => {
         
         if (error) throw error;
         if (data?.code === 'ai_unavailable') {
+          unavailableRef.current = true; stoppedRef.current = true;
           toast({ title: 'Temporarily unavailable', description: data.error, variant: 'destructive' });
           return null;
         }
@@ -686,6 +655,7 @@ const CreateReport = () => {
 
   // Stop generation handler
   const handleStopGeneration = () => {
+    stoppedRef.current = true;
     setStopRequested(true);
     setAllGeneratedLines(prev => [...prev, { 
       chapter: currentChapter || '', 
@@ -738,6 +708,8 @@ const CreateReport = () => {
             ...getGenerationPayload(formData, reportKind),
             userId: user?.id,
             reportKind,
+            reportId: reportIdRef.current,
+            preferences,
             chapter: chapterKey,
             part: part,
           },
@@ -746,7 +718,7 @@ const CreateReport = () => {
         setIsApiCalling(false); // Stop thinking timer
         
         if (error) throw error;
-        if (data?.code === 'ai_unavailable') return null;
+        if (data?.code === 'ai_unavailable') { unavailableRef.current = true; stoppedRef.current = true; return null; }
         if (data?.content) {
           contents.push(data.content);
           
@@ -838,7 +810,7 @@ const CreateReport = () => {
 
   // Generate all chapters sequentially
   const handleGenerateReport = async () => {
-    if (!canGenerate) {
+    if (!canGenerate && !currentReportId) {
       toast({
         title: 'Generation limit reached',
         description: 'Please top up to continue generating reports.',
@@ -849,6 +821,7 @@ const CreateReport = () => {
 
     if (!validateForm()) return;
 
+    stoppedRef.current = false; unavailableRef.current = false;
     setGenerating(true);
     setFailedChapters([]);
     setCurrentLine('');
@@ -888,13 +861,14 @@ const CreateReport = () => {
             report_kind: reportKind,
             pages_count: clampPagesCount(formData.pagesCount, reportKind),
             status: 'generating',
+            form_data: JSON.parse(JSON.stringify(preferences)),
           })
           .select()
           .single();
 
         if (reportError) throw reportError;
         reportId = reportData.id;
-        setCurrentReportId(reportId);
+        setCurrentReportId(reportId); reportIdRef.current = reportId;
       } catch (error: any) {
         console.error('Create report error:', error);
         toast({
@@ -917,8 +891,8 @@ const CreateReport = () => {
     // Free users (no verified payment) only get up to Chapter 4 (no Bibliography)
     const isFreeGeneration = !hasApprovedPayment;
     const availableChapters = isFreeGeneration 
-      ? CHAPTERS.filter(ch => ch.key !== '5') // Exclude Bibliography for free users
-      : CHAPTERS;
+      ? CHAPTERS.filter(ch => reportChapterKeys(reportKind, true, preferences).includes(ch.key)) // Exclude Bibliography for free users
+      : CHAPTERS.filter(ch => reportChapterKeys(reportKind, false, preferences).includes(ch.key));
     
     const chaptersToGenerate = resumingReport 
       ? availableChapters.filter(ch => !chapterContent[ch.key])
@@ -941,7 +915,7 @@ const CreateReport = () => {
 
     for (let batchStart = 0; batchStart < chaptersToGenerate.length; batchStart += BATCH_SIZE) {
       // Check if stop was requested
-      if (stopRequested) {
+      if (stoppedRef.current) {
         setAllGeneratedLines(prev => [...prev, { 
           chapter: 'system', 
           line: `\n✅ Generation stopped. Progress saved. You can resume later.` 
@@ -1036,6 +1010,7 @@ const CreateReport = () => {
         }
       }
 
+      if (reportId) await saveChapterToDb(reportId, newContent);
       setActiveChapters([]);
 
       // Small delay between batches to avoid rate limiting
@@ -1056,7 +1031,7 @@ const CreateReport = () => {
     setStopRequested(false);
 
     // Update report status to completed if all done (and not stopped)
-    if (failed.length === 0 && reportId && !stopRequested) {
+    if (availableChapters.every(ch => newContent[ch.key]) && reportId && !stoppedRef.current) {
       try {
         await supabase
           .from('reports')
@@ -1070,13 +1045,15 @@ const CreateReport = () => {
     checkUserStatus();
 
     // Play sound notification when complete
-    if (failed.length === 0 && !stopRequested) {
+    if (failed.length === 0 && !stoppedRef.current) {
       playCompletionSound();
       toast({
         title: '🎉 Report generated successfully!',
         description: 'All chapters have been generated. Download your report now.',
       });
-    } else if (stopRequested) {
+    } else if (unavailableRef.current) {
+      toast({ title: 'Report writing unavailable', description: 'Your progress is saved. Please try again after report writing is restored.', variant: 'destructive' });
+    } else if (stoppedRef.current) {
       toast({
         title: 'Generation stopped',
         description: 'Your progress has been saved. You can resume later.',
@@ -1230,7 +1207,7 @@ const CreateReport = () => {
 
     // Merge all chapters in order and clean up asterisks
     const orderedContent = getChapters(formData.internshipTitle, reportKind)
-      .map(ch => chapterContent[ch.key] ? cleanContent(chapterContent[ch.key]!) : null)
+      .map(ch => { const content = chapterContent[ch.key]; return content ? cleanContent(content) : null; })
       .filter(Boolean)
       .join('\n\n---\n\n');
 
@@ -1626,7 +1603,7 @@ const CreateReport = () => {
       styles: {
         default: {
           document: {
-            run: bnuFormat ? { font: 'Times New Roman', size: 24 } : undefined,
+            run: { font: bnuFormat ? 'Times New Roman' : (preferences.fontStyle?.split(' 12pt')[0] || 'Times New Roman'), size: 24 },
             paragraph: {
               spacing: { line: 360 }, // 1.5 line spacing
             },
@@ -1671,8 +1648,9 @@ const CreateReport = () => {
     });
 
     const blob = await Packer.toBlob(doc);
-    const filename = `${formData.studentName.replace(/\s+/g, '_')}_Internship_Report.docx`;
+    const filename = `${formData.studentName.replace(/\s+/g, '_')}_${reportKind}_Report.docx`;
     saveAs(blob, filename);
+    if (currentReportId) await supabase.rpc('record_report_download', { _report_id: currentReportId });
 
     toast({
       title: 'Downloaded!',
@@ -1723,6 +1701,7 @@ const CreateReport = () => {
           </div>
         </div>
 
+        <div className="flex flex-wrap gap-3 mb-4"><Button asChild variant="outline"><Link to="/generate">Guided Form</Link></Button><Button asChild variant="outline"><Link to="/my-reports">My Reports</Link></Button></div>
         {/* Quick-start shortcuts (same as home page) */}
         <div className="mb-8 -mx-4">
           <GenerateShortcuts />
@@ -1745,7 +1724,7 @@ const CreateReport = () => {
             <CardContent className="space-y-4">
               {/* Chapter Generation Grid - Individual Buttons */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {getChapters(formData.internshipTitle, reportKind).map(chapter => {
+                {requiredChapters.map(chapter => {
                   const isCompleted = !!chapterContent[chapter.key];
                   const isCurrent = currentChapter === chapter.key;
                   const isFailed = failedChapters.includes(chapter.key);
@@ -2021,7 +2000,7 @@ const CreateReport = () => {
                 onClick={() => {
                   setChapterContent({});
                   setFailedChapters([]);
-                  setCurrentReportId(null);
+                  setCurrentReportId(null); reportIdRef.current = null;
                   setResumingReport(false);
                   setAllGeneratedLines([]);
                   setLineCount(0);
@@ -2120,7 +2099,7 @@ const CreateReport = () => {
                       />
                     </div>
                     <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="guideName">Guide/Supervisor Name *</Label>
+                      <Label htmlFor="guideName">Guide/Supervisor Name {reportKind === 'internship' ? '(optional)' : '*'}</Label>
                       <Input
                         id="guideName"
                         name="guideName"
@@ -2159,7 +2138,7 @@ const CreateReport = () => {
                     {kindFields.showCompany && (
                       <>
                         <div className="space-y-2">
-                          <Label htmlFor="companyLocation">Company Location *</Label>
+                          <Label htmlFor="companyLocation">Company Location (optional)</Label>
                           <Input
                             id="companyLocation"
                             name="companyLocation"

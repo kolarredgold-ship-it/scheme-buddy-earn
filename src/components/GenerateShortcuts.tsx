@@ -72,7 +72,7 @@ const CourseSlider = ({ categoryKey }: { categoryKey: string }) => {
         {COURSES.map(c => (
           <Link
             key={c.slug}
-            to={`/create-report?kind=${categoryKey}&course=${encodeURIComponent(c.label)}`}
+            to={`/generate/${categoryKey}?course=${encodeURIComponent(c.label)}`}
             className="shrink-0 snap-start px-3 py-1.5 rounded-full text-[11px] font-medium bg-background/80 border border-border hover:bg-primary hover:text-primary-foreground hover:border-primary active:scale-95 transition-all whitespace-nowrap"
           >
             {c.label}
@@ -114,7 +114,7 @@ const GenerateShortcuts = () => {
                     <span className="font-semibold text-sm truncate">{cat.title}</span>
                   </div>
                   <Link
-                    to={`/create-report?kind=${cat.key}`}
+                    to={`/generate/${cat.key}`}
                     className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-accent hover:underline"
                   >
                     Start <ArrowRight className="w-3 h-3" />

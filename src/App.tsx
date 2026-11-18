@@ -21,6 +21,9 @@ const AdminSchemes = lazy(() => import("./pages/admin/AdminSchemes"));
 const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
 const AdminWithdrawals = lazy(() => import("./pages/admin/AdminWithdrawals"));
 const CreateReport = lazy(() => import("./pages/CreateReport"));
+const GenerateChooser = lazy(() => import("./pages/GenerateChooser"));
+const Generate = lazy(() => import("./pages/Generate"));
+const MyReports = lazy(() => import("./pages/MyReports"));
 const AIReportGenerator = lazy(() => import("./pages/AIReportGenerator"));
 const MockInterview = lazy(() => import("./pages/MockInterview"));
 const LiveHRInterview = lazy(() => import("./pages/LiveHRInterview"));
@@ -87,6 +90,11 @@ const App = () => {
               <Route path="/admin/users" element={<AdminUsers />} />
               <Route path="/admin/withdrawals" element={<AdminWithdrawals />} />
               <Route path="/create-report" element={<CreateReport />} />
+              <Route path="/generate" element={<GenerateChooser />} />
+              <Route path="/generate/internship" element={<Generate key="internship" kind="internship" />} />
+              <Route path="/generate/project" element={<Generate key="project" kind="project" />} />
+              <Route path="/generate/thesis" element={<Generate key="thesis" kind="thesis" />} />
+              <Route path="/my-reports" element={<MyReports />} />
               <Route path="/ai-report" element={<AIReportGenerator />} />
               <Route path="/mock-interview" element={<MockInterview />} />
               <Route path="/live-hr-interview" element={<LiveHRInterview />} />

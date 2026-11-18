@@ -138,6 +138,10 @@ const Dashboard = () => {
         </Card>
 
         {/* Quick Actions */}
+        <div className="flex flex-wrap gap-3">
+          <Button asChild><Link to="/generate">Create Report</Link></Button>
+          <Button asChild variant="outline"><Link to="/my-reports">My Reports</Link></Button>
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <Link to="/withdrawals">
             <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">

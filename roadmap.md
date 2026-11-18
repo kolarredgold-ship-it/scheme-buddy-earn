@@ -10,3 +10,9 @@
 - [ ] Compare all non-digital-product features, forms and generation conditions.
 - [ ] Import missing report workflows while preserving Smartlio sign-in, payments and DeepSeek.
 - [ ] Test report rules and verify connected report workflows on mobile and desktop.
+
+# Uploaded Razorpay instructions
+- [ ] Check and complete the existing checkout without duplicate endpoints or exposed credentials.
+
+# Smartlio domain
+- [ ] Replace techrola.in website references with smartlio.in.
