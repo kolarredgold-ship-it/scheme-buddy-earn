@@ -20,11 +20,11 @@ const ContactUs = () => (
         "@context": "https://schema.org",
         "@type": "ContactPage",
         name: "Contact Smartlio",
-        url: "https://techrola.in/contact-us",
+        url: "https://smartlio.in/contact-us",
         mainEntity: {
           "@type": "Organization",
           name: "Smartlio",
-          url: "https://techrola.in",
+          url: "https://smartlio.in",
           email: EMAIL,
           telephone: PHONE_INTL,
           address: {

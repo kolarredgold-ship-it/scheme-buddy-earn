@@ -39,7 +39,7 @@ const AboutUs = () => (
         "@context": "https://schema.org",
         "@type": "Organization",
         name: "Smartlio",
-        url: "https://techrola.in",
+        url: "https://smartlio.in",
         description:
           "Indian edu-tech platform for government scheme discovery, AI student tools and career training.",
         email: "omlaytechnologies@gmail.com",

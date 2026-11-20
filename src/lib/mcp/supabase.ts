@@ -68,4 +68,4 @@ export function supabaseForUser(ctx: ToolContext) {
   });
 }
 
-export const SITE_URL = "https://techrola.in";
+export const SITE_URL = "https://smartlio.in";

@@ -1,292 +1,292 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://techrola.in/</loc>
+    <loc>https://smartlio.in/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://techrola.in/blog</loc>
+    <loc>https://smartlio.in/blog</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://techrola.in/career-program</loc>
+    <loc>https://smartlio.in/career-program</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai-tools</loc>
+    <loc>https://smartlio.in/ai-tools</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai-report</loc>
+    <loc>https://smartlio.in/ai-report</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://techrola.in/create-report</loc>
+    <loc>https://smartlio.in/create-report</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://techrola.in/dashboard</loc>
+    <loc>https://smartlio.in/dashboard</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://techrola.in/mock-interview</loc>
+    <loc>https://smartlio.in/mock-interview</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/subscription</loc>
+    <loc>https://smartlio.in/subscription</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://techrola.in/leaderboard</loc>
+    <loc>https://smartlio.in/leaderboard</loc>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://techrola.in/install</loc>
+    <loc>https://smartlio.in/install</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://techrola.in/login</loc>
+    <loc>https://smartlio.in/login</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://techrola.in/signup</loc>
+    <loc>https://smartlio.in/signup</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://techrola.in/about-us</loc>
+    <loc>https://smartlio.in/about-us</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://techrola.in/contact-us</loc>
+    <loc>https://smartlio.in/contact-us</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://techrola.in/investors</loc>
+    <loc>https://smartlio.in/investors</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://techrola.in/faq</loc>
+    <loc>https://smartlio.in/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://techrola.in/privacy-policy</loc>
+    <loc>https://smartlio.in/privacy-policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://techrola.in/terms-conditions</loc>
+    <loc>https://smartlio.in/terms-conditions</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://techrola.in/refund-policy</loc>
+    <loc>https://smartlio.in/refund-policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/resume</loc>
+    <loc>https://smartlio.in/student-tool/resume</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/cover-letter</loc>
+    <loc>https://smartlio.in/student-tool/cover-letter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/sop</loc>
+    <loc>https://smartlio.in/student-tool/sop</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/study-notes</loc>
+    <loc>https://smartlio.in/student-tool/study-notes</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/roadmap</loc>
+    <loc>https://smartlio.in/student-tool/roadmap</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/leave-letter</loc>
+    <loc>https://smartlio.in/student-tool/leave-letter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/lor</loc>
+    <loc>https://smartlio.in/student-tool/lor</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/project-report</loc>
+    <loc>https://smartlio.in/student-tool/project-report</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/email-writer</loc>
+    <loc>https://smartlio.in/student-tool/email-writer</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/viva-questions</loc>
+    <loc>https://smartlio.in/student-tool/viva-questions</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/ppt-outline</loc>
+    <loc>https://smartlio.in/student-tool/ppt-outline</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/scholarship-essay</loc>
+    <loc>https://smartlio.in/student-tool/scholarship-essay</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/linkedin-bio</loc>
+    <loc>https://smartlio.in/student-tool/linkedin-bio</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/business-plan</loc>
+    <loc>https://smartlio.in/student-tool/business-plan</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/assignment</loc>
+    <loc>https://smartlio.in/student-tool/assignment</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/essay</loc>
+    <loc>https://smartlio.in/student-tool/essay</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/student-tool/speech</loc>
+    <loc>https://smartlio.in/student-tool/speech</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/live-hr-interview</loc>
+    <loc>https://smartlio.in/live-hr-interview</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/internship-report-generator</loc>
+    <loc>https://smartlio.in/ai/internship-report-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/mock-interview</loc>
+    <loc>https://smartlio.in/ai/mock-interview</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/live-hr-interview</loc>
+    <loc>https://smartlio.in/ai/live-hr-interview</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/resume-builder</loc>
+    <loc>https://smartlio.in/ai/resume-builder</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/cover-letter-generator</loc>
+    <loc>https://smartlio.in/ai/cover-letter-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/sop-generator</loc>
+    <loc>https://smartlio.in/ai/sop-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/study-notes-maker</loc>
+    <loc>https://smartlio.in/ai/study-notes-maker</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/career-roadmap</loc>
+    <loc>https://smartlio.in/ai/career-roadmap</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/leave-letter</loc>
+    <loc>https://smartlio.in/ai/leave-letter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/letter-of-recommendation</loc>
+    <loc>https://smartlio.in/ai/letter-of-recommendation</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/project-report</loc>
+    <loc>https://smartlio.in/ai/project-report</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/professional-email-writer</loc>
+    <loc>https://smartlio.in/ai/professional-email-writer</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/viva-questions</loc>
+    <loc>https://smartlio.in/ai/viva-questions</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/ppt-outline</loc>
+    <loc>https://smartlio.in/ai/ppt-outline</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/scholarship-essay</loc>
+    <loc>https://smartlio.in/ai/scholarship-essay</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/linkedin-bio</loc>
+    <loc>https://smartlio.in/ai/linkedin-bio</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/business-plan</loc>
+    <loc>https://smartlio.in/ai/business-plan</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/assignment-helper</loc>
+    <loc>https://smartlio.in/ai/assignment-helper</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/essay-writer</loc>
+    <loc>https://smartlio.in/ai/essay-writer</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://techrola.in/ai/speech-writer</loc>
+    <loc>https://smartlio.in/ai/speech-writer</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
-const SITE_URL = "https://techrola.in";
+const SITE_URL = "https://smartlio.in";
 
 const STATIC_ROUTES: { path: string; priority: string; changefreq: string }[] = [
   { path: "/", priority: "1.0", changefreq: "daily" },

@@ -387,7 +387,7 @@ const CareerProgram = () => {
       case 3:
         if (isCompleted || profile?.referral_code) {
           const code = profile?.referral_code || "";
-          const link = `https://techrola.in/signup?ref=${code}`;
+          const link = `https://smartlio.in/signup?ref=${code}`;
           return (
             <div className="space-y-3">
               <CompletedBadge text="Your Referral Code" />
@@ -460,7 +460,7 @@ const CareerProgram = () => {
                 <ChevronRight className="h-4 w-4 ml-auto" />
               </Button>
             </Link>
-            <p className="text-xs text-center text-muted-foreground">techrola.in/emp — Track your leads & earnings</p>
+            <p className="text-xs text-center text-muted-foreground">smartlio.in/emp — Track your leads & earnings</p>
           </div>
         );
 

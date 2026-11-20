@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 
-export const SITE_URL = "https://techrola.in";
+export const SITE_URL = "https://smartlio.in";
 
 type SeoProps = {
   title: string;

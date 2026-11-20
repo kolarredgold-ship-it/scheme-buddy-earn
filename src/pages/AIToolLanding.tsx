@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import { findLanding, aiToolLandings } from "@/data/aiToolLandings";
 
-const SITE_URL = "https://techrola.in";
+const SITE_URL = "https://smartlio.in";
 
 const AIToolLanding = () => {
   const { slug = "" } = useParams();

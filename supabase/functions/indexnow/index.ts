@@ -4,8 +4,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const SITE_URL = "https://techrola.in";
-const HOST = "techrola.in";
+const SITE_URL = "https://smartlio.in";
+const HOST = "smartlio.in";
 const INDEXNOW_KEY = "8a3d27578472d470685d4a2446808452";
 const MAX_URLS = 10000;
 

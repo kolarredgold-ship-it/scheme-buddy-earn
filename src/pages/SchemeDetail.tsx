@@ -65,8 +65,8 @@ const SchemeDetail = () => {
           description,
           serviceType: scheme.category,
           areaServed: scheme.state || "India",
-          url: `https://techrola.in/scheme/${scheme.slug}`,
-          provider: { "@type": "Organization", name: "Smartlio", url: "https://techrola.in" },
+          url: `https://smartlio.in/scheme/${scheme.slug}`,
+          provider: { "@type": "Organization", name: "Smartlio", url: "https://smartlio.in" },
         }}
       />
       <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 pb-24 md:pb-10 max-w-3xl lg:max-w-5xl animate-fade-in">

@@ -12,7 +12,7 @@ export default defineMcp({
   title: "Scheme Wealth",
   version: "0.1.0",
   instructions:
-    "Tools for Smartlio (techrola.in): search Indian government schemes, scholarships and job notifications, read Smartlio career articles, and check the signed-in user's subscription, referral code and AI tool credits. Use search_schemes then get_scheme for full eligibility and apply links.",
+    "Tools for Smartlio (smartlio.in): search Indian government schemes, scholarships and job notifications, read Smartlio career articles, and check the signed-in user's subscription, referral code and AI tool credits. Use search_schemes then get_scheme for full eligibility and apply links.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",

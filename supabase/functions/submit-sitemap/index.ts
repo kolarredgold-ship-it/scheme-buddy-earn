@@ -3,7 +3,7 @@
 // (via the indexnow function) and by the daily cron.
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const SITE_URL = "https://techrola.in";
+const SITE_URL = "https://smartlio.in";
 const DEFAULT_SITEMAP = `${SITE_URL}/sitemap.xml`;
 const GATEWAY = "https://connector-gateway.lovable.dev/google_search_console";
 

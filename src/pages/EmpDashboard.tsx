@@ -81,7 +81,7 @@ const EmpDashboard = () => {
   const pendingLeads = leads.filter(l => l.subscription_status === "free" || l.subscription_status === "expired");
   const successLeads = leads.filter(l => l.subscription_status === "active");
 
-  const referralLink = `https://techrola.in/signup?ref=${profile.referral_code}`;
+  const referralLink = `https://smartlio.in/signup?ref=${profile.referral_code}`;
 
   const copyReferralLink = () => {
     navigator.clipboard.writeText(referralLink);

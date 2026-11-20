@@ -5,7 +5,7 @@ import { spawnSync } from "node:child_process";
 import { componentTagger } from "lovable-tagger";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 
-// Generates public/sitemap.xml before build so https://techrola.in/sitemap.xml
+// Generates public/sitemap.xml before build so https://smartlio.in/sitemap.xml
 // is served as a real static file (Lovable hosting doesn't support redirects).
 function sitemapPlugin(): Plugin {
   const run = () => {

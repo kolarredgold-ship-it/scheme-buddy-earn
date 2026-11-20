@@ -1,7 +1,7 @@
 // Public RSS 2.0 feed for Smartlio blogs.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
-const SITE_URL = "https://techrola.in";
+const SITE_URL = "https://smartlio.in";
 
 const escapeXml = (s: string) =>
   (s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -35,7 +35,7 @@ Deno.serve(async () => {
       <guid isPermaLink="true">${escapeXml(link)}</guid>
       <pubDate>${pub}</pubDate>
       <category>${cdata(b.category || "Career Tips")}</category>
-      <author>noreply@techrola.in (${escapeXml(b.author || "Smartlio Editorial")})</author>
+      <author>noreply@smartlio.in (${escapeXml(b.author || "Smartlio Editorial")})</author>
       <description>${cdata(b.excerpt || "")}</description>
       ${img}
     </item>`;

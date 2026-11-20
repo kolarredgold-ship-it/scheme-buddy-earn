@@ -41,7 +41,7 @@ const CATEGORIES = [
 ] as const;
 
 const CAREER_CTA_HEADING = '## Join the Smartlio Career Program (Work from Home)';
-const CAREER_CTA_BLOCK = `\n\n${CAREER_CTA_HEADING}\n\nWork from home with Smartlio's Career Program — earn while you learn, get AI career tools, and grow with a verified network of Indian students. **[Join the Smartlio Career Program →](https://techrola.in/career-program)**\n`;
+const CAREER_CTA_BLOCK = `\n\n${CAREER_CTA_HEADING}\n\nWork from home with Smartlio's Career Program — earn while you learn, get AI career tools, and grow with a verified network of Indian students. **[Join the Smartlio Career Program →](https://smartlio.in/career-program)**\n`;
 
 const SYSTEM_PROMPT = `You are the AI Content Writer for Smartlio — India's AI-powered Career & Student Platform.
 You write SHORT, punchy, SEO-optimized blogs (500-800 words each) for Indian students and job seekers.
@@ -49,10 +49,10 @@ Rules:
 - Never mention any specific year (do NOT include 2024, 2025, 2026, 2027 etc. in titles, slugs or body).
 - Never describe Smartlio as an MLM or a get-rich-quick platform.
 - Educational and honest tone. Warn against scams. Always cite realistic Indian examples.
-- EVERY article MUST include a section titled exactly "## Join the Smartlio Career Program (Work from Home)" with 2-3 lines and a markdown link to https://techrola.in/career-program.
-- For investor/acquisition topics, ALSO include a section titled exactly "## Invest in or Acquire Smartlio" with 2-3 honest lines: Smartlio is open to acquisition or strategic investment; the product, payments and SEO engine are built and the founders are mainly looking for marketing capital to scale. Link to https://techrola.in/investors and mention contact email omlaytechnologies@gmail.com.
-- MOST articles should end with a conversion-focused section titled exactly "## Go Pro with Smartlio (₹83.25/Month)" with 3-4 honest lines: Pro unlocks full scheme details, all AI tools (internship reports, resumes, SOPs, mock interviews) and more credits — priced at ₹999/year (₹83.25/month equivalent). Link to https://techrola.in/subscription. This is the primary conversion goal; make it persuasive but honest.
-- End every article with a short CTA to techrola.in, /subscription and /ai-tools.`;
+- EVERY article MUST include a section titled exactly "## Join the Smartlio Career Program (Work from Home)" with 2-3 lines and a markdown link to https://smartlio.in/career-program.
+- For investor/acquisition topics, ALSO include a section titled exactly "## Invest in or Acquire Smartlio" with 2-3 honest lines: Smartlio is open to acquisition or strategic investment; the product, payments and SEO engine are built and the founders are mainly looking for marketing capital to scale. Link to https://smartlio.in/investors and mention contact email omlaytechnologies@gmail.com.
+- MOST articles should end with a conversion-focused section titled exactly "## Go Pro with Smartlio (₹83.25/Month)" with 3-4 honest lines: Pro unlocks full scheme details, all AI tools (internship reports, resumes, SOPs, mock interviews) and more credits — priced at ₹999/year (₹83.25/month equivalent). Link to https://smartlio.in/subscription. This is the primary conversion goal; make it persuasive but honest.
+- End every article with a short CTA to smartlio.in, /subscription and /ai-tools.`;
 
 const batchPrompt = (topics: string[], avoidTitles: string[]) => `Generate ${topics.length} SHORT SEO blog posts for Smartlio.
 Assign each blog to one topic in order:
@@ -74,7 +74,7 @@ Return STRICT JSON only (no markdown fences) matching this exact shape:
       "reading_time": 4,
       "hook": "one strong opening line (emoji ok)",
       "excerpt": "2 sentence teaser, 180 chars max, no year",
-      "body_markdown": "500-800 word markdown article. Must include: H2 intro, 2-3 H2 sections with bullets, a small markdown comparison table, a '## Why Smartlio?' 3-bullet section, and a closing '## Next Steps' CTA linking to https://techrola.in, https://techrola.in/career-program and https://techrola.in/ai-tools. Never mention a year.",
+      "body_markdown": "500-800 word markdown article. Must include: H2 intro, 2-3 H2 sections with bullets, a small markdown comparison table, a '## Why Smartlio?' 3-bullet section, and a closing '## Next Steps' CTA linking to https://smartlio.in, https://smartlio.in/career-program and https://smartlio.in/ai-tools. Never mention a year.",
       "faq": [{"q":"...","a":"..."}, {"q":"...","a":"..."}, {"q":"...","a":"..."}]
     }
   ]
@@ -240,8 +240,8 @@ Deno.serve(async (req) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             urls: [
-              'https://techrola.in/blog',
-              ...publishedSlugs.map((s) => `https://techrola.in/blog/${s}`),
+              'https://smartlio.in/blog',
+              ...publishedSlugs.map((s) => `https://smartlio.in/blog/${s}`),
             ],
           }),
         });

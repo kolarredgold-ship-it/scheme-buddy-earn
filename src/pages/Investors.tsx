@@ -104,14 +104,14 @@ const Investors = () => {
           "@context": "https://schema.org",
           "@type": "InvestorRelationsWebPage",
           name: "Smartlio Investor Relations",
-          url: "https://techrola.in/investors",
+          url: "https://smartlio.in/investors",
           description:
             "Business model, traction, growth strategy and use of funds for Smartlio, an Indian edu-tech platform for government schemes and AI career tools.",
           about: {
             "@type": "Organization",
             name: "Smartlio",
             legalName: "Omlay Technologies",
-            url: "https://techrola.in",
+            url: "https://smartlio.in",
             email: EMAIL,
             telephone: PHONE_INTL,
             address: {
@@ -126,8 +126,8 @@ const Investors = () => {
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Home", item: "https://techrola.in/" },
-            { "@type": "ListItem", position: 2, name: "Investors", item: "https://techrola.in/investors" },
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://smartlio.in/" },
+            { "@type": "ListItem", position: 2, name: "Investors", item: "https://smartlio.in/investors" },
           ],
         },
       ]}

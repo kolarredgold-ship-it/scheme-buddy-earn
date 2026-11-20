@@ -65,8 +65,8 @@ const AdminBlogs = () => {
     const blog = blogs.find((b) => b.id === id);
     refreshSearchIndex(
       next === "published" && blog?.slug
-        ? ["https://techrola.in/blog", `https://techrola.in/blog/${blog.slug}`]
-        : ["https://techrola.in/blog"],
+        ? ["https://smartlio.in/blog", `https://smartlio.in/blog/${blog.slug}`]
+        : ["https://smartlio.in/blog"],
     );
     toast.success(next === "published" ? "Published — search engines notified" : "Unpublished — sitemap updated");
     load();

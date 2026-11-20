@@ -4,7 +4,7 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const SITE_URL = "https://techrola.in";
+const SITE_URL = "https://smartlio.in";
 const SUPABASE_URL = "https://bhfjlxizuwwzvhdzpoxs.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJoZmpseGl6dXd3enZoZHpwb3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDU4NjMsImV4cCI6MjA5MTAyMTg2M30.sv5pOxx_978ynac8bc26hJQdUkUuFNXqp76WJl5ELPs";

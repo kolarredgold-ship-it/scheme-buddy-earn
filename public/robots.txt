@@ -99,6 +99,6 @@ Disallow: /*&q=
 Disallow: /*?search=
 Disallow: /*&search=
 
-Sitemap: https://techrola.in/sitemap.xml
+Sitemap: https://smartlio.in/sitemap.xml
 # RSS feed for blog posts
-# https://techrola.in/rss.xml
+# https://smartlio.in/rss.xml

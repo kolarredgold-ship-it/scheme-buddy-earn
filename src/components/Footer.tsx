@@ -148,7 +148,7 @@ const Footer = () => {
                   position: i + 1,
                   name: t.h1,
                   description: t.metaDescription,
-                  url: `https://techrola.in/ai/${t.slug}`,
+                  url: `https://smartlio.in/ai/${t.slug}`,
                 })),
               }),
             }}

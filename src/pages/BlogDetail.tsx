@@ -118,7 +118,7 @@ const BlogDetail = () => {
     setMeta("twitter:card", "summary_large_image");
 
     // Canonical: always the post's own slug URL (dedupes query-string / stale-slug variants)
-    const canonical = `https://techrola.in/blog/${blog.slug}`;
+    const canonical = `https://smartlio.in/blog/${blog.slug}`;
     setCanonical(canonical);
     setMeta("og:url", canonical, "property");
     setMeta("robots", "index,follow");
@@ -134,8 +134,8 @@ const BlogDetail = () => {
       image: blog.featured_image_url ? [blog.featured_image_url] : [],
       datePublished: blog.published_at,
       author: { "@type": "Organization", name: blog.author ?? "Smartlio Editorial" },
-      publisher: { "@type": "Organization", name: "Smartlio", url: "https://techrola.in" },
-      mainEntityOfPage: `https://techrola.in/blog/${blog.slug}`,
+      publisher: { "@type": "Organization", name: "Smartlio", url: "https://smartlio.in" },
+      mainEntityOfPage: `https://smartlio.in/blog/${blog.slug}`,
     });
     if (blog.faq?.length) {
       scripts.push({
