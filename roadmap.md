@@ -13,7 +13,7 @@
 
 # Uploaded Razorpay instructions
 - [ ] Check and complete the existing checkout without duplicate endpoints or exposed credentials.
-- [ ] Replace existing Razorpay credentials through the secure form and reload affected payment functions.
+- [x] Replace existing Razorpay credentials through the secure form and reload affected payment functions.
 
 # Smartlio domain
-- [ ] Replace techrola.in website references with smartlio.in.
+- [x] Replace techrola.in website references with smartlio.in.
