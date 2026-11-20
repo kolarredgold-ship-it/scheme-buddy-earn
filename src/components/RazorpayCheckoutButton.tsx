@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { canPurchaseTopup } from '@/lib/topupAccess';
 
 declare global {
   interface Window {
@@ -54,15 +57,22 @@ export default function RazorpayCheckoutButton({
 }: Props) {
 
   const [loading, setLoading] = useState(false);
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
 
   const handlePay = async () => {
+    if (['topup', 'ai_topup', 'report_credits'].includes(paymentType) && (!user || !canPurchaseTopup(profile))) {
+      toast.info('Activate Pro for ₹999 before purchasing credit top-ups.');
+      navigate(user ? '/subscription' : '/login?redirect=/subscription');
+      return;
+    }
     setLoading(true);
     try {
       const ok = await loadRazorpay();
       if (!ok) throw new Error("Razorpay SDK failed to load");
 
       const { data: order, error } = await supabase.functions.invoke("razorpay-create-order", {
-        body: { amount: Math.round(amount * 100), currency, receipt },
+        body: { amount: Math.round(amount * 100), currency, receipt, payment_type: paymentType },
       });
       if (error || !order?.order_id) throw new Error(error?.message || "Failed to create order");
 

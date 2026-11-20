@@ -756,15 +756,15 @@ const StudentTool = () => {
                 {!credits.canGenerate && <span className="text-destructive font-semibold">No credits left</span>}
                 {" · "}{isPro ? "Pro: 3 free per tool" : "Free: 1 per tool"}
               </span>
-              <button onClick={() => setShowTopup(true)} className="text-primary font-semibold hover:underline">
-                Top-up ₹499 (+3)
-              </button>
+              <Button variant="link" size="sm" onClick={() => setShowTopup(true)}>
+                {isPro ? 'Top-up ₹499' : 'Upgrade to Pro ₹999'}
+              </Button>
             </div>
             <Button onClick={generate} disabled={loading} className="w-full" size="lg">
               {loading ? (
                 <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Generating with AI...</>
               ) : !credits.canGenerate ? (
-                <><Lock className="h-4 w-4 mr-2" /> Top-up ₹499 to Generate</>
+                <><Lock className="h-4 w-4 mr-2" /> {isPro ? 'Top-up ₹499 to Generate' : 'Upgrade to Pro ₹999'}</>
               ) : (
                 <><Sparkles className="h-4 w-4 mr-2" /> Generate with AI</>
               )}

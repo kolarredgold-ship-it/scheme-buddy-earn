@@ -4,3 +4,4 @@
 - Shared interview-bank reads require a profile matching the authenticated user through RLS, so registration is checked without treating shared questions as user-owned data.
 - Guided report forms pass structured formatting and chapter preferences to the existing generator; history opens that same quality-gated viewer to avoid divergent export behavior.
 - Report chapter requests claim allowance by an owned report ID through an idempotent RPC, so retries and resumed parts do not consume additional report credits.
+- Top-up eligibility is checked in shared purchase controls and at order creation, with a payment-table trigger as the final backstop against bypasses.

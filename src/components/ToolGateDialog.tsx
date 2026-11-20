@@ -60,7 +60,7 @@ export default function ToolGateDialog({ reason, onOpenChange, onUpgrade, onTopu
                 className="w-full"
                 onClick={() => (onUpgrade ? onUpgrade() : navigate("/subscription"))}
               >
-                Upgrade to Premium
+                Upgrade to Pro — ₹999
               </Button>
             </DialogFooter>
           </>

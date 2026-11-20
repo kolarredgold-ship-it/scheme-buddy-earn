@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { canPurchaseTopup, PRO_UPGRADE_PRICE } from '@/lib/topupAccess';
 
 interface Props {
   open: boolean;
@@ -25,6 +26,20 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
   }, [open, loading, user]);
 
   const redirectParam = encodeURIComponent(location.pathname + location.search);
+  const eligible = canPurchaseTopup(profile);
+
+  if (user && !eligible && !loading) return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle>Upgrade to Pro first</DialogTitle>
+          <DialogDescription>Activate Pro for ₹{PRO_UPGRADE_PRICE} for 12 months before purchasing extra AI credits.</DialogDescription>
+        </DialogHeader>
+        <p className="text-sm text-muted-foreground">Pro includes 3 generations per tool. Once Pro is active, you can buy ₹499 top-ups.</p>
+        <Button onClick={() => { onOpenChange(false); navigate('/subscription'); }}>Upgrade to Pro — ₹{PRO_UPGRADE_PRICE}</Button>
+      </DialogContent>
+    </Dialog>
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -48,7 +63,7 @@ export default function TopupDialog({ open, onOpenChange, onSuccess }: Props) {
             <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-green-500" /> Added instantly on top of your current balance</li>
             <li className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-amber-500" /> Available only for Premium members</li>
           </ul>
-          {user ? (
+          {user && eligible && !loading ? (
             <RazorpayCheckoutButton
               amount={499}
               userId={user.id}
