@@ -19,5 +19,5 @@
 - [x] Replace techrola.in website references with smartlio.in.
 
 # Pro before top-ups
-- [ ] Require active Pro before credit top-ups in tool prompts, checkout and payment acceptance.
-- [ ] Test free and Pro purchase eligibility.
+- [x] Require active Pro before credit top-ups in tool prompts, checkout and payment acceptance.
+- [x] Test free and Pro purchase eligibility — five rule tests passed; signed-in free-member upgrade and direct request rejection verified. Pro browser payment remains unverified after temporary session expired.
