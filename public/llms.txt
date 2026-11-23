@@ -1,6 +1,6 @@
-# Techrola
+# Smartlio
 
-> Techrola is India's platform for discovering 2500+ government schemes, scholarships, and welfare programs, plus AI-powered career tools (internship reports, mock interviews) and a referral earning program.
+> Smartlio is India's platform for discovering government schemes, scholarships, and welfare programs, plus AI-powered career tools (internship, project and thesis reports, resumes, SOPs and mock interviews) and a referral earning program. Official website: https://smartlio.in.
 
 ## Pages
 
@@ -9,10 +9,9 @@
 - [AI Tools](/ai-tools): AI-powered career and learning utilities.
 - [AI Report Generator](/create-report): Generate internship reports as DOCX.
 - [Mock Interview](/mock-interview): AI-driven interview practice across 4 paths.
-- [Plans](/plans): Free vs Pro subscription tiers.
-- [Subscription](/subscription): Manage Pro subscription via WhatsApp.
+- [Subscription](/subscription): Compare Free and Pro and purchase Pro with Razorpay, billed annually at ₹999 (₹83.25/month).
 - [Leaderboard](/leaderboard): Top earners in the referral program.
-- [Install](/install): Install Techrola as a PWA on Android/iOS.
+- [Install](/install): Install Smartlio as a PWA on Android/iOS.
 - [FAQ](/faq): How schemes work, eligibility, application steps, plans and payment.
 - [About Us](/about-us): Mission and what we offer.
 - [Contact Us](/contact-us): Email, phone, and address.

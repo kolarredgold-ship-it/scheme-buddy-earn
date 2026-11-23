@@ -51,7 +51,7 @@ const Dashboard = () => {
   };
 
   const shareWhatsApp = () => {
-    const msg = `Join Smartlio and access government schemes! Use my referral code: ${profile?.referral_code} to get subscription at just ₹83.25/m! https://techrola.com`;
+    const msg = `Join Smartlio and access government schemes! Use my referral code: ${profile?.referral_code} to get subscription at just ₹83.25/m! https://smartlio.in`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
   };
 

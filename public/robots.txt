@@ -1,4 +1,4 @@
-# Techrola robots.txt
+# Smartlio robots.txt
 # Sitemap is regenerated on every publish (build-time) and served from the CDN.
 # Blog and scheme pages are crawlable; tracking/query-string variants are blocked
 # so only the canonical URL of each post/scheme gets indexed.
@@ -14,7 +14,7 @@ Disallow: /dashboard
 Disallow: /emp
 Disallow: /earnings
 Disallow: /withdrawals
-Disallow: /subscription
+Allow: /subscription
 Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
@@ -44,7 +44,7 @@ Disallow: /dashboard
 Disallow: /emp
 Disallow: /earnings
 Disallow: /withdrawals
-Disallow: /subscription
+Allow: /subscription
 Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
@@ -80,7 +80,7 @@ Disallow: /dashboard
 Disallow: /emp
 Disallow: /earnings
 Disallow: /withdrawals
-Disallow: /subscription
+Allow: /subscription
 Disallow: /payment-status
 Disallow: /login
 Disallow: /signup
