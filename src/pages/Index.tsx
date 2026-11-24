@@ -170,7 +170,7 @@ const INTRO_SLIDES = [
 ];
 
 
-const TECHROLA_TABS = [
+const SMARTLIO_TABS = [
   {
     key: "job",
     label: "Job Seekers",
@@ -567,8 +567,8 @@ const Index = () => {
   return (
     <Layout>
       <Seo
-        title="Smartlio — Government Schemes, Jobs & AI Career Tools"
-        description="Find government schemes, sarkari and private jobs, scholarships and AI career tools for students across India — all in one place."
+        title="Smartlio — AI Career Tools & Government Schemes"
+        description="Discover Indian government schemes and career programs with Smartlio. Create internship reports, resumes and SOPs, and practise AI mock interviews."
         path="/"
       />
       <div className="pb-24 md:pb-12 bg-background">
@@ -877,6 +877,7 @@ const Index = () => {
                 {searchQuery && (
                   <button
                     onClick={clearSearch}
+                    aria-label="Clear search"
                     className="absolute right-12 top-1/2 -translate-y-1/2 text-muted-foreground"
                   >
                     <X className="h-4 w-4" />
@@ -1151,7 +1152,7 @@ const Index = () => {
                 Get Started with <span className="text-amber-700">SMARTLIO</span> — Create Yours Today!
               </h3>
               <div className="mt-5 inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white border border-border shadow-sm max-w-full overflow-x-auto">
-                {TECHROLA_TABS.map((t, i) => (
+                {SMARTLIO_TABS.map((t, i) => (
                   <button
                     key={t.key}
                     onClick={() => setTechTab(i)}
@@ -1172,13 +1173,13 @@ const Index = () => {
                   className="rounded-lg border border-border bg-white/80 backdrop-blur p-5 md:p-7 shadow-sm text-left animate-in fade-in slide-in-from-bottom-2 duration-500"
                 >
                   <h4 className="text-lg md:text-2xl font-extrabold text-foreground" style={{ fontFamily: "Plus Jakarta Sans" }}>
-                    {TECHROLA_TABS[techTab].title}
+                    {SMARTLIO_TABS[techTab].title}
                   </h4>
                   <p className="mt-2 text-sm md:text-base text-muted-foreground">
-                    {TECHROLA_TABS[techTab].desc}
+                    {SMARTLIO_TABS[techTab].desc}
                   </p>
                   <ul className="mt-4 grid sm:grid-cols-3 gap-2">
-                    {TECHROLA_TABS[techTab].bullets.map((b) => (
+                    {SMARTLIO_TABS[techTab].bullets.map((b) => (
                       <li key={b} className="flex items-center gap-2 text-xs md:text-sm font-medium text-foreground/80 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
                         <Check className="h-4 w-4 text-amber-600 shrink-0" /> {b}
                       </li>

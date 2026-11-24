@@ -292,7 +292,7 @@ const Subscription = () => {
               className="w-full text-muted-foreground"
               onClick={() => {
                 const msg = `Hi, I need help paying for Smartlio Premium (₹${ANNUAL_PRICE}).%0AName: ${profile?.name || "N/A"}%0AEmail: ${profile?.email || user?.email || "N/A"}`;
-                window.open(`https://wa.me/919999999999?text=${msg}`, "_blank");
+                window.open(`https://wa.me/917899666679?text=${msg}`, "_blank");
               }}
             >
               <MessageCircle className="h-4 w-4 mr-2" />

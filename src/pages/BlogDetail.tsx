@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Layout from "@/components/Layout";
+import Seo, { SITE_URL } from "@/components/Seo";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,20 +31,6 @@ interface Blog {
   reading_time: number | null;
   published_at: string | null;
 }
-
-const setMeta = (name: string, content: string, attr: "name" | "property" = "name") => {
-  let el = document.querySelector(`meta[${attr}="${name}"]`);
-  if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
-  el.setAttribute("content", content);
-};
-
-/** Single self-referencing canonical, always pointing at the post's own slug URL. */
-const setCanonical = (href: string) => {
-  document.querySelectorAll('link[rel="canonical"]').forEach((n, i) => { if (i > 0) n.remove(); });
-  let el = document.querySelector('link[rel="canonical"]');
-  if (!el) { el = document.createElement("link"); el.setAttribute("rel", "canonical"); document.head.appendChild(el); }
-  el.setAttribute("href", href);
-};
 
 // Normalize AI-generated markdown that arrives collapsed onto a single line.
 // The generator often writes headings ("## Title:") and bullets (" - **Item**")
@@ -107,55 +94,6 @@ const BlogDetail = () => {
     })();
   }, [slug]);
 
-  useEffect(() => {
-    if (!blog) return;
-    document.title = (blog.meta_title || blog.title).slice(0, 65);
-    setMeta("description", (blog.meta_description || blog.excerpt || "").slice(0, 160));
-    setMeta("og:title", blog.title, "property");
-    setMeta("og:description", (blog.meta_description || blog.excerpt || "").slice(0, 160), "property");
-    setMeta("og:type", "article", "property");
-    if (blog.featured_image_url) setMeta("og:image", blog.featured_image_url, "property");
-    setMeta("twitter:card", "summary_large_image");
-
-    // Canonical: always the post's own slug URL (dedupes query-string / stale-slug variants)
-    const canonical = `https://smartlio.in/blog/${blog.slug}`;
-    setCanonical(canonical);
-    setMeta("og:url", canonical, "property");
-    setMeta("robots", "index,follow");
-
-    // FAQ schema JSON-LD
-    document.querySelectorAll('script[data-blog-jsonld]').forEach((n) => n.remove());
-    const scripts: any[] = [];
-    scripts.push({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: blog.title,
-      description: blog.meta_description ?? blog.excerpt,
-      image: blog.featured_image_url ? [blog.featured_image_url] : [],
-      datePublished: blog.published_at,
-      author: { "@type": "Organization", name: blog.author ?? "Smartlio Editorial" },
-      publisher: { "@type": "Organization", name: "Smartlio", url: "https://smartlio.in" },
-      mainEntityOfPage: `https://smartlio.in/blog/${blog.slug}`,
-    });
-    if (blog.faq?.length) {
-      scripts.push({
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: blog.faq.map((f) => ({
-          "@type": "Question", name: f.q,
-          acceptedAnswer: { "@type": "Answer", text: f.a },
-        })),
-      });
-    }
-    scripts.forEach((json) => {
-      const s = document.createElement("script");
-      s.type = "application/ld+json";
-      s.setAttribute("data-blog-jsonld", "1");
-      s.textContent = JSON.stringify(json);
-      document.head.appendChild(s);
-    });
-  }, [blog]);
-
   const share = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -172,6 +110,34 @@ const BlogDetail = () => {
 
   return (
     <Layout>
+      <Seo
+        title={(blog.meta_title || blog.title).slice(0, 60)}
+        description={(blog.meta_description || blog.excerpt || blog.title).slice(0, 160)}
+        path={`/blog/${blog.slug}`}
+        type="article"
+        image={blog.featured_image_url ?? undefined}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: blog.title,
+            description: blog.meta_description ?? blog.excerpt,
+            image: blog.featured_image_url ? [blog.featured_image_url] : [],
+            datePublished: blog.published_at,
+            author: { "@type": "Organization", name: blog.author ?? "Smartlio Editorial" },
+            publisher: { "@type": "Organization", name: "Smartlio", url: SITE_URL },
+            mainEntityOfPage: `${SITE_URL}/blog/${blog.slug}`,
+          },
+          ...(blog.faq?.length ? [{
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: blog.faq.map((f) => ({
+              "@type": "Question", name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          }] : []),
+        ]}
+      />
       {/* Hero header */}
       <header className="border-b bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 max-w-3xl text-left">

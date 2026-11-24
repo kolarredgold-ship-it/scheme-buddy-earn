@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2, Sparkles, Download } from "lucide-react";
 import UserPreferences from "@/components/UserPreferences";
 import NotificationBell from "@/components/NotificationBell";
-const techrolaLogo = "/smartlio_logo.png";
+const smartlioLogo = "/smartlio_logo.png";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
@@ -58,7 +58,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="h-1 w-full bg-gradient-to-r from-accent via-primary to-[hsl(140_60%_35%)]" aria-hidden="true" />
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center group">
-            <img src={techrolaLogo} alt="Smartlio - Empowering Public & Students" className="h-6 md:h-7 w-auto" />
+            <img src={smartlioLogo} alt="Smartlio - Empowering Public & Students" className="h-6 md:h-7 w-auto" />
           </Link>
 
           {/* Desktop Nav */}

@@ -31,8 +31,8 @@ const offerings = [
 const AboutUs = () => (
   <Layout>
     <Seo
-      title="About Smartlio | Government Schemes & AI Career Tools for India"
-      description="Smartlio is an Indian edu-tech platform helping students and citizens discover 2500+ government schemes and use AI tools for resumes, reports, interviews and careers."
+      title="About Smartlio — Government Schemes & AI Career Tools"
+      description="Meet Smartlio, India's platform for government schemes and AI career tools. Build resumes, internship reports and interview skills with our career programs."
       path="/about-us"
       keywords="about Smartlio, government schemes platform India, AI tools for students, career program"
       jsonLd={{

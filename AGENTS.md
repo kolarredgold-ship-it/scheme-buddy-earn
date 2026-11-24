@@ -5,3 +5,4 @@
 - Guided report forms pass structured formatting and chapter preferences to the existing generator; history opens that same quality-gated viewer to avoid divergent export behavior.
 - Report chapter requests claim allowance by an owned report ID through an idempotent RPC, so retries and resumed parts do not consume additional report credits.
 - Top-up eligibility is checked in shared purchase controls and at order creation, with a payment-table trigger as the final backstop against bypasses.
+- Blog and scheme detail metadata use the shared Helmet-backed Seo component so canonical, social tags and structured data are cleaned up on navigation; static HTML remains the non-JavaScript crawler fallback.

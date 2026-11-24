@@ -279,8 +279,8 @@ const AITools = () => {
   return (
     <Layout>
       <Seo
-        title="Students AI Tools — Free Resume, SOP & Report Generators | Smartlio"
-        description="Free AI tools for Indian students: resume builder, cover letter, SOP, internship report, study notes, career roadmap and mock interview practice. Generate and download instantly."
+        title="AI Tools for Students — Resume, SOP & Reports | Smartlio"
+        description="Explore Smartlio's AI tools for resumes, SOPs, internship reports, study notes and mock interviews. Start free, then upgrade to Pro for more generations."
         path="/ai-tools"
         keywords="students ai tools, ai resume builder india, sop generator, internship report generator, ai mock interview, study notes maker"
         jsonLd={[itemListLd, breadcrumbLd]}
@@ -300,6 +300,7 @@ const AITools = () => {
         </div>
 
         {/* Tools Grid */}
+        <h2 className="text-xl font-semibold mb-4">Available AI Tools</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           {tools.map((t, i) => {
             const landingSlug = TOOL_TO_LANDING[t.to];

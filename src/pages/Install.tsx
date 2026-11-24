@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Download, Smartphone, Share, MoreVertical, PlusSquare, Check } from "lucide-react";
-const techrolaLogo = "/smartlio_logo.png";
+const smartlioLogo = "/smartlio_logo.png";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -58,7 +58,7 @@ const Install = () => {
     <Layout>
       <div className="container mx-auto px-4 py-8 pb-20 md:pb-8 max-w-md">
         <div className="text-center mb-8">
-          <img src={techrolaLogo} alt="Smartlio Logo" className="h-16 mx-auto mb-4" />
+          <img src={smartlioLogo} alt="Smartlio Logo" className="h-16 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Install Smartlio App</h1>
           <p className="text-muted-foreground text-sm">Install for quick access — works like a native app!</p>
         </div>

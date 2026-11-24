@@ -179,7 +179,7 @@ const AIToolLanding = () => {
                   {r.h1}
                 </div>
                 <div className="text-[11px] md:text-xs text-primary inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Learn more <ArrowRight className="h-3 w-3" />
+                  Explore this tool <ArrowRight className="h-3 w-3" />
                 </div>
               </Link>
             ))}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import techrolaIcon from "@/assets/techrola_icon.png";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,7 +21,8 @@ const SchemeDetail = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase.from("schemes").select("*").eq("slug", slug!).single();
+      if (!slug) return;
+      const { data } = await supabase.from("schemes").select("*").eq("slug", slug).single();
       setScheme(data);
       setLoading(false);
     };
@@ -55,9 +55,10 @@ const SchemeDetail = () => {
     <Layout>
       {/* Self-referencing canonical uses the scheme's own slug, not the URL param */}
       <Seo
-        title={`${scheme.title} — Eligibility, Benefits & How to Apply`.slice(0, 65)}
+        title={`${scheme.title} — Eligibility & How to Apply`.slice(0, 60)}
         description={(description || `${scheme.title}: eligibility, benefits, documents and application process.`).slice(0, 160)}
         path={`/scheme/${scheme.slug}`}
+        image={scheme.image_url ?? undefined}
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "GovernmentService",
@@ -66,7 +67,6 @@ const SchemeDetail = () => {
           serviceType: scheme.category,
           areaServed: scheme.state || "India",
           url: `https://smartlio.in/scheme/${scheme.slug}`,
-          provider: { "@type": "Organization", name: "Smartlio", url: "https://smartlio.in" },
         }}
       />
       <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 pb-24 md:pb-10 max-w-3xl lg:max-w-5xl animate-fade-in">
@@ -100,7 +100,7 @@ const SchemeDetail = () => {
             <img src={scheme.image_url} alt={scheme.title} className="w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5">
-              <img src={techrolaIcon} alt="Smartlio" className="h-20 w-20 opacity-20" />
+              <img src="/smartlio_logo.png" alt="Smartlio" className="h-20 w-auto max-w-full opacity-20" />
             </div>
           )}
         </div>

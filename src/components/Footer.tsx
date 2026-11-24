@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-const techrolaLogo = "/smartlio_logo.png";
+const smartlioLogo = "/smartlio_logo.png";
 import { aiToolLandings } from "@/data/aiToolLandings";
 import { Mail, Phone, MapPin, Download, ExternalLink, BookOpen, Briefcase, Wand2, GraduationCap, FileText, HelpCircle, Shield, CreditCard, Sparkles } from "lucide-react";
 
@@ -41,7 +41,7 @@ const Footer = () => {
           {/* Brand + About */}
           <div className="lg:col-span-4 space-y-4">
             <Link to="/" className="inline-flex items-center gap-2">
-              <img src={techrolaLogo} alt="Smartlio Logo" className="h-9 w-auto bg-white rounded-md px-1.5 py-1" />
+              <img src={smartlioLogo} alt="Smartlio Logo" className="h-9 w-auto bg-white rounded-md px-1.5 py-1" />
               <span className="text-xl font-bold text-white tracking-tight">Smartlio</span>
             </Link>
             <p className="text-sm text-slate-300 leading-relaxed max-w-sm">
