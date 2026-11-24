@@ -128,6 +128,7 @@ async function main() {
   ).join("\n");
 
   const schemeUrls = schemes
+    .filter((scheme, index, entries) => entries.findIndex((entry) => entry.slug === scheme.slug) === index)
     .map((s) => {
       const lastmod = s.updated_at ? s.updated_at.split("T")[0] : null;
       return `  <url>
@@ -139,6 +140,7 @@ async function main() {
     .join("\n");
 
   const blogUrls = blogs
+    .filter((blog, index, entries) => entries.findIndex((entry) => entry.slug === blog.slug) === index)
     .map((b) => {
       const lastmod = b.updated_at ? b.updated_at.split("T")[0] : null;
       return `  <url>

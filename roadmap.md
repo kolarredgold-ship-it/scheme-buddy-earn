@@ -19,9 +19,9 @@
 - [x] Replace techrola.in website references with smartlio.in.
 
 # Smartlio search and branding
-- [ ] Replace remaining public legacy branding and website links, including stored blog content.
-- [ ] Update search metadata and sitemap for public pages.
-- [ ] Verify smartlio.in in Google Search Console and submit its sitemap — requires the verification tag to be live.
+- [x] Replace remaining public legacy branding and website links, including 699 stored blogs; preserve internal identifiers and existing content addresses.
+- [x] Update search metadata and sitemap for public pages; browser checks passed for home, blog, scheme, About and AI Tools.
+- [x] Verify smartlio.in in Google Search Console and submit its sitemap; Google accepted verification, property addition and submission.
 
 # Pro before top-ups
 - [x] Require active Pro before credit top-ups in tool prompts, checkout and payment acceptance.
