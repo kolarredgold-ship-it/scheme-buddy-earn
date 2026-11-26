@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2, Sparkles, Download } from "lucide-react";
+import { Home, LayoutDashboard, Wallet, LogOut, Menu, X, User, Shield, CreditCard, Briefcase, Trophy, Settings2, Sparkles, Download, Crown } from "lucide-react";
 import UserPreferences from "@/components/UserPreferences";
 import NotificationBell from "@/components/NotificationBell";
 const smartlioLogo = "/smartlio_logo.png";
@@ -31,6 +31,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { path: "/", label: "Schemes", icon: Home },
     { path: "/career-program", label: "Career", icon: Briefcase },
     { path: "/ai-tools", label: "Students AI", icon: Sparkles },
+    { path: "/subscription", label: "Subscription", icon: Crown },
     ...(user
       ? [
           { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -42,6 +43,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const bottomNavItems = [
     { type: "link" as const, path: "/", icon: Home, label: "Home" },
     { type: "link" as const, path: "/ai-tools", icon: Sparkles, label: "AI Tools" },
+    { type: "link" as const, path: "/subscription", icon: Crown, label: "Pro" },
     { type: "link" as const, path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { type: "link" as const, path: "/install", icon: Download, label: "Install" },
   ];
