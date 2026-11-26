@@ -66,6 +66,10 @@ const SchemeDetail = () => {
           description,
           serviceType: scheme.category,
           areaServed: scheme.state || "India",
+          provider: {
+            "@type": "GovernmentOrganization",
+            name: scheme.state ? `Government of ${scheme.state}` : "Government of India",
+          },
           url: `https://smartlio.in/scheme/${scheme.slug}`,
         }}
       />
