@@ -74,7 +74,14 @@ export default function RazorpayCheckoutButton({
       const { data: order, error } = await supabase.functions.invoke("razorpay-create-order", {
         body: { amount: Math.round(amount * 100), currency, receipt, payment_type: paymentType },
       });
-      if (error || !order?.order_id) throw new Error(error?.message || "Failed to create order");
+      if (error || !order?.order_id) {
+        let msg = error?.message || "Failed to create order";
+        try {
+          const body = await (error as any)?.context?.json?.();
+          if (body?.error) msg = body.error === "Authentication failed" ? "Payment gateway is not set up correctly. Please contact support." : body.error;
+        } catch { /* keep default */ }
+        throw new Error(msg);
+      }
 
       const rzp = new window.Razorpay({
         key: order.key_id,
